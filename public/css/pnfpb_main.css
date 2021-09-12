@@ -1,0 +1,109 @@
+.pnfpb_ic_push_settings_table_row {
+	height:70px;
+}
+
+.pnfpb_ic_push_settings_table_label_checkbox {
+	padding:5px;
+}
+
+.pnfpb_ic_push_settings_table_column {
+    border:1px solid #ccc;
+    
+}
+
+.pnfpb_ic_push_settings_table_label_column {
+	width:10%;
+}
+
+.pnfpb_ic_push_settings_table_value_column {
+	width:80%;
+}
+
+.pnfpb_ic_push_settings_table_value_column_input_field {
+	width:82%;
+}
+
+.pnfpb_ic_push_settings_header {
+	line-height:1.5em;
+}
+
+.pnfpb_ic_push_settings_header2 {
+	line-height:1.5em;
+}
+
+.pnfpb_ic_push_settings_upload_icon {
+    width:80%;
+    white-space:normal;
+    word-wrap:break-word;
+}
+
+.pnfpb_unsubscribe_button {
+    color:#ffffff;
+    background:#000000;
+	display:none;
+}
+
+.pnfpb_subscribe_button {
+    color:#ffffff;
+    background:#000000;
+    display:none;
+}
+
+.pnfpb_subscribe_dialog_confirm {
+    display:none;
+}
+
+.pnfpb_unsubscribe_dialog_confirm {
+    display:none;
+}
+
+.pnfpb_group_users_subscribe_dialog_confirm {
+	display:none;	
+}
+
+.subscribegroupbutton {
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 2px !important;
+	font-size: 14px !important;
+	font-weight: 100 !important;
+}
+
+.subscribe-notification-group {
+	margin-left: 1px;
+	margin-right: 5px;
+	padding: .3em .5em !important;
+	font-size: 14px !important;
+	font-weight: 100 !important;
+}
+
+.unsubscribe-notification-group {
+	margin-top:1px;
+	margin-left: 1px;
+	margin-right: 5px;
+	padding: .3em .5em !important;
+	font-size: 14px !important;
+	font-weight: 100!important;
+}
+
+.subscribe-display-on {
+	display:block !important;
+}
+
+.subscribe-display-off {
+	display:none !important;
+}
+
+.ui-dialog {
+	width: 450px !important;
+}
+
+.ui-dialog-buttonpane {
+    float: left !important;
+    width: 100% !important;
+}
+
+.ui-dialog-buttonset button {
+	padding: 3px !important;
+	height: unset;
+}
