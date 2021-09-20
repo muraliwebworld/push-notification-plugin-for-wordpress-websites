@@ -1,11 +1,14 @@
 # push-notification-plugin-for-wordpress-websites<br/>
-This Plugin is designed subscribe users for push notification and to send push notification using Firebase Cloud Messaging whenever new WordPress post published, WordPress custom post types published and for new BuddyPress activities and also for comments posted in BuddyPress activities.<br/><br/>
+This Plugin is designed subscribe users for push notification and to send/schedule push notification using Firebase Cloud Messaging whenever new WordPress post published, WordPress custom post types published and for new BuddyPress activities and also for comments posted in BuddyPress activities.<br/><br/>
 # Features in this WordPress plugin<br/>
 Push notification using Firebase Cloud Messaging credentials when new post/BuddyPress/BBpress/activities/custom post type published.<br/>
 To send push Notification to all BuddyPress users when new BuddyPress activities or comments are published.<br/>
 To send push Notifications only for BuddyPress Group Members when group activities are published.<br/>
 To send push notifications for private messages in BuddyPress users. Private message notification will be sent only to the recipient id sent by sender.<br/>
 To send push Notification to all users when new post or custom post types are published using Firebase Cloud Messaging.<br/>
+# Scheduling push notifications<br/>
+It allows to Schedule Push notifications to send as per below schedule using WordPress CRON scheduler 
+hourly(every hour)<br/>,twice daily(2 times per day)<br />, daily<br />, weekly<br />
 Firebase PUSH API is not compatible with Safari browsers and push notification using firebase push api will not work in Safari browsers. For Safari browsers,this plugin will display console log messages to indicate the browser is not supported for push api.<br/>
 Service workers are created on the fly for Firebase Cloud Messaging while activating the plugin<br/>
 In addition to default subscription from browser, following shortcode can also be used to display toggle subscription button.<br/>

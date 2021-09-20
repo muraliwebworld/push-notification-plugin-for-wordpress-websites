@@ -3,12 +3,12 @@
 }
 
 .pnfpb_ic_push_settings_table_label_checkbox {
-	padding:5px;
+	padding-left:0px;
+	padding-right:10px;
 }
 
 .pnfpb_ic_push_settings_table_column {
-    border:1px solid #ccc;
-    
+	border:1px solid #ccc;
 }
 
 .pnfpb_ic_push_settings_table_label_column {
@@ -24,11 +24,11 @@
 }
 
 .pnfpb_ic_push_settings_header {
-	line-height:1.5em;
+	line-height:1.25em;
 }
 
 .pnfpb_ic_push_settings_header2 {
-	line-height:1.5em;
+	line-height:1.0em;
 }
 
 .pnfpb_ic_push_settings_upload_icon {
@@ -94,16 +94,33 @@
 	display:none !important;
 }
 
-.ui-dialog {
+.ui-dialog[aria-describedby~=pnfpb_subscribe_dialog_confirm] {
 	width: 450px !important;
 }
 
-.ui-dialog-buttonpane {
+.ui-dialog-buttonpane[aria-describedby~=pnfpb_subscribe_dialog_confirm] {
     float: left !important;
     width: 100% !important;
 }
 
-.ui-dialog-buttonset button {
+.ui-dialog-buttonset button[aria-describedby~=pnfpb_subscribe_dialog_confirm] {
 	padding: 3px !important;
 	height: unset;
 }
+
+.ui-dialog[aria-describedby~=pnfpb_unsubscribe_dialog_confirm] {
+	width: 450px !important;
+}
+
+.ui-dialog-buttonpane[aria-describedby~=pnfpb_unsubscribe_dialog_confirm] {
+    float: left !important;
+    width: 100% !important;
+}
+
+.ui-dialog-buttonset button[aria-describedby~=pnfpb_unsubscribe_dialog_confirm] {
+	padding: 3px !important;
+	height: unset;
+}
+
+.devicetokens .wp-list-table .column-id { width: 7%; }
+.devicetokens .wp-list-table .column-userid { width: 15%; }

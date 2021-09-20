@@ -45,13 +45,13 @@
 		
 		foreach( $deviceid_exists as $result ) {
 
-			if ($result->userid === 0){
+				if ($result->userid == 0){
 
-				$deviceid_update_status = $wpdb->query("UPDATE {$table} SET userid = '{$bpuserid}' WHERE device_id = '{$bpdeviceid}'") ;	
-			} 
+					$deviceid_update_status = $wpdb->query("UPDATE $table SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
+				}  
 		}		
 	
-		if($wpdb->num_rows > 0) {
+		if(count($deviceid_exists) > 0) {
 			echo "duplicate";
 		}
 		else
@@ -109,13 +109,13 @@
 
 				foreach( $deviceid_select_status as $result ) {
 
-					if ($result->userid === 0){
+					if ($result->userid == 0){
 
-						$deviceid_update_status = $wpdb->query("UPDATE {$table} SET userid = '{$bpuserid}' WHERE device_id = '{$bpdeviceid}'") ;	
+						$deviceid_update_status = $wpdb->query("UPDATE {$table} SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
 					} 
 				}			
 		
-		        if($deviceid_select_status > 0) {
+		        if(count($deviceid_select_status) > 0) {
 		    
 			        echo "subscribed";
 			
