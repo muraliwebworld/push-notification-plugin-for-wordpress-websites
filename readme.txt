@@ -2,20 +2,21 @@
 Contributors: murali-indiacitys
 Author URI: https://www.indiacitys.com
 Plugin URL: https://www.indiacitys.com
-Tags:  Push notification using FCM for Post, BuddyPress push notification, Push notification using FCM for Custom Post types, Firebase push notification for WordPress, WordPress Free Push Notification for post and BuddyPress
+Tags:  Push notification using FCM for Post, Push notification, PWA app, Progressive Web App, PWA app with offline mode, BuddyPress push notification, Push notification using FCM for Custom Post types, Firebase push notification for WordPress, WordPress Free Push Notification for post and BuddyPress
 Donate link: https://www.indiacitys.com
 Requires at least: 5.0
 Tested up to: 5.8.1
 Requires PHP: 7.0
-Stable tag: 1.19
+Stable tag: 1.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin will add Push notification for Post, custom post types and for BuddyPress activities using Firebase.
+This plugin is to generate Push notifications for Post, custom post types, for BuddyPress activities using Firebase and to generate Progressive Web App (PWA) with offline mode facility.
 
 == Description ==
 
-This Plugin is designed subscribe users for push notification and to send push notification using Firebase Cloud Messaging whenever new WordPress post published, WordPress custom post types published and for new BuddyPress activities and also for comments posted in BuddyPress activities.
+This Plugin is designed to send push notification using Firebase Cloud Messaging whenever new WordPress post published, WordPress custom post types published and for new BuddyPress activities and also for comments posted in BuddyPress activities. It also generates PWA - Progressive Web App with offline mode facility based on setting from plugin admin page.
+
 
 **Plugin features:-** 
 To send/schedule Push notifications when new item is published for following,
@@ -35,6 +36,9 @@ In addition to default subscription from browser, following shortcode can also b
 New Shortcode [subscribe_PNFPB_push_notification] to display Subscribe/Unsubscribe push notification toggle button.
 Using above shortcode, toggle button to subscribe/unsubscribe can be added to sidebar or any other locations according to your need.
 The shortcode [subscribe_PNFPB_push_notification] is optional, it is a additional facility to subscribe to push notification inaddition to default option from browser.
+
+= Progressive Web App (PWA) =
+This plugin generates PWA app based on settings in plugin admin area. Admin users will be able to enable/disable PWA app and will be customize PWA app with app name, app icon, app theme color, background color and list of pages to be included in offline cache for web app offline mode. If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed. Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android. Firefox for desktop will not support PWA.
 
 **How to use Plugin:-**
 
@@ -59,6 +63,8 @@ Following are steps to configure the plugin,
 11. For remaining fields, you need to get it from your Firebase web app. All fields are required to configure FireBase push notification.
 12. In the Your apps card, select the nickname of the Firebase web app for which you need a config object.
 13.Select Config from the Firebase SDK snippet pane and fill below fields
+= Progressive Web App (PWA) settings =
+14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.
 
 After saving below fields, it will ask to allow notification for this website in browser default popup, click on allow notification to get notifications
 
@@ -92,6 +98,8 @@ Following are steps to configure the plugin,
 11. For remaining fields, you need to get it from your Firebase web app. All fields are required to configure FireBase push notification.
 12. In the Your apps card, select the nickname of the Firebase web app for which you need a config object.
 13.Select Config from the Firebase SDK snippet pane and fill below fields
+= Progressive Web App (PWA) settings =
+14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.
 
 After saving below fields, it will ask to allow notification for this website in browser default popup, click on allow notification to get notifications
 
@@ -117,8 +125,14 @@ After completing above steps, push notification will be displayed based on optio
 5. Shortcode to display unsubscribe/subscribe toggle button
 6. BuddyPress Group members can subscribe/remove push notification for every group
 7. Admin page showing list of tokens subscribed
+8. Progressive Web App admin settings page
 
 == Changelog ==
+= 1.20 =
+New feature to generate Progressive Web App (PWA) with offline facility.
+Go to plugin admin area PWA settings to activate PWA Progressive Web App facility
+Fix to use push notifications for wordpress sites installed in sub folders.
+Modified version of plugin admin settings pages.
 = 1.19 =
 To fix problem related to delete device token in admin settings.New features to schedule push notifications and new admin option to manage subscribed device tokens list for push notifications.
 = 1.18 =
@@ -201,6 +215,10 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* New feature to generate Progressive Web App (PWA) with offline facility.
+Go to plugin admin area PWA settings to activate PWA Progressive Web App facility
+Fix to use push notifications for wordpress sites installed in sub folders.
+Modified version of plugin admin settings pages.
 * To fix problem related to delete device token in admin settings.New features to schedule push notifications and new admin option to manage subscribed device tokens list for push notifications
 * New features to schedule push notifications and new admin option to manage subscribed device tokens list for push notifications
 if schedule check box is ON then admin can schedule push notification in hourly/twicedaily/daily/weekly schedules

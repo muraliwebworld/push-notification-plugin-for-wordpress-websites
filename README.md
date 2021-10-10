@@ -1,5 +1,5 @@
-# push-notification-plugin-for-wordpress-websites<br/>
-This Plugin is designed subscribe users for push notification and to send/schedule push notification using Firebase Cloud Messaging whenever new WordPress post published, WordPress custom post types published and for new BuddyPress activities and also for comments posted in BuddyPress activities.<br/><br/>
+# push notification plugin for wordpress websites and Progressive Web App (PWA) generator<br/>
+This plugin is to generate Push notifications for Post, custom post types, for BuddyPress activities using Firebase and to generate Progressive Web App (PWA) with offline mode facility.<br/><br/>
 # Features in this WordPress plugin<br/>
 Push notification using Firebase Cloud Messaging credentials when new post/BuddyPress/BBpress/activities/custom post type published.<br/>
 To send push Notification to all BuddyPress users when new BuddyPress activities or comments are published.<br/>
@@ -15,6 +15,8 @@ In addition to default subscription from browser, following shortcode can also b
 New Shortcode [subscribe_PNFPB_push_notification] to display Subscribe/Unsubscribe push notification toggle button.<br/>
 Using above shortcode, toggle button to subscribe/unsubscribe can be added to sidebar or any other locations according to your need.<br/>
 The shortcode [subscribe_PNFPB_push_notification] is optional, it is a additional facility to subscribe to push notification inaddition to default option from browser.<br/><br/>
+# Progressive Web App (PWA)<br/>
+This plugin generates PWA app based on settings in plugin admin area. Admin users will be able to enable/disable PWA app and will be customize PWA app with app name, app icon, app theme color, background color and list of pages to be included in offline cache for web app offline mode. If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed. Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android. Firefox for desktop will not support PWA.<br/>
 # Download this plugin<br/>
 https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/><br/>
 # How to configure plugin<br/>
@@ -34,6 +36,8 @@ Following are steps to configure the plugin,<br/>
 After saving below fields, it will ask to allow notification for this website in browser default popup, click on allow notification to get notifications<br/>
 After completing above steps, push notification will be displayed based on option selected for posts/buddypress while publishing posts or custom post types or during new BuddyPress activities or comments.<br/>
 New Shortcode [subscribe_PNFPB_push_notification] can also be used to display Subscribe/Unsubscribe push notification toggle button. It is a additional facility in addition to default option from browser to subscribe/unsubscribe push notifications.<br/><br/>
+# Progressive Web App (PWA) settings<br/>
+14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.<br/>
 # Screenshots
 ![screenshot-1push](https://user-images.githubusercontent.com/32461311/132991104-5a7cfbf4-19dd-4129-8d8a-279fb00876a0.png)
 ![screenshot-2push](https://user-images.githubusercontent.com/32461311/132991097-760fa89c-7731-4068-99f3-56daf7dd61dc.png)

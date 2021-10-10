@@ -105,7 +105,7 @@
 
 		        $table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
 		
-		        $deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id = '{$bpdeviceid}'");
+		        $deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$bpdeviceid."%'");
 
 				foreach( $deviceid_select_status as $result ) {
 
@@ -122,7 +122,16 @@
 		        }
 		        else
 		        {
-			        echo "not-subscribed";
+					$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid);
+					$insertstatus = $wpdb->insert($table,$data);
+					if (!$insertstatus || $insertstatus != 0){
+						$my_id = $wpdb->insert_id;
+						echo 'subscribed';
+					}
+					else
+					{
+						echo "not-subscribed";
+					}
 		        }		        
 		        
 		    }

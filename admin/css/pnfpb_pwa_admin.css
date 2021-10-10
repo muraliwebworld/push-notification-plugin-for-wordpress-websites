@@ -1,0 +1,28 @@
+.pnfpb_ic_push_pwa_settings_table_row {
+	height:70px;
+}
+
+.pnfpb_ic_push_pwa_settings_table_label_checkbox {
+	padding-left:0px;
+	padding-right:10px;
+}
+
+.pnfpb_ic_push_pwa_settings_table_column {
+	border:1px solid #ccc;
+}
+
+
+.pnfpb_ic_push_pwa_settings_table_value_column {
+	width:80% !important;
+}
+
+.pnfpb_ic_push_pwa_settings_table_value_column_input_field {
+	width:82% !important;
+}
+.pnfpb_ic_push_pwa_color {
+       width:20% !important;
+}
+
+.pnfpb_ic_push_pwa_settings_upload_icon {
+	width:100%;
+}

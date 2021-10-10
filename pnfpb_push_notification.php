@@ -3,11 +3,11 @@
 Plugin Name: Push Notification for Post and BuddyPress
 Plugin URI: https://www.indiacitys.com
 Description: Push notification for Post, custom post types and for BuddyPress activities using Firebase. Update Firebase configuration details in <a href="options-general.php?page=pnfpb-icfcm-slug"><strong>settings page</strong></a>
-Version: 1.19
+Version: 1.20
 Author: Muralidharan Ramasamy
 Author URI: https://www.indiacitys.com
 Text Domain: PNFPB_TD
-Updated: 19 Sep 2021
+Updated: 10 Oct 2021
 */
 /**
  * License: GPLv2 or later
@@ -40,6 +40,10 @@ if (!defined("PNFPB_PLUGIN_NM_SETTINGS")) define("PNFPB_PLUGIN_NM_SETTINGS", 'PN
 if (!defined("PNFPB_PLUGIN_NM_DEVICE_TOKENS")) define("PNFPB_PLUGIN_NM_DEVICE_TOKENS", 'PNFPB - Device tokens list');
 if (!defined("PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_HEADER")) define("PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_HEADER", 'List of device tokens registered for push notification');
 if (!defined("PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_DETAILS")) define("PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_DETAILS", '(Do not delete tokens unneccessarily it will result in user will not receive push notification, unless it is needed, avoid deleting tokens )');
+if (!defined("PNFPB_PLUGIN_NM_PWA_HEADER")) define("PNFPB_PLUGIN_NM_PWA_HEADER", 'PWA app settings');
+if (!defined("PNFPB_PLUGIN_NM_PWA_SETTINGS")) define("PNFPB_PLUGIN_NM_PWA_SETTINGS", 'PWA Progressive web app settings');
+if (!defined("PNFPB_PLUGIN_PWA_SETTINGS")) define("PNFPB_PLUGIN_PWA_SETTINGS", 'Below settings are to generate Progressive Web App(PWA) with offline facility');
+if (!defined("PNFPB_PLUGIN_PWA_SETTINGS_DESCRIPTION")) define("PNFPB_PLUGIN_PWA_SETTINGS_DESCRIPTION", 'All below fields are required to generate Progressive Web App (PWA). Additionally, Enable/disable PWA app by selecting appropriate check box and Enter appropriate URLs to store in cache for offline PWA app, selected pages can be viewed in offline without internet. In offline mode, if page is not available/stored in cache then 404 offline page will be displayed');
 if (!defined("PNFPB_PLUGIN_ENABLE_PUSH")) define("PNFPB_PLUGIN_ENABLE_PUSH", 'Enable/Disable push notifications for following types');
 if (!defined("PNFPB_PLUGIN_SCHEDULE_PUSH")) define("PNFPB_PLUGIN_SCHEDULE_PUSH", '(if scheduled, push notification will be sent as per selected schedule otherwise it will be sent whenever new item is posted. BuddyPress notifications only when BuddyPress plugin is installed and active)');
 if (!defined("PNFPB_PLUGIN_FIREBASE_SETTINGS")) define("PNFPB_PLUGIN_FIREBASE_SETTINGS", 'Firebase configuration');
@@ -63,7 +67,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 
 		public function __construct()
 		{
-			add_filter( 'set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3 );
+			add_filter( 'set-screen-option', [ __CLASS__, 'PNFPB_set_screen' ], 10, 3 );
 			
 			// Installation and uninstallation hooks
 			register_activation_hook(__FILE__, array($this, $this->pre_name . 'activate'));
@@ -100,6 +104,9 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			
 			// Scheduled push notification(if enabled) for post and custom post types
 			add_action( $this->pre_name .'cron_post_hook', array($this, $this->pre_name . 'icforum_push_notifications_post_web'));
+			
+			//add manifest link for PWA app
+			add_action( 'wp_head', array($this, $this->pre_name . 'include_manifest_link'));
 			
 			if ( function_exists('bp_is_active') ) {
 				
@@ -258,6 +265,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 	
             wp_enqueue_style( 'pnfpb-icpstyle-name', plugin_dir_url( __FILE__ ).'public/css/pnfpb_main.css' );
 			wp_enqueue_style( 'pnfpb-admin-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_admin.css' );
+			wp_enqueue_style( 'pnfpb-admin-pwa-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_pwa_admin.css' );
             
 			$apiKey = get_option( 'pnfpb_ic_fcm_api' );
 			$authDomain = get_option( 'pnfpb_ic_fcm_authdomain' );
@@ -267,6 +275,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			$messagingSenderId = get_option( 'pnfpb_ic_fcm_messagingsenderid' );
 			$appId = get_option( 'pnfpb_ic_fcm_appid' );
 			$publicKey = get_option( 'pnfpb_ic_fcm_publickey' );
+			$homeurl = get_home_url();
 
 			if ($projectId != false && $projectId != '' && $publicKey != false && $publicKey != '' && $apiKey != false && $apiKey != '' && $messagingSenderId != false && $messagingSenderId != '') {
 			    
@@ -276,27 +285,38 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				$filename = '/public/js/firebase-core/pnfpb_firebase_messaging.js';
 				wp_enqueue_script( 'pnfpb-icajax-script-firebase-messaging', plugins_url( $filename, __FILE__ )); 
     
-				$filename = '/public/js/pnfpb_pushscript.js';
+				$filename = '/public/js/pnfpb_pushscript_pwa.js';
 				$ajaxobject = 'pnfpb_ajax_object_push';
 				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ));
-				wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'apiKey' => $apiKey, 'authDomain' => $authDomain, 'databaseURL' => $databaseUrl, 'projectId' => $projectId, 'storageBucket' => $storageBucket, 'messagingSenderId' => $messagingSenderId, 'appId' => $appId, 'publicKey' => $publicKey) );
+				wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'apiKey' => $apiKey, 'authDomain' => $authDomain, 'databaseURL' => $databaseUrl, 'projectId' => $projectId, 'storageBucket' => $storageBucket, 'messagingSenderId' => $messagingSenderId, 'appId' => $appId, 'publicKey' => $publicKey, 'homeurl' => $homeurl) );
 				
-				$filename = '/public/js/pnfpb_unsubscribe_pushscript.js';
+				$filename = '/public/js/pnfpb_unsubscribe_pushscript_pwa.js';
 				$ajaxobject = 'pnfpb_ajax_object_unsubscribe_push';
 				wp_enqueue_script( 'pnfpb-icajax-script-unsubscribe-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ));
-				wp_localize_script( 'pnfpb-icajax-script-unsubscribe-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'publicKey' => $publicKey) );
+				wp_localize_script( 'pnfpb-icajax-script-unsubscribe-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'publicKey' => $publicKey, 'homeurl' => $homeurl) );
 				
-				$filename = '/public/js/pnfpb_group_pushscript.js';
+				$filename = '/public/js/pnfpb_group_pushscript_pwa.js';
 				$ajaxobject = 'pnfpb_ajax_object_group_push';
 				wp_enqueue_script( 'pnfpb-icajax-script-group-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ));
-				wp_localize_script( 'pnfpb-icajax-script-group-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'groupId' => '9') );
+				wp_localize_script( 'pnfpb-icajax-script-group-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'groupId' => '9', 'publicKey' => $publicKey, 'homeurl' => $homeurl) );
 				
 			}
 			
   
 		}
     
-
+		/**
+		 * Add pnfpbmanifest.json to header for PWA app
+		 * provided PWA conversion app option is ON
+		 * @since 1.20
+		 */
+		// Creates the link tag
+		public function PNFPB_include_manifest_link() {
+			if (get_option('pnfpb_ic_pwa_app_enable') === '1') {
+        		echo '<link rel="manifest" href="'.get_home_url().'/pnfpbmanifest.json">';
+			}
+		}		 
+		
 		/**
 		* Ajax callback routine to update subscribed device id for push notification.
 		*
@@ -327,6 +347,14 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				, array($this, $this->pre_name.'icfcm_device_tokens_list') // -> To render the page
 			);
 			add_action( "load-$hook_device_tokens", [ $this, $this->pre_name.'screen_option' ] );
+			
+			add_submenu_page(null            // -> Set to null - will hide menu link
+				, __('PWA app settings', PNFPB_TD)// -> Page Title
+				, 'PWA app settings'    // -> Title that would otherwise appear in the menu
+				, 'administrator' // -> Capability level
+				, 'pnfpb_icfm_pwa_app_settings'   // -> Still accessible via admin.php?page=menu_handle
+				, array($this, $this->pre_name.'icfcm_pwa_app_settings') // -> To render the page
+			);			
 
 			add_submenu_page(null            // -> Set to null - will hide menu link
 				, __('Test Notification', PNFPB_TD)// -> Page Title
@@ -372,21 +400,21 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		/**
 		* Admin page to list and manage device tokens - set screen options
 		*
-		* @since 1.0.0
+		* @since 1.19
 		*/		
-		public static function set_screen( $status, $option, $value ) {
+		public static function PNFPB_set_screen( $status, $option, $value ) {
 			return $value;
 		}
 		
 		/**
 		* Admin page to list and manage device tokens
 		*
-		* @since 1.0.0
+		* @since 1.19
 		*/
 		public function PNFPB_icfcm_device_tokens_list()
 		{
 		?>
-			<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a></h2>
+			<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a></h2>
 			<h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS,PNFPB_TD);?></h1>
 			<div class="wrap">
 				<h2><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_HEADER,PNFPB_TD);?></h2>
@@ -417,6 +445,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 
 		/**
 		* Admin page to list and manage device tokens - Screen options
+		* @since 1.19
 		*/
 		public function PNFPB_screen_option() {
 
@@ -430,6 +459,16 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			add_screen_option( $option, $args );
 
 			$this->devicetokens_obj = new PNFPB_ICFM_Device_tokens_List();
+		}
+		
+		/**
+		 * Generate PWA app with offline facility
+		 * @since 1.20
+		 * 
+		*/
+		public function PNFPB_icfcm_pwa_app_settings()
+		{
+			include(plugin_dir_path(__FILE__) . 'admin/pnfpb_admin_pwa_app_settings.php');
 		}
  
 		/**
@@ -458,6 +497,19 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_bprivatemessage_enable");
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_bprivatemessage_text");
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_post_schedule_enable");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_enable");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_name");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_shortname");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_theme_color");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_backgroundcolor");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_display");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_fcm_pwa_upload_icon_132");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_fcm_pwa_upload_icon_512");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url1");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url2");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url3");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url4");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url5");
 			register_setting(
 				"pnfpb_icfcm_group", 
 				"pnfpb_ic_fcm_post_timeschedule_enable",
@@ -621,6 +673,9 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			$filename = '/admin/js/pnfpb_ic_upload_icon.js';
 			wp_register_script('pnfpb_ic_upload_icon_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.0.0', true);
 			wp_enqueue_script('pnfpb_ic_upload_icon_script');
+			$filename = '/admin/js/pnfpb_ic_pwa_upload_icon.js';
+			wp_register_script('pnfpb_ic_pwa_upload_icon_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.0.0', true);
+			wp_enqueue_script('pnfpb_ic_pwa_upload_icon_script');			
 		}   
 
 
@@ -809,12 +864,11 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			
         
             $apiaccesskey = get_option('pnfpb_ic_fcm_google_api');
- 
 
 			if ((($activity_content && !wp_next_scheduled( 'PNFPB_cron_buddypressactivities_hook' )) || (!$activity_content && wp_next_scheduled( 'PNFPB_cron_buddypressactivities_hook' )))  && (get_option('pnfpb_ic_fcm_buddypress_enable') == 1 && $apiaccesskey != '' && $apiaccesskey != false)) {
 
 				global $wpdb;
-				
+
 				$activitylink = get_home_url();
 				if (function_exists('bp_is_active')){
 					$activitylink = get_home_url().'/'.buddypress()->pages->activity->slug;
@@ -837,6 +891,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				$blog_title = get_bloginfo( 'name' );
 				
 				$localactivitycontent = $activity_content;
+
             
 				if (get_option('pnfpb_ic_fcm_activity_title') != false && get_option('pnfpb_ic_fcm_activity_title') != '') {
 					$activitytitle = get_option('pnfpb_ic_fcm_activity_title');
@@ -892,6 +947,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				$apibody = wp_remote_retrieve_body($apiresults);
 
 				$bodyresults = json_decode($apibody,true);
+
 				if (array_key_exists('results', $bodyresults)) {
 					foreach ($bodyresults['results'] as $idx=>$result){
 						if (array_key_exists('error',$result)) {

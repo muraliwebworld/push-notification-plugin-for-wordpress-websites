@@ -12,16 +12,19 @@
 }
 
 .pnfpb_ic_push_settings_table_label_column {
-	width:10%;
+	width:60% !important;
 }
 
+
 .pnfpb_ic_push_settings_table_value_column {
-	width:80%;
+	width:80% !important;
 }
 
 .pnfpb_ic_push_settings_table_value_column_input_field {
-	width:82%;
+	width:82% !important;
 }
+
+
 
 .pnfpb_ic_push_settings_header {
 	line-height:1.25em;
