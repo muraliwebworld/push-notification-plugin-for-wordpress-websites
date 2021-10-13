@@ -92,7 +92,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'main_v2.0.0',
+  			cache_version: 'pnfpb_v1.21.0',
   			offline_assets: []
 		};
 		var cacheurl3 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url3') ?>';
@@ -100,6 +100,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		var cacheurl5 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url5') ?>';
 
 		SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url1');} else {echo get_home_url();}?>");
+
 		if (cacheurl3 !== '' && cacheurl3 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl3 !== cacheurl5){
 			SW.offline_assets.push(cacheurl3);
 		}
@@ -112,7 +113,17 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 		const offlinePage = "<?php if (get_option('pnfpb_ic_pwa_app_offline_url2') && get_option('pnfpb_ic_pwa_app_offline_url2') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url2');} else {echo get_home_url();} ?>";
 
-		const neverCacheUrls = ['/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php/','/wp-includes/','/preview=true/','ps.w.org'];
+		var pnfpbwpSysurls = ['/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];
+
+		var pnfpbexcludeurls = "<?php echo get_option('pnfpb_ic_pwa_app_excludeurls'); ?>";
+
+		var pnfpbexcludeurlsarray = pnfpbexcludeurls.split(",");
+
+		var neverCacheUrls = pnfpbwpSysurls;
+
+		if (pnfpbexcludeurlsarray.length > 0 && pnfpbexcludeurls !== ''){
+			neverCacheUrls = pnfpbwpSysurls.concat(pnfpbexcludeurlsarray);
+		}
 
 		//
 		// Installation
@@ -381,12 +392,17 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 	}
 
 		function receivePushNotification(event) {
-			const notification = event.data.json().notification;
+			var notification = {};
+  			if (event.data) {
+    			notification = event.data.json().notification;
+			}
+
 			// Customize notification here
 			const notificationTitle = notification.title;
 			const notificationOptions = {
 				body: notification.body,
 				icon: notification.icon,
+				image: notification.image,
 				data: {
 					url: notification.click_action
 				}
@@ -452,9 +468,10 @@ var firebaseConfig = {
 				const notificationTitle = notification.title;
 				const notificationOptions = {
 					body: notification.body,
+					image: notification.image,
 					icon: notification.icon,
 					data: {
-					url: notification.click_action
+						url: notification.click_action
 					}
 
 				};

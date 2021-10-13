@@ -1,13 +1,12 @@
 === Push Notification for Post and BuddyPress ===
 Contributors: murali-indiacitys
 Author URI: https://www.indiacitys.com
-Plugin URL: https://www.indiacitys.com
-Tags:  Push notification using FCM for Post, Push notification, PWA app, Progressive Web App, PWA app with offline mode, BuddyPress push notification, Push notification using FCM for Custom Post types, Firebase push notification for WordPress, WordPress Free Push Notification for post and BuddyPress
+Tags:  Push notification,Progressive Web App,PWA,BuddyPress push notification,Push notification for posts,Firebase push notification for WordPress,Free Push Notification,Push notification using Firebase,PWA offline mode
 Donate link: https://www.indiacitys.com
 Requires at least: 5.0
 Tested up to: 5.8.1
 Requires PHP: 7.0
-Stable tag: 1.20
+Stable tag: 1.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +73,7 @@ After completing above steps, push notification will be displayed based on optio
 
 14. New Shortcode [subscribe_PNFPB_push_notification] can also be used to display Subscribe/Unsubscribe push notification toggle button. It is a additional facility in addition to default option from browser to subscribe/unsubscribe push notifications.
 
+15. Go to on-demand push notification admin panel to send push notification from admin panel to all subscribers whenever it required.
 
 == Installation ==
 
@@ -100,6 +100,7 @@ Following are steps to configure the plugin,
 13.Select Config from the Firebase SDK snippet pane and fill below fields
 = Progressive Web App (PWA) settings =
 14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.
+15. Go to on-demand push notification admin panel to send push notification from admin panel to all subscribers whenever it required.
 
 After saving below fields, it will ask to allow notification for this website in browser default popup, click on allow notification to get notifications
 
@@ -128,6 +129,9 @@ After completing above steps, push notification will be displayed based on optio
 8. Progressive Web App admin settings page
 
 == Changelog ==
+= 1.21 =
+* New feature added in admin plugin settings panel to send custom or on-demand or one time push notification from plugin admin panel to all subscribers.
+Added exclude urls option in PWA admin settings page. List of urls entered in this options are excluded from offline cache from service worker. New feature to generate Progressive Web App (PWA) with offline facility.
 = 1.20 =
 New feature to generate Progressive Web App (PWA) with offline facility.
 Go to plugin admin area PWA settings to activate PWA Progressive Web App facility
@@ -215,6 +219,8 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* New feature added in admin plugin settings panel to send custom or on-demand or one time push notification from plugin admin panel to all subscribers.
+Added exclude urls option in PWA admin settings page. List of urls entered in this options are excluded from offline cache from service worker.New feature to generate Progressive Web App (PWA) with offline facility.
 * New feature to generate Progressive Web App (PWA) with offline facility.
 Go to plugin admin area PWA settings to activate PWA Progressive Web App facility
 Fix to use push notifications for wordpress sites installed in sub folders.

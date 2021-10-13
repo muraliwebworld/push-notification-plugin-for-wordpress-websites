@@ -6,7 +6,7 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a></h2>
+<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a></h2>
 
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_PWA_SETTINGS,PNFPB_TD);?></h1>
 
@@ -93,7 +93,8 @@
 						<?php echo __("PWA Icon1*<br/>( Must be 132x132 pixels)",PNFPB_TD);?>
 					</label>
 				</td>
-    			<tr class="pnfpb_ic_push_settings_table_row">
+			</tr>
+    		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">				
             		<table>
 						<tr>
@@ -120,6 +121,7 @@
 						<?php echo __(" PWA Icon2*<br/>( Must be 512x512 pixels)",PNFPB_TD);?>
 					</label>
 				</td>
+			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">	
             		<table>
@@ -138,7 +140,6 @@
                 			</td>
             			</tr>
 					</table>
-					
 				</td>
 			</tr>
 			<tr><td><b>Below options are for offline facility for PWA - web app</b></td></tr>
@@ -242,6 +243,16 @@
 				</select>					
 				</td>
 			</tr>
+			<tr><td><b>List of urls to be excluded from offline cache separted by comma. Please note that enter list of urls to be excluded separated with comma</b></td></tr>
+    		<tr class="pnfpb_ic_push_settings_table_row">
+        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_excludeurls">
+						<?php echo __("List of urls to be excluded from cache separated by comma",PNFPB_TD);?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_excludeurls" name="pnfpb_ic_pwa_app_excludeurls" type="text" value="<?php if (get_option( 'pnfpb_ic_pwa_app_excludeurls' )) {echo get_option( 'pnfpb_ic_pwa_app_excludeurls' );}?>" />					
+				</td>
+			</tr>			
 			<tr><td><b>All fields marked with "*" are required fields, Please verify before submitting the changes</b></td></tr>
 			<tr><td><b>Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android,Edge for Android, Brave for Android and Samsung Interent except Firefox for desktop</b></td></tr>
     		<tr>

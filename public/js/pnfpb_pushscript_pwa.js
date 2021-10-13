@@ -144,6 +144,7 @@ navigator.serviceWorker.register(homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:homeur
  			const notificationOptions = {
     			body: notification_foreground.body,
     			icon: notification_foreground.icon,
+				image: notification_foreground.image,
     			data: {
             		url: notification_foreground.click_action
     			},
@@ -165,6 +166,7 @@ navigator.serviceWorker.register(homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:homeur
           				var notification = new Notification(notificationTitle, {
                                 body: notification_foreground.body,
                                 icon: notification_foreground.icon,
+								image: notification_foreground.image,
                                 data: {
                                     url: notification_foreground.click_action
                                 }

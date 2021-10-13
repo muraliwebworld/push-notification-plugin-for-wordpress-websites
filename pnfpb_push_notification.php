@@ -3,11 +3,11 @@
 Plugin Name: Push Notification for Post and BuddyPress
 Plugin URI: https://www.indiacitys.com
 Description: Push notification for Post, custom post types and for BuddyPress activities using Firebase. Update Firebase configuration details in <a href="options-general.php?page=pnfpb-icfcm-slug"><strong>settings page</strong></a>
-Version: 1.20
+Version: 1.21
 Author: Muralidharan Ramasamy
 Author URI: https://www.indiacitys.com
 Text Domain: PNFPB_TD
-Updated: 10 Oct 2021
+Updated: 11 Oct 2021
 */
 /**
  * License: GPLv2 or later
@@ -47,6 +47,9 @@ if (!defined("PNFPB_PLUGIN_PWA_SETTINGS_DESCRIPTION")) define("PNFPB_PLUGIN_PWA_
 if (!defined("PNFPB_PLUGIN_ENABLE_PUSH")) define("PNFPB_PLUGIN_ENABLE_PUSH", 'Enable/Disable push notifications for following types');
 if (!defined("PNFPB_PLUGIN_SCHEDULE_PUSH")) define("PNFPB_PLUGIN_SCHEDULE_PUSH", '(if scheduled, push notification will be sent as per selected schedule otherwise it will be sent whenever new item is posted. BuddyPress notifications only when BuddyPress plugin is installed and active)');
 if (!defined("PNFPB_PLUGIN_FIREBASE_SETTINGS")) define("PNFPB_PLUGIN_FIREBASE_SETTINGS", 'Firebase configuration');
+if (!defined("PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER")) define("PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER", 'On demand push notification');
+if (!defined("PNFPB_PLUGIN_NM_ONDEMANDPUSH_SETTINGS")) define("PNFPB_PLUGIN_NM_ONDEMANDPUSH_SETTINGS", 'On demand or one time push notification settings');
+if (!defined("PNFPB_PLUGIN_NM_ONDEMANDPUSH_DETAIL")) define("PNFPB_PLUGIN_NM_ONDEMANDPUSH_DETAIL", 'To send On demand or one time push notification to all subscribers with image');
 if (!defined("PNFPB_TD")) define("PNFPB_TD", 'pnfpb_td');
 
 
@@ -357,8 +360,8 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			);			
 
 			add_submenu_page(null            // -> Set to null - will hide menu link
-				, __('Test Notification', PNFPB_TD)// -> Page Title
-				, 'Test Notification'    // -> Title that would otherwise appear in the menu
+				, __('On demand Notification', PNFPB_TD)// -> Page Title
+				, 'On demand Notification'    // -> Title that would otherwise appear in the menu
 				, 'administrator' // -> Capability level
 				, 'pnfpb_icfmtest_notification'   // -> Still accessible via admin.php?page=menu_handle
 				, array($this, $this->pre_name.'icfcm_test_notification') // -> To render the page
@@ -372,18 +375,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		* @since 1.0.0
 		*/
 		public function PNFPB_icfcm_test_notification(){
-			$content = 'Test Notification using Push notification using PNFPB FCM Plugin';
-        
-			$homeurl = $url = home_url( '/' );
-
-			$result = $this->PNFPB_icforum_push_notifications_post_web($content,"",$homeurl);
-
-			echo '<div class="row">';
-			echo '<div><h2>Message sent</h2>';
-
-			echo '<p><a href="'. admin_url('admin.php').'?page=pnfpb-icfcm-slug">Back</a></p>';
-
-			echo '</div>';
+			include(plugin_dir_path(__FILE__) . 'admin/pnfpb_admin_ondemand_notification_settings.php');
 		} 		
 		
 
@@ -414,7 +406,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		public function PNFPB_icfcm_device_tokens_list()
 		{
 		?>
-			<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a></h2>
+			<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a></h2>
 			<h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS,PNFPB_TD);?></h1>
 			<div class="wrap">
 				<h2><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_HEADER,PNFPB_TD);?></h2>
@@ -510,6 +502,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url3");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url4");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_offline_url5");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_excludeurls");
 			register_setting(
 				"pnfpb_icfcm_group", 
 				"pnfpb_ic_fcm_post_timeschedule_enable",
@@ -675,7 +668,10 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			wp_enqueue_script('pnfpb_ic_upload_icon_script');
 			$filename = '/admin/js/pnfpb_ic_pwa_upload_icon.js';
 			wp_register_script('pnfpb_ic_pwa_upload_icon_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.0.0', true);
-			wp_enqueue_script('pnfpb_ic_pwa_upload_icon_script');			
+			wp_enqueue_script('pnfpb_ic_pwa_upload_icon_script');
+			$filename = '/admin/js/pnfpb_ic_ondemand_push_upload_image.js';
+			wp_register_script('pnfpb_ic_ondemand_push_upload_image_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.0.0', true);
+			wp_enqueue_script('pnfpb_ic_ondemand_push_upload_image_script');				
 		}   
 
 
