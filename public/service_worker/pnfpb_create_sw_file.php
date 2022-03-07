@@ -85,56 +85,68 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		ob_start();  ?>
 		'use strict';
 
-		//This is the "Offline copy of pages" wervice worker
+		var isPWAenabled = '<?php echo get_option('pnfpb_ic_pwa_app_enable'); ?>';
+		var isExcludeallurlsincache = '<?php echo get_option('pnfpb_ic_pwa_app_excludeallurls'); ?>';
 
-		//Install stage sets up the index page (home page) in the cahche and opens a new cache
+
 
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v1.21.0',
+  			cache_version: 'pnfpb_v1.31.0',
   			offline_assets: []
 		};
-		var cacheurl3 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url3') ?>';
-		var cacheurl4 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url4') ?>';
-		var cacheurl5 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url5') ?>';
 
-		SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url1');} else {echo get_home_url();}?>");
-
-		if (cacheurl3 !== '' && cacheurl3 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl3 !== cacheurl5){
-			SW.offline_assets.push(cacheurl3);
-		}
-		if (cacheurl4 !== '' && cacheurl4 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl4 !== cacheurl5){
-			SW.offline_assets.push(cacheurl4);
-		}
-		if (cacheurl5 !== '' && cacheurl5 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl5 !== cacheurl3  && cacheurl4 !== cacheurl5){
-			SW.offline_assets.push(cacheurl5);
+		if (isExcludeallurlsincache === '1') {
+			caches.delete(SW.cache_version);
 		}
 
-		const offlinePage = "<?php if (get_option('pnfpb_ic_pwa_app_offline_url2') && get_option('pnfpb_ic_pwa_app_offline_url2') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url2');} else {echo get_home_url();} ?>";
+		if (isPWAenabled === '1') {
 
-		var pnfpbwpSysurls = ['/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];
+			//This is the "Offline copy of pages" wervice worker
 
-		var pnfpbexcludeurls = "<?php echo get_option('pnfpb_ic_pwa_app_excludeurls'); ?>";
+			//Install stage sets up the index page (home page) in the cahche and opens a new cache
 
-		var pnfpbexcludeurlsarray = pnfpbexcludeurls.split(",");
+			var cacheurl3 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url3') ?>';
+			var cacheurl4 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url4') ?>';
+			var cacheurl5 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url5') ?>';
 
-		var neverCacheUrls = pnfpbwpSysurls;
+			SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url1');} else {echo get_home_url();}?>");
 
-		if (pnfpbexcludeurlsarray.length > 0 && pnfpbexcludeurls !== ''){
-			neverCacheUrls = pnfpbwpSysurls.concat(pnfpbexcludeurlsarray);
-		}
+			if (cacheurl3 !== '' && cacheurl3 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl3 !== cacheurl5){
+				SW.offline_assets.push(cacheurl3);
+			}
+			if (cacheurl4 !== '' && cacheurl4 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl4 !== cacheurl5){
+				SW.offline_assets.push(cacheurl4);
+			}
+			if (cacheurl5 !== '' && cacheurl5 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl5 !== cacheurl3  && cacheurl4 !== cacheurl5){
+				SW.offline_assets.push(cacheurl5);
+			}
 
-		//
-		// Installation
-		//
-		self.addEventListener('install', function installer(event) {
-  			// Don't wait to take control.
-  			self.skipWaiting();
+			const offlinePage = "<?php if (get_option('pnfpb_ic_pwa_app_offline_url2') && get_option('pnfpb_ic_pwa_app_offline_url2') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url2');} else {echo get_home_url();} ?>";
 
-  			// Set up our cache.
-  			event.waitUntil(
-    			caches.open(SW.cache_version).then(function(cache) {
+			var pnfpbwpSysurls = ['gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];
+
+			var pnfpbexcludeurls = "<?php echo get_option('pnfpb_ic_pwa_app_excludeurls'); ?>";
+
+			var pnfpbexcludeurlsarray = pnfpbexcludeurls.split(",");
+
+			var neverCacheUrls = pnfpbwpSysurls;
+
+			if (pnfpbexcludeurlsarray.length > 0 && pnfpbexcludeurls !== ''){
+				neverCacheUrls = pnfpbwpSysurls.concat(pnfpbexcludeurlsarray);
+			}
+
+			//
+			// Installation
+			//
+			self.addEventListener('install', function installer(event) {
+  				// Don't wait to take control.
+  				self.skipWaiting();
+
+  				// Set up our cache.
+  				event.waitUntil(
+    				caches.open(SW.cache_version).then(function(cache) {
         			// Attempt to cache assets
 					//console.log(SW.offline_assets);
         			var cacheResult = cache.addAll(SW.offline_assets);
@@ -150,124 +162,156 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
         			});
 
         			return cacheResult;
-      			})
-  			);
-		});
-
-		//
-		// Activation. First-load and also when a new version of SW is detected.
-		//
-		self.addEventListener('activate', function(event) {
-  			// Delete all caches that aren't named in SW.cache_version.
-  			//
-  			var expectedCacheNames = [SW.cache_version];
-
-
-
-  			event.waitUntil(
-    			caches.keys().then(function(cacheNames) {
-      				return Promise.all(
-        				cacheNames.map(function(cacheName) {
-          				// Two conditions must be met in order to delete the cache:
-          				//
-          				// 1. It must NOT be found in the main SW cache list.
-          				// 2. It must NOT be prefixed with our offline article prefix.
-          	if (
-            	expectedCacheNames.indexOf(cacheName) === -1 &&
-            	cacheName.indexOf(OFFLINE_ARTICLE_PREFIX) === -1
-          	) {
-            	// If this cache name isn't present in the array of "expected"
-            	// cache names, then delete it.
-            	console.info('Service Worker: deleting old cache ' + cacheName);
-            	return caches.delete(cacheName);
-          	}
-        	})
-      		);
-    	})
-  		);
-		});
-
-		//
-		// Intercept requests
-		//
-		self.addEventListener('fetch', function(event) {
-			// Return if the current request url is in the never cache list
-			if ( ! neverCacheUrls.every(checkNeverCacheList, event.request.url) ) {
-	  			//console.log( 'Service worker - request is excluded from cache.' );
-	  			return;
-			}
-
-  			// Build a hostname-free version of request path.
-  			//console.log(event.request.url);
-  			var reqLocation = getLocation(event.request.url);
-  			var reqPath = '';
-			
-  			var updateCache = function(request){
-    			return caches.open(SW.cache_version).then(function (cache) {
-      				return fetch(request).then(function (response) {
-        				//console.log('[pnfpbpwa] add page to offline '+response.url)
-        				return cache.put(request, response.clone());
       				})
-					.catch(function () {
-                  		return caches.match(offlinePage);
-              		})
-    			});
-  			};
+  				);
+			});
 
-  			event.waitUntil(updateCache(event.request));
+			//
+			// Activation. First-load and also when a new version of SW is detected.
+			//
+			self.addEventListener('activate', function(event) {
+  				// Delete all caches that aren't named in SW.cache_version.
+  				//
+  				var expectedCacheNames = [SW.cache_version];
+  				event.waitUntil(
+    				caches.keys().then(function(cacheNames) {
+      					return Promise.all(
+        					cacheNames.map(function(cacheName) {
+          					// Two conditions must be met in order to delete the cache:
+          					//
+          					// 1. It must NOT be found in the main SW cache list.
+          					// 2. It must NOT be prefixed with our offline article prefix.
+          						if (
+            						expectedCacheNames.indexOf(cacheName) === -1 &&
+            						cacheName.indexOf(OFFLINE_ARTICLE_PREFIX) === -1
+          						) {
+            						// If this cache name isn't present in the array of "expected"
+            						// cache names, then delete it.
+            						console.info('Service Worker: deleting old cache ' + cacheName);
+            						return caches.delete(cacheName);
+          						}
+        					})
+      					);
+    				})
+  				);
+			});
 
-  			var request = event.request;
-  			// Always fetch non-GET requests from the network
-  			if (request.method !== 'GET') {
-      			event.respondWith(
-          			fetch(request)
-              		.catch(function () {
-                  		return caches.match(offlinePage);
-              		})
-      			);
-      			return;
-  			}  
+			//
+			// Intercept requests
+			//
+			self.addEventListener('fetch', function(event) {
+				// Return if the current request url is in the never cache list
+				if ( ! neverCacheUrls.every(checkNeverCacheList, event.request.url) ) {
+	  				//console.log( 'Service worker - request is excluded from cache.' );
+	  				return;
+				}
 
-  			// Consolidate some conditions for re-use.
-  			var requestisAccept = false;
-  			if (event.request.headers.get('Accept')) {
-    			if (event.request.headers.get('Accept').indexOf('text/html') !== -1){
-      				requestisAccept = true;
-   	 			}
-  			}
-  			var requestIsHTML = event.request.method === 'GET';
+				if (isExcludeallurlsincache === '1' && event.request.url !== offlinePage) {
+					return;
+				}
+
+  				// Build a hostname-free version of request path.
+  				//console.log(event.request.url);
+  				var reqLocation = getLocation(event.request.url);
+  				var reqPath = '';
+			
+  				var updateCache = function(request){
+    				return caches.open(SW.cache_version).then(function (cache) {
+      					return fetch(request).then(function (response) {
+        					//console.log('[pnfpbpwa] add page to offline '+response.url)
+        					return cache.put(request, response.clone());
+      					})
+						.catch(function () {
+                  			return caches.match(offlinePage);
+              			})
+    				});
+  				};
+
+  				event.waitUntil(updateCache(event.request));
+
+  				var request = event.request;
+  				// Always fetch non-GET requests from the network
+  				if (request.method !== 'GET') {
+      				event.respondWith(
+          				fetch(request)
+              			.catch(function () {
+                  			return caches.match(offlinePage);
+              			})
+      				);
+      				return;
+  				}  
+
+  				// Consolidate some conditions for re-use.
+  				var requestisAccept = false;
+  				if (event.request.headers.get('Accept')) {
+    				if (event.request.headers.get('Accept').indexOf('text/html') !== -1){
+      					requestisAccept = true;
+   	 				}
+  				}
+  				var requestIsHTML = event.request.method === 'GET';
 
 
-  			// Saved articles, MVW pages, Offline
-  			//
-  			// First, we check to see if the user has explicitly cached this HTML content
-  			// or if the page is in the "minimum viable website" list defined in the main
-  			// SW.cache_version. If no cached page is found, we fallback to the network,
-  			// and finally if both of those fail, serve the "Offline" page.
-  			if (
-    			requestisAccept && requestIsHTML
-  			) {
-    			event.respondWith(
-     		 caches.match(event.request).then(function (response) {
-        		// Show old content while revalidating URL in background if necessary.
-        		return staleWhileRevalidate(event.request);
-      		}).catch(function(error) {
-        		// When the cache is empty and the network also fails, we fall back to a
-        		// generic "Offline" page.
-        		return caches.match(offlinePage);
-      		})
-    		);
-  		}
-  		else {
-    		event.respondWith(
-      			fetch(request)
-          			.catch(function () {
-              			return caches.match(offlinePage);
-          			})
-    		);
-    	return;    
-  	}
-	});
+  				// Saved articles, MVW pages, Offline
+  				//
+  				// First, we check to see if the user has explicitly cached this HTML content
+  				// or if the page is in the "minimum viable website" list defined in the main
+  				// SW.cache_version. If no cached page is found, we fallback to the network,
+  				// and finally if both of those fail, serve the "Offline" page.
+  				if (
+    				requestisAccept && requestIsHTML
+  				) {
+    				event.respondWith(
+     		 			caches.match(event.request).then(function (response) {
+        					// Show old content while revalidating URL in background if necessary.
+        					return staleWhileRevalidate(event.request);
+      					}).catch(function(error) {
+        					// When the cache is empty and the network also fails, we fall back to a
+        					// generic "Offline" page.
+        					return caches.match(offlinePage);
+      					})
+    				);
+  				}
+  				else {
+    				event.respondWith(
+      					fetch(request)
+          				.catch(function () {
+              				return caches.match(offlinePage);
+          				})
+    				);
+    				return;    
+  				}
+		});
+	}
+	else
+	{
+
+			//
+			// Activation. First-load and also when a new version of SW is detected.
+			//
+			self.addEventListener('activate', function(event) {
+  				// Delete all caches that aren't named in SW.cache_version.
+  				//
+  				var expectedCacheNames = [SW.cache_version];
+  				event.waitUntil(
+    				caches.keys().then(function(cacheNames) {
+      					return Promise.all(
+        					cacheNames.map(function(cacheName) {
+          						//if (
+            					//	expectedCacheNames.indexOf(cacheName) === -1 &&
+            					//	cacheName.indexOf(OFFLINE_ARTICLE_PREFIX) === -1
+          						//) {
+            						// If this cache name isn't present in the array of "expected"
+            						// cache names, then delete it.
+            						console.info('Service Worker: deleting old cache ' + cacheName);
+            						return caches.delete(cacheName);
+          						//}
+        					})
+      					);
+    				})
+  				);
+			});
+
+	}
 
 	// Stale While Revalidate
 	//
@@ -493,6 +537,7 @@ if (!function_exists('PNFPB_ic_genenrate_pwa_mainfest_json')) {
 	function PNFPB_ic_generate_pwa_manifest_json() {
 						ob_start();  ?>
 						{
+						"id": "<?php echo get_home_url(); ?>/",
   						"name": "<?php if (get_option( 'pnfpb_ic_pwa_app_name' )) {echo get_option( 'pnfpb_ic_pwa_app_name' );} else { echo substr(get_bloginfo( 'name' ),0,50);} ?>",
   						"short_name": "<?php if (get_option( 'pnfpb_ic_pwa_app_shortname' )) {echo get_option( 'pnfpb_ic_pwa_app_shortname' );} else { echo substr(get_bloginfo( 'name' ),0,25);} ?>",
   						"start_url": "<?php echo get_home_url(); ?>/",

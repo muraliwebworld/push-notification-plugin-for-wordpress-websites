@@ -97,6 +97,7 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 			case 'id':
 			case 'device_id':
 			case 'userid':
+			case 'subscription_option':
 				return $item[ $column_name ];
 			default:
 				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
@@ -146,9 +147,10 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	function get_columns() {
 		$columns = [
 			'cb'      => '<input type="checkbox" />',
-			'id'    => __( 'id', 'pnfpb' ),
+			'id'    => __( 'Id', 'pnfpb' ),
 			'device_id' => __( 'Device token', 'pnfpb' ),
-			'userid'    => __( 'userid', 'pnfpb' )
+			'userid'    => __( 'Userid', 'pnfpb' ),
+			'subscription_option' => __('Shortcode_Subscription','pnfpb')
 		];
 
 		return $columns;
@@ -163,7 +165,8 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	public function get_sortable_columns() {
 		$sortable_columns = array(
 			'id' => array( 'id', true ),
-			'userid' => array( 'userid', true )
+			'userid' => array( 'userid', true ),
+			'subscription_option' => array( 'subscription_option', true )
 		);
 
 		return $sortable_columns;

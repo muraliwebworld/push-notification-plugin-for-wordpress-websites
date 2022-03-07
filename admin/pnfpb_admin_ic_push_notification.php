@@ -7,7 +7,7 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab nav-tab-active">Push notification settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a></h2>
+<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab nav-tab-active">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo 'Integrate app API';?></a></h2>
 
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_SETTINGS,PNFPB_TD);?></h1>
 
@@ -167,13 +167,23 @@
     </tbody>
 </table>
 <h2 class="pnfpb_ic_push_settings_header2"><?php echo __(PNFPB_PLUGIN_FIREBASE_SETTINGS,PNFPB_TD);?></h2>
+<a href="https://www.youtube.com/watch?v=02oymYLt3qo" target="_blank">Watch this tutorial on Firebase settings and configuration</a>
 <ul>
-<li>To get Firebase server key, select project settings from Firebase account, go to cloud messaging tab, get server key fill below first field</li>
-<li>For remaining fields, you need to get it from your Firebase web app.</li>
-<li>Sign in to Firebase, then open your project click settings icon & select Project settings</li>
-<li>In the Your apps card, select the nickname of the web app for which you need a config object.</li>
-<li>Select Config from the Firebase SDK snippet pane and fill below fields</li>
-<li>After saving below fields, it will ask to allow notification for this website, click on allow notification</li>
+<li>Sign in to Firebase, then open your project, click settings icon & select Project settings</li>
+
+<li>To get Firebase server key (for field 1 in admin firebase settings)</li>
+<li>project settings > cloud messaging tab > get server key or add server key button to get server key</li>
+
+<li>To get Firebase config fields (for fields 2 to 8 in admin firebase settings)</li>
+<li>If you do not have web app, Create a new web app. After creating a new app, it will show firebase config fields</li>
+<li>Project settings > General under your apps section > click on config button to view configuration fields</li> 
+
+<li>To get Firebase public key (for field 9 in admin firebase settings)</li>
+<li>Open the Cloud Messaging tab of the Firebase console Settings pane and scroll to the Web configuration section</li>
+<li>project settings > cloud messaging tab > Under web push certificates > Generate key pair to get public key</li>
+<li>In the Web Push certificates tab, click Generate Key Pair. The console displays a notice that the key pair was generated, and displays the public key string and date added</li>
+<li>(If you already Generated key pair then no need to generate it again)</li>
+<li>After saving below fields, you will get browser prompt asking to allow notification for this website, click on allow notification</li>
 <li>After completing above steps, push notification will work based on option selected for posts/buddypress</li>
 </ul>
 <table class="pnfpb_ic_push_settings_table widefat fixed">
@@ -190,7 +200,7 @@
     </tr>
 		
 	   <tr class="pnfpb_ic_push_settings_table_row">
-        <td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_databaseurl"><?php echo __("Firebase Database url",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_databaseurl" name="pnfpb_ic_fcm_databaseurl" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_databaseurl' ); ?>" required="required" /></td>
+        <td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_databaseurl"><?php echo __("Firebase Database url (optional)",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_databaseurl" name="pnfpb_ic_fcm_databaseurl" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_databaseurl' ); ?>" /></td>
     </tr>
 		
 	   <tr class="pnfpb_ic_push_settings_table_row">
@@ -208,35 +218,33 @@
 	<tr class="pnfpb_ic_push_settings_table_row">
         <td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_appid"><?php echo __("Firebase App id",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"   id="pnfpb_ic_fcm_appid" name="pnfpb_ic_fcm_appid" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_appid' ); ?>" required="required" /> </td>
     </tr>
-
-
 	<tr class="pnfpb_ic_push_settings_table_row">
         <td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_publickey"><?php echo __("Firebase Public key",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_publickey" name="pnfpb_ic_fcm_publickey" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_publickey' ); ?>" required="required" /></td>
     </tr>
     <tr class="pnfpb_ic_push_settings_table_row">
         <td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_upload_icon"><?php echo __("FCM Push Icon(16x16 pixels)",PNFPB_TD);?></label><br/>            
-			<table><tr>
-                <td class="column-columnname">
-                    <input type="button" value="<?php echo __("Update Push Notification Icon",PNFPB_TD);?>" id="pnfpb_ic_fcm_upload_button" class="pnfpb_ic_push_settings_upload_icon" />
-                    <input type="hidden" id="pnfpb_ic_fcm_upload_icon" name="pnfpb_ic_fcm_upload_icon" value="<?php echo get_option( 'pnfpb_ic_fcm_upload_icon' ); ?>" />
-                </td>
-            </tr><tr>
-                <td class="column-columnname">
-                    <div style="display:block;width:100%; overflow:hidden; text-align:center;">
-                        <div id="pnfpb_ic_fcm_upload_preview" style="background-image: url(<?php echo get_option('pnfpb_ic_fcm_upload_icon'); ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:20px auto;background-position:center center;background-repeat:no-repeat;background-size:cover;"></div>
-                    </div>
-                </td>
-            </tr></table></td>
-    </tr>
-		
-    <tr>
+			<table>
+				<tr>
+                	<td class="column-columnname">
+                    	<input type="button" value="<?php echo __("Update Push Notification Icon",PNFPB_TD);?>" id="pnfpb_ic_fcm_upload_button" class="pnfpb_ic_push_settings_upload_icon" />
+                    	<input type="hidden" id="pnfpb_ic_fcm_upload_icon" name="pnfpb_ic_fcm_upload_icon" value="<?php echo get_option( 'pnfpb_ic_fcm_upload_icon' ); ?>" />
+                	</td>
+            	</tr>
+				<tr>
+                	<td class="column-columnname">
+                    	<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+                        	<div id="pnfpb_ic_fcm_upload_preview" style="background-image: url(<?php echo get_option('pnfpb_ic_fcm_upload_icon'); ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:20px auto;background-position:center center;background-repeat:no-repeat;background-size:cover;"></div>
+                    	</div>
+                	</td>
+            	</tr>
+			</table>
+		</td>
+		</tr>				
+	<tr>
 		<td class="column-columnname"> <div class="col-sm-10"><?php submit_button(); ?></div></td>
-
     </tr>
-
-    </tbody>
-    </table>
-
+  </tbody>
+</table>
 </form>
 
 <?php if(get_option('pnfpb_ic_fcm_api')){ ?>

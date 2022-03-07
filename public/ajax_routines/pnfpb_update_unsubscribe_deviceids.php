@@ -43,5 +43,7 @@
 	{
 		echo "Device id empty...failed to unsubscribe device id";
 	}
+
+	wp_die();
 	
 ?>

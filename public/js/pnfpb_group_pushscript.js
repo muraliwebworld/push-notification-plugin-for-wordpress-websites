@@ -4,7 +4,7 @@
 * @since 1.8
 */
 var $j = jQuery.noConflict();
-	
+var groupid;	
 $j(document).ready(function() {
 			if (firebase.messaging.isSupported()) {
 			var groupId =  '0';
@@ -18,6 +18,9 @@ $j(document).ready(function() {
 									var join_group_string_array = $j(this).parent().attr('id').split("-");
 									if (join_group_string_array.length > 0) {
 										var join_group_id = join_group_string_array[1];
+										if (groupid) {
+											groupid.postMessage(join_group_id);
+										}										
 										var join_group_unsubscribebuttonname = '.unsubscribegroupbutton-'+join_group_id;
 										var join_group_subscribebuttonname = '.subscribegroupbutton-'+join_group_id;
 										var join_group_unsubscribebuttonid = '#unsubscribegroupbutton-'+join_group_id;
@@ -32,6 +35,9 @@ $j(document).ready(function() {
 									var leave_group_string_array = $j(this).parent().attr('id').split("-");
 									if (leave_group_string_array.length > 0) {
 										var leave_group_id = leave_group_string_array[1];
+										if (groupid) {
+											groupid.postMessage(leave_group_id);
+										}										
 										var leave_group_unsubscribebuttonname = '.unsubscribegroupbutton-'+leave_group_id;
 										var leave_group_subscribebuttonname = '.subscribegroupbutton-'+leave_group_id;
 										var leave_group_unsubscribebuttonid = '#unsubscribegroupbutton-'+leave_group_id;
@@ -80,6 +86,9 @@ $j(document).ready(function() {
 									var join_group_string_array = $j(this).parent().attr('id').split("-");
 									if (join_group_string_array.length > 0) {
 										var join_group_id = join_group_string_array[1];
+										if (groupid) {
+											groupid.postMessage(join_group_id);
+										}											
 										var join_group_unsubscribebuttonname = '.unsubscribegroupbutton-'+join_group_id;
 										var join_group_subscribebuttonname = '.subscribegroupbutton-'+join_group_id;
 										var join_group_unsubscribebuttonid = '#unsubscribegroupbutton-'+join_group_id;
@@ -94,6 +103,9 @@ $j(document).ready(function() {
 									var leave_group_string_array = $j(this).parent().attr('id').split("-");
 									if (leave_group_string_array.length > 0) {
 										var leave_group_id = leave_group_string_array[1];
+										if (groupid) {
+											groupid.postMessage(leave_group_id);
+										}										
 										var leave_group_unsubscribebuttonname = '.unsubscribegroupbutton-'+leave_group_id;
 										var leave_group_subscribebuttonname = '.subscribegroupbutton-'+leave_group_id;
 										var leave_group_unsubscribebuttonid = '#unsubscribegroupbutton-'+leave_group_id;
@@ -142,6 +154,9 @@ $j(document).ready(function() {
 		    					$j(document).on( "click",".subscribe-notification-group", function(e) {
 									e.preventDefault();
 									groupId = $j(this).attr("data-group-id");
+									if (groupid) {
+										groupid.postMessage(groupId);
+									}									
 									var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
 									var subscribebuttonname = '.subscribegroupbutton-'+groupId;
 									var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
@@ -217,6 +232,9 @@ $j(document).ready(function() {
 		    					$j(document).on( "click",".unsubscribe-notification-group", function(e) {
 									e.preventDefault();
 									groupId = $j(this).attr("data-group-id");
+									if (groupid) {
+										groupid.postMessage(groupId);
+									}									
 									var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
 									var subscribebuttonname = '.subscribegroupbutton-'+groupId;
 									var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
@@ -314,14 +332,30 @@ $j(document).ready(function() {
 							
 					$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>UnSubscribe/Subscribe failed..try again ..Please!! </p>");
 							
-					$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();                        
+					$j( "#pnfpb-group-unsubscribe-dialog" ).dialog(); 
+		    		$j(document).on( "click",".subscribe-notification-group", function(e) {
+						e.preventDefault();
+						groupId = $j(this).attr("data-group-id");
+						if (groupid) {
+							groupid.postMessage(groupId);
+						}
+					});
+					
                   }
                     
 				//})
 			}
 			else
 			{
-				console.log('This browser does not support PUSHAPI Firebase messaging!!!')
+				console.log('This browser does not support PUSHAPI Firebase messaging!!!');
+				
+		    		$j(document).on( "click",".subscribe-notification-group", function(e) {
+						e.preventDefault();
+						groupId = $j(this).attr("data-group-id");
+						if (groupid) {
+							groupid.postMessage(groupId);
+						}
+					});				
 			}
 
 });

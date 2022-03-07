@@ -7,16 +7,16 @@
 var $j = jQuery.noConflict();
 $j(document).ready(function() {
     
-	var mediaUploader;
+	var mediaUploadericon;
 	
 	$j('#pnfpb_ic_fcm_upload_button').on('click',function(e) {
 		e.preventDefault();
-		if( mediaUploader ){
-			mediaUploader.open();
+		if( mediaUploadericon ){
+			mediaUploadericon.open();
 			return;
 		}
 		
-		mediaUploader = wp.media.frames.file_frame = wp.media({
+		mediaUploadericon = wp.media.frames.file_frame = wp.media({
 			title: 'Select a Picture',
 			button: {
 				text: 'Select Picture'
@@ -24,13 +24,13 @@ $j(document).ready(function() {
 			multiple: false
 		});
 		
-		mediaUploader.on('select', function(){
-			attachment = mediaUploader.state().get('selection').first().toJSON();
+		mediaUploadericon.on('select', function(){
+			attachment = mediaUploadericon.state().get('selection').first().toJSON();
 			$j('#pnfpb_ic_fcm_upload_icon').val(attachment.url);
 			$j('#pnfpb_ic_fcm_upload_preview').css('background-image','url(' + attachment.url + ')');
 		});
 		
-		mediaUploader.open();
+		mediaUploadericon.open();
 		
 	});
 	

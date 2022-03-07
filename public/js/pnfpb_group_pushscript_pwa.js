@@ -3,9 +3,12 @@
 * To send push notification only for members belonging to group
 * @since 1.8
 */
-//pnfpb_ajax_object_group_push.homeurl+
+
 var $j = jQuery.noConflict();
-	
+var unsubscribeGroupid;
+var subscribeGroupid
+var pnfpb_pushtoken_fromflutter = '';
+
 $j(document).ready(function() {
 
 	navigator.serviceWorker.register(pnfpb_ajax_object_group_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_group_push.homeurl+'/'}).then(function(registration) {
@@ -55,7 +58,7 @@ $j(document).ready(function() {
 											        	pushtype: 'unsubscribe-group-button'
 										        	};
 								
-										        	$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+										        	$j.post(pnfpb_ajax_object_group_push.ajax_url, data, function(response) {
 										            
 							        
 			                                            if (response != 'fail')
@@ -116,7 +119,7 @@ $j(document).ready(function() {
 											        	pushtype: 'unsubscribe-group-button'
 										        	};
 								
-										        	$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+										        	$j.post(pnfpb_ajax_object_group_push.ajax_url, data, function(response) {
 										            
 									        
 			                                            if (response != 'fail')
@@ -153,13 +156,19 @@ $j(document).ready(function() {
 									}
 									else
 									{
-										$j(this).append( '<div id="pnfpb_group_users_subscribe_dialog_confirm" class="pnfpb_group_users_subscribe_dialog_confirm" title="Subscribe notification?" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Do you want to Subscribe push notification for this group?</div><div id="pnfpb-group-unsubscribe-dialog" title="Push notification status"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
+										$j(this).append( '<div id="pnfpb_group_users_subscribe_dialog_confirm" class="pnfpb_group_users_subscribe_dialog_confirm" title="Subscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_group_push.group_subscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
 									}
+ 									var subscribe_button_text = pnfpb_ajax_object_group_push.subscribe_button_text;
 						        	$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog({  
-							        	resizable: false,
+										resizable: false,
+										height: "auto",
 							        	modal: true,
-							        	buttons: {
-								        	"Subscribe notifications for this group": function() {
+							        	buttons: [{
+      										text: subscribe_button_text,
+											open: function() {
+												$j(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_group_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_group_push.subscribe_button_color+';border:0px');
+											},
+      										click: function() {												
 									        	if (currentToken) {
 							   
 										        	deviceid = currentToken;
@@ -172,14 +181,14 @@ $j(document).ready(function() {
 											        	pushtype: 'subscribe-group-button'
 										        	};
 								
-										        	$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+										        	$j.post(pnfpb_ajax_object_group_push.ajax_url, data, function(response) {
 										            
 										        
 			                                            if (response != 'fail')
 			                                            {
     	                                                    if (response != 'duplicate'){
     	                                                        
-			       			                                    $j(".pnfpb-group-unsubscribe-alert-msg").html("<p>Your device is subscribed for push notifications for this group.</p>");
+			       			                                    $j(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_group_push.group_subscribe_dialog_text_confirm+"</p>");
 			       			                                    $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 																$j(subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 																$j(unsubscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
@@ -207,12 +216,12 @@ $j(document).ready(function() {
 										        });
 							
 									        }									
-										    $j( this ).dialog( "close" );
+											$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
 								        },
 								        Cancel: function() {
-									        $j( this ).dialog( "close" );
+									        $j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
 								        }
-							        }
+							        }]
     						    })
 								})
 		    					$j(document).on( "click",".unsubscribe-notification-group", function(e) {
@@ -227,13 +236,19 @@ $j(document).ready(function() {
 									}
 									else
 									{
-										$j(this).append( '<div id="pnfpb_group_users_unsubscribe_dialog_confirm" class="pnfpb_group_users_unsubscribe_dialog_confirm" title="Remove push notification?" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Do you want to Remove push notification from this group?</div><div id="pnfpb-group-unsubscribe-dialog" title="Push notification status"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
-									}								
+										$j(this).append( '<div id="pnfpb_group_users_unsubscribe_dialog_confirm" class="pnfpb_group_users_unsubscribe_dialog_confirm" title="Unsubscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_group_push.group_unsubscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
+									}
+									var unsubscribe_button_text = pnfpb_ajax_object_group_push.unsubscribe_button_text;									
 						        	$j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog({  
-							        	resizable: false,
+										resizable: false,
+										height: "auto",
 							        	modal: true,
-							        	buttons: {
-								        	"Remove push notifications for this group": function() {
+							        	buttons: [{
+      										text: unsubscribe_button_text,
+											open: function() {
+												$j(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_group_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_group_push.subscribe_button_color+';border:0px');
+											},
+      										click: function() {	
 									        	if (currentToken) {
 							   
 										        	deviceid = currentToken;
@@ -245,7 +260,7 @@ $j(document).ready(function() {
 											        	pushtype: 'unsubscribe-group-button'
 										        	};
 								
-										        	$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+										        	$j.post(pnfpb_ajax_object_group_push.ajax_url, data, function(response) {
 										            
 									        
 			                                            if (response != 'fail')
@@ -257,11 +272,13 @@ $j(document).ready(function() {
 																$j(unsubscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 																$j(subscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
 																
-																$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>Your device is un-subscribed for push notifications for this group.</p>");
+																$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_group_push.group_unsubscribe_dialog_text_confirm+"</p>");
+																
 																$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
-			                                                    }
-			                                                    else
-			                                                    {
+																
+			                                                  }
+			                                                  else
+			                                                  {
 			           
 			                                                        console.log("Push notification unsubscription failed..try again!!");
 			                                                    }
@@ -280,13 +297,13 @@ $j(document).ready(function() {
 							
 										        });
 							
-									        }									
-										    $j( this ).dialog( "close" );
+									        }
+											$j("#pnfpb_group_users_unsubscribe_dialog_confirm").dialog("close");
 								        },
 								        Cancel: function() {
-									        $j( this ).dialog( "close" );
+									        $j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog( "close" );
 								        }
-							        }
+							        }]
     						    })
 								})
 							
@@ -319,8 +336,114 @@ $j(document).ready(function() {
 			}
 			else
 			{
-				console.log('This browser does not support PUSHAPI Firebase messaging!!!')
-			}
-	})
+				if (pnfpb_pushtoken_fromflutter !== '') {
+					console.log('This browser does not support PUSHAPI Firebase messaging!!!');
+					$j(document).on( "click",".subscribe-notification-group", function(e) {
+						e.preventDefault();
+						groupId = $j(this).attr("data-group-id");
+						var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
+						var subscribebuttonname = '.subscribegroupbutton-'+groupId;
+						var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
+						var subscribebuttonid = '#subscribegroupbutton-'+groupId;										
+						if( $j("#pnfpb_group_users_subscribe_dialog_confirm").length ) {
+							//console.log('dialog');
+						}
+						else
+						{
+							$j(this).append( '<div id="pnfpb_group_users_subscribe_dialog_confirm" class="pnfpb_group_users_subscribe_dialog_confirm" title="Subscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_group_push.group_subscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
+						}
+ 						var subscribe_button_text = pnfpb_ajax_object_group_push.subscribe_button_text;
+						$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog({  
+							resizable: false,
+							height: "auto",
+			   				modal: true,
+			   				buttons: [{
+      							text: subscribe_button_text,
+								open: function() {
+								$j(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_group_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_group_push.subscribe_button_color+';border:0px');
+											},
+      							click: function() {
+									const d = new Date();
+									d.setTime(d.getTime() + (365*24*60*60*1000));
+									let expires = "expires="+ d.toUTCString();
+									var cookievalue = "pnfpb_group_push_notification_"+groupId + "=" + "expiretime" + ";" + expires + ";path=/";
+									document.cookie = cookievalue;
+									if (subscribeGroupid) {
+										subscribeGroupid.postMessage(groupId);
+									}								
+									$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_group_push.group_subscribe_dialog_text_confirm+"</p>");
+			       			    	$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
+									$j(subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+									$j(unsubscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
+									$j(subscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+									$j(unsubscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );														
+						 	 $j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
+							},
+							Cancel: function() {
+								$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
+							}
+						}]
+    				})
+
+				});
+					
+		    	$j(document).on( "click",".unsubscribe-notification-group", function(e) {
+					e.preventDefault();
+					groupId = $j(this).attr("data-group-id");
+					document.cookie = "pnfpb_group_push_notification_"+groupId + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"				
+					var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
+					var subscribebuttonname = '.subscribegroupbutton-'+groupId;
+					var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
+					var subscribebuttonid = '#subscribegroupbutton-'+groupId;
+					if( $j("#pnfpb_group_users_unsubscribe_dialog_confirm").length ) {
+						//console.log('dialog');
+					}
+					else
+					{
+						$j(this).append( '<div id="pnfpb_group_users_unsubscribe_dialog_confirm" class="pnfpb_group_users_unsubscribe_dialog_confirm" title="Unsubscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_group_push.group_unsubscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
+					}
+					var unsubscribe_button_text = pnfpb_ajax_object_group_push.unsubscribe_button_text;									
+					$j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog({  
+						resizable: false,
+						height: "auto",
+					    modal: true,
+						buttons: [{
+      						text: unsubscribe_button_text,
+							open: function() {
+								$j(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_group_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_group_push.subscribe_button_color+';border:0px');
+							},
+      						click: function() {
+								if (unsubscribeGroupid) {
+									unsubscribeGroupid.postMessage(groupId);
+								}								
+								$j(unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+								$j(subscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
+								$j(unsubscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+								$j(subscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
+								$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_group_push.group_unsubscribe_dialog_text_confirm+"</p>");
+								$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
+								$j("#pnfpb_group_users_unsubscribe_dialog_confirm").dialog("close");
+							},
+						Cancel: function() {
+							$j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog( "close" );
+						}
+					}]
+				})
+			})				
+		}		
+	}
+
+})
+
+	
+
+/*function PNFPB_from_Flutter_mobileapp(pushtoken) {
+	
+ pnfpb_pushtoken_fromflutter = pushtoken;
+	
+ return pnfpb_pushtoken_fromflutter;
+	
+}*/
+	
 
 });

@@ -6,7 +6,7 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification settings</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a></h2>
+<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo 'Integrate app API';?></a></h2>
 
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_SETTINGS,PNFPB_TD);?></h1>
 
@@ -80,11 +80,13 @@
 				$apibody = wp_remote_retrieve_body($apiresults);
 				
 				$bodyresults = json_decode($apibody,true);
-				if (array_key_exists('results', $bodyresults)) {
-					foreach ($bodyresults['results'] as $idx=>$result){
-						if (array_key_exists('error',$result)) {
-							if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+				if (is_array($bodyresults)) {
+					if (array_key_exists('results', $bodyresults)) {
+						foreach ($bodyresults['results'] as $idx=>$result){
+							if (array_key_exists('error',$result)) {
+								if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
 									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+								}
 							}
 						}
 					}
