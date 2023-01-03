@@ -3,11 +3,11 @@
 Plugin Name: Push Notification for Post and BuddyPress
 Plugin URI: https://www.muraliwebworld.com/groups/wordpress-plugins-by-muralidharan-indiacitys-com-technologies/forum/topic/push-notification-for-post-and-buddypress/
 Description: Push notification for Post, custom post types and for BuddyPress activities using Firebase. Update Firebase configuration details in <a href="options-general.php?page=pnfpb-icfcm-slug"><strong>settings page</strong></a>
-Version: 1.351
+Version: 1.48
 Author: Muralidharan Ramasamy
 Author URI: https://www.muraliwebworld.com
 Text Domain: PNFPB_TD
-Updated: 21 Feb 2022
+Updated: 01 Jan 2023
 */
 /**
  * License: GPLv2 or later
@@ -50,8 +50,16 @@ if (!defined("PNFPB_PLUGIN_FIREBASE_SETTINGS")) define("PNFPB_PLUGIN_FIREBASE_SE
 if (!defined("PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER")) define("PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER", 'On demand push notification');
 if (!defined("PNFPB_PLUGIN_NM_BUTTON_HEADER")) define("PNFPB_PLUGIN_NM_BUTTON_HEADER", 'Customize buttons');
 if (!defined("PNFPB_PLUGIN_NM_ONDEMANDPUSH_SETTINGS")) define("PNFPB_PLUGIN_NM_ONDEMANDPUSH_SETTINGS", 'On demand or one time push notification settings');
+if (!defined("PNFPB_PLUGIN_API_MOBILE_APP_HEADER")) define("PNFPB_PLUGIN_API_MOBILE_APP_HEADER", " API to integrate mobile app");
 if (!defined("PNFPB_PLUGIN_NM_ONDEMANDPUSH_DETAIL")) define("PNFPB_PLUGIN_NM_ONDEMANDPUSH_DETAIL", 'To send On demand or one time push notification to all subscribers with image');
 if (!defined("PNFPB_TD")) define("PNFPB_TD", 'pnfpb_td');
+if (!defined("PNFPB_PLUGIN_NGINX_HEADER")) define("PNFPB_PLUGIN_NGINX_HEADER", "for NGINX");
+if (!defined("PNFPB_PLUGIN_NGINX_SETTINGS")) define("PNFPB_PLUGIN_NGINX_SETTINGS", "Settings for NGINX based server/hosting");
+if (!defined("PNFPB_PLUGIN_NGINX_SETTINGS_DESCRIPTION")) define("PNFPB_PLUGIN_NGINX_SETTINGS_DESCRIPTION", "if server/hosting is based on NGINX and if it is not able to serve dynamic service worker push notification js file(like for example: https:/<yourdomain>/pnfpb_icpush_pwa_sw.js), PWA manifest json file (like for example: https:/<yourdomain>/pnfpb_icpush_pwa_sw.js) from APACHE then enable this option to create static service worker js file for push notification and PWA manifest json files in your website root folder. If this option is enabled it will automatically create push notification service worker file which is used for push notification and PWA manifest json file (pnfpbmanifest.json) in root folder");
+if (!defined("PNFPB_PLUGIN_NGINX_SETTINGS_DESCRIPTION2")) define("PNFPB_PLUGIN_NGINX_SETTINGS_DESCRIPTION2", "Enable this option only when push notification dynamic service worker file(like for example: https:/<yourdomain>/pnfpb_icpush_pwa_sw.js) not created for SERVER BASED ON NGINX. If this option is enabled it will automatically create push notification service worker file (pnfpb_icpush_pwa_sw.js) which is used for push notification and PWA manifest json file (pnfpbmanifest.json) in root folder");
+if (!defined("PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION")) define("PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION", "Disable push notification service worker file and PWA");
+if (!defined("PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION2")) define("PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION2", "This option will disable service worker file, it will switch off push notification service as well as it will switch off PWA. Use this option only, if you want to use this plugin for push notification services via REST API (example: for mobile app using WebView) ");
+if (!defined("PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION3")) define("PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION3", "Currently, Service worker file is disabled/not created. if you need push notification and PWA in website, please enable service worker file using below option");
 
 
 /**
@@ -83,13 +91,11 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			add_filter( 'plugin_action_links', array($this, $this->pre_name .'add_settings_link' ), 10, 2 );
 			add_filter( 'network_admin_plugin_action_links', array($this, $this->pre_name .'add_settings_link' ), 10, 2 );
 
-			wp_enqueue_script("jquery");
-			
-			wp_enqueue_script("jquery-ui-dialog");
 		
 			//Enqueue needed scripts for frontend and for admin area
-			add_action( 'wp_enqueue_scripts', array($this, $this->pre_name .'ic_push_notification_scripts'),12 );
-			add_action( 'admin_enqueue_scripts', array($this, $this->pre_name .'ic_push_notification_scripts'),12 );
+			add_action( 'login_enqueue_scripts', array($this, $this->pre_name .'ic_push_notification_scripts'),6 );
+			add_action( 'wp_enqueue_scripts', array($this, $this->pre_name .'ic_push_notification_scripts'),6 );
+			add_action( 'admin_enqueue_scripts', array($this, $this->pre_name .'ic_push_notification_scripts'),6 );
 		
 			add_action( 'wp_ajax_icpushcallback', array($this,  $this->pre_name .'icpushcallback_callback') );
 			add_action( 'wp_ajax_nopriv_icpushcallback', array($this,  $this->pre_name .'icpushcallback_callback') );
@@ -106,10 +112,12 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			add_action('init', array($this, $this->pre_name .'icpush_sw_file_create'));
 		
 			//add manifest link for PWA app
-			add_action( 'wp_head', array($this, $this->pre_name . 'include_manifest_link'));
+			add_action( 'wp_head', array($this, $this->pre_name . 'include_manifest_link'),6);
+			add_action( 'login_head', array($this, $this->pre_name . 'include_manifest_link'),6);
 
 			//add custom pwa install prompt
-			add_action( 'wp_footer', array($this, $this->pre_name . 'custom_pwa_install_prompt'));
+			add_action( 'wp_footer', array($this, $this->pre_name . 'custom_pwa_install_prompt'),6);
+			add_action( 'login_footer', array($this, $this->pre_name . 'custom_pwa_install_prompt'),6);
 		
 			//Push notification(if enabled) for post and custom post types based on plugin settings
 			add_action('save_post', array($this, $this->pre_name . 'on_post_save_web'),5, 3);
@@ -123,22 +131,11 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			// Scheduled push notification(if enabled) for new comments in Buddypress Activities
 			add_action( $this->pre_name .'cron_comments_post_hook', array($this,  $this->pre_name .'icforum_push_notifications_post_comment_web'));
 			
+			// Scheduled task to delete push subscription token with user id no longer exists
+			add_action( $this->pre_name .'cron_token_delete_user_not_exist_hook', array($this,  $this->pre_name .'icforum_delete_token_user_not_exist'));			
+			
 			add_action( 'rest_api_init',array($this,  $this->pre_name .'rest_api_subscription_tokens_from_app'));
 			//
-			/*add_action ('rest_api_init' , function () {
-				register_rest_route( 'PNFPBpush/v1', 'token/(?P<id>\d+)', array(
-   				 'methods' => 'GET',
-    			'callback' => array($this,  $this->pre_name .'PNFPB_get_subscription_tokens_from_app'),
-    			'args' => array(
-      				'id' => array(
-						'sanitize_callback' => function($value, $request, $param) {
-							return $value;
-						}
-      				),
-    			),
-  				) );
-			})*/
-			
 			
 			if ( function_exists('bp_is_active') ) {
 				
@@ -158,7 +155,20 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				//Push notification(if enabled) for BuddyPress Private messages. It will Send notifications only to userid.
 				add_action( 'messages_message_sent', array($this,  $this->pre_name .'icforum_push_notifications_private_messages'), 10 );
 				
-							
+				//Push notification(if enabled) for BuddyPress Private messages. It will Send notifications only to userid.
+				add_action( 'bp_core_activated_user', array($this,  $this->pre_name .'icforum_push_notifications_new_member'), 10, 3 );
+				
+				//Push notification(if enabled) for BuddyPress Private messages. It will Send notifications only to userid.
+				add_action( 'friends_friendship_requested', array($this,  $this->pre_name .'icforum_push_notifications_friendship_request'), 10, 3 );
+				
+				//Push notification(if enabled) for BuddyPress Private messages. It will Send notifications only to userid.
+				add_action( 'friends_friendship_accepted', array($this,  $this->pre_name .'icforum_push_notifications_friendship_accepted'), 10, 3 );				
+				//Push notification(if enabled) for BuddyPress Private messages. It will Send notifications only to userid.
+				add_action( 'bp_members_avatar_uploaded', array($this,  $this->pre_name .'icforum_push_notifications_avatar_change'), 10, 3 );
+				
+				//Push notification(if enabled) for BuddyPress Private messages. It will Send notifications only to userid.
+				add_action( 'members_cover_image_uploaded', array($this,  $this->pre_name .'icforum_push_notifications_cover_image_change'), 10, 3 );				
+						
 				//Push notification(if enabled) for new comments posted on BuddyPress acitivities based on plugin settings
 				add_action( 'bp_activity_comment_posted', array($this,  $this->pre_name .'icforum_push_notifications_comment_web'), 5, 3 );
 			
@@ -172,6 +182,9 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			
 			//Shortcode to unsubscribe push notification
 			add_shortcode( 'subscribe_PNFPB_push_notification', array($this,  $this->pre_name .'subscribe_push_notification_shortcode') );
+			
+			//Shortcode for PWA
+			add_shortcode( 'PNFPB_PWA_PROMPT', array($this,  $this->pre_name .'pwa_prompt_shortcode') );
 		
 	
 		}
@@ -254,7 +267,20 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				if ( !wp_next_scheduled( 'PNFPB_cron_comments_post_hook' ) ) {
     				wp_schedule_event( time(), get_option('pnfpb_ic_fcm_buddypresscomments_timeschedule_enable'), 'PNFPB_cron_comments_post_hook' );
 				}				
-			}			
+			}
+			
+			if (get_option('pnfpb_ic_fcm_token_delete_without_user_enable') && get_option('pnfpb_ic_fcm_token_delete_without_user_enable') == 1) {
+					
+				if ( !wp_next_scheduled( 'PNFPB_cron_token_delete_user_not_exist_hook' ) ) {
+    				wp_schedule_event( time(), get_option('pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable'), 'PNFPB_cron_token_delete_user_not_exist_hook' );
+				}
+				else 
+				{
+					$timestamp = wp_next_scheduled( 'PNFPB_cron_token_delete_user_not_exist_hook' );
+					wp_unschedule_event( $timestamp, 'PNFPB_cron_token_delete_user_not_exist_hook' );
+					wp_schedule_event( time(), get_option('pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable'), 'PNFPB_cron_token_delete_user_not_exist_hook' );														}
+			}
+			
 		}
 
 
@@ -290,6 +316,11 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				wp_unschedule_event( $timestamp, 'PNFPB_cron_comments_post_hook' );					
 			}
 			
+			if ( wp_next_scheduled( 'PNFPB_cron_token_delete_user_not_exist_hook' ) ) {
+				$timestamp = wp_next_scheduled( 'PNFPB_cron_token_delete_user_not_exist_hook' );
+				wp_unschedule_event( $timestamp, 'PNFPB_cron_token_delete_user_not_exist_hook' );					
+			}			
+			
 		}
 
 
@@ -324,12 +355,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		*/
 		public function PNFPB_ic_push_notification_scripts() {
 			
+			wp_enqueue_script("jquery");
 			wp_enqueue_script( 'jquery-ui-dialog' ); 
 			wp_enqueue_style( 'wp-jquery-ui-dialog' );
 	
-            wp_enqueue_style( 'pnfpb-icpstyle-name', plugin_dir_url( __FILE__ ).'public/css/pnfpb_main.css',array(),'1.371' );
-			wp_enqueue_style( 'pnfpb-admin-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_admin.css' );
-			wp_enqueue_style( 'pnfpb-admin-pwa-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_pwa_admin.css' );
+            wp_enqueue_style( 'pnfpb-icpstyle-name', plugin_dir_url( __FILE__ ).'public/css/pnfpb_main.css',array(),'1.47' );
+			wp_enqueue_style( 'pnfpb-admin-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_admin.css',array(),'1.47' );
+			wp_enqueue_style( 'pnfpb-admin-pwa-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_pwa_admin.css',array(),'1.47' );
             
 			$apiKey = get_option( 'pnfpb_ic_fcm_api' );
 			$authDomain = get_option( 'pnfpb_ic_fcm_authdomain' );
@@ -366,7 +398,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			
 			$pwacustominstalltype = get_option('pnfpb_ic_pwa_app_custom_prompt_type');
 
-			if (($projectId != false && $projectId != '' && $publicKey != false && $publicKey != '' && $apiKey != false && $apiKey != '' && $messagingSenderId != false && $messagingSenderId != '' ) ) {
+			if ($projectId != false && $projectId != '' && $publicKey != false && $publicKey != '' && $apiKey != false && $apiKey != '' && $messagingSenderId != false && $messagingSenderId != '' && get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) != '1')  {
 			    
 				$filename = '/public/js/firebase-core/pnfpb_firebase_app.js';
 				wp_enqueue_script('pnfpb-firebase_app', plugins_url( $filename, __FILE__ ), array(), '8.2.5', true);
@@ -445,13 +477,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					}				
 				$filename = '/public/js/pnfpb_pushscript_pwa.js';
 				$ajaxobject = 'pnfpb_ajax_object_push';
-				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.35944');
+				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.47');
 				wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'apiKey' => $apiKey, 'authDomain' => $authDomain, 'databaseURL' => $databaseURL, 'projectId' => $projectId, 'storageBucket' => $storageBucket, 'messagingSenderId' => $messagingSenderId, 'appId' => $appId, 'publicKey' => $publicKey, 'homeurl' => $homeurl, 'pwaapponlyenable' => '0', 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwainstallpromptenabled' => $pwainstallpromptenabled,  'pwacustominstalltype' => $pwacustominstalltype,'unsubscribe_dialog_text_confirm' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text_confirm' => $subscribe_dialog_text_confirm,'unsubscribe_button_text' => $unsubscribe_button_text_shortcode, 'subscribe_button_text' => $subscribe_button_text_shortcode, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color, 'cancel_button_text' => $cancel_button_text, 'save_button_text' => $save_button_text, 'isloggedin' => is_user_logged_in() ) );
 				
 				$filename = '/public/js/pnfpb_unsubscribe_pushscript_pwa.js';
 				$ajaxobject = 'pnfpb_ajax_object_unsubscribe_push';
-				wp_enqueue_script( 'pnfpb-icajax-script-unsubscribe-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.31');
-				wp_localize_script( 'pnfpb-icajax-script-unsubscribe-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'publicKey' => $publicKey, 'homeurl' => $homeurl, 'unsubscribe_dialog_text' => $unsubscribe_dialog_text, 'subscribe_dialog_text' => $subscribe_dialog_text, 'unsubscribe_dialog_text_confirm' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text_confirm' => $subscribe_dialog_text_confirm,'unsubscribe_button_text' => $unsubscribe_button_text_shortcode, 'subscribe_button_text' => $subscribe_button_text_shortcode, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color) );
+				wp_enqueue_script( 'pnfpb-icajax-script-unsubscribe-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.32');
+				wp_localize_script( 'pnfpb-icajax-script-unsubscribe-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'publicKey' => $publicKey, 'homeurl' => $homeurl, 'unsubscribe_dialog_text' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text' => $subscribe_dialog_text_confirm, 'unsubscribe_dialog_text_confirm' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text_confirm' => $subscribe_dialog_text_confirm,'unsubscribe_button_text' => $unsubscribe_button_text_shortcode, 'subscribe_button_text' => $subscribe_button_text_shortcode, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color) );
 			
 				$group_unsubscribe_dialog_text_confirm = 'Your device is unsubscribed from notification';
 				
@@ -481,16 +513,16 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 				$filename = '/public/js/pnfpb_group_pushscript_pwa.js';
 				$ajaxobject = 'pnfpb_ajax_object_group_push';
-				wp_enqueue_script( 'pnfpb-icajax-script-group-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.3138');
+				wp_enqueue_script( 'pnfpb-icajax-script-group-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.315');
 				wp_localize_script( 'pnfpb-icajax-script-group-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'groupId' => '9', 'publicKey' => $publicKey, 'homeurl' => $homeurl,'group_unsubscribe_dialog_text_confirm' => $group_unsubscribe_dialog_text_confirm, 'group_subscribe_dialog_text_confirm' => $group_subscribe_dialog_text_confirm, 'group_unsubscribe_dialog_text' => $group_unsubscribe_dialog_text, 'group_subscribe_dialog_text' => $group_subscribe_dialog_text, 'unsubscribe_button_text' => $unsubscribe_button_text, 'subscribe_button_text' => $subscribe_button_text, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color) );
 				
 			}
 			else 
 			{
-				if ($pwaappenable === "1") {
+				if ($pwaappenable === "1" && get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) != '1') {
 					$filename = '/public/js/pnfpb_pushscript_pwa.js';
 					$ajaxobject = 'pnfpb_ajax_object_push';
-					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.3579');
+					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.47');
 					wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'apiKey' => $apiKey, 'authDomain' => $authDomain, 'databaseURL' => $databaseURL, 'projectId' => $projectId, 'storageBucket' => $storageBucket, 'messagingSenderId' => $messagingSenderId, 'appId' => $appId, 'publicKey' => $publicKey, 'homeurl' => $homeurl, 'pwaapponlyenable' => $pwaappenable, 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwacustominstalltype' => $pwacustominstalltype,  'pwainstallpromptenabled' => $pwainstallpromptenabled) );					
 				}
 			}
@@ -505,13 +537,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		 */
 		// Creates the link tag
 		public function PNFPB_include_manifest_link() {
-			if (get_option('pnfpb_ic_pwa_app_enable') === '1') {
+			if (get_option('pnfpb_ic_pwa_app_enable') === '1' && get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) != '1') {
         		echo '<link rel="manifest" href="'.get_home_url().'/pnfpbmanifest.json">';
 			}
 		}
 
 		public function PNFPB_custom_pwa_install_prompt() {
-			if (get_option('pnfpb_ic_pwa_app_enable') === '1' && get_option('pnfpb_ic_pwa_app_custom_prompt_enable') === '1') {
+			if (get_option('pnfpb_ic_pwa_app_enable') === '1' && get_option('pnfpb_ic_pwa_app_custom_prompt_enable') === '1' && get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) != '1') {
 				
 ?>
 				<!-- The actual snackbar -->
@@ -589,6 +621,14 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				, 'pnfpb_icfm_integrate_app'   // -> Still accessible via admin.php?page=menu_handle
 				, array($this, $this->pre_name.'icfcm_integrate_app') // -> To render the page
 			);
+			
+		  	add_submenu_page(null            // -> Set to null - will hide menu link
+				, __('NGNIX', PNFPB_TD)// -> Page Title
+				, 'NGNIX'    // -> Title that would otherwise appear in the menu
+				, 'administrator' // -> Capability level
+				, 'pnfpb_icfm_settings_for_ngnix_server'   // -> Still accessible via admin.php?page=menu_handle
+				, array($this, $this->pre_name.'icfcm_settings_for_ngnix_server') // -> To render the page
+			);			
 		}
 		
 		/**
@@ -630,17 +670,67 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		{
 		?>
 			<h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS,PNFPB_TD);?></h1>
-			<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo 'Integrate app API';?></a></h2>
-
-			<div class="wrap">
-				<h2><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_HEADER,PNFPB_TD);?></h2>
-				<p>
-					<b>
-						<?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_DETAILS);?>
-					</b>
-				</p>
-				<div id="poststuff">
-					<div id="post-body" class="metabox-holder columns-2">
+			<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER);?></a></h2>
+			<div class="pnfpb_column_1000">
+				<div class="wrap">
+					<h2><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_HEADER,PNFPB_TD);?></h2>
+					<p>
+						<b>
+							<?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_LIST_DETAILS);?>
+						</b>
+					</p>
+					<form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
+    					<?php settings_fields( 'pnfpb_icfcm_token'); ?>
+    					<?php do_settings_sections( 'pnfpb_icfcm_token' ); ?>					
+						<div class="pnfpb_row">
+  							<div class="pnfpb_column_400">
+    							<div class="pnfpb_card">
+									<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable">
+										<?php echo __("Schedule automatic delete tokens with userid no longer exist",'PNFPB_TD');?>
+									</label>
+									<label class="pnfpb_switch">
+										<input  id="pnfpb_ic_fcm_token_delete_without_user_enable" name="pnfpb_ic_fcm_token_delete_without_user_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_token_delete_without_user_enable' ) ); ?>  />
+										<span class="pnfpb_slider round"></span>
+									</label>
+								</div>
+							</div>
+  							<div class="pnfpb_column_400">
+    							<div class="pnfpb_card">
+									<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_token_delete_without_useridtoken_enable">
+										<?php echo __("Schedule automatic delete tokens without userid (userid=0)",'PNFPB_TD');?>
+									</label>
+									<label class="pnfpb_switch">
+										<input  id="pnfpb_ic_fcm_token_delete_without_useridtoken_enable" name="pnfpb_ic_fcm_token_delete_without_useridtoken_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_token_delete_without_useridtoken_enable' ) ); ?>  />
+										<span class="pnfpb_slider round"></span>
+									</label>
+								</div>
+							</div>							
+						</div>
+						<div class="pnfpb_row">
+  							<div class="pnfpb_column_400">
+    							<div class="pnfpb_card">
+									<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container"><?php echo __("Twicedaily",'PNFPB_TD');?>
+										<input name="pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable" type="radio" value="twicedaily" <?php checked( 'twicedaily', get_option( 'pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable' ) ); ?>  />
+										<span class="pnfpb_checkmark"></span>
+									</label>
+									<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container"><?php echo __("Daily",'PNFPB_TD');?>
+										<input name="pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable" type="radio" value="daily" <?php checked( 'daily', get_option( 'pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable' ) ); ?>  />
+										<span class="pnfpb_checkmark"></span>
+									</label>
+									<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
+										<?php echo __("Weekly",'PNFPB_TD');?>
+										<input name="pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable" type="radio" value="weekly" <?php checked( 'weekly', get_option( 'pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable' ) ); ?>  />
+										<span class="pnfpb_checkmark"></span>
+									</label>
+								</div>
+							</div>
+							<div class="pnfpb_column_400">
+								<?php submit_button(__('Save changes',PNFPB_TD),''); ?>
+							</div>
+						</div>
+					</form>
+					<div id="poststuff">
+						<div id="post-body" class="metabox-holder columns-2">
 						<div id="post-body-content">
 							<div class="meta-box-sortables ui-sortable">
 								<form method="post">
@@ -651,8 +741,9 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 								</form>
 							</div>
 						</div>
+						</div>
+						<br class="clear">
 					</div>
-					<br class="clear">
 				</div>
 			</div>
 		<?php
@@ -686,7 +777,6 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		{
 			include(plugin_dir_path(__FILE__) . 'admin/pnfpb_admin_button_customization.php');
 		}		
-		
 		/**
 		 * Generate PWA app with offline facility
 		 * @since 1.20
@@ -714,15 +804,35 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_appid');
 			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_publickey');
 			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_activity_title');
+			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_activity_message');
 			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_group_activity_title');
+			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_group_activity_message');
 			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_comment_activity_title');
+			register_setting('pnfpb_icfcm_group', 'pnfpb_ic_fcm_comment_activity_message');
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_upload_icon");
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_post_enable");
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_buddypress_enable");
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_bcomment_enable");
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_bprivatemessage_enable");
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_bprivatemessage_text");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_bprivatemessage_content");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_new_member_enable");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_new_member_text");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_new_member_content");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_friendship_request_enable");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_friendship_request_text");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_friendship_request_content");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_friendship_accept_enable");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_friendship_accept_text");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_friendship_accept_content");			
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_avatar_change_enable");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_avatar_change_text");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_avatar_change_content");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_cover_image_change_enable");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_cover_image_change_text");
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_cover_image_change_content");			
 			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_post_schedule_enable");
+			
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_enable");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_name");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_shortname");
@@ -741,11 +851,15 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_custom_prompt_enable");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_app_custom_prompt_type");			
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_prompt_install_button_text");
-			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_prompt_header_text");				register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_prompt_description");
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_prompt_header_text");				
+			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_prompt_description");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_prompt_install_button_color");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb_ic_pwa_prompt_install_text_color");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb-pwa-dialog-app-installed_text");
 			register_setting("pnfpb_icfcm_pwa", "pnfpb-pwa-dialog-app-installed_description");
+			
+			register_setting("pnfpb_icfcm_nginx", "pnfpb_ic_nginx_static_files_enable");
+			
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_button_color");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_button_text_color");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_button_text");			
@@ -762,9 +876,30 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_post_activity_dialog_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_all_comments_dialog_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_my_comments_dialog_text");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_private_message_dialog_text");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_new_member_dialog_text");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_friendship_request_dialog_text");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_user_avatar_dialog_text");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_cover_image_change_dialog_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_unsubscribe_all_dialog_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_dialog_text_confirm");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_unsubscribe_dialog_text_confirm");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_install_pwa_shortcode_button_color");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_install_pwa_shortcode_button_text_color");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_install_pwa_shortcode_button_text");
+			
+			register_setting("pnfpb_icfcm_token", "pnfpb_ic_fcm_token_delete_without_user_enable");
+			register_setting("pnfpb_icfcm_token", "pnfpb_ic_fcm_token_delete_without_useridtoken_enable");
+			
+			register_setting(
+				"pnfpb_icfcm_token", 
+				"pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable",
+            	array('type' => 'string',
+            			'sanitize_callback' => array( $this, "pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable_callback" ),							 
+					)
+			);
+			
 			register_setting(
 				"pnfpb_icfcm_group", 
 				"pnfpb_ic_fcm_post_timeschedule_enable",
@@ -806,9 +941,35 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			
 		}
 		
+		public function pnfpb_ic_fcm_token_delete_without_user_timeschedule_enable_callback($posted_options) {
+			
+			if( $_POST['submit'] == 'Save changes' ) {
+				
+				if ((get_option('pnfpb_ic_fcm_token_delete_without_user_enable') && get_option('pnfpb_ic_fcm_token_delete_without_user_enable')) == 1
+				    || (get_option('pnfpb_ic_fcm_token_delete_without_useridtoken_enable') && get_option('pnfpb_ic_fcm_token_delete_without_useridtoken_enable') == 1)) 					{
+					
+					if ( !wp_next_scheduled( 'PNFPB_cron_token_delete_user_not_exist_hook' ) ) {
+    					wp_schedule_event( time(), $posted_options, 'PNFPB_cron_token_delete_user_not_exist_hook' );
+					}
+					else 
+					{
+						$timestamp = wp_next_scheduled( 'PNFPB_cron_token_delete_user_not_exist_hook' );
+						wp_unschedule_event( $timestamp, 'PNFPB_cron_token_delete_user_not_exist_hook' );
+						wp_schedule_event( time(), $posted_options, 'PNFPB_cron_token_delete_user_not_exist_hook' );														}
+				}
+				else 
+				{
+						$timestamp = wp_next_scheduled( 'PNFPB_cron_token_delete_user_not_exist_hook' );
+						wp_unschedule_event( $timestamp, 'PNFPB_cron_token_delete_user_not_exist_hook' );
+			
+				}
+			}
+			return $posted_options;
+		}
+		
 		public function pnfpb_ic_fcm_post_timeschedule_callback($posted_options){
 			
-			if( $_POST['submit'] == 'Save Changes' ) {
+			if( $_POST['submit'] == 'Save changes' ) {
 			
 				if (get_option('pnfpb_ic_fcm_post_schedule_enable') && get_option('pnfpb_ic_fcm_post_schedule_enable') == 1) {
 			
@@ -836,7 +997,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		
 		public function pnfpb_ic_fcm_buddypressactivities_timeschedule_callback($posted_options){
 			
-			if( $_POST['submit'] == 'Save Changes' ) {
+			if( $_POST['submit'] == 'Save changes' ) {
 				
 				if (get_option('pnfpb_ic_fcm_buddypressactivities_schedule_enable') && get_option('pnfpb_ic_fcm_buddypressactivities_schedule_enable') == 1) 			  {
 					if (get_option('pnfpb_ic_fcm_buddypress_enable') == 1) {
@@ -891,7 +1052,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		
 		public function pnfpb_ic_fcm_buddypresscomments_timeschedule_callback($posted_options){
 			
-			if( $_POST['submit'] == 'Save Changes' ) {
+			if( $_POST['submit'] == 'Save changes' ) {
 				
 				if (get_option('pnfpb_ic_fcm_buddypresscomments_schedule_enable') && get_option('pnfpb_ic_fcm_buddypresscomments_schedule_enable') == 1) {
 			
@@ -951,7 +1112,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			wp_register_script('pnfpb_ic_upload_icon_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.30.0', true);
 			wp_enqueue_script('pnfpb_ic_upload_icon_script');
 			$filename = '/admin/js/pnfpb_ic_pwa_upload_icon.js';
-			wp_register_script('pnfpb_ic_pwa_upload_icon_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.0.0', true);
+			wp_register_script('pnfpb_ic_pwa_upload_icon_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.0.7', true);
 			wp_enqueue_script('pnfpb_ic_pwa_upload_icon_script');
 			$filename = '/admin/js/pnfpb_ic_ondemand_push_upload_image.js';
 			wp_register_script('pnfpb_ic_ondemand_push_upload_image_script',plugins_url( $filename, __FILE__ ), array('jquery'), '1.0.0', true);
@@ -965,8 +1126,64 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		* @since 1.0.0
 		*/
 		public function PNFPB_icpush_sw_file_create() {
-			include(plugin_dir_path(__FILE__) . 'public/service_worker/pnfpb_create_sw_file.php');
-			//$this->PNFPB_icfm_check_serviceworker_and_manifest();
+			
+			if (get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) != '1') {
+			
+				include(plugin_dir_path(__FILE__) . 'public/service_worker/pnfpb_create_sw_file.php');
+			}
+			
+			if (get_option( 'pnfpb_ic_nginx_static_files_enable' ) === '1') {
+
+				global $wp_filesystem;
+	
+				if ( empty( $wp_filesystem ) ) {
+				
+					require_once( trailingslashit( ABSPATH ) . 'wp-admin/includes/file.php' );
+					WP_Filesystem();
+				}
+	
+				$sw_content = PNFPB_icfm_icpush_sw_template();	
+	
+				$swresponse 		= wp_remote_head( home_url( '/' ). 'pnfpb_icpush_pwa_sw.js', array( 'sslverify' => false ) );
+				$swresponse_code 	= wp_remote_retrieve_response_code( $swresponse );
+
+	
+				if ( 200 !== $swresponse_code ) {
+				
+					$createfileresult = $wp_filesystem->put_contents( trailingslashit( ABSPATH ) . 'pnfpb_icpush_pwa_sw.js',$sw_content, 0644);
+
+				}
+			
+				$firebase_sw_contents = PNFPB_icfm_icpush_firebasesw_template();	
+				$firebase_swresponse 		= wp_remote_head( home_url( '/' ). 'firebase-messaging-sw.js', array( 'sslverify' => false ) );
+				
+				$firebase_swresponse_code 	= wp_remote_retrieve_response_code( $firebase_swresponse );
+
+	
+				if ( 200 !== $firebase_swresponse_code ) {
+				
+					$createfileresult = $wp_filesystem->put_contents( trailingslashit( ABSPATH ) . 'firebase-messaging-sw.js',$firebase_sw_contents, 0644);
+
+				}
+			
+				if (get_option('pnfpb_ic_pwa_app_enable') === '1' && get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) != '1') {
+			
+					$pwa_manifest_contents = PNFPB_ic_generate_pwa_manifest_json();	
+	
+					$pwa_manifest_response 		= wp_remote_head( home_url( '/' ). 'pnfpbmanifest.json', array( 'sslverify' => false ) );
+					
+					$pwa_manifest_response_code 	= wp_remote_retrieve_response_code( $pwa_manifest_response );
+				
+					if ( 200 !== $pwa_manifest_response_code ) {
+				
+						$createfileresult = $wp_filesystem->put_contents( trailingslashit( ABSPATH ) . 'pnfpbmanifest.json',$pwa_manifest_contents, 0644);
+
+					}
+					
+				}
+				
+			}
+			
 		}
 		
 		
@@ -1025,7 +1242,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($post->post_content), $imgresult);
 				
 					if (is_array($imgresult)) {
-						if (count($imgresult) > 0) {
+						if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 							$imageurl = str_replace('"','',$imgresult[2][0]);
 							update_option('pnfpb_ic_fcm_new_post_image',$imageurl);
 						}
@@ -1087,7 +1304,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($post_content), $imgresult);
 				
 					if (is_array($imgresult)) {
-						if (count($imgresult) > 0) {
+						if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 							$imageurl = str_replace('"','',$imgresult[2][0]);
 						}
 					}					
@@ -1103,12 +1320,14 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			    $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 
 				if (get_option('pnfpb_shortcode_enable') === 'yes') {
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (subscription_option = '01000' OR subscription_option = '01100' OR subscription_option = '01010' OR subscription_option = '10000')" );
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!webview%' AND device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );
 				}
 				else
 				{
-			    	$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
+			    	$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%!!webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
 				}
+				
+				$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );				
 	
 			    $url = 'https://fcm.googleapis.com/fcm/send';
 
@@ -1117,61 +1336,121 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			    $activity_content_push = strip_tags(urldecode($post_content));
 
 			    $iconurl = get_option ('pnfpb_ic_fcm_upload_icon');
-
-			    // prepare the message
-			    $message = array( 
-				    'title'     => $post_title,
-				    'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
-				    'icon'		=> $iconurl,
-					'image'		=> $imageurl,
-				    'click_action' => $postlink
-			    );
-    
-
-			    $fields = array( 
-				    'registration_ids' => $regid, 
-				    'notification' => $message
-			    );
-    
-			    $headers = array( 
-				    'Authorization' => 'key='.$apiaccesskey, 
-				    'Content-Type' => 'application/json'
-			    );
-    
-			    $body = json_encode($fields);
-			
-			    $args = array(
-			        'httpversion' => '1.0',
-					'blocking' => true,
-					'sslverify' => false,
-					'body' => $body,
-					'headers' => $headers
-			    );
-			
-			    $apiresults = wp_remote_post($url, $args);
 				
-				$apibody = wp_remote_retrieve_body($apiresults);
+		
+				if (count($regid) > 0) {				
+		    		// prepare the message
+			    		$message = array( 
+				    	'title'     => $post_title,
+				    	'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+				    	'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+				    	'click_action' => $postlink
+			    	);
+    
 
-				$bodyresults = json_decode($apibody,true);
+			    	$fields = array( 
+				    	'registration_ids' => $regid, 
+				    	'notification' => $message
+			    	);
+    
+			    	$headers = array( 
+				    	'Authorization' => 'key='.$apiaccesskey, 
+				    	'Content-Type' => 'application/json'
+			    	);
+    
+			    	$body = json_encode($fields);
+			
+			    	$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+			    	);
+			
+			    	$apiresults = wp_remote_post($url, $args);
 				
-				if (is_array($bodyresults)) {
-					if (array_key_exists('results', $bodyresults)) {
-						foreach ($bodyresults['results'] as $idx=>$result){
-							if (array_key_exists('error',$result)) {
-								if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
-									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+					$apibody = wp_remote_retrieve_body($apiresults);
+
+					$bodyresults = json_decode($apibody,true);
+				
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+									}
 								}
 							}
 						}
 					}
-				}
 		
 			
-			    if (is_wp_error($apiresults)) {
-				    $status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
-                    $error_message = $apiresults->get_error_message();
-                    error_log('There was a '.$status.' error in push notification : '.$error_message);
-                }
+			    	if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification : '.$error_message);
+                	}
+				}
+				
+				if (count($deviceidswebview) > 0) {				
+		    		// prepare the message
+			    		$message = array( 
+				    	'title'     => $post_title,
+				    	'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+				    	'icon'		=> $iconurl,
+						'image'		=> $imageurl
+			    	);
+    
+
+			    	$fields = array( 
+				    	'registration_ids' => $deviceidswebview, 
+				    	'notification' => $message
+			    	);
+    
+			    	$headers = array( 
+				    	'Authorization' => 'key='.$apiaccesskey, 
+				    	'Content-Type' => 'application/json'
+			    	);
+    
+			    	$body = json_encode($fields);
+			
+			    	$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+			    	);
+			
+			    	$apiresults = wp_remote_post($url, $args);
+				
+					$apibody = wp_remote_retrieve_body($apiresults);
+
+					$bodyresults = json_decode($apibody,true);
+				
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+									}
+								}
+							}
+						}
+					}
+		
+			
+			    	if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification : '.$error_message);
+                	}
+				}
+				
                 
 			}    
 		}
@@ -1210,11 +1489,11 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 				if (get_option('pnfpb_shortcode_enable') === 'yes') {
 					
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (subscription_option = '01000' OR subscription_option = '01100' OR subscription_option = '01010' OR subscription_option = '10000')" );
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );
 				}
 				else 
 				{
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
 				}
 				
 				$url = 'https://fcm.googleapis.com/fcm/send';
@@ -1259,75 +1538,146 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						$activitylink = get_option('pnfpb_ic_fcm_new_buddypressactivities_link');
 						$imageurl = get_option('pnfpb_ic_fcm_new_buddypressactivities_image');
 					}
-				}	
+				}
+				
+				if (get_option('pnfpb_ic_fcm_activity_message') != false && get_option('pnfpb_ic_fcm_activity_message') != '' ) {
+					
+						$localactivitycontent = get_option('pnfpb_ic_fcm_activity_message');
+					
+				}				
 				
 				if ($localactivitycontent) {
 					preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($localactivitycontent), $imgresult);
 					
 				
 					if (is_array($imgresult)) {
-						if (count($imgresult) > 0) {
+						if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 							$imageurl = str_replace('"','',$imgresult[2][0]);
 							$imageurl = stripslashes($imageurl);
 						}
 					}
 				}
+				
+				$isWebView = false;
+				$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );
+				
+				if (count($deviceidswebview) > 0) {
+					$isWebView = true;
+				}
+				
+				if (count($regid) > 0) {
     
-				// prepare the message
-				$message = array( 
-					'title'     => $activitytitle,
-					'body'      => substr(stripslashes(strip_tags(urldecode($localactivitycontent))),0,59),
-					'icon'		=> $iconurl,
-					'image'		=> $imageurl,
-					'click_action'  => $activitylink
-				);
-    
-
-				$fields = array( 
-	                'registration_ids' => $regid, 
-	                'notification' => $message,
-				);
-    
-				$headers = array( 
-					'Authorization' => 'key='.$apiaccesskey, 
-					'Content-Type' => 'application/json'
-				);
+					// prepare the message
+					$message = array( 
+						'title'     => $activitytitle,
+						'body'      => substr(stripslashes(strip_tags(urldecode($localactivitycontent))),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+						'click_action'  => $activitylink
+					);
+					
+					$fields = array( 
+	                	'registration_ids' => $regid, 
+	                	'notification' => $message,
+					);					
+					
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
     
 				
-				$body = json_encode($fields);
+					$body = json_encode($fields);
 			
-				$args = array(
-			        'httpversion' => '1.0',
-					'blocking' => true,
-					'sslverify' => false,
-					'body' => $body,
-					'headers' => $headers
-				);
+					$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
 			
-				$apiresults = wp_remote_post($url, $args);
+					$apiresults = wp_remote_post($url, $args);
 				
-				$apibody = wp_remote_retrieve_body($apiresults);
+					$apibody = wp_remote_retrieve_body($apiresults);
 
-				$bodyresults = json_decode($apibody,true);
+					$bodyresults = json_decode($apibody,true);
 
-				if (is_array($bodyresults)) {
-					if (array_key_exists('results', $bodyresults)) {
-						foreach ($bodyresults['results'] as $idx=>$result){
-							if (array_key_exists('error',$result)) {
-								if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
-									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+									}
 								}
 							}
 						}
 					}
+				
+					if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
+                	}
 				}
+					
+				if ($isWebView) 
+				{
+					// prepare the message
+					$message = array( 
+						'title'     => $activitytitle,
+						'body'      => substr(stripslashes(strip_tags(urldecode($localactivitycontent))),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+					);					
+
+					$fields = array( 
+	                	'registration_ids' => $deviceidswebview, 
+	                	'notification' => $message,
+					);					
+					
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
+    
 				
-				if (is_wp_error($apiresults)) {
-				    $status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
-                    $error_message = $apiresults->get_error_message();
-                    error_log('There was a '.$status.' error in push notification: '.$error_message);
-                }				
+					$body = json_encode($fields);
+			
+					$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
+			
+					$apiresults = wp_remote_post($url, $args);
 				
+					$apibody = wp_remote_retrieve_body($apiresults);
+
+					$bodyresults = json_decode($apibody,true);
+
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+									}
+								}
+							}
+						}
+					}
+				
+					if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
+                	}				
+				
+				}
 	
 			}
 			else 
@@ -1341,7 +1691,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					$imageurl = '';
 				
 					if (is_array($imgresult)) {
-						if (count($imgresult) > 0) {
+						if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 							$imageurl = str_replace('"','',$imgresult[2][0]);
 							update_option('pnfpb_ic_fcm_new_buddypressactivities_image',$imageurl);
 						}
@@ -1396,14 +1746,19 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 				if (get_option('pnfpb_shortcode_enable') === 'yes') {
 					
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (subscription_option = '01000' OR subscription_option = '01100' OR subscription_option = '01010' OR subscription_option = '10000')" );
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );
 					
 				}
 				else				
 				{
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1)  FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1)  FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
 				}
-	
+				
+				$webview = false;
+				$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );				
+				if (count($deviceidwebview) > 0) {
+					$webview = true;
+				}
 				$url = 'https://fcm.googleapis.com/fcm/send';
 
 				$regid = $deviceids;
@@ -1415,8 +1770,12 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				}
 				else 
 				{
+
 					$localactivitycontent = "New contents available in ".get_bloginfo( 'name' );
+
 				}
+				
+				
             
 				$blog_title = get_bloginfo( 'name' );
             
@@ -1434,7 +1793,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						}
 						else 
 						{
-							$localactivitycontent = "New contents available in ".get_bloginfo( 'name' );
+							if (get_option('pnfpb_ic_fcm_group_activity_message') != false && get_option('pnfpb_ic_fcm_group_activity_message') != '') {
+								$localactivitycontent = get_option('pnfpb_ic_fcm_group_activity_message');
+							}
+							else 
+							{							
+								$localactivitycontent = "New contents available in ".get_bloginfo( 'name' );
+							}
 						}
 					$grouplink = get_home_url();
 					if (function_exists('bp_is_active')){
@@ -1449,7 +1814,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						$imageurl = get_option('pnfpb_ic_fcm_new_buddypressgroup_image');
 					}
 				}
-
+				
 				if (strpos($content, "[bpfb_images]") !== false) {
     
 					$bpfbimagesstart = strpos($localactivitycontent, "[bpfb_images]");
@@ -1467,66 +1832,132 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					$imageurl = '';
 				
 					if (is_array($imgresult)) {
-						if (count($imgresult) > 0) {
+						if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 							$imageurl = str_replace('"','',$imgresult[2][0]);
 						}
 					}
 				}
+				
+				
+				if (get_option('pnfpb_ic_fcm_group_activity_message') != false && get_option('pnfpb_ic_fcm_group_activity_message') != '') {
+					
+					$localactivitycontent = get_option('pnfpb_ic_fcm_group_activity_message');
+					
+				}				
     
-				// prepare the message
-				$message = array( 
-					'title'     => $grouptitle,
-					'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
-					'icon'		=> $iconurl,
-					'image'		=> $imageurl,
-					'click_action' => $grouplink,
+				if (count($regid) > 0) {
+					// prepare the message
+					$message = array( 
+						'title'     => $grouptitle,
+						'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+						'click_action' => $grouplink
 
-				);
+					);
     
 
-				$fields = array( 
-					'registration_ids' => $regid, 
-					'notification' => $message
-				);
+					$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+					);
     
-				$headers = array( 
-					'Authorization' => 'key='.$apiaccesskey, 
-					'Content-Type' => 'application/json'
-				);
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
     
 				
-				$body = json_encode($fields);
+					$body = json_encode($fields);
 			
-				$args = array(
-			        'httpversion' => '1.0',
-					'blocking' => true,
-					'sslverify' => false,
-					'body' => $body,
-					'headers' => $headers
-				);
+					$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
 			
-				$apiresults = wp_remote_post($url, $args);
+					$apiresults = wp_remote_post($url, $args);
 				
-				$apibody = wp_remote_retrieve_body($apiresults);
+					$apibody = wp_remote_retrieve_body($apiresults);
 
-				$bodyresults = json_decode($apibody,true);
-				if (is_array($bodyresults)) {
-					if (array_key_exists('results', $bodyresults)) {
-						foreach ($bodyresults['results'] as $idx=>$result){
-							if (array_key_exists('error',$result)) {
-								if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
-									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+					$bodyresults = json_decode($apibody,true);
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+									}
 								}
 							}
 						}
-					}
-				}				
+					}				
 				
-				if (is_wp_error($apiresults)) {
-				    $status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
-                    $error_message = $apiresults->get_error_message();
-                    error_log('There was a '.$status.' error in push notification: '.$error_message);
-                }
+					if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
+                	}
+				}
+				
+				if (count($deviceidswebview) > 0) {
+					// prepare the message
+					$message = array( 
+						'title'     => $grouptitle,
+						'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+
+					);
+    
+
+					$fields = array( 
+						'registration_ids' => $deviceidswebview, 
+						'notification' => $message
+					);
+    
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
+    
+				
+					$body = json_encode($fields);
+			
+					$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
+			
+					$apiresults = wp_remote_post($url, $args);
+				
+					$apibody = wp_remote_retrieve_body($apiresults);
+
+					$bodyresults = json_decode($apibody,true);
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+									}
+								}
+							}
+						}
+					}				
+				
+					if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
+                	}
+					
+				}
 			}
 			else
 			{
@@ -1560,14 +1991,18 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					
 					if (get_option('pnfpb_shortcode_enable') === 'yes') {
 						
-							$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!{$bpgroupid}!!%' AND (subscription_option = '01000' OR subscription_option = '01100' OR subscription_option = '01010' OR subscription_option = '10000')" );
+							$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );
 						
 					}
 					else				
 					{					
 	
-						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!{$bpgroupid}!!%'" );
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%'" );
 					}
+					
+					$webview = false;
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1')" );
+					
 
 					$url = 'https://fcm.googleapis.com/fcm/send';
 
@@ -1590,7 +2025,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					}
 					else 
 					{
-						$localactivitycontent = "New contents available in ".get_bloginfo( 'name' );
+						if (get_option('pnfpb_ic_fcm_group_activity_content') != false && get_option('pnfpb_ic_fcm_group_activity_content') != '') {
+							$localactivitycontent = get_option('pnfpb_ic_fcm_group_activity_content');
+						}
+						else 
+						{						
+							$localactivitycontent = "New contents available in ".get_bloginfo( 'name' );
+						}
 					}
 					
 					if (!get_option('pnfpb_ic_fcm_new_buddypressactivities_content') && wp_next_scheduled( 'PNFPB_cron_buddypressgroupactivities_hook' ))
@@ -1600,7 +2041,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						}
 						else 
 						{
-							$localactivitycontent = "New contents available in ".get_bloginfo( 'name' );
+							if (get_option('pnfpb_ic_fcm_group_activity_content') != false && get_option('pnfpb_ic_fcm_group_activity_content') != '') {
+								$localactivitycontent = get_option('pnfpb_ic_fcm_group_activity_content');
+							}
+							else 
+							{							
+								$localactivitycontent = "New contents available in ".get_bloginfo( 'name' );
+							}
 						}
 						
 						$grouplink = get_home_url();
@@ -1633,18 +2080,26 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				$imageurl = '';
 				
 				if (is_array($imgresult)) {
-					if (count($imgresult) > 0) {
+					if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 						$imageurl = str_replace('"','',$imgresult[2][0]);
 					}
-				}					
-    
+				}
+					
+					
+				if (get_option('pnfpb_ic_fcm_group_activity_message') != false && get_option('pnfpb_ic_fcm_group_activity_message') != '') {
+					
+					$localactivitycontent = get_option('pnfpb_ic_fcm_group_activity_message');
+					
+				}
+					
+				if (count($regid) > 0) {
 					// prepare the message
 					$message = array( 
 						'title'     => $grouptitle,
 						'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
 						'icon'		=> $iconurl,
 						'image'		=> $imageurl,
-						'click_action' => $grouplink,
+						'click_action' => $grouplink
 
 					);
     
@@ -1671,7 +2126,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					);
 			
 					$apiresults = wp_remote_post($url, $args);
-					
+				
 					$apibody = wp_remote_retrieve_body($apiresults);
 
 					$bodyresults = json_decode($apibody,true);
@@ -1685,13 +2140,73 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 								}
 							}
 						}
-					}					
+					}				
 				
 					if (is_wp_error($apiresults)) {
 				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
                     	$error_message = $apiresults->get_error_message();
                     	error_log('There was a '.$status.' error in push notification: '.$error_message);
-                	}					
+                	}
+				}
+				
+				if (count($deviceidswebview) > 0) {
+					// prepare the message
+					$message = array( 
+						'title'     => $grouptitle,
+						'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+
+					);
+    
+
+					$fields = array( 
+						'registration_ids' => $deviceidswebview, 
+						'notification' => $message
+					);
+    
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
+    
+				
+					$body = json_encode($fields);
+			
+					$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
+			
+					$apiresults = wp_remote_post($url, $args);
+				
+					$apibody = wp_remote_retrieve_body($apiresults);
+
+					$bodyresults = json_decode($apibody,true);
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+									}
+								}
+							}
+						}
+					}				
+				
+					if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
+                	}
+					
+				}
+					
+					
 				}
 				else 
 				{
@@ -1705,7 +2220,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						$imageurl = '';
 				
 						if (is_array($imgresult)) {
-							if (count($imgresult) > 0) {
+							if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 								$imageurl = str_replace('"','',$imgresult[2][0]);
 								update_option('pnfpb_ic_fcm_new_buddypressactivities_image',$imageurl);
 							}
@@ -1748,6 +2263,8 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		
 				// Barf.
 				extract( $args );
+				
+				//print_r($args);
 		
 				if ( empty( $recipients ) ) {
 					return;
@@ -1781,35 +2298,39 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				foreach ( $recipients as $recipient ) {
 
 					$messageurl = esc_url( bp_core_get_user_domain( $recipient->user_id ).bp_get_messages_slug().'/view/'.$thread_id.'/');
-
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND userid = '{$recipient->user_id}'"  );
-
-
-				if (strpos($activity_content_push, "[bpfb_images]") !== false) {
-    
-					$bpfbimagesstart = strpos($activity_content_push, "[bpfb_images]");
-    
-					$bpfbimagesend = strrpos($activity_content_push, "[/bpfb_images]");
-    
-					$bpfbimagestaglength = ($bpfbimagesend+17) - $bpfbimagesstart;
-    
-					$activity_content_push = strip_tags(urldecode(substr_replace($content,"",$bpfbimagesstart,$bpfbimagestaglength)));
-				}
 					
-					preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($message), $imgresult);
-					$imageurl = '';
-				
-					if (is_array($imgresult)) {
-						if (count($imgresult) > 0) {
-							$imageurl = str_replace('"','',$imgresult[2][0]);
-						}
+					if (get_option('pnfpb_shortcode_enable') === 'yes') {
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$recipient->user_id}' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,5,1) = '1')"  );
+					} else {
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$recipient->user_id}'"  );
 					}
+					
+					
+					$webview = false;
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$recipient->user_id}' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,5,1) = '1')"  );
+					
+
+					
+					$imageurl = '';
+					
+					$iconurl =	bp_core_fetch_avatar ( 
+    							array(  'item_id'   => $recipient->user_id,       // output user id of post author
+            							'type'      => 'full',
+            							'html'      => FALSE    // FALSE = return url, TRUE (default) = return url wrapped with html
+   									 ) 
+								);
+				
 
 					if (count($deviceids) > 0) {
 
 						$regid = $deviceids;
+						
+						
+						if (get_option('pnfpb_ic_fcm_bprivatemessage_content') != false && get_option('pnfpb_ic_fcm_bprivatemessage_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_bprivatemessage_content');
+						}
 
-						// prepare the message
+
 						$message = array( 
 						'title'     => $notificationtitle,
 						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
@@ -1817,7 +2338,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						'image'		=> $imageurl,
 						'click_action' => $messageurl
 						);
-    
+
 
 						$fields = array( 
 						'registration_ids' => $regid, 
@@ -1862,16 +2383,1077 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
                     		error_log('There was a '.$status.' error in push notification: '.$error_message);
 						}
 					}
+
+					if (count($deviceidswebview) > 0) {
+
+						$regid = $deviceidswebview;
+						
+						
+						if (get_option('pnfpb_ic_fcm_bprivatemessage_content') != false && get_option('pnfpb_ic_fcm_bprivatemessage_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_bprivatemessage_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+				
 				}
 			}
 		}
+		
+		/**
+		* Triggered after private messages sent for user in BuddyPress.
+		* to send push notifications Opt in/out for the notification can be 
+		* controlled from plugin settings.		
+		*
+		*
+		* @param array   $raw_args		Message content array
+		*
+		*
+		* @since 1.47
+		*/
+		public function PNFPB_icforum_push_notifications_new_member($user_id) {
+			
+            $apiaccesskey = get_option('pnfpb_ic_fcm_google_api');		    
+        
+			if (get_option('pnfpb_ic_fcm_new_member_enable') == 1 && $apiaccesskey != '' && $apiaccesskey != false) {
+				
+				global $wpdb;
+
+		
+				if ( empty( $user_id ) ) {
+					return;
+				}
+				
+
+				$member_name = bp_core_get_user_displayname( $user_id );
+
+				$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+	
+				$url = 'https://fcm.googleapis.com/fcm/send';
+
+				$activity_content_push = 'Welcome our new member '.$member_name;
+				
+				$notificationtitle = $member_name.' registered as new member';
+				
+				$titletext = get_option('pnfpb_ic_fcm_new_member_text');
+				
+				if ( $titletext && $titletext !== '') {
+					$notificationtitle = str_replace("[member name]", $member_name, $titletext);
+				}
+				
+
+					$messageurl = esc_url( bp_core_get_user_domain( $user_id ).bp_get_messages_slug().'/view/'.$thread_id.'/');
+				
+					if (get_option('pnfpb_shortcode_enable') === 'yes') {
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1')"  );
+					} else {
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%'"  );
+					}
+					
+					$webview = false;
+				
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id NOT LIKE '%@N%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1')"  );
+					
+					
+					
+					$imageurl = '';
+				
+					$iconurl =	bp_core_fetch_avatar ( 
+    							array(  'item_id'   => $user_id,       // output user id of post author
+            							'type'      => 'full',
+            							'html'      => FALSE       // FALSE = return url, TRUE (default) = return url wrapped with html
+   									 ) 
+								);
+				
+
+					if (count($deviceids) > 0) {
+
+						$regid = $deviceids;
+						
+						
+						if (get_option('pnfpb_ic_fcm_new_member_content') != false && get_option('pnfpb_ic_fcm_new_member_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_new_member_content');
+						}
+
+
+						$message = array( 
+							'title'     => $notificationtitle,
+							'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+							'icon'		=> $iconurl,
+							'image'		=> $imageurl,
+							'click_action' => $messageurl
+						);
+
+
+						$fields = array( 
+							'registration_ids' => $regid, 
+							'notification' => $message
+						);
+    
+						$headers = array( 
+							'Authorization' => 'key='.$apiaccesskey, 
+							'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        		'httpversion' => '1.0',
+							'blocking' => true,
+							'sslverify' => false,
+							'body' => $body,
+							'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+
+					if (count($deviceidswebview) > 0) {
+
+						$regid = $deviceidswebview;
+						
+						
+						if (get_option('pnfpb_ic_fcm_new_member_content') != false && get_option('pnfpb_ic_fcm_new_member_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_new_member_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+				
+				//}
+			}
+		}
+
+		
+		/**
+		* Triggered after private messages sent for user in BuddyPress.
+		* to send push notifications Opt in/out for the notification can be 
+		* controlled from plugin settings.		
+		*
+		*
+		* @param array   $raw_args		Message content array
+		*
+		*
+		* @since 1.47
+		*/
+		public function PNFPB_icforum_push_notifications_friendship_request($friendship_id, $initiator_id, $friend_id) {
+			
+            $apiaccesskey = get_option('pnfpb_ic_fcm_google_api');		    
+        
+			if (get_option('pnfpb_ic_fcm_friendship_request_enable') == 1 && $apiaccesskey != '' && $apiaccesskey != false) {
+				
+				global $wpdb;
+	
+				$friendship_initiator_name = bp_core_get_user_displayname( $initiator_id );
+				
+				$friend_name = bp_core_get_user_displayname( $friend_id );
+
+				$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+	
+				$url = 'https://fcm.googleapis.com/fcm/send';
+
+				$activity_content_push = $friendship_initiator_name.' sent you friendship request';
+				
+				$notificationtitle = '[friendship initiator name] sent you friend request';
+				
+				$titletext = get_option('pnfpb_ic_fcm_friendship_request_text');
+				
+				if ( $titletext && $titletext !== '') {
+					$notificationtitle = str_replace("[friendship initiator name]", $friendship_initiator_name, $titletext);
+				}
+				
+
+					$messageurl = esc_url( bp_core_get_user_domain( $friend_id ) . bp_get_friends_slug() . '/requests/');
+				
+					if (get_option('pnfpb_shortcode_enable') === 'yes') {
+
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$friend_id}' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,7,1) = '1')"  );
+						
+					} else {
+						
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$friend_id}'"  );
+						
+					}
+					
+					$webview = false;
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$friend_id}' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,7,1) = '1')"  );
+				
+					$imageurl = '';
+					
+					$iconurl =	bp_core_fetch_avatar ( 
+    							array(  'item_id'   => $initiator_id,       // output user id of post author
+            							'type'      => 'full',
+            							'html'      => FALSE       // FALSE = return url, TRUE (default) = return url wrapped with html
+								  
+   									 ) 
+								);					
+
+					if (count($deviceids) > 0) {
+
+						$regid = $deviceids;
+						
+						
+						if (get_option('pnfpb_ic_fcm_friendship_request_content') != false && get_option('pnfpb_ic_fcm_friendship_request_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_friendship_request_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+						'click_action' => $messageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+
+					if (count($deviceidswebview) > 0) {
+
+						$regid = $deviceidswebview;
+						
+						
+						if (get_option('pnfpb_ic_fcm_friendship_request_content') != false && get_option('pnfpb_ic_fcm_friendship_request_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_friendship_request_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+				
+			}
+		}
+		
+		/**
+		* Triggered after private messages sent for user in BuddyPress.
+		* to send push notifications Opt in/out for the notification can be 
+		* controlled from plugin settings.		
+		*
+		*
+		* @param array   $raw_args		Message content array
+		*
+		*
+		* @since 1.47
+		*/
+		public function PNFPB_icforum_push_notifications_friendship_accepted($friendship_id, $initiator_id, $friend_id) {
+			
+            $apiaccesskey = get_option('pnfpb_ic_fcm_google_api');		    
+        
+			if (get_option('pnfpb_ic_fcm_friendship_accept_enable') == 1 && $apiaccesskey != '' && $apiaccesskey != false) {
+				
+				global $wpdb;
+	
+				$friendship_initiator_name = bp_core_get_user_displayname( $initiator_id );
+				
+				$friend_name = bp_core_get_user_displayname( $friend_id );
+
+				$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+	
+				$url = 'https://fcm.googleapis.com/fcm/send';
+
+				$activity_content_push = $friend_name.' accepted your friendship request';
+				
+				$notificationtitle = '[friendship acceptor name] accepted your friendship request';
+				
+				$titletext = get_option('pnfpb_ic_fcm_friendship_accept_text');
+				
+				if ( $titletext && $titletext !== '') {
+					$notificationtitle = str_replace("[friendship acceptor name]", $friend_name, $titletext);
+				}
+				
+
+					$messageurl = esc_url( bp_core_get_user_domain( $friend_id ) . bp_get_friends_slug() . '/requests/');
+				
+					if (get_option('pnfpb_shortcode_enable') === 'yes') {
+						
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$initiator_id}' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1')"  );
+						
+					} else  {
+
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$initiator_id}'"  );
+						
+					}
+					
+					$webview = false;
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$initiator_id}' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1')"  );
+				
+					$imageurl = '';
+					
+					$iconurl =	bp_core_fetch_avatar ( 
+    							array(  'item_id'   => $friend_id,       // output user id of post author
+            							'type'      => 'full',
+            							'html'      => FALSE       // FALSE = return url, TRUE (default) = return url wrapped with html
+								  
+   									 ) 
+								);					
+
+					if (count($deviceids) > 0) {
+
+						$regid = $deviceids;
+						
+						if (get_option('pnfpb_ic_fcm_friendship_accept_content') != false && get_option('pnfpb_ic_fcm_friendship_accept_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_friendship_accept_content');
+						}
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+						'click_action' => $messageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+
+					if (count($deviceidswebview) > 0) {
+
+						$regid = $deviceidswebview;
+						
+						
+						if (get_option('pnfpb_ic_fcm_friendship_accept_content') != false && get_option('pnfpb_ic_fcm_friendship_accept_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_friendship_accept_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+				
+			}
+		}
+		
+		
+		/**
+		* Triggered after private messages sent for user in BuddyPress.
+		* to send push notifications Opt in/out for the notification can be 
+		* controlled from plugin settings.		
+		*
+		*
+		* @param array   $raw_args		Message content array
+		*
+		*
+		* @since 1.47
+		*/
+		public function PNFPB_icforum_push_notifications_avatar_change($user_id = 0) {
+			
+            $apiaccesskey = get_option('pnfpb_ic_fcm_google_api');		    
+        
+			if (get_option('pnfpb_ic_fcm_avatar_change_enable') == 1 && $apiaccesskey != '' && $apiaccesskey != false) {
+				
+				global $wpdb;
+				
+				$member_name = bp_core_get_user_displayname( $user_id );
+
+				$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+	
+				$url = 'https://fcm.googleapis.com/fcm/send';
+
+				$activity_content_push = '';
+				
+				$notificationtitle = $member_name.' updated avatar';
+				
+				$titletext = get_option('pnfpb_ic_fcm_avatar_change_text');
+				
+				if ( $titletext && $titletext !== '') {
+					$notificationtitle = str_replace("[member name]", $member_name, $titletext);
+				}
+				
+
+					$messageurl = esc_url( bp_core_get_user_domain( $user_id ));
+				
+					if (get_option('pnfpb_shortcode_enable') === 'yes') {
+
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,9,1) = '1')"  );
+						
+					} else  {
+						
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%'"  );						
+						
+					}
+					
+					$webview = false;
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id NOT LIKE '%@N%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,9,1) = '1')"  );
+				
+					$imageurl = '';
+					
+					$iconurl =	bp_core_fetch_avatar ( 
+    							array(  'item_id'   => $user_id,       // output user id of post author
+            							'type'      => 'full',
+            							'html'      => FALSE        // FALSE = return url, TRUE (default) = return url wrapped with html
+							  
+   									 ) 
+								);
+					
+
+					if (count($deviceids) > 0) {
+
+						$regid = $deviceids;
+						
+						
+						if (get_option('pnfpb_ic_fcm_avatar_change_content') != false && get_option('pnfpb_ic_fcm_avatar_change_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_avatar_change_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+						'click_action' => $messageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+
+					if (count($deviceidswebview) > 0) {
+
+						$regid = $deviceidswebview;
+						
+						
+						if (get_option('pnfpb_ic_fcm_avatar_change_content') != false && get_option('pnfpb_ic_fcm_avatar_change_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_avatar_change_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+				
+			}
+		}
+		
+		/**
+		* Triggered after private messages sent for user in BuddyPress.
+		* to send push notifications Opt in/out for the notification can be 
+		* controlled from plugin settings.		
+		*
+		*
+		* @param array   $raw_args		Message content array
+		*
+		*
+		* @since 1.47
+		*/
+		public function PNFPB_icforum_push_notifications_cover_image_change($item_id, $cover_url) {
+			
+            $apiaccesskey = get_option('pnfpb_ic_fcm_google_api');		    
+        
+			if (get_option('pnfpb_ic_fcm_cover_image_change_enable') == 1 && $apiaccesskey != '' && $apiaccesskey != false) {
+				
+				global $wpdb;
+
+				$member_name = bp_core_get_user_displayname( $item_id );
+
+				$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+	
+				$url = 'https://fcm.googleapis.com/fcm/send';
+
+				$activity_content_push = '';
+				
+				$notificationtitle = $member_name.' updated cover photo';
+				
+				$titletext = get_option('pnfpb_ic_fcm_cover_image_change_text');
+				
+				if ( $titletext && $titletext !== '') {
+					$notificationtitle = str_replace("[member name]", $member_name, $titletext);
+				}
+				
+
+					$messageurl = esc_url( bp_core_get_user_domain( $item_id ));
+				
+					if (get_option('pnfpb_shortcode_enable') === 'yes') {
+
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,10,1) = '1')"  );
+						
+					} else  {
+						
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%'"  );
+						
+					}
+					
+					$webview = false;
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id NOT LIKE '%@N%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,10,1) = '1')"  );
+					
+
+					$iconurl =	bp_core_fetch_avatar ( 
+    							array(  'item_id'   => $item_id,       // output user id of post author
+            							'type'      => 'full',
+            							'html'      => FALSE    // FALSE = return url, TRUE (default) = return url wrapped with html
+   									 ) 
+								);
+				
+					
+					$imageurl = '';
+				
+
+					if (count($deviceids) > 0) {
+
+						$regid = $deviceids;
+						
+						
+						if (get_option('pnfpb_ic_fcm_cover_image_change_content') != false && get_option('pnfpb_ic_fcm_cover_image_change_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_cover_image_change_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+						'click_action' => $messageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+
+					if (count($deviceidswebview) > 0) {
+
+						$regid = $deviceidswebview;
+						
+						
+						if (get_option('pnfpb_ic_fcm_cover_image_change_content') != false && get_option('pnfpb_ic_fcm_cover_image_change_content') != '') {
+							$activity_content_push = get_option('pnfpb_ic_fcm_cover_image_change_content');
+						}
+
+
+						$message = array( 
+						'title'     => $notificationtitle,
+						'body'      => substr(stripslashes(strip_tags($activity_content_push)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+						);
+
+
+						$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+						);
+    
+						$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+						$apibody = wp_remote_retrieve_body($apiresults);
+						
+						$bodyresults = json_decode($apibody,true);
+						
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}						
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code();
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+						}
+					}
+				
+				//}
+			}
+		}
+		
+		/**
+		 * To delete push notification subscription token with user no longer exists
+		 * using CRON schedule every day or 2 times every day
+		 * since 1.47
+		 * 
+		 */
+		 public function PNFPB_icforum_delete_token_user_not_exist() {
+			 
+			global $wpdb;
+			 
+			$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+			 
+			$users_table_name =  $wpdb->prefix . "users";
+			 
+			if ( get_option('pnfpb_ic_fcm_token_delete_without_user_enable' ) && get_option('pnfpb_ic_fcm_token_delete_without_user_enable' ) == '1' && get_option('pnfpb_ic_fcm_token_delete_without_useridtoken_enable' ) && get_option('pnfpb_ic_fcm_token_delete_without_useridtoken_enable' ) == '1') {
+				
+			 	$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE {$table_name}.userid = 0 OR NOT EXISTS (SELECT * FROM {$users_table_name} WHERE {$table_name}.userid = {$users_table_name}.ID)");
+				
+			}
+			else {
+				if ( get_option('pnfpb_ic_fcm_token_delete_without_user_enable' ) && get_option('pnfpb_ic_fcm_token_delete_without_user_enable' ) == '1') 				  {
+					
+					$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE {$table_name}.userid != 0 AND NOT EXISTS (SELECT * FROM {$users_table_name} WHERE {$table_name}.userid = {$users_table_name}.ID)");
+					
+				}
+				else 
+				{
+					if ( get_option('pnfpb_ic_fcm_token_delete_without_useridtoken_enable' ) && get_option('pnfpb_ic_fcm_token_delete_without_useridtoken_enable' ) == '1') {
+						
+						$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE {$table_name}.userid = 0");
+						
+					}
+				}
+			}
+			 
+				 
+		 }
+		
 		
 		/** Push notification for post comment
 		 * 
 		 * 
 		 * @since 1.31
 		 * 
-		*/
+		 */
 		
 		public function PNFPB_icforum_push_notifications_post_comment_web($comment_ID=null, $comment_approved=null, $commentdata=null) {
 			
@@ -1901,14 +3483,16 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 					if (get_option('pnfpb_shortcode_enable') === 'yes') {
 	
-						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (subscription_option = '01100' OR subscription_option = '00100' OR subscription_option = '10000')" );
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,3,1) = '1')" );
 					
 					}
 					else				
 					{
 						
-						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
+						$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
 					}
+					
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,3,1) = '1')" );					
 				
 					/* Logic to get subscribers who subscribed only comments made on my posts */
 				
@@ -1935,7 +3519,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					}
 				
 					if (get_option('pnfpb_shortcode_enable') === 'yes') {
-						$deviceidsmypost=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid = {$postuserid} AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (subscription_option = '01010' OR subscription_option = '00010')" );
+						$deviceidsmypost=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid = {$postuserid} AND device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AAND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,4,1) = '1')" );
 
 					}
 				
@@ -1955,70 +3539,131 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					$localpostcontent = $commentData->comment_content;
 					
 					$postcommentlink = get_permalink($postData->ID);
+					
+					
+						
+					if (get_option('pnfpb_ic_fcm_comment_activity_message') != false && get_option('pnfpb_ic_fcm_comment_activity_message') != '') {
+						$localpostcontent = get_option('pnfpb_ic_fcm_comment_activity_message');
+					}						
 				
 								
 					preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($localpostcontent), $imgresult);
 					$imageurl = '';
 				
 					if (is_array($imgresult)) {
-						if (count($imgresult) > 0) {
+						if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 							$imageurl = str_replace('"','',$imgresult[2][0]);
 						}
-					}				
-				
-
-					// prepare the message
-					$message = array( 
-						'title'     => $commenttitle,
-						'body'      => substr(stripslashes(strip_tags($localpostcontent)),0,59),
-						'icon'		=> $iconurl,
-						'image'		=> $imageurl,
-						'click_action' => $postcommentlink
-					);
+					}
+					
+					if (count($regid) > 0) {
+						// prepare the message
+						$message = array( 
+							'title'     => $commenttitle,
+							'body'      => substr(stripslashes(strip_tags($localpostcontent)),0,59),
+							'icon'		=> $iconurl,
+							'image'		=> $imageurl,
+							'click_action' => $postcommentlink
+						);
+	
+						$fields = array( 
+							'registration_ids' => $regid, 
+							'notification' => $message
+						);
     
-
-					$fields = array( 
-						'registration_ids' => $regid, 
-						'notification' => $message
-					);
-    
-					$headers = array( 
-						'Authorization' => 'key='.$apiaccesskey, 
-						'Content-Type' => 'application/json'
-					);
+						$headers = array( 
+							'Authorization' => 'key='.$apiaccesskey, 
+							'Content-Type' => 'application/json'
+						);
 				
-					$body = json_encode($fields);
+						$body = json_encode($fields);
 			
-					$args = array(
-			        	'httpversion' => '1.0',
-						'blocking' => true,
-						'sslverify' => false,
-						'body' => $body,
-						'headers' => $headers
-					);
+						$args = array(
+			        		'httpversion' => '1.0',
+							'blocking' => true,
+							'sslverify' => false,
+							'body' => $body,
+							'headers' => $headers
+						);
 			
-					$apiresults = wp_remote_post($url, $args);
+						$apiresults = wp_remote_post($url, $args);
 				
-					$apibody = wp_remote_retrieve_body($apiresults);
+						$apibody = wp_remote_retrieve_body($apiresults);
 
-					$bodyresults = json_decode($apibody,true);
-					if (is_array($bodyresults)) {
-						if (array_key_exists('results', $bodyresults)) {
-							foreach ($bodyresults['results'] as $idx=>$result){
-								if (array_key_exists('error',$result)) {
-									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
-										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+						$bodyresults = json_decode($apibody,true);
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+										}
 									}
 								}
 							}
-						}
-					}				
+						}				
 				
-					if (is_wp_error($apiresults)) {
-				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
-                    	$error_message = $apiresults->get_error_message();
-                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
-                	}
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+                		}
+					}
+					
+					if (count($deviceidswebview) > 0) {
+					
+						// prepare the message
+						$message = array( 
+							'title'     => $commenttitle,
+							'body'      => substr(stripslashes(strip_tags($localpostcontent)),0,59),
+							'icon'		=> $iconurl,
+							'image'		=> $imageurl
+						);
+
+						$fields = array( 
+							'registration_ids' => $deviceidswebview, 
+							'notification' => $message
+						);
+    
+						$headers = array( 
+							'Authorization' => 'key='.$apiaccesskey, 
+							'Content-Type' => 'application/json'
+						);
+				
+						$body = json_encode($fields);
+			
+						$args = array(
+			        		'httpversion' => '1.0',
+							'blocking' => true,
+							'sslverify' => false,
+							'body' => $body,
+							'headers' => $headers
+						);
+			
+						$apiresults = wp_remote_post($url, $args);
+				
+						$apibody = wp_remote_retrieve_body($apiresults);
+
+						$bodyresults = json_decode($apibody,true);
+						if (is_array($bodyresults)) {
+							if (array_key_exists('results', $bodyresults)) {
+								foreach ($bodyresults['results'] as $idx=>$result){
+									if (array_key_exists('error',$result)) {
+										if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+											$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+										}
+									}
+								}
+							}
+						}				
+				
+						if (is_wp_error($apiresults)) {
+				    		$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    		$error_message = $apiresults->get_error_message();
+                    		error_log('There was a '.$status.' error in push notification: '.$error_message);
+                		}
+					}
+					
 				}
 			}
 			else 
@@ -2090,13 +3735,15 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 				if (get_option('pnfpb_shortcode_enable') === 'yes') {
 	
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (subscription_option = '01100' OR subscription_option = '00100' OR subscription_option = '10000')" );
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,3,1) = '1')" );
 					
 				}
 				else				
 				{
-					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
+					$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
 				}
+				
+				$deviceidswebview = $wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,3,1) = '1')" );
 				
 				/* Logic to get subscribers who subscribed only comments made on my activities */
 				
@@ -2120,7 +3767,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 				if (get_option('pnfpb_shortcode_enable') === 'yes') {
 	
-					$deviceidsmyactivities=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid = {$activityuserid} AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (subscription_option = '01010' OR subscription_option = '00010')" );
+					$deviceidsmyactivities=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid = {$activityuserid} AND device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,4,1) = '1')" );
 					
 				}
 				
@@ -2159,73 +3806,135 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 				$localactivitycontent = $activity_content_push;
 				
+				
+				
 				if ($comment_id===null && wp_next_scheduled( 'PNFPB_cron_buddypressactivities_hook' ) && get_option('pnfpb_ic_fcm_new_buddypresscomments_content')){
 					$localactivitycontent = get_option('pnfpb_ic_fcm_new_buddypresscomments_content');
 					$activitylink = get_option('pnfpb_ic_fcm_new_buddypresscomments_link');
-				}	
+				}
+				
+				if (get_option('pnfpb_ic_fcm_comment_activity_message') != false && get_option('pnfpb_ic_fcm_comment_activity_message') != '') {
+					$localactivitycontent = get_option('pnfpb_ic_fcm_comment_activity_message');
+				}				
 				
 				preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($localactivitycontent), $imgresult);
 				$imageurl = '';
 				
 				if (is_array($imgresult)) {
-					if (count($imgresult) > 0) {
+					if (count($imgresult) > 2 && is_array($imgresult[2]) && count($imgresult[2]) > 0) {
 						$imageurl = str_replace('"','',$imgresult[2][0]);
 					}
 				}				
 				
-
-				// prepare the message
-				$message = array( 
-					'title'     => $commenttitle,
-					'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
-					'icon'		=> $iconurl,
-					'image'		=> $imageurl,
-					'click_action' => $activitylink
-				);
+				if (count($regid) > 0) {
+					// prepare the message
+					$message = array( 
+						'title'     => $commenttitle,
+						'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl,
+						'click_action' => $activitylink
+					);
     
 
-				$fields = array( 
-					'registration_ids' => $regid, 
-					'notification' => $message
-				);
+					$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+					);
     
-				$headers = array( 
-					'Authorization' => 'key='.$apiaccesskey, 
-					'Content-Type' => 'application/json'
-				);
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
 				
-				$body = json_encode($fields);
+					$body = json_encode($fields);
 			
-				$args = array(
-			        'httpversion' => '1.0',
-					'blocking' => true,
-					'sslverify' => false,
-					'body' => $body,
-					'headers' => $headers
-				);
+					$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
 			
-				$apiresults = wp_remote_post($url, $args);
+					$apiresults = wp_remote_post($url, $args);
 				
-				$apibody = wp_remote_retrieve_body($apiresults);
+					$apibody = wp_remote_retrieve_body($apiresults);
 
-				$bodyresults = json_decode($apibody,true);
-				if (is_array($bodyresults)) {
-					if (array_key_exists('results', $bodyresults)) {
-						foreach ($bodyresults['results'] as $idx=>$result){
-							if (array_key_exists('error',$result)) {
-								if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
-									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+					$bodyresults = json_decode($apibody,true);
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+									}
 								}
 							}
 						}
-					}
-				}				
+					}				
 				
-				if (is_wp_error($apiresults)) {
-				    $status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
-                    $error_message = $apiresults->get_error_message();
-                    error_log('There was a '.$status.' error in push notification: '.$error_message);
-                }
+					if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
+                	}
+				}
+				
+				if (count($deviceidswebview) > 0) {
+					// prepare the message
+					$message = array( 
+						'title'     => $commenttitle,
+						'body'      => substr(stripslashes(strip_tags($localactivitycontent)),0,59),
+						'icon'		=> $iconurl,
+						'image'		=> $imageurl
+					);
+    
+
+					$fields = array( 
+						'registration_ids' => $deviceidswebview, 
+						'notification' => $message
+					);
+    
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
+				
+					$body = json_encode($fields);
+			
+					$args = array(
+			        	'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
+			
+					$apiresults = wp_remote_post($url, $args);
+				
+					$apibody = wp_remote_retrieve_body($apiresults);
+
+					$bodyresults = json_decode($apibody,true);
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+									}
+								}
+							}
+						}
+					}				
+				
+					if (is_wp_error($apiresults)) {
+				    	$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+                    	$error_message = $apiresults->get_error_message();
+                    	error_log('There was a '.$status.' error in push notification: '.$error_message);
+                	}
+				}
+				
         
 			}
 			else 
@@ -2259,6 +3968,38 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			}			
 
 		}
+		
+		/** Shortcode PWA prompt install
+		* 
+		* 
+		* @since 1.45 
+		*/
+		public function PNFPB_pwa_prompt_shortcode() {
+			
+			$pwa_install_button_color = '#ffffff';
+				
+			if ((get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_color')) && (get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_color') !== false) && (get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_color') !== '')) {
+					$pwa_install_button_color = get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_color');
+			}
+				
+			$pwa_install_button_text_color = '#000000';
+				
+			if ((get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text_color')) && (get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text_color') !== false) && (get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text_color') !== '')) {
+					$pwa_install_button_text_color = get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text_color');
+			}
+			
+			$pwa_install_button_text = 'Install Our App';
+				
+			if (get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text') && get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text') !== false && get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text') !== '') {
+					$pwa_install_button_text = get_option('pnfpb_ic_fcm_install_pwa_shortcode_button_text');
+			}			
+			
+			$pnfpb_pwa_prompt_shortcode = '<div id="pnfpb_pwa_shortcode_box" class="pnfpb_pwa_shortcode_box"><button type="button" id="pnfpb_pwa_button" class="pnfpb_pwa_button" style="color:'.$pwa_install_button_text_color.';background-color:'.$pwa_install_button_color.';">'.$pwa_install_button_text.'</button></div>';
+			
+			return $pnfpb_pwa_prompt_shortcode;
+		}
+
+		
 
 	    /**
 	    * Shortcode - UnSubscribe push notification.
@@ -2281,7 +4022,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						$subscribe_button_color = get_option('pnfpb_ic_fcm_subscribe_button_color');
 					}
 			
-					$unsubscribe_shortcode_dialog_text = 'Unsubscribe push notifications';
+					$unsubscribe_shortcode_dialog_text = 'Change push subscriptions';
 				
 					if (get_option('pnfpb_ic_fcm_unsubscribe_button_shortcode_text') && get_option('pnfpb_ic_fcm_unsubscribe_button_shortcode_text') !== false && get_option('pnfpb_ic_fcm_unsubscribe_button_shortcode_text') !== '') {
 						$unsubscribe_shortcode_dialog_text = get_option('pnfpb_ic_fcm_unsubscribe_button_shortcode_text');
@@ -2305,7 +4046,8 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						$subscribe_post_activities_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_post_activity_dialog_text');
 					}
 			
-					$subscribe_all_comments_shortcode_dialog_text = 'Subscribe all new comments notifications';
+			
+					$subscribe_all_comments_shortcode_dialog_text = 'Subscribe new comments notifications';
 				
 					if (get_option('pnfpb_ic_fcm_subscribe_all_comments_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_all_comments_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_all_comments_dialog_text') !== '') {
 						$subscribe_all_comments_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_all_comments_dialog_text');
@@ -2316,6 +4058,43 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					if (get_option('pnfpb_ic_fcm_subscribe_my_comments_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_my_comments_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_my_comments_dialog_text') !== '') {
 						$subscribe_mypost_comments_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_my_comments_dialog_text');
 					}
+			
+					$subscribe_private_message_shortcode_dialog_text = 'Subscribe private message notifications (only to recipient)';
+				
+					if (get_option('pnfpb_ic_fcm_subscribe_private_message_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_private_message_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_private_message_dialog_text') !== '') {
+						$subscribe_private_message_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_private_message_dialog_text');
+					}
+						
+			
+					$subscribe_new_member_shortcode_dialog_text = 'Subscribe new member notifications';
+				
+					if (get_option('pnfpb_ic_fcm_subscribe_new_member_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_new_member_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_new_member_dialog_text') !== '') {
+						$subscribe_new_member_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_new_member_dialog_text');
+					}
+			
+					$subscribe_friendship_request_shortcode_dialog_text = 'Subscribe friendship request notifications (only to recipient)';
+				
+					if (get_option('pnfpb_ic_fcm_subscribe_friendship_request_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_friendship_request_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_friendship_request_dialog_text') !== '') {
+						$subscribe_friendship_request_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_friendship_request_dialog_text');
+					}			
+			
+					$subscribe_friendship_accepted_shortcode_dialog_text = 'Subscribe friendship accepted notifications (only to recipient)';
+				
+					if (get_option('pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text') !== '') {
+						$subscribe_friendship_accepted_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text');
+					}
+			
+					$subscribe_user_avatar_shortcode_dialog_text = 'Subscribe user avatar change notifications';
+				
+					if (get_option('pnfpb_ic_fcm_subscribe_user_avatar_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_user_avatar_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_user_avatar_dialog_text') !== '') {
+						$subscribe_user_avatar_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_user_avatar_dialog_text');
+					}
+			
+					$subscribe_cover_image_change_shortcode_dialog_text = 'Subscribe cover image change notifications';
+				
+					if (get_option('pnfpb_ic_fcm_subscribe_cover_image_change_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_cover_image_change_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_cover_image_change_dialog_text') !== '') {
+						$subscribe_cover_image_change_shortcode_dialog_text = get_option('pnfpb_ic_fcm_subscribe_cover_image_change_dialog_text');
+					}				
 			
 					$unsubscribe_all_shortcode_dialog_text = 'Un-Subscribe all notifications';
 				
@@ -2330,7 +4109,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		    $pnfpb_notification_shortcode .= '<button type="button" id="pnfpb_subscribe_button" class="pnfpb_subscribe_button" style="color:'.$subscribe_button_text_color.';background-color:'.$subscribe_button_color.'">'.$subscribe_shortcode_dialog_text.'</button></div>';
 		
 	    
-		    $pnfpb_notification_shortcode .= '<div id="pnfpb_subscribe_dialog_confirm" class="pnfpb_subscribe_dialog_confirm" title="Subscribe notification?"><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div  style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_all_shortcode_enable" name="pnfpb_ic_subscribe_all_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_all_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_all_shortcode_enable" style="font-weight:400;">'.$subscribe_all_shortcode_dialog_text.'</label></div></div><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_post_activities_shortcode_enable" name="pnfpb_ic_subscribe_post_activities_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_post_activities_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_post_activities_shortcode_enable" style="font-weight:400;">'.$subscribe_post_activities_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_all_comments_shortcode_enable" name="pnfpb_ic_subscribe_all_comments_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_all_comments_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_all_comments_shortcode_enable" style="font-weight:400;">'.$subscribe_all_comments_shortcode_dialog_text.'</label></div></div><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_my_post_shortcode_enable" name="pnfpb_ic_subscribe_my_post_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_my_post_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_subscribe_my_post_shortcode_label_checkbox" for="pnfpb_ic_subscribe_my_post_shortcode_enable" style="font-weight:400;">'.$subscribe_mypost_comments_shortcode_dialog_text.'</label></div></div><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div style="width:5%;float:left;"><input id="pnfpb_ic_unsubscribe_all_shortcode_enable" name="pnfpb_ic_unsubscribe_all_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_unsubscribe_all_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_unsubscribe_all_shortcode_enable" style="font-weight:400;">'.$unsubscribe_all_shortcode_dialog_text.'</label></div></div></div>';
+		    $pnfpb_notification_shortcode .= '<div id="pnfpb_subscribe_dialog_confirm" class="pnfpb_subscribe_dialog_confirm  ui-helper-clearfix" title="Subscribe notification?"  style="overflow: unset !important;"><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div  style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_all_shortcode_enable" name="pnfpb_ic_subscribe_all_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_all_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_all_shortcode_enable" style="font-weight:400;">'.$subscribe_all_shortcode_dialog_text.'</label></div></div><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_post_activities_shortcode_enable" name="pnfpb_ic_subscribe_post_activities_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_post_activities_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_post_activities_shortcode_enable" style="font-weight:400;">'.$subscribe_post_activities_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_all_comments_shortcode_enable" name="pnfpb_ic_subscribe_all_comments_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_all_comments_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_all_comments_shortcode_enable" style="font-weight:400;">'.$subscribe_all_comments_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_private_message_shortcode_enable" name="pnfpb_ic_subscribe_private_message_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_private_message_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_private_message_shortcode_enable" style="font-weight:400;">'.$subscribe_private_message_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_new_member_shortcode_enable" name="pnfpb_ic_subscribe_new_member_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_new_member_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_new_member_shortcode_enable" style="font-weight:400;">'.$subscribe_new_member_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_friendship_request_shortcode_enable" name="pnfpb_ic_subscribe_friendship_request_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_friendship_request_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_friendship_request_shortcode_enable" style="font-weight:400;">'.$subscribe_friendship_request_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_friendship_accepted_shortcode_enable" name="pnfpb_ic_subscribe_friendship_accepted_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_friendship_accepted_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_friendship_accepted_shortcode_enable" style="font-weight:400;">'.$subscribe_friendship_accepted_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_user_avatar_shortcode_enable" name="pnfpb_ic_subscribe_user_avatar_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_user_avatar_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_user_avatar_shortcode_enable" style="font-weight:400;">'.$subscribe_user_avatar_shortcode_dialog_text.'</label></div><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_cover_image_change_shortcode_enable" name="pnfpb_ic_subscribe_cover_image_change_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_cover_image_change_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_subscribe_cover_image_change_shortcode_enable" style="font-weight:400;">'.$subscribe_cover_image_change_shortcode_dialog_text.'</label></div></div><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div style="width:5%;float:left;"><input id="pnfpb_ic_subscribe_my_post_shortcode_enable" name="pnfpb_ic_subscribe_my_post_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_my_post_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_subscribe_my_post_shortcode_label_checkbox" for="pnfpb_ic_subscribe_my_post_shortcode_enable" style="font-weight:400;">'.$subscribe_mypost_comments_shortcode_dialog_text.'</label></div></div><div style="background:#eeeeee;float:left;width:100%;padding:5px;margin:5px;padding-bottom:0px;border:1px solid #eeeeee;"><div style="width:5%;float:left;"><input id="pnfpb_ic_unsubscribe_all_shortcode_enable" name="pnfpb_ic_unsubscribe_all_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_unsubscribe_all_shortcode_enable' ) ).'  /></div><div  style="width:95%;float:left;"> <label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_unsubscribe_all_shortcode_enable" style="font-weight:400;">'.$unsubscribe_all_shortcode_dialog_text.'</label></div></div></div>';
 		
 		    $pnfpb_notification_shortcode .= '<div id="pnfpb-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-unsubscribe-alert-msg" class="pnfpb-unsubscribe-alert-msg"></div></div>';
 			
@@ -2358,13 +4137,16 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
     			$bpuserid = get_current_user_id();
 			
 					$cookievalue = '';
-					if(!isset($_COOKIE[$cookie_name])) {
+					if(isset($_COOKIE['pnfpb_group_push_notification_'.$group->id])) {
 						$cookievalue = $_COOKIE['pnfpb_group_push_notification_'.$group->id];
 					}
 			
 					$table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
-			
-					$deviceid_select_status = $wpdb->query("SELECT * FROM {$table} WHERE device_id LIKE '%!!{$group->id}!!{$cookievalue}%'");
+					
+					$deviceid_select_status = 0;
+					if ($cookievalue != '') {					
+						$deviceid_select_status = $wpdb->query("SELECT * FROM {$table} WHERE device_id LIKE '%!!{$group->id}!!{$cookievalue}%' AND userid = {$bpuserid}");
+					}
 				
 					$unsubscribe_button_text = 'Unubscribe push notifications';
 				
@@ -2491,6 +4273,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_rest_route( 'PNFPBpush/v1', '/subscriptiontoken', array(
    				 'methods' => 'POST',
     			'callback' => array($this,'PNFPB_get_subscription_tokens_from_app'),
+				'permission_callback' => '__return_true',
     			'args' => array(
       				'id' => array(
 						'sanitize_callback' => function($value, $request, $param) {
@@ -2548,9 +4331,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				$key = hash('sha256', $encryption_key);
 
 				$receivedhasmac = base64_decode($parts[2]);
-				//$receivedhasmac = $parts[2];
 
-				//$bphasmac = hash_hmac('sha256',$decrypted, $key,true);
 				$bphasmac = hash_hmac('sha256',$decrypted, $encryption_key);
 
 				if ($bphasmac !== $parts[3]) {
@@ -2578,7 +4359,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						
 					}
 					
-					$bpnewdeviceid = $decrypted.'!!'.$request['groupid'].'!!'.$request['cookievalue'];
+					$bpnewdeviceid = $decrypted.'!!'.$request['groupid'].'!!'.$request['cookievalue'].'!!webview';
 					
 					$data = array('userid' => $bpuserid, 'device_id' => $bpnewdeviceid, 'subscription_option' => $subscriptionoptions);					
 					
@@ -2595,15 +4376,16 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					
 					if ($request['subscription-type'] === 'unsubscribe-group') {
 					
-						$bpolddeviceid = $decrypted.'!!'.$request['groupid'].'!!'.$request['cookievalue'];
+						$bpolddeviceid = $decrypted.'!!'.$request['groupid'].'!!'.$request['cookievalue'].'!!webview';
 		
 		    			$deviceid_update_status = $wpdb->query("DELETE from {$table} WHERE userid = {$bpuserid} AND device_id = '{$bpolddeviceid}'") ;
 					}
 					else 
 					{
-						$data = array('userid' => $bpuserid, 'device_id' => $decrypted, 'subscription_option' => '10000');
+						$deviceid = $decrypted.'!!webview';
+						$data = array('userid' => $bpuserid, 'device_id' => $deviceid, 'subscription_option' => '10000');
 				
-						$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$decrypted."%'");
+						$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$deviceid."%'");
 				
 						$updatetokenresponse = 'fail';
 						
@@ -2611,7 +4393,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			
 							if ($result->userid === 0 || $result->userid !== $bpuserid){
 
-								$deviceid_update_status = $wpdb->query("UPDATE $table SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
+								$deviceid_update_status = $wpdb->query("UPDATE $table SET userid = {$bpuserid} WHERE device_id = '{$deviceid}'") ;	
 							}  
 						}						
 				
@@ -2643,8 +4425,6 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 			}
 			
-			//$parameters = $request->get_params();
-			//print_r($parameters);
 		}
 		
 		/**
@@ -2655,22 +4435,28 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		*/
 		public function PNFPB_icfcm_integrate_app() {
 			global $wpdb;
-			//$table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
-			//$data = array('userid' => 0, 'device_id' => 'test', 'subscription_option' => '10000');
-			//$insertstatus = $wpdb->insert($table,$data);
-			//print_r($insertstatus);
 			if (isset($_POST["submit"])) {
 				$bytes = random_bytes(16);
 				update_option('PNFPB_icfcm_integrate_app_secret_code',bin2hex($bytes));
 			}
 			
+ 			if (isset($_POST["disable_sw_file"]) && get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) === '1') {
+				update_option('pnfpb_ic_disable_serviceworker_pwa_pushnotification',null);
+			}
+			else 
+			{
+				if (isset($_POST["disable_sw_file"])) {
+					update_option('pnfpb_ic_disable_serviceworker_pwa_pushnotification','1');
+				}
+			}
+			
 		?>
 
-		<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab nav-tab-active"><?php echo 'API to integrate mobile app';?></a></h2>
-
+		<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER);?></a></h2>
+		<div class="pnfpb_column_1000">
 			<h2 class="pnfpb_ic_push_settings_header2"><?php echo 'Generate secret key for Android/Ios app integration';?></h2>
-			<h5 class="pnfpb_ic_push_settings_header2"><?php echo 'This secret key will be used to get subscription token in secured manner from Android/Ios app to store it in WordPress Database table to send push notifications for app users';?></h5>
-			<h5 class="pnfpb_ic_push_settings_header2"><?php echo 'Use this secret key in http post request using this rest api from app';?></h5>
+			<h4 class="pnfpb_ic_push_settings_header2"><?php echo 'This secret key will be used to get subscription token in secured manner from Android/Ios app to store it in WordPress Database table to send push notifications for app users';?></h4>
+			<h4 class="pnfpb_ic_push_settings_header2"><?php echo 'Use this secret key in http post request using this rest api from app';?></h4>
 
 			<form method="post" enctype="multipart/form-data" class="form-field">
 				<table class="pnfpb_ic_push_settings_table widefat fixed">
@@ -2684,9 +4470,151 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					</tbody>
 				</table>
 			</form>
-
+			<br/>
+			<h4>REST API url post method to get subscription token from app users to send push notification
+https://domainname.com/wp-json/PNFPBpush/v1/subscriptiontoken</h4>
+			<br/>
+			<h4>Documentation on how to use API to integrate this plugin push notification with mobile app is in this link <a href="https://www.muraliwebworld.com/groups/wordpress-plugins-by-muralidharan-indiacitys-com-technologies/forum/topic/integrate-push-notification-for-post-buddypress-wp-in-mobile-app-webview/" target="_blank">Integrate it with native mobile app users to send push notifications for app users</a></h4>
+			<br />
+			<h2 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION,PNFPB_TD);?></h2>
+			<?php if (get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) === '1') { ?>
+				<p class="pnfpb_ic_red_color_text"><b><?php echo __(PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION3);?></b></p>
+			<?php } ?>
+			<form method="post" enctype="multipart/form-data" class="form-field">
+				<table class="pnfpb_ic_push_settings_table widefat fixed">
+    				<tbody>
+    					<tr  class="pnfpb_ic_push_settings_table_row">
+							<td class="column-columnname">
+								<?php if (get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) === '1') { ?> 
+								<div class="col-sm-10"><?php submit_button(__( 'Enable service worker file', 'PNFPB_TD' ), 'primary','disable_sw_file' ); ?></div>
+								<?php } else { ?>
+								<div class="col-sm-10"><?php submit_button(__( 'Disable service worker file', 'PNFPB_TD' ), 'primary','disable_sw_file' ); ?></div>		
+								<?php } ?>
+								<ul>
+									<li><?php echo __(PNFPB_PLUGIN_DISABLE_SW_SETTINGS_DESCRIPTION2);?></li>
+								</ul>
+							</td>							
+    					</tr>							
+					</tbody>
+				</table>
+			</form>
+			<br/>
+			</div>
 		<?php
-		} 		
+		}
+
+		/**
+		* For NGINX enabled servers, enable/disable static service worker js file and PWA manifest json file
+		* in root folder of website. This settings is applicable only if server has NGINX and static files are
+		* served by NGINX instead of APACHE & for .htaccess rewrite not working for dynamic js/json files.
+		* @since 1.40
+		*/		
+		public function PNFPB_icfcm_settings_for_ngnix_server() {
+			?>
+			<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER);?></a></h2>
+
+			<div class="pnfpb_column_1000">
+				
+				<h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NGINX_SETTINGS,PNFPB_TD);?></h1>
+
+				<form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
+	
+    				<?php settings_fields( 'pnfpb_icfcm_nginx'); ?>
+				
+    				<?php do_settings_sections( 'pnfpb_icfcm_nginx' ); ?>
+				
+					<?php
+						if (get_option( 'pnfpb_ic_nginx_static_files_enable' ) != '1') {
+
+						global $wp_filesystem;
+						
+
+						if ( empty( $wp_filesystem ) ) {
+				
+							require_once( trailingslashit( ABSPATH ) . 'wp-admin/includes/file.php' );
+							WP_Filesystem();
+						}
+	
+						$swresponse 		= wp_remote_head( home_url( '/' ). 'pnfpb_icpush_pwa_sw.js', array( 'sslverify' => false ) );
+						
+						$swresponse_code 	= wp_remote_retrieve_response_code( $swresponse );
+						
+						if ( 200 === $swresponse_code ) {
+
+							$createfileresult = $wp_filesystem->delete( trailingslashit( ABSPATH ) . 'pnfpb_icpush_pwa_sw.js');
+						
+						}
+			
+						$firebase_swresponse 		= wp_remote_head( home_url( '/' ). 'firebase-messaging-sw.js', array( 'sslverify' => false ) );
+				
+						$firebase_swresponse_code 	= wp_remote_retrieve_response_code( $firebase_swresponse );
+
+	
+						if ( 200 === $firebase_swresponse_code ) {
+				
+							$createfileresult = $wp_filesystem->delete( trailingslashit( ABSPATH ) . 'firebase-messaging-sw.js');
+
+						}
+			
+						if (get_option('pnfpb_ic_pwa_app_enable') === '1') {
+			
+							$pwa_manifest_response 		= wp_remote_head( home_url( '/' ). 'pnfpbmanifest.json', array( 'sslverify' => false ) );
+					
+							$pwa_manifest_response_code 	= wp_remote_retrieve_response_code( $pwa_manifest_response );
+				
+							if ( 200 === $pwa_manifest_response_code ) {
+				
+								$createfileresult = $wp_filesystem->delete( trailingslashit( ABSPATH ) . 'pnfpbmanifest.json');
+
+							}
+					
+						}
+				
+					}			
+			
+					?>
+	
+					<ul>
+					
+						<li><?php echo __(PNFPB_PLUGIN_NGINX_SETTINGS_DESCRIPTION);?></li>
+					
+					</ul>
+				
+					<table class="pnfpb_ic_push_settings_table widefat fixed">
+    					<tbody>
+							<tr class="pnfpb_ic_push_settings_table_row">
+								<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+									<div class="pnfpb_row">
+  										<div class="pnfpb_column_400">
+    										<div class="pnfpb_card">									
+												<label for="pnfpb_ic_nginx_static_files_enable">
+													<?php echo __("Enable/Disable static service worker and PWA manifest files",'PNFPB_TD');?>
+												</label>
+												<label class="pnfpb_switch">
+													<input  id="pnfpb_ic_nginx_static_files_enable" name="pnfpb_ic_nginx_static_files_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_nginx_static_files_enable' ) ); ?>  />
+													<span class="pnfpb_slider round"></span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+    						<tr  class="pnfpb_ic_push_settings_table_row">
+								<td class="column-columnname">
+									<div class="pnfpb_column_full"><?php submit_button(__('Save changes',PNFPB_TD),'pnfpb_ic_push_save_configuration_button'); ?></div>
+									<ul>
+					
+										<li><?php echo __(PNFPB_PLUGIN_NGINX_SETTINGS_DESCRIPTION2);?></li>
+					
+									</ul>
+								</td>							
+    						</tr>							
+						</tbody>
+					</table>
+				</form>
+			</div>
+		<?php
+		}		
 		
 	}
 
@@ -2699,8 +4627,4 @@ else
 {
     exit;
 }
-
-
-
-
 ?>

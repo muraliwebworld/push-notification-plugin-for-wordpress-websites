@@ -6,8 +6,9 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo 'Integrate app API';?></a></h2>
+<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER);?></a></h2>
 
+<div class="pnfpb_column_1000">
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_PWA_SETTINGS,PNFPB_TD);?></h1>
 
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
@@ -23,17 +24,18 @@
 	</ul>
 	<table class="pnfpb_ic_push_settings_table widefat fixed">
     	<tbody>
-			<tr>
-				<td>
-					<b>Activate/deactivate PWA app</b>
-				</td>
-			</tr>		
 			<tr class="pnfpb_ic_push_settings_table_row">
 				<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_app_enable">
-						<?php echo __("Enable/Disable<br/>PWA-Progressive web app*",'PNFPB_TD');?>
-					</label>
-					<input  id="pnfpb_ic_pwa_app_enable" name="pnfpb_ic_pwa_app_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_enable' ) ); ?>  />					
+				<div class="pnfpb_row">
+  					<div class="pnfpb_column">
+    					<div class="pnfpb_card">				
+							<label for="pnfpb_ic_pwa_app_enable"><?php echo __("Enable/Disable PWA*",'PNFPB_TD');?></label>									<label class="pnfpb_switch">
+								<input  id="pnfpb_ic_pwa_app_enable" name="pnfpb_ic_pwa_app_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_enable' ) ); ?>  />	
+								<span class="pnfpb_slider round"></span>
+							</label>
+						</div>
+					</div>
+				</div>
 				</td>
 			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
@@ -89,16 +91,13 @@
 			<tr><td><b>PWA icon size must be exactly as specified below for icon1 and icon2(132x132 and 512x512) otherwise it will use default plugin icons</b></td></tr>			
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_pwa_upload_icon_132">
-						<?php echo __("PWA Icon1*<br/>( Must be 132x132 pixels)",PNFPB_TD);?>
-					</label>
-				</td>
-			</tr>
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">				
+					<div class="pnfpb_column_400">
             		<table>
 						<tr>
                 			<td class="column-columnname">
+								<label for="pnfpb_ic_fcm_pwa_upload_icon_132">
+									<?php echo __("PWA Icon1*<br/>( Must be 132x132 pixels)",PNFPB_TD);?>
+								</label>								
                     			<input type="button" value="<?php echo __("Add PWA Icon",PNFPB_TD);?>" id="pnfpb_ic_fcm_pwa_upload_button_132" class="pnfpb_ic_push_pwa_settings_upload_icon" />
                     			<input type="hidden" id="pnfpb_ic_fcm_pwa_upload_icon_132" name="pnfpb_ic_fcm_pwa_upload_icon_132" value="<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_icon_132' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_icon_132' );} else { echo plugin_dir_url( __DIR__ ).'public/img/icon_132.png';} ?>" />
                 			</td>
@@ -112,21 +111,14 @@
                 			</td>
             			</tr>
 					</table>
-					
-				</td>
-			</tr>
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_pwa_upload_icon_512">
-						<?php echo __(" PWA Icon2*<br/>( Must be 512x512 pixels)",PNFPB_TD);?>
-					</label>
-				</td>
-			</tr>
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">	
+					</div>
+					<div class="pnfpb_column_400">
             		<table>
 						<tr>
                 			<td class="column-columnname">
+								<label for="pnfpb_ic_fcm_pwa_upload_icon_512">
+									<?php echo __(" PWA Icon2*<br/>( Must be 512x512 pixels)",PNFPB_TD);?>
+								</label>								
                     			<input type="button" value="<?php echo __("Add PWA Icon",PNFPB_TD);?>" id="pnfpb_ic_fcm_pwa_upload_button_512" class="pnfpb_ic_push_pwa_settings_upload_icon" />
                     			<input type="hidden" id="pnfpb_ic_fcm_pwa_upload_icon_512" name="pnfpb_ic_fcm_pwa_upload_icon_512" value="<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_icon_512' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_icon_512' );} else { echo plugin_dir_url( __DIR__ ).'public/img/icon.png';} ?>" />
                 			</td>
@@ -140,6 +132,7 @@
                 			</td>
             			</tr>
 					</table>
+					</div>
 				</td>
 			</tr>
 			<tr><td><b>Below options are for offline facility for PWA - web app</b></td></tr>
@@ -243,43 +236,62 @@
 				</select>					
 				</td>
 			</tr>
-			<tr class="pnfpb_ic_push_settings_table_row">
-				<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_app_excludeallurls">
-						<?php echo __("Exclude all Urls from PWA offline cache<br/>(except offline page selected above)",'PNFPB_TD');?>
-					</label>
-					<input  id="pnfpb_ic_pwa_app_excludeallurls" name="pnfpb_ic_pwa_app_excludeallurls" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_excludeallurls' ) ); ?>  />				
-				</td>
-			</tr>			
 			<tr><td><b>List of urls to be excluded from offline cache separted by comma. Please note that enter list of urls to be excluded separated with comma</b></td></tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_app_excludeurls">
+  					<div class="pnfpb_row">
+						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">						
+								<label class="pnfpb_ic_push_settings_table_label_checkbox">
+									<?php echo __("Exclude all Urls from PWA offline cache",'PNFPB_TD');?>
+									<label class="pnfpb_switch">
+										<input  id="pnfpb_ic_pwa_app_excludeallurls" name="pnfpb_ic_pwa_app_excludeallurls" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_excludeallurls' ) ); ?>  />
+										<span class="pnfpb_slider round"></span>
+									</label>
+								</label>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr><td><b>List of urls to be excluded from offline cache separted by comma. Please note that enter list of urls to be excluded separated with comma</b></td></tr>
+    		<tr class="pnfpb_ic_push_settings_table_row">
+        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_excludeurls">			
 						<?php echo __("List of urls to be excluded from cache separated by comma",PNFPB_TD);?>
+						<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_excludeurls" name="pnfpb_ic_pwa_app_excludeurls" type="text" value="<?php if (get_option( 'pnfpb_ic_pwa_app_excludeurls' )) {echo get_option( 'pnfpb_ic_pwa_app_excludeurls' );}?>" />
 					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_excludeurls" name="pnfpb_ic_pwa_app_excludeurls" type="text" value="<?php if (get_option( 'pnfpb_ic_pwa_app_excludeurls' )) {echo get_option( 'pnfpb_ic_pwa_app_excludeurls' );}?>" />					
 				</td>
 			</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
 				<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_app_custom_prompt_enable">
-						<?php echo __("Enable/Disable<br/>PWA custom prompt install*",'PNFPB_TD');?>
-					</label>
-					<input  id="pnfpb_ic_pwa_app_custom_prompt_enable" name="pnfpb_ic_pwa_app_custom_prompt_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_custom_prompt_enable' ) ); ?>  />
-					<br />
-					<label for="pnfpb_ic_pwa_app_custom_prompt_popup">
-						<?php echo __("POPUP type prompt ",'PNFPB_TD');?>
-					</label>
-					
-					<input  id="pnfpb_ic_pwa_app_custom_prompt_popup" name="pnfpb_ic_pwa_app_custom_prompt_type" type="radio" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_custom_prompt_type' ) ); ?>  />
-					
-					<label for="pnfpb_ic_pwa_app_custom_prompt_snackbar">
-						<?php echo __("Snackbar type prompt",'PNFPB_TD');?>
-					</label>
-					
-					<input  id="pnfpb_ic_pwa_app_custom_prompt_snackbar" name="pnfpb_ic_pwa_app_custom_prompt_type" type="radio" value="2" <?php checked( '2', get_option( 'pnfpb_ic_pwa_app_custom_prompt_type' ) ); ?>  />					
-					
+					<div class="pnfpb_row">
+  						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">
+								<label for="pnfpb_ic_pwa_app_custom_prompt_enable">
+									<?php echo __("Enable/Disable custom prompt install*",'PNFPB_TD');?>
+								</label>
+								<label class="pnfpb_switch">
+									<input  id="pnfpb_ic_pwa_app_custom_prompt_enable" name="pnfpb_ic_pwa_app_custom_prompt_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_custom_prompt_enable' ) ); ?>  />
+									<span class="pnfpb_slider round"></span>
+								</label>
+							</div>
+						</div>
+ 						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">
+								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
+									<?php echo __("Popup type prompt ",'PNFPB_TD');?>
+									<input  id="pnfpb_ic_pwa_app_custom_prompt_popup" name="pnfpb_ic_pwa_app_custom_prompt_type" type="radio" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_custom_prompt_type' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
+									<?php echo __("Snackbar type prompt",'PNFPB_TD');?>
+									<input  id="pnfpb_ic_pwa_app_custom_prompt_snackbar" name="pnfpb_ic_pwa_app_custom_prompt_type" type="radio" value="2" <?php checked( '2', get_option( 'pnfpb_ic_pwa_app_custom_prompt_type' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>							
+							</div>
+						</div>
+					</div>
 				</td>
 			</tr>			
     		<tr class="pnfpb_ic_push_settings_table_row">
@@ -348,8 +360,11 @@
 			<tr><td><b>All fields marked with "*" are required fields, Please verify before submitting the changes</b></td></tr>
 			<tr><td><b>Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android,Edge for Android, Brave for Android and Samsung Interent except Firefox for desktop</b></td></tr>
     		<tr>
-				<td class="column-columnname"> <div class="col-sm-10"><?php submit_button(); ?></div></td>
+				<td class="column-columnname">
+					<div class="pnfpb_column_full"><?php submit_button(__('Save changes',PNFPB_TD),'pnfpb_ic_push_save_configuration_button'); ?></div>
+				</td>
     		</tr>
    		</tbody>
 	</table>
 </form>
+</div>

@@ -11,9 +11,10 @@
 
 if ( !function_exists( 'PNFPB_icfm_icpush_add_rewrite_rules' ) && !function_exists( 'PNFPB_icfm_icpush_generate_sw' ) ) {
 	
-	add_action( 'init', 'PNFPB_icfm_icpush_add_rewrite_rules' );
-
-	add_action( 'parse_request', 'PNFPB_icfm_icpush_generate_sw_pwajson' );
+	
+	add_action( 'init', 'PNFPB_icfm_icpush_add_rewrite_rules' );	
+	
+	add_action( 'parse_request', 'PNFPB_icfm_icpush_generate_sw_pwajson' );	
 	
 }
 
@@ -21,6 +22,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_add_rewrite_rules' ) && !function_exis
 if ( !function_exists( 'PNFPB_icfm_icpush_add_rewrite_rules' )) {
 	
 	function PNFPB_icfm_icpush_add_rewrite_rules() {
+		
 		$sw_filename = home_url( '/' ).'pnfpb_icpush_pwa_sw.js';
 		add_rewrite_rule( "^/{$sw_filename}$","index.php?{$sw_filename}=1");
 		
@@ -50,7 +52,8 @@ if ( !function_exists( 'PNFPB_icfm_icpush_generate_sw_pwajson' )) {
 				if ($sw_filename_firebasesw != trim($query_vars_as_string)) {
 					if (trim($query_vars_as_string) === 'pnfpbmanifest.json' && get_option('pnfpb_ic_pwa_app_enable') === '1') {
 						header( 'Content-Type: application/json' );
-						echo PNFPB_ic_generate_pwa_manifest_json();
+						$pwa_manifest_contents = PNFPB_ic_generate_pwa_manifest_json();
+ 						echo $pwa_manifest_contents;
 						exit();
 					}
 			    	else 
@@ -61,14 +64,16 @@ if ( !function_exists( 'PNFPB_icfm_icpush_generate_sw_pwajson' )) {
 			else
 			{
 				header( 'Content-Type: text/javascript' );
-				echo PNFPB_icfm_icpush_firebasesw_template();
+				$firebase_sw_contents =  PNFPB_icfm_icpush_firebasesw_template();
+				echo $firebase_sw_contents;				
 				exit();
 			}
 		}
 		else
 		{
 			header( 'Content-Type: text/javascript' );
-			echo PNFPB_icfm_icpush_sw_template();
+			$sw_contents = PNFPB_icfm_icpush_sw_template();
+			echo $sw_contents;
 			exit();
 		}
 	}
@@ -93,7 +98,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v1.31.0',
+  			cache_version: 'pnfpb_v1.47.0',
   			offline_assets: []
 		};
 
@@ -460,7 +465,16 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 			event.waitUntil(self.clients.openWindow(event.notification.data.url));
 		});
 
-		<?php return apply_filters( 'PNFPB_icfm_icpush_sw_template', ob_get_clean() );
+		<?php 
+			$sw_contents = ob_get_contents();
+		
+			ob_get_clean();
+		
+			return $sw_contents;
+
+			//return apply_filters( 'PNFPB_icfm_icpush_sw_template', $sw_contents );
+		
+			
 	}
 
 }
@@ -526,9 +540,14 @@ var firebaseConfig = {
 
 
 		}
-		
 
-		<?php return apply_filters( 'PNFPB_icfm_icpush_firebasesw_template', ob_get_clean() );
+		<?php 
+			$firebase_sw_contents = ob_get_contents();
+		
+			ob_get_clean();
+		
+			return $firebase_sw_contents;		
+			//return apply_filters( 'PNFPB_icfm_icpush_firebasesw_template', ob_get_clean() );
 	}
 }
 
@@ -557,7 +576,13 @@ if (!function_exists('PNFPB_ic_genenrate_pwa_mainfest_json')) {
   						"background_color": "<?php if (get_option( 'pnfpb_ic_pwa_app_backgroundcolor' )){echo get_option( 'pnfpb_ic_pwa_app_backgroundcolor' );} else { echo '#ffffff';} ?>",
   						"display": "<?php if (get_option( 'pnfpb_ic_pwa_app_display' )) {echo get_option( 'pnfpb_ic_pwa_app_display' );} else { echo 'standalone';} ?>"
 						}
-					<?php return apply_filters( 'PNFPB_ic_generate_pwa_manifest_json', ob_get_clean() );		
+					<?php 
+						$pwa_manifest_contents = ob_get_contents();
+		
+						ob_get_clean();
+		
+						return $pwa_manifest_contents;		
+						//return apply_filters( 'PNFPB_ic_generate_pwa_manifest_json', ob_get_clean() );		
 	}
 }
 

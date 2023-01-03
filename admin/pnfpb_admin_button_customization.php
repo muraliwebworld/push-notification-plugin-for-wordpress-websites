@@ -6,9 +6,9 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab ">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo 'Integrate app API';?></a></h2>
+<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab ">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER);?></a></h2>
 
-<h2 class="pnfpb_ic_push_settings_header"><?php echo __("Subscribe/un-subscribe notification button customization",PNFPB_TD);?></h2>
+<div class="pnfpb_column_1000">
 
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
     <?php settings_fields( 'pnfpb_icfcm_buttons'); ?>
@@ -16,6 +16,7 @@
 	
 	<table class="pnfpb_ic_push_settings_table widefat fixed">
   		<tbody>
+			<tr class="pnfpb_ic_push_settings_table_row"><td class="pnfpb_ic_push_settings_table_label_column column-columnname"><h3 class="pnfpb_ic_push_settings_header"><?php echo __("Subscribe/un-subscribe notification button customization",PNFPB_TD);?></h3></td></tr>				
    	 		<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<label for="pnfpb_ic_fcm_subscribe_button_color">
@@ -104,9 +105,38 @@
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm"><?php echo __("Site unsubscription dialog text after complete using shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm" name="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_unsubscribe_dialog_text_confirm' )) {echo get_option( 'pnfpb_ic_fcm_unsubscribe_dialog_text_confirm' );} else { echo 'Your device is unsubscribed';} ?>" />
 				</td>
     		</tr>
+			<tr class="pnfpb_ic_push_settings_table_row"><td class="pnfpb_ic_push_settings_table_label_column column-columnname"><h3 class="pnfpb_ic_push_settings_header"><?php echo __("PWA Install shortcode button customization",PNFPB_TD);?></h3><h5 class="pnfpb_ic_push_settings_header"><?php echo __("(PNFPB_PWA_PROMPT)",PNFPB_TD);?></h5></td></tr>
+   	 		<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_ic_fcm_install_pwa_shortcode_button_color">
+						<?php echo __("Install PWA shortcode button background color",PNFPB_TD);?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_prompt_install_button_color pnfpb_ic_push_pwa_color" id="pnfpb_ic_fcm_install_pwa_shortcode_button_color" name="pnfpb_ic_fcm_install_pwa_shortcode_button_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_color' )) {echo get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_color' ); } else { echo '#000000';}?>" />
+				</td>
+			</tr>
+   	 		<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_ic_fcm_install_pwa_shortcode_button_text_color">
+						<?php echo __("Install PWA shortcode button text color",PNFPB_TD);?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_prompt_install_button_color pnfpb_ic_push_pwa_color" id="pnfpb_ic_fcm_install_pwa_shortcode_button_text_color" name="pnfpb_ic_fcm_install_pwa_shortcode_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_text_color' ); } else { echo '#ffffff';}?>" />
+				</td>
+			</tr>
+   	 		<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_ic_fcm_install_pwa_shortcode_button_text_color">
+						<?php echo __("Install PWA shortcode button text",PNFPB_TD);?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_prompt_install_button_color pnfpb_ic_push_pwa_color" id="pnfpb_ic_fcm_install_pwa_shortcode_button_text" name="pnfpb_ic_fcm_install_pwa_shortcode_button_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_text' )) {echo get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_text' ); } else { echo 'Install PWA';}?>" />
+				</td>
+			</tr>			
 			<tr>
-				<td class="column-columnname"> <div class="col-sm-10"><?php submit_button(); ?></div></td>
+				<td class="column-columnname"><div class="pnfpb_column_full"><?php submit_button(__('Save changes',PNFPB_TD),'pnfpb_ic_push_save_configuration_button'); ?></div></td>
     		</tr>
   		</tbody>
 	</table>
 </form>
+</div>

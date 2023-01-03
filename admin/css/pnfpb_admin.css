@@ -8,7 +8,7 @@
 }
 
 .pnfpb_ic_push_settings_table_column {
-	border:1px solid #ccc;
+	border:0px solid #ccc;
 }
 
 .pnfpb_ic_push_settings_table_label_column {
@@ -35,9 +35,396 @@
 }
 
 .pnfpb_ic_push_settings_upload_icon {
-    width:80%;
+	width:100%;
     white-space:normal;
     word-wrap:break-word;
+  	background-color: #135e96 !important; 
+  	border: none !important;
+  	color: white !important;
+  	padding: 10px !important;
+  	text-align: center !important;
+  	text-decoration: none !important;
+  	display: inline-block !important;
+  	font-size: 16px !important;
+  	margin: 4px 2px !important;
+  	cursor: pointer !important;
+  	border-radius: 8px !important;	
 }
 .devicetokens .column-id { width: 7%; }
 .devicetokens .column-userid { width: 15%; }
+.pnfpb_ic_red_color_text { color: red;}
+.pnfpb_switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  margin-left: 4px;
+}
+
+.pnfpb_switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pnfpb_slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.pnfpb_slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .pnfpb_slider {
+  background-color: #135e96;
+}
+
+input:focus + .pnfpb_slider {
+  box-shadow: 0 0 1px #135e96;
+}
+
+input:checked + .pnfpb_slider:before {
+  -webkit-transform: translateX(17px);
+  -ms-transform: translateX(17px);
+  transform: translateX(17px);
+}
+
+/* Rounded sliders */
+.pnfpb_slider.round {
+  border-radius: 20px;
+}
+
+.pnfpb_slider.round:before {
+  border-radius: 50%;
+}
+
+.pnfpb_ic_push_settings_table_label_checkbox {
+	padding-left: 0px;
+	padding-right: 0px;
+	font-weight:500;
+}
+
+/* Float four columns side by side */
+.pnfpb_column {
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+  max-width: 200px;
+  margin-bottom: 10px;
+}
+
+.pnfpb_column_400 {
+  float: left;
+  /* width: 25%; */
+  padding: 0 10px;
+  /* max-width: 400px; */
+  margin-bottom: 10px;
+}
+
+/* Remove extra left and right margins, due to padding */
+.pnfpb_row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.pnfpb_row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the counter cards */
+.pnfpb_card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  text-align: left;
+  background-color: #dcdcdeb5;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: stretch;
+}
+
+.pnfpb_container {
+  display: inline;
+  position: relative;
+  padding-left: 35px;
+  padding-right: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.pnfpb_container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.pnfpb_checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.pnfpb_container:hover input ~ .pnfpb_checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.pnfpb_container input:checked ~ .pnfpb_checkmark {
+  background-color: #135e96;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.pnfpb_checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.pnfpb_container input:checked ~ .pnfpb_checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.pnfpb_container .pnfpb_checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .pnfpb_column {
+    width: 25%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .pnfpb_container {
+  	display: block;
+   }
+}
+
+.pnfpb_activity_form_button, .pnfpb_comments_content_button, .pnfpb_private_message_button, .pnfpb_ic_push_configuration_button, .pnfpb_avatar_change_button, .pnfpb_friendship_request_button, .pnfpb_new_member_button, .pnfpb_cover_image_change_button, .pnfpb_friendship_accept_button {
+	background-color: #135e96 !important;
+    border: none !important;
+    color: white !important;
+    padding: 5px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+	max-width: 76px;
+}
+
+.pnfpb_ic_push_save_configuration_button {
+	background-color: #135e96 !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+}
+
+.pnfpb_ic_firebase_configuration_button, .pnfpb_ic_firebase_configuration_help_button {
+	background-color: #135e96 !important;
+    border: none !important;
+    color: white !important;
+    padding: 5px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+}
+
+.pnfpb_ic_private_message_form {
+	display: none;
+}
+
+.pnfpb_ic_new_member_form {
+	display: none;
+}
+
+.pnfpb_ic_friendship_request_form {
+	display: none;
+}
+
+.pnfpb_ic_friendship_accept_form {
+	display: none;
+}
+
+.pnfpb_ic_avatar_change_form {
+	display: none;
+}
+
+.pnfpb_ic_cover_image_change_form {
+	display: none;
+}
+
+.pnfpb_ic_activity_content_form {
+	display: none;
+}
+
+.pnfpb_ic_comments_content_form {
+	display: none;
+}
+
+.pnfpb_ic_firebase_configuration_help {
+	display: none;
+	width: 100%;
+}
+
+.pnfpb_ic_firebase_configuration {
+	display: block;
+}
+
+table.pnfpb_ic_push_settings_table {
+	border: 1px solid #000000;
+}
+
+table.pnfpb_ic_push_notification_settings_table {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-top: 1px solid #000000;
+}
+
+table.pnfpb_ic_push_firebase_settings_table {
+	border: 1px solid #000000;
+}
+
+td.pnfpb_ic_push_settings_table_label_column {
+	border-left: 0px solid #000000;
+}
+
+td.pnfpb_ic_push_settings_table_column {
+	border-bottom: 1px solid #000000;
+}
+.pnfpb_column_full p.submit {
+	text-align: center;
+}
+
+.pnfpb_column_400 p.submit {
+	margin-top: 0px;
+}
+
+.pnfpb_column_full {
+	width: 100%;
+}
+
+.pnfpb_column_1000 {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.pnfpb_column_buddypress_functions {
+	width: 40%;
+}
+
+@media screen and (max-width: 600px) {
+	.pnfpb_column_buddypress_functions {
+		width: unset;
+	}
+}
+
+.pnfpb_ic_push_settings_table {
+	margin-top: 10px;
+}
+
+.pnfpb_max_width_236 {
+	max-width: 236px;
+}
+
+.pnfpb_max_width_40 {
+	max-width: 40px;
+}
+
+.pnfpb_width_60 {
+	width: 60%;
+}
+
+.pnfpb_width_15 {
+	width: 15%;
+}
+
+.pnfpb_width_20 {
+	width: 20%;
+}
+
+.pnfpb_float_right {
+	float: right;
+}
+
+.pnfpb_float_left {
+	float: left;
+}
+
+.pnfpb_padding_top_8 {
+	padding-top: 8px;
+}
+
+.pnfpb_flex_grow_1 {
+	flex-grow: 1;
+}
+
+.pnfpb_flex_grow_3 {
+	flex-grow: 3;
+}
+
+.pnfpb_flex_grow_6 {
+	flex-grow: 6;
+}
+
+.pnfpb_margin_top_8 {
+	margin-top: 8px;
+}
+
+.pnfpb_margin_top_6 {
+	margin-top: 6px;
+}
+
+.pnfpb_margin_left_4 {
+	margin-left: 4px;
+}

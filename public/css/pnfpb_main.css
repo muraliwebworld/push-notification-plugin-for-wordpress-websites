@@ -259,3 +259,7 @@
 .pnfpbclose:after {
   transform: rotate(-45deg);
 }
+.pnfpb_pwa_shortcode_box {
+	text-align:center;
+	display:none;
+}

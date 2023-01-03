@@ -15,7 +15,11 @@
 	
     $bpdeviceid = sanitize_text_field($_POST['device_id']);
 
-    $bpsubscribeoptions = sanitize_text_field($_POST['subscriptionoptions']);
+	$bpsubscribeoptions = '10000000000';
+
+	if (isset($_POST['subscriptionoptions'])) {
+    	$bpsubscribeoptions = sanitize_text_field($_POST['subscriptionoptions']);
+	}
 	
 	/** securing data from Firebase who subscribed push notification  **/
 	

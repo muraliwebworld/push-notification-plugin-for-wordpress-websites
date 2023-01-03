@@ -6,8 +6,9 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo 'Integrate app API';?></a></h2>
+<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER);?></a></h2>
 
+<div class="pnfpb_column_1000">
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_SETTINGS,PNFPB_TD);?></h1>
 
 <h2 class="pnfpb_ic_push_settings_details"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_DETAIL,PNFPB_TD);?></h2>
@@ -27,7 +28,9 @@
 	
 			    $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 	
-			    $deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%'" );
+			    $deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%'" );
+				
+				$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%'" );
 	
 			    $url = 'https://fcm.googleapis.com/fcm/send';
 
@@ -44,60 +47,120 @@
                 if (isset($_POST['pnfpb_ic_on_demand_push_url'])) {
                     $postlink = $_POST['pnfpb_ic_on_demand_push_url'];
                 }
-
-			    // prepare the message
-			    $message = array( 
-				    'title'     => $_POST['pnfpb_ic_on_demand_push_title'],
-				    'body'      => $activity_content_push,
-				    'icon'		=> $imageurl,
-					'image'		=> $imageurl,
-				    'click_action' => $postlink
-			    );
-    
-
-			    $fields = array( 
-				    'registration_ids' => $regid, 
-				    'notification' => $message
-			    );
-    
-			    $headers = array( 
-				    'Authorization' => 'key='.$apiaccesskey, 
-				    'Content-Type' => 'application/json'
-			    );
-    
-			    $body = json_encode($fields);
-			
-			    $args = array(
-			        'httpversion' => '1.0',
-					'blocking' => true,
-					'sslverify' => false,
-					'body' => $body,
-					'headers' => $headers
-			    );
-			
-			    $apiresults = wp_remote_post($url, $args);
 				
-				$apibody = wp_remote_retrieve_body($apiresults);
+				if (count($regid) > 0) {
+
+					// prepare the message
+					$message = array( 
+						'title'     => $_POST['pnfpb_ic_on_demand_push_title'],
+						'body'      => $activity_content_push,
+						'icon'		=> $imageurl,
+						'image'		=> $imageurl,
+						'click_action' => $postlink
+					);
+    
+
+					$fields = array( 
+						'registration_ids' => $regid, 
+						'notification' => $message
+					);
+    
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
+    
+					$body = json_encode($fields);
+			
+					$args = array(
+						'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
+			
+					$apiresults = wp_remote_post($url, $args);
 				
-				$bodyresults = json_decode($apibody,true);
-				if (is_array($bodyresults)) {
-					if (array_key_exists('results', $bodyresults)) {
-						foreach ($bodyresults['results'] as $idx=>$result){
-							if (array_key_exists('error',$result)) {
-								if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
-									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+					$apibody = wp_remote_retrieve_body($apiresults);
+				
+					$bodyresults = json_decode($apibody,true);
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($regid[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$regid[$idx]}'") ;
+									}
 								}
 							}
 						}
 					}
-				}
 		
 			
-			    if (is_wp_error($apiresults)) {
-				    $status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
-                    $error_message = $apiresults->get_error_message();
-                    error_log('There was a '.$status.' error in push notification : '.$error_message);
-                }
+					if (is_wp_error($apiresults)) {
+						$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+						$error_message = $apiresults->get_error_message();
+						error_log('There was a '.$status.' error in push notification : '.$error_message);
+					}
+				}
+				
+				if (count($deviceidswebview) > 0) {
+
+					// prepare the message
+					$message = array( 
+						'title'     => $_POST['pnfpb_ic_on_demand_push_title'],
+						'body'      => $activity_content_push,
+						'icon'		=> $imageurl,
+						'image'		=> $imageurl
+					);
+    
+
+					$fields = array( 
+						'registration_ids' => $deviceidswebview, 
+						'notification' => $message
+					);
+    
+					$headers = array( 
+						'Authorization' => 'key='.$apiaccesskey, 
+						'Content-Type' => 'application/json'
+					);
+    
+					$body = json_encode($fields);
+			
+					$args = array(
+						'httpversion' => '1.0',
+						'blocking' => true,
+						'sslverify' => false,
+						'body' => $body,
+						'headers' => $headers
+					);
+			
+					$apiresults = wp_remote_post($url, $args);
+				
+					$apibody = wp_remote_retrieve_body($apiresults);
+				
+					$bodyresults = json_decode($apibody,true);
+					if (is_array($bodyresults)) {
+						if (array_key_exists('results', $bodyresults)) {
+							foreach ($bodyresults['results'] as $idx=>$result){
+								if (array_key_exists('error',$result)) {
+									if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($deviceidswebview[$idx], '!!') === false) {
+										$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$deviceidswebview[$idx]}'") ;
+									}
+								}
+							}
+						}
+					}
+		
+			
+					if (is_wp_error($apiresults)) {
+						$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
+						$error_message = $apiresults->get_error_message();
+						error_log('There was a '.$status.' error in push notification : '.$error_message);
+					}
+				}
+				
                 
 			}    
 
@@ -174,8 +237,9 @@
 				</td>
 			</tr>                       
     		<tr>
-				<td class="column-columnname"> <div class="col-sm-10"><?php submit_button( __( 'Send push notification', 'PNFPB_TD' )); ?></div></td>
+				<td class="column-columnname"><div class="pnfpb_column_full"><?php submit_button(__('Send push notification',PNFPB_TD),'pnfpb_ic_push_save_configuration_button'); ?></div></td>
     		</tr>
    		</tbody>
 	</table>
 </form>
+</div>

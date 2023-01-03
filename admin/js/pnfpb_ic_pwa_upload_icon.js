@@ -1,7 +1,7 @@
  
 /**
 * Upload custom icon for pwa app from plugin settings area.
-*
+* Customize push notification settings in plugin settings area.
 *
 * @since 1.20
 */
@@ -80,6 +80,166 @@ $j(document).ready(function() {
 		
 		mediaUploader_512.open();
 		
-	});	
+	});
 	
 });
+
+	function toggle_activity_content_form() {
+		
+  		$j('.pnfpb_ic_activity_content_form').toggle();
+		
+		if ($j('.pnfpb_ic_activity_content_form').is(':visible')) {
+			
+			$j('.pnfpb_activity_form_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_activity_form_button').text('Customize');
+		}		
+	}
+
+	function toggle_comments_content_form() {
+
+		$j('.pnfpb_ic_comments_content_form').toggle();
+		
+		if ($j('.pnfpb_ic_comments_content_form').is(':visible')) {
+			
+			$j('.pnfpb_comments_content_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_comments_content_button').text('Customize');
+		}		
+	}
+
+	function toggle_private_message_form() {
+	
+  		$j('.pnfpb_ic_private_message_form').toggle();
+		
+		if ($j('.pnfpb_ic_private_message_form').is(':visible')) {
+			
+			$j('.pnfpb_private_message_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_private_message_button').text('Customize');
+		}
+		
+	}
+
+	function toggle_new_member_form() {
+	
+  		$j('.pnfpb_ic_new_member_form').toggle();
+		
+		if ($j('.pnfpb_ic_new_member_form').is(':visible')) {
+			
+			$j('.pnfpb_new_member_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_new_member_button').text('Customize');
+		}
+		
+	}
+
+	function toggle_friendship_request_form() {
+	
+  		$j('.pnfpb_ic_friendship_request_form').toggle();
+		
+		if ($j('.pnfpb_ic_friendship_request_form').is(':visible')) {
+			
+			$j('.pnfpb_friendship_request_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_friendship_request_button').text('Customize');
+		}
+		
+	}
+
+
+	function toggle_friendship_accept_form() {
+	
+  		$j('.pnfpb_ic_friendship_accept_form').toggle();
+		
+		if ($j('.pnfpb_ic_friendship_accept_form').is(':visible')) {
+			
+			$j('.pnfpb_friendship_accept_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_friendship_accept_button').text('Customize');
+		}
+		
+	}
+
+
+	function toggle_avatar_change_form() {
+	
+  		$j('.pnfpb_ic_avatar_change_form').toggle();
+		
+		if ($j('.pnfpb_ic_avatar_change_form').is(':visible')) {
+			
+			$j('.pnfpb_avatar_change_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_avatar_change_button').text('Customize');
+		}
+		
+	}
+
+	function toggle_cover_image_change_form() {
+	
+  		$j('.pnfpb_ic_cover_image_change_form').toggle();
+		
+		if ($j('.pnfpb_ic_cover_image_change_form').is(':visible')) {
+			
+			$j('.pnfpb_cover_image_change_button').text('Hide form');
+			
+		}
+		else
+		{
+			$j('.pnfpb_cover_image_change_button').text('Customize');
+		}
+		
+	}
+
+	function toggle_firebase_configuration() {
+		
+  		$j('.pnfpb_ic_firebase_configuration').toggle();
+		
+		if ($j('.pnfpb_ic_firebase_configuration').is(':visible')) {
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text('Hide Firebase configuration');
+			
+		}
+		else
+		{
+			$j('.pnfpb_ic_firebase_configuration_button').text('Update Firebase configuration');
+		}	
+		
+	}
+
+	function toggle_firebase_configuration_help() {
+		
+  		$j('.pnfpb_ic_firebase_configuration_help').toggle();
+		
+		if ($j('.pnfpb_ic_firebase_configuration_help').is(':visible')) {
+			
+			$j('.pnfpb_ic_firebase_configuration_help_button').text('Hide Firebase Tutorial');
+			
+		}
+		else
+		{
+			$j('.pnfpb_ic_firebase_configuration_help_button').text('Tutorial on Firebase');
+		}	
+		
+	}

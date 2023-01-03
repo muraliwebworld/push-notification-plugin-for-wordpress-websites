@@ -5,11 +5,40 @@
 */
 
 var $j = jQuery.noConflict();
+
 var unsubscribeGroupid;
 var subscribeGroupid
 var pnfpb_pushtoken_fromflutter = '';
 
+var standalone_group_pwa = window.navigator.standalone;
+var userAgent_group_pwa = window.navigator.userAgent.toLowerCase();
+var safari_group_pwa = /safari/.test(userAgent_group_pwa);
+var ios_group_pwa = /iphone|ipod|ipad/.test(userAgent_group_pwa);
+	
+var pnfpb_webview = false;
+
+if (ios_group_pwa) {
+  if (!standalone_group_pwa && safari_group_pwa) {
+    // Safari
+    pnfpb_webview = false;
+  } else if (!standalone_group_pwa && !safari_group_pwa) {
+    // iOS webview
+    pnfpb_webview = true;
+  };
+} else {
+  if (userAgent_group_pwa.includes('wv')) {
+    // Android webview
+    pnfpb_webview = true;
+  } else {
+    // Chrome
+    pnfpb_webview = false;
+  }
+};
+
+
 $j(document).ready(function() {
+	
+	if (!pnfpb_webview) {
 
 	navigator.serviceWorker.register(pnfpb_ajax_object_group_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_group_push.homeurl+'/'}).then(function(registration) {
 
@@ -162,6 +191,7 @@ $j(document).ready(function() {
 						        	$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog({  
 										resizable: false,
 										height: "auto",
+										closeText : '',
 							        	modal: true,
 							        	buttons: [{
       										text: subscribe_button_text,
@@ -242,6 +272,7 @@ $j(document).ready(function() {
 						        	$j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog({  
 										resizable: false,
 										height: "auto",
+										closeText : '',
 							        	modal: true,
 							        	buttons: [{
       										text: unsubscribe_button_text,
@@ -356,6 +387,7 @@ $j(document).ready(function() {
 						$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog({  
 							resizable: false,
 							height: "auto",
+							closeText : '',
 			   				modal: true,
 			   				buttons: [{
       							text: subscribe_button_text,
@@ -406,6 +438,7 @@ $j(document).ready(function() {
 					$j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog({  
 						resizable: false,
 						height: "auto",
+						closeText : '',
 					    modal: true,
 						buttons: [{
       						text: unsubscribe_button_text,
@@ -434,6 +467,12 @@ $j(document).ready(function() {
 	}
 
 })
+		
+	}
+	else 
+		{
+			console.log('This browser does not support PUSHAPI Firebase messaging!!!');
+		}
 
 	
 

@@ -2,11 +2,11 @@
 Contributors: murali-indiacitys
 Author URI: https://www.muraliwebworld.com
 Tags:  Push notification,Progressive Web App,PWA,desktop notification,mobile notification,push notifications,BuddyPress push notification,Push notification for posts,Firebase push notification for WordPress,Free Push Notification,Push notification using Firebase,PWA offline mode
-Donate link: https://www.indiacitys.com/#donate
+Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/
 Requires at least: 5.0
-Tested up to: 5.9
+Tested up to: 6.1
 Requires PHP: 7.0
-Stable tag: 1.351
+Stable tag: 1.48
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,26 +19,48 @@ This Plugin is designed to send push notification using Firebase Cloud Messaging
 **Plugin features:-** 
 To send/schedule Push notifications when new item is published for following,
 
-1.New post/custom post type published
-2.New BuddyPress activities published
-3.New BuddyPress group activity published
-4.New Buddypress comments published
-5.New BuddyPress message sent
+1. New post/custom post type published (including bbpress)
+2. New BuddyPress activities published
+3. New BuddyPress group activity published
+4. New Buddypress comments published
+5. New BuddyPress message or private messages
+6. New BuddyPress member joined
+7. Friend request in BuddyPress
+8. Friendship accepted in BuddyPress
+9. User avatar change in BuddyPress
+10. Cover image change in BuddyPress
 
 Refer video tutorial under "How to use this plugin" section to configure Firebase options in plugin admin area.
 	
-To Generate Progressive Web App (PWA).Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android. Firefox for desktop will not support PWA. Admin options are in plugin settings page to enable/disable PWA app and to customize PWA app with app name, app icon, app theme color, background color and list of pages to be included in offline cache for web app offline mode.
+This plugin has facility to generate Progressive Web App (PWA).
+Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android. Firefox for desktop will not support PWA. 
+Go to plugin settings page to enable/disable PWA app and to customize PWA app with app name, app icon, app theme color, background color for PWA and list of pages to be included in offline cache for web app offline mode.
 	
-To Opt for following different push notification use shortcode [subscribe_PNFPB_push_notification].The shortcode [subscribe_PNFPB_push_notification] is optional, it is a additional facility to subscribe to push notification for various following options inaddition to default option from browser.
-	1. Subscribe all notifications
-	2. Subscribe to all new post/new BuddyPress activity notifications
-	3. Subscribe to all new comments for post,BuddyPress activities notifications
-	4. Subscribe to new comments notifications only from My BuddyPress activities or My post based on Post Author id/BuddyPress activity Author id
-	5. Unsubscribe all notifications
+For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications for following
+
+	1.Subscribe all notifications
+	2.Subscribe to all new post/new BuddyPress activity notifications
+	3.Subscribe to all new comments for post,BuddyPress activities notifications
+	4.Subscribe to new comments notifications only from My BuddyPress activities or My post based on Post Author id/BuddyPress activity Author id
+	5.New BuddyPress member joined
+	6.Friend request in BuddyPress
+	7.Friendship accepted in BuddyPress
+	8.User avatar change in BuddyPress
+	9.Cover image change in BuddyPress
+	10.Unsubscribe all notifications
+
+Front end users/customers can opt/remove for various push notifications listed above according to their own choice.
 
 It allows Scheduled Push notifications to send push notifications hourly(every hour), twice daily(2 times per day), daily, weekly as per WordPress CRON.
 
-It uses Firebase Cloud Messaging to send push notification using Firebase registration credentials which is free of cost.Firebase PUSH API is not compatible with Safari browsers and push notification using firebase push api will not work in Safari browsers. For Safari browsers,this plugin will display console log messages to indicate the browser is not supported for push api.This plugin automatically clears out device tokens which are not subscribed or if user unsubscribed from the browser then that token will be automatically deleted.Service workers are created on the fly for Firebase Cloud Messaging while activating the plugin
+= REST API to Integrate with Mobile app =
+It also provides REST API to integrate with mobile native app to get subscription token and to send push notifications to WordPress site users as well as to Native mobile app users
+REST API url is https://<domain>/wp-json/PNFPBpush/v1/subscriptiontoken
+
+= Extra settings for NGINX server =
+If server is NGINX and not able to create dynamic service worker file https://<domain>/pnfpb_icpush_pwa_sw.js & PWA manifest json file https://<domain>/pnfpbmanifest.json then go to plugin settings->nginx tab, enable static file creation option, it will create required static service worker file, PWA manifest json files in root folder. This option is applicable only if hosting/server is based on NGINX and not creating dynamic service worker file, manifest json files. By default, this plugin creates dynamic service worker file and PWA manifest json file. 
+
+This plugin uses Firebase Cloud Messaging to send push notification using Firebase registration credentials which is free of cost.Firebase PUSH API is not compatible with Safari browsers and push notification using firebase push api will not work in Safari browsers. For Safari browsers,this plugin will display console log messages to indicate the browser is not supported for push api.This plugin automatically clears out device tokens which are not subscribed or if user unsubscribed from the browser then that token will be automatically deleted.Service workers are created on the fly for Firebase Cloud Messaging while activating the plugin
 
 ** Video tutorial showing how to configure Firebase for this plugin **
 	
@@ -50,14 +72,20 @@ Following are steps to configure the plugin,
 1. Download the plugin
 2. Activate the plugin
 3. Go to settings of the plugin (in admin menu -> Settings -> Push Notification PNFPB)
-4. Enable/Disable push notification to all subscribed users when new post published,
-5. Enable/Disable push notification to all subscribed users when new custom post types published,
-6. Enable/Disable BuddyPress new activity push notification to all subscribed users,
-7. Enable/Disable BuddyPress Group push notification for particular group members,
-8. Enable/Disable BuddyPress message push notification only to particular user,
-9. Enable/Disable BuddyPress new comment push notification to all subscribed users
+4. Enable/Disable push notification for following,
+	4.a. new post types,
+	4.b. new custom post types (including bbpress),
+	4.c. BuddyPress activities,
+	4.d. BuddyPress Group members,
+	4.e. BuddyPress messages,
+	4.f. BuddyPress comments
+	4.g. New BuddyPress member joined
+	4.h. Friend request in BuddyPress
+	4.i. Friendship accepted in BuddyPress
+	4.j. User avatar change in BuddyPress
+	4.k. Cover image change in BuddyPress
 	
-10. If schedule option is enabled then push notification will be sent according to selected schedule for above options,
+10. If schedule option is enabled then push notification will be sent automatically(using CRON) according to selected schedule hourly/daily/twice daily/weekly.
 
 = Firebase configuration setup in plugin admin settings =
 	
@@ -88,29 +116,51 @@ In the Web Push certificates tab, click Generate Key Pair. The console displays 
 
 After completing above steps, push notification will be displayed based on option selected for posts/buddypress while publishing posts or custom post types or during new BuddyPress activities or comments.
 
-18. New Shortcode [subscribe_PNFPB_push_notification] can also be used to display Subscribe/Unsubscribe push notification toggle button. It is a additional facility in addition to default option from browser to subscribe/unsubscribe push notifications. Following different push notification options are included in shortcode,
-	Subscribe all notifications
-	Subscribe to all new post/new BuddyPress activity notifications
-	Subscribe to all new comments for post,BuddyPress activities notifications
-	Subscribe to new comments notifications only from My BuddyPress activities or My post based on Post Author id/BuddyPress activity Author id
-	Unsubscribe all notifications
+18. For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications for following
 
-19. Go to on-demand push notification admin panel to send push notification from admin panel to all subscribers whenever it required.
+	1.Subscribe all notifications
+	2.Subscribe to all new post/new BuddyPress activity notifications
+	3.Subscribe to all new comments for post,BuddyPress activities notifications
+	4.Subscribe to new comments notifications only from My BuddyPress activities or My post based on Post Author id/BuddyPress activity Author id
+	5.New BuddyPress member joined
+	6.Friend request in BuddyPress
+	7.Friendship accepted in BuddyPress
+	8.User avatar change in BuddyPress
+	9.Cover image change in BuddyPress
+	10.Unsubscribe all notifications
+
+Front end users/customers can opt/remove for various push notifications listed above according to their own choice.
+	
+19. Shortcode [PNFPB_PWA_PROMPT] to create button to install PWA. If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience.
+
+20. Go to on-demand push notification admin panel to send push notification from admin panel to all subscribers whenever it required.
 
 == Installation ==
 
 Following are steps to configure the plugin,
+
 1. Download the plugin
+
 2. Activate the plugin
+
 3. Go to settings of the plugin (in admin menu -> Settings -> Push Notification using FCM)
+
 4. Enable/Disable push notification when new item published in following,
+
 	4.a. new post types published,
 	4.b. new custom post types published,
 	4.c. BuddyPress activities,
 	4.d. BuddyPress Group members,
 	4.e. BuddyPress messages,
 	4.f. BuddyPress comments
+	4.g.New BuddyPress member joined
+	4.h.Friend request in BuddyPress
+	4.i.Friendship accepted in BuddyPress
+	4.j.User avatar change in BuddyPress
+	4.k.Cover image change in BuddyPress
+
 = Scheduling push notifications =
+
 5.Optionally it allows to Schedule push notifications for post types,BuddyPress new activities, BuddyPress new Group activities and for BuddyPress new comments. Push notifications can be scheduled in following schedules. Go to admin settings and schedule it accordingly.Schedule push notifications in Hourly, twice daily,daily,weekly schedules. If schedule is off then push notification will be sent whenever new item is published in corresponding post types/BuddyPress activities/messages/comments.
 6.When BuddyPress Group Members option is enabled, it will send push notification only to users who joined in Group/to Particular group members.
 7.When Buddypress private message notification is enabled, Private message notification will be sent only to the recipient id sent by sender. Admin can customize the text for push notification title from admin options.
@@ -149,12 +199,22 @@ Push notifications will better work in normal browser not in cognito private bro
 
 After completing above steps, push notification will be displayed based on option selected for posts/buddypress while publishing posts or custom post types or during new BuddyPress activities or comments.
 
-11. Shortcode [subscribe_PNFPB_push_notification] to display Subscribe/Unsubscribe push notification toggle button. It is a additional facility in addition to default option from browser to subscribe/unsubscribe push notifications.Following different push notification options are included in shortcode,
-	Subscribe all notifications
-	Subscribe to all new post/new BuddyPress activity notifications
-	Subscribe to all new comments for post,BuddyPress activities notifications
-	Subscribe to new comments notifications only from My BuddyPress activities or My post based on Post Author id/BuddyPress activity Author id
-	Unsubscribe all notifications
+11.For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications for following
+
+	1.Subscribe all notifications
+	2.Subscribe to all new post/new BuddyPress activity notifications
+	3.Subscribe to all new comments for post,BuddyPress activities notifications
+	4.Subscribe to new comments notifications only from My BuddyPress activities or My post based on Post Author id/BuddyPress activity Author id
+	5.New BuddyPress member joined
+	6.Friend request in BuddyPress
+	7.Friendship accepted in BuddyPress
+	8.User avatar change in BuddyPress
+	9.Cover image change in BuddyPress
+	10.Unsubscribe all notifications
+
+Front end users/customers can opt/remove for various push notifications listed above according to their own choice.
+	
+12. Shortcode [PNFPB_PWA_PROMPT] to create button to install PWA. If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience. 
 
 == Frequently Asked Questions ==
 
@@ -164,16 +224,55 @@ After completing above steps, push notification will be displayed based on optio
 
 == Screenshots ==
 
-1. Screen showing list of push notifications in desktop
-2. Settings page to configure plugin with FireBase and other settings
-3. Admin area menu for this plugin
-4. Shortcode to display subscribe/unsubscribe toggle button
-5. Shortcode to display unsubscribe/subscribe toggle button
+1. Push notification in Mobile
+2. Desktop push notification
+3. Plugin settings for push notification in admin area
+4. Plugin settings for push notification with BuddyPress options in admin area
+5. Shortcode push notification options for front-end users to opt for various notifications
 6. BuddyPress Group members can subscribe/remove push notification for every group
 7. Admin page showing list of tokens subscribed
 8. Progressive Web App admin settings page
+9. On demand push notification page in plugin settings area
+10.Customize plugin buttons
+11.API for mobile app which are using webview
+12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.48 =
+Bug fix: Automatic Deletion of tokens using CRON schedule with userid does not exist/deleted users and with userid = 0.
+= 1.47 =
+New features: Added new push notifications for New member joined, Friend request, Friendship accepted, User avatar change, User cover image change in BuddyPress.
+New feature: New option added in device token list page to enable/disable automatic deletion of tokens whose userid no longer exists and tokens without userid. It can be enabled/disabled according website admin choice in plugin settings area.
+Update: shortcode [subscribe_PNFPB_push_notification] is updated to have new push notification options for New member joined, Friend request, Friendship accepted, User avatar change, User cover image change. Front end user can opt/not to opt for push notifications according to their choice.
+Update: Plugin settings area screen updated with custom radio buttons and custom check box.
+= 1.46 =
+New Addition: New Shortcode PNFPB_PWA_PROMPT added to create button to install PWA. Button text and color, background color can be customized in plugin settings area under customize button tab in last 3 fields.If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience.
+= 1.45 =
+New Addition: New Shortcode PNFPB_PWA_PROMPT added to create button to install PWA. If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience.
+= 1.44 =
+New Addition: Added new option to enable/disable service worker file to switch on/off push notification under plugin settings in "API to integrate mobile app" admin tab. By default push notification option will be ON.This option will disable service worker file, it will switch off push notification service as well as it will switch off PWA. Use this option only, if you want to use this plugin for push notification services via REST API (example: for mobile app using WebView)
+= 1.43 =
+To remove duplicate push notifications for mobile apps using webview REST API interface and to fix problems related to deletion of unsubscribed tokens for webview.
+= 1.42 =
+Compatible with wordpress 6.1.1 version.
+Added default push notification message content options in plugin setting field when new BuddyPress activity/BuddyPress group activity/post/BuddyPress activity comments/custom post/custom post comments/BuddyPress private messages
+Modified click action logic in push notifications, click action option removed when site invoked using WebView mobile app. Click action will present if site is invoked using Desktop/Mobilebrowsers and in PWA.
+Allow/Block prompt for push notification will appear only if site is invoked using using Desktop/Mobilebrowsers and in PWA.
+Added new admin option in plugin settings area for NGINX server/hosting to enable/disable static push notification service worker file and for PWA manifest json files.If server is NGINX and not able to create dynamic service worker file https://<domain>/pnfpb_icpush_pwa_sw.js & PWA manifest json file https://<domain>/pnfpbmanifest.json then go to plugin settings->nginx tab, enable static file creation option, it will create required static service worker file, PWA manifest json files in root folder. This option is applicable only if hosting/server is based on NGINX and not creating dynamic service worker file, manifest json files. By default, this plugin creates dynamic service worker file and PWA manifest json file.
+= 1.40 =
+Compatible with wordpress 6.1.1 version.
+Added default push notification message content options in plugin setting field when new BuddyPress activity/BuddyPress group activity/post/BuddyPress activity comments/custom post/custom post comments/BuddyPress private messages
+Modified click action logic in push notifications, click action option removed when site invoked using WebView mobile app. Click action will present if site is invoked using Desktop/Mobilebrowsers and in PWA.
+Allow/Block prompt for push notification will appear only if site is invoked using using Desktop/Mobilebrowsers and in PWA.
+Added new admin option in plugin settings area for NGINX server/hosting to enable/disable static push notification service worker file and for PWA manifest json files.If server is NGINX and not able to create dynamic service worker file https://<domain>/pnfpb_icpush_pwa_sw.js & PWA manifest json file https://<domain>/pnfpbmanifest.json then go to plugin settings->nginx tab, enable static file creation option, it will create required static service worker file, PWA manifest json files in root folder. This option is applicable only if hosting/server is based on NGINX and not creating dynamic service worker file, manifest json files. By default, this plugin creates dynamic service worker file and PWA manifest json file.
+= 1.39 =
+Group subscription logic updated to check whether cookie related to group subscription for particular user is present or not.
+= 1.38 =
+To fix problem related to setting cookie values while subscribing to Group notifications for BuddyPress Groups.
+= 1.37 =
+To fix warning related to permission callback in REST API related code while using in WordPress debug mode.
+= 1.36 =
+Compatible and tested upto WordPress6.0 version. Added REST API facility to get subscription token from native/hybrid mobile app users to send push notifications from this plugin to Native/Hybrid mobile app users along with website users.
 = 1.35 =
 Added new custom install prompt as New snack bar type for custom install PWA prompt. Admin can set custom install prompt appearence as pop up or snack bar/toast. Updated logic to appear custom install pwa prompt once in 7 days if user dismisses the pwa installation.
 = 1.34 =
@@ -327,6 +426,25 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* Bug fix: Automatic Deletion of tokens using CRON schedule with userid does not exist/deleted and with userid = 0.
+* New features: Push notifications for New member joined, Friend request, Friendship accepted, User avatar change, User cover image change in BuddyPress.
+* New feature: New option added in device token list page to enable/disable automatic deletion of tokens whose userid no longer exists and tokens without userid. It can be enabled/disabled according website admin choice in plugin settings area.
+* Update: shortcode [subscribe_PNFPB_push_notification] is updated to have new push notification options for New member joined, Friend request, Friendship accepted, User avatar change, User cover image change. Front end user can opt/not to opt for push notifications according to their choice.
+* Update: Plugin settings area screen updated with custom radio buttons and custom check box.
+* New Addition: New Shortcode PNFPB_PWA_PROMPT added to create button to install PWA. Button text and color, background color can be customized in plugin settings area under customize button tab in last 3 fields.If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience. 
+* New Addition: New Shortcode PNFPB_PWA_PROMPT added to create button to install PWA. If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience.
+* New Addition: Added new option to enable/disable service worker file to switch on/off push notification under plugin settings in "API to integrate mobile app" admin tab. By default push notification option will be ON.This option will disable service worker file, it will switch off push notification service as well as it will switch off PWA. Use this option only, if you want to use this plugin for push notification services via REST API (example: for mobile app using WebView)
+* To remove duplicate push notifications for mobile apps using webview REST API interface and to fix problems related to deletion of unsubscribed tokens for webview.
+* Modified click action logic in push notifications, click action option removed when site invoked using WebView mobile app. Click action will present if site is invoked using Desktop/Mobilebrowsers and in PWA.
+* Compatible with wordpress 6.1.1 version.
+* Added default push notification message content options in plugin setting field when new BuddyPress activity/BuddyPress group activity/post/BuddyPress activity comments/custom post/custom post comments/BuddyPress private messages
+* Modified click action logic in push notifications, click action option removed when site invoked using WebView mobile app. Click action will present if site is invoked using Desktop/Mobilebrowsers and in PWA.
+* Allow/Block prompt for push notification will appear only if site is invoked using using Desktop/Mobile browsers and in PWA.
+* Added new admin option in plugin settings area for NGINX server/hosting to enable/disable static push notification service worker file and for PWA manifest json files.If server is NGINX and not able to create dynamic service worker file https://<domain>/pnfpb_icpush_pwa_sw.js & PWA manifest json file https://<domain>/pnfpbmanifest.json then go to plugin settings->nginx tab, enable static file creation option, it will create required static service worker file, PWA manifest json files in root folder. This option is applicable only if hosting/server is based on NGINX and not creating dynamic service worker file, manifest json files. By default, this plugin creates dynamic service worker file and PWA manifest json file.
+* Group subscription logic updated to check whether cookie related to group subscription for particular user is present or not.
+* To fix problem related to setting cookie values while subscribing to Group notifications for BuddyPress Groups.
+* To fix warning related to permission callback in REST API related code while using in WordPress debug mode.
+* Compatible and tested upto WordPress6.0 version. Added REST API facility to get subscription token from native/hybrid mobile app users to send push notifications from this plugin to Native/Hybrid mobile app users along with website users.
 * Added new custom install prompt as New snack bar type for custom install PWA prompt. Admin can set custom install prompt appearence as pop up or snack bar. Updated logic to appear custom install pwa prompt once in 7 days if user dismisses the pwa installation. 
 * Fixed problem related to Alter push notification database table to add New column subscription_option for shortcode subscription after plugin loaded.
 * Resolved problem related to alter table new column subscription_option in push notification table
