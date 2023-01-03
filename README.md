@@ -1,6 +1,6 @@
-# push notification plugin for wordpress websites and Progressive Web App (PWA) generator<br/>
+# Push Notification plugin for WordPress, BuddyPress websites with Progressive Web App (PWA)<br/>
 This plugin is to generate Push notifications for Post, custom post types, for BuddyPress activities using Firebase and to generate Progressive Web App (PWA) with offline mode facility.<br/><br/>
-# Features in this WordPress plugin<br/>
+# Features<br/>
 To send/schedule Push notifications when new item is published for following,
 
 1.  New post/custom post type published (including bbpress)
