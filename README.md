@@ -6,6 +6,49 @@ To send push Notification to all BuddyPress users when new BuddyPress activities
 To send push Notifications only for BuddyPress Group Members when group activities are published.<br/>
 To send push notifications for private messages in BuddyPress users. Private message notification will be sent only to the recipient id sent by sender.<br/>
 To send push Notification to all users when new post or custom post types are published using Firebase Cloud Messaging.<br/>
+# Integrate Native mobile apps like Flutter mobile app with this WordPress plugin
+New API to send push notification subscription from Native mobile apps like Flutter mobile app to WordPress backend and to send push notifications from WordPress to Native mobile app using Firebase.
+1. Generate secret key in mobile app tab to communicate between mobile app(in Integrate app api tab plugin settings)
+2. REST api to send subscription token from Mobile Flutter app using WebView to this WordPress plugin to store it in WordPress db to send push notification whenever new activities/post are published.
+
+Note:- All REST api code is already included in the code, below is only for reference as guide,
+
+REST API using POST method, to send push notification in secured way using AES 256 cryptography encryption method to avoid spams
+
+REST API url post method to send push notification
+https://domainname.com/wp-json/PNFPBpush/v1/subscriptiontoken
+
+Input parameters in body in http post method in Flutter APP,
+token – it should be encrypted according to AES 256 cryptography standards,
+
+Following is sample code in dart Flutter AES 256 encryption and hash generation using AES 256 cryptography to send push notification subscription token in encrypted manner to this plugin - WordPress backend
+
+```dart
+String strPwd = "16234hgJKLmllpdcd09b2bc37293"; //secret key generated in step 1 above
+
+      GlobalData.pushtoken = token.toString();
+
+      final iv = EncryptPack.IV.fromLength(16);
+
+      final key = EncryptPack.Key.fromUtf8(strPwd); //hardcode
+
+      final encrypter = EncryptPack.Encrypter(EncryptPack.AES(key, mode: EncryptPack.AESMode.cbc));
+
+      final encrypted = encrypter.encrypt(token.toString(), iv: iv);
+
+      var hmacSha256 = CryptoPack.Hmac(CryptoPack.sha256,ConvertPack.utf8.encode(strPwd)); // HMAC-SHA256
+
+      var hmacstring = hmacSha256.convert(ConvertPack.utf8.encode(token.toString()));
+
+      var encryptedsubscription = encrypted.base64+":"+iv.base64+":"+hmacstring.toString()+":"+hmacstring.toString();
+```
+
+Using secret key generated from step 1, enter secret key in flutter app code as below in push_notification_manager.dart file (attached link for lib folder),
+
+store token in global variable for other user
+Generate envrypted token as mentioned below using below coding (AES 256 cryptography encryption)
+Once plugin receives this token, it will unencrypt using the secret key generate and compare hash code to confirm it is sent from Flutter app
+
 # Scheduling push notifications<br/>
 It allows to Schedule Push notifications to send as per below schedule using WordPress CRON scheduler 
 hourly(every hour)<br/>,twice daily(2 times per day)<br />, daily<br />, weekly<br />
