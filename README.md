@@ -89,8 +89,8 @@ Following are steps to configure the plugin,<br/>
 	4.i. Friendship accepted in BuddyPress<br/>
 	4.j. User avatar change in BuddyPress<br/>
 	4.k. Cover image change in BuddyPress<br/>
-5.When BuddyPress Group Members option is enabled, it will send push notification only to users who joined in Group/to Particular group members.<br/>
-5.1. When Buddypress private message notification is enabled, Private message notification will be sent only to the recipient id sent by sender. Admin can customize the text for push notification title from admin options.<br/>
+      When BuddyPress Group Members option is enabled, it will send push notification only to users who joined in Group/to Particular group members.<br/>
+      When Buddypress private message notification is enabled, Private message notification will be sent only to the recipient id sent by sender. Admin can customize the text for push notification title from admin options.<br/>
 6. Configure Firebase settings as per below steps,<br/>
 7. Sign in to Firebase, then open your project click settings icon & select Project settings<br/>
 8. To get Firebase server key, select project settings from Firebase account, go to cloud messaging tab, get server key fill below first field under firebase configuration<br/>
