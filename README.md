@@ -1,11 +1,19 @@
 # push notification plugin for wordpress websites and Progressive Web App (PWA) generator<br/>
 This plugin is to generate Push notifications for Post, custom post types, for BuddyPress activities using Firebase and to generate Progressive Web App (PWA) with offline mode facility.<br/><br/>
 # Features in this WordPress plugin<br/>
-Push notification using Firebase Cloud Messaging credentials when new post/BuddyPress/BBpress/activities/custom post type published.<br/>
-To send push Notification to all BuddyPress users when new BuddyPress activities or comments are published.<br/>
-To send push Notifications only for BuddyPress Group Members when group activities are published.<br/>
-To send push notifications for private messages in BuddyPress users. Private message notification will be sent only to the recipient id sent by sender.<br/>
-To send push Notification to all users when new post or custom post types are published using Firebase Cloud Messaging.<br/>
+To send/schedule Push notifications when new item is published for following,
+
+1.  New post/custom post type published (including bbpress)
+2.  New BuddyPress activities published
+3.  New BuddyPress group activity published
+4.  New Buddypress comments published
+5.  New BuddyPress message or private messages
+6.  New BuddyPress member joined
+7.  Friend request in BuddyPress
+8.  Friendship accepted in BuddyPress
+9.  User avatar change in BuddyPress
+10. Cover image change in BuddyPress
+
 # Integrate Native mobile apps like Flutter mobile app with this WordPress plugin
 New API to send push notification subscription from Native mobile apps like Flutter mobile app to WordPress backend and to send push notifications from WordPress to Native mobile app using Firebase.
 1. Generate secret key in mobile app tab to communicate between mobile app(in Integrate app api tab plugin settings)
@@ -69,7 +77,18 @@ Following are steps to configure the plugin,<br/>
 1. Download the plugin<br/>
 2. Activate the plugin<br/>
 3. Go to settings of the plugin (in admin menu -> Settings -> Push Notification using FCM)<br/>
-4. Enable/Disable push notification settings for post, custom post types, BuddyPress activities all users or only for BuddyPress Group Members and for BuddyPress comments.<br/>
+4. Enable/Disable push notification for following,<br/>
+      4.a. new post types,<br/>
+	4.b. new custom post types (including bbpress),<br/>
+	4.c. BuddyPress activities,<br/>
+	4.d. BuddyPress Group members,<br/>
+	4.e. BuddyPress messages,<br/>
+	4.f. BuddyPress comments<br/>
+	4.g. New BuddyPress member joined<br/>
+	4.h. Friend request in BuddyPress<br/>
+	4.i. Friendship accepted in BuddyPress<br/>
+	4.j. User avatar change in BuddyPress<br/>
+	4.k. Cover image change in BuddyPress<br/>
 5.When BuddyPress Group Members option is enabled, it will send push notification only to users who joined in Group/to Particular group members.<br/>
 5.1. When Buddypress private message notification is enabled, Private message notification will be sent only to the recipient id sent by sender. Admin can customize the text for push notification title from admin options.<br/>
 6. Configure Firebase settings as per below steps,<br/>
