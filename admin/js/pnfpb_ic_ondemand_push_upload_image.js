@@ -7,6 +7,8 @@
 var $j = jQuery.noConflict();
 
 $j(document).ready(function() {
+	
+	const { __ } = wp.i18n;
     
 	var mediaUploader_push_ondemand;
 	
@@ -27,6 +29,7 @@ $j(document).ready(function() {
 		
 		mediaUploader_push_ondemand.on('select', function(){
 			attachment = mediaUploader_push_ondemand.state().get('selection').first().toJSON();
+			$j('#pnfpb_ic_on_demand_push_image_url').val(attachment.url);
 			$j('#pnfpb_ic_fcm_on_demand_push_image').val(attachment.url);
 			$j('#pnfpb_ic_fcm_on_demand_push_image_preview').css('background-image','url(' + attachment.url + ')');
 		});
@@ -34,4 +37,9 @@ $j(document).ready(function() {
 		mediaUploader_push_ondemand.open();
 		
 	});
+	
+	$j('#pnfpb_ic_on_demand_push_url').on('click',function(e) {
+		$j('#pnfpb_ic_on_demand_push_url_link').val($j('#pnfpb_ic_on_demand_push_url').find(":selected").val());
+	});
+	
 });

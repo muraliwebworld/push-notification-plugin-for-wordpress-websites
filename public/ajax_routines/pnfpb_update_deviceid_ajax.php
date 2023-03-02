@@ -20,6 +20,10 @@
 	if (isset($_POST['subscriptionoptions'])) {
     	$bpsubscribeoptions = sanitize_text_field($_POST['subscriptionoptions']);
 	}
+
+	if ($bpsubscribeoptions === '') {
+		$bpsubscribeoptions = '10000000000';
+	}
 	
 	/** securing data from Firebase who subscribed push notification  **/
 	
@@ -89,21 +93,21 @@
 		}
 		else
 		{
-			$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid);
+			$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'subscription_option' => $bpsubscribeoptions);
 			$insertstatus = $wpdb->insert($table,$data);
 			if (!$insertstatus || $insertstatus != 0){
 				$my_id = $wpdb->insert_id;
-				echo 'subscribed';
+				echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
 			}
 			else
 			{
-				echo "fail";
+				echo json_encode(array('subscriptionstatus' => 'fail', 'subscriptionoptions' => $bpsubscribeoptions));
 			}
 		}
 	}
 	else
 	{
-		if ($bpdeviceid != '' && $pushtype == 'subscribe-button') {
+		if ($pushtype == 'subscribe-button') {
 		    
 		    $table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
 			
@@ -116,46 +120,80 @@
     			$add_status_column = "ALTER TABLE `{$table}` ADD `subscription_option` VARCHAR(50) NULL DEFAULT NULL AFTER `device_id`; ";
    				$wpdb->query( $add_status_column );
 			endif;			
-		
 			
-		    $deviceid_update_status = $wpdb->query("UPDATE {$table} SET device_id = '{$bpdeviceid}' , subscription_option = '{$bpsubscribeoptions}' WHERE device_id LIKE '%{$bpdeviceid}%' AND device_id NOT LIKE '%!!%'") ;
-			
-			$deviceid_group_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE device_id LIKE '%{$bpdeviceid}%' AND device_id LIKE '%!!%'") ;			
-			
-			$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$bpdeviceid."%'");			
-		
-		    if($deviceid_update_status > 0) {
-
-				echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
-			
-		    }
-		    else
-		    {
-				if(count($deviceid_select_status) <= 0) {
-					$bpdeviceid = $bpdeviceid;
-			    	$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'subscription_option' => $bpsubscribeoptions);
-			    	$insertstatus = $wpdb->insert($table,$data);
-			    	if (!$insertstatus || $insertstatus != 0){
-				    	$my_id = $wpdb->insert_id;
+			if ($bpdeviceid !== '') {
+				
+				if ( $bpuserid !== 0 ) {
 					
-				    	echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
-			    	}
-			    	else
-			    	{
-				    	echo json_encode(array('subscriptionstatus' => 'fail', 'subscriptionoptions' => $bpsubscribeoptions));
-			    	}
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE userid = {$bpuserid}") ;
+			
+					$deviceid_group_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE userid = {$bpuserid}") ;
+					
 				}
 				else 
 				{
-					echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
-				
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE device_id LIKE '%{$bpdeviceid}%' AND device_id NOT LIKE '%!!%'") ;
+			
+					$deviceid_group_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE device_id LIKE '%{$bpdeviceid}%' AND device_id LIKE '%!!%'") ;				
 				}
-		    }		    
+			
+				$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$bpdeviceid."%'");			
+		
+				if($deviceid_update_status > 0) {
+
+					echo json_encode(array('subscriptionstatus' => 'subscribed updated', 'subscriptionoptions' => $bpsubscribeoptions));
+			
+				}
+				else
+				{
+					if(count($deviceid_select_status) <= 0) {
+						$bpdeviceid = $bpdeviceid;
+						$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'subscription_option' => $bpsubscribeoptions);
+						$insertstatus = $wpdb->insert($table,$data);
+						if (!$insertstatus || $insertstatus != 0){
+							$my_id = $wpdb->insert_id;
+					
+							echo json_encode(array('subscriptionstatus' => 'subscribed newly', 'subscriptionoptions' => $bpsubscribeoptions));
+						}
+						else
+						{
+							echo json_encode(array('subscriptionstatus' => 'fail', 'subscriptionoptions' => $bpsubscribeoptions));
+						}
+					}
+					else 
+					{
+						echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
+				
+					}
+				}
+			}
+			else
+			{
+				if ( $bpuserid !== 0 ) {
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE userid = {$bpuserid}") ;
+			
+					$deviceid_group_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE userid = {$bpuserid}") ;
+				}
+				else 
+				{
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE device_id LIKE '%{$bpdeviceid}%' AND device_id NOT LIKE '%!!%'") ;
+			
+					$deviceid_group_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE device_id LIKE '%{$bpdeviceid}%' AND device_id LIKE '%!!%'") ;				
+				}
+			
+				$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$bpdeviceid."%'");			
+		
+				if($deviceid_update_status > 0) {
+
+					echo json_encode(array('subscriptionstatus' => 'subscribed webview', 'subscriptionoptions' => $bpsubscribeoptions));
+			
+				}				
+			}
 		}
 		else
 		{
 		    
-		    if ($bpdeviceid != '' && $pushtype == 'checkdeviceid') {
+		    if ($pushtype == 'checkdeviceid') {
 
 		        $table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
 				
@@ -166,37 +204,53 @@
 				if( empty($is_status_col) ):
 					$add_status_column = "ALTER TABLE `{$table}` ADD `subscription_option` VARCHAR(50) NULL DEFAULT NULL AFTER `device_id`; ";
 					$wpdb->query( $add_status_column );
-				endif;				
+				endif;
+
+				if ($bpdeviceid !== '') {
 		
-		        $deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$bpdeviceid."%'");
+					$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$bpdeviceid."%'");
 				
-				$subscribed = true;
-				$subscriptionoptions = '00000';
+					$subscribed = true;
+				
+					//$subscriptionoptions = '000000000000';
 
-				foreach( $deviceid_select_status as $result ) {
+					foreach( $deviceid_select_status as $result ) {
 					
-					if ($result->userid == 0 || $result->userid != $bpuserid) {
+						if ($result->userid == 0 || $result->userid != $bpuserid) {
 
-						$deviceid_update_status = $wpdb->query("UPDATE {$table} SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
-					}
+							$deviceid_update_status = $wpdb->query("UPDATE {$table} SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
+						}
 					
-					$subscriptionoptions = $result->subscription_option;
+						$subscriptionoptions = $result->subscription_option;
 					
-					if ($subscriptionoptions === NULL || $subscriptionoptions === null || $subscriptionoptions == 'NULL') {
+						if ($subscriptionoptions === '' || $subscriptionoptions === NULL || $subscriptionoptions === null || $subscriptionoptions === 'NULL') {
 						
-						$subscriptionoptions = '10000';
+							$subscriptionoptions = '100000000000';
 						
-						$deviceid_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '10000' WHERE device_id = '{$bpdeviceid}'") ;
+							$deviceid_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '100000000000' WHERE device_id = '{$bpdeviceid}'") ;
 							
+						}
+					
+						if (strpos($result->device_id,'@N') !== false || $subscriptionoptions === '000000000000' || $subscriptionoptions === '000000000010' ) 
+						{
+							$subscribed = false;
+						}					
+				
 					}
-				
-				}			
-				
-				if (strpos($result->device_id,'@N') !== false || $subscriptionoptions === '00000' || $subscriptionoptions === '00001' ) 
+				}
+				else 
 				{
-						$subscribed = false;
-				}				
-		
+					if (($bpdeviceid  === '' || $subscriptionoptions === '000000000000' || $subscriptionoptions === '') && $bpuserid != 0) {
+					
+						$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE userid = {$bpuserid}");
+					
+						foreach( $deviceid_select_status as $result ) {
+						
+							$subscriptionoptions = $result->subscription_option;
+						}
+					}
+				}
+
 		        if(count($deviceid_select_status) > 0) {
 					
 	    			if ($subscribed) {
@@ -210,17 +264,19 @@
 		        }
 		        else
 		        {
-					$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid);
-					$insertstatus = $wpdb->insert($table,$data);
-					if (!$insertstatus || $insertstatus != 0){
-						$my_id = $wpdb->insert_id;
-						echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $subscriptionoptions));
+					if ($bpdeviceid !== '') {
+						$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid);
+						$insertstatus = $wpdb->insert($table,$data);
+						if (!$insertstatus || $insertstatus != 0){
+							$my_id = $wpdb->insert_id;
+							echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $subscriptionoptions));
+						}
+						else
+						{
+							echo json_encode(array('subscriptionstatus' => 'not-subscribed', 'subscriptionoptions' => $subscriptionoptions));
+						}
 					}
-					else
-					{
-						echo json_encode(array('subscriptionstatus' => 'not-subscribed', 'subscriptionoptions' => $subscriptionoptions));
-					}
-		        }		        
+				}
 		        
 		    }
 		    
@@ -266,7 +322,7 @@
 						endif;			
 						
 						$cookievalue = '';
-						if(!isset($_COOKIE[$cookie_name])) {
+						if(isset($_COOKIE['pnfpb_group_push_notification_'.$bpgroupid])) {
 							$cookievalue = $_COOKIE['pnfpb_group_push_notification_'.$bpgroupid];
 						}
 						
@@ -306,7 +362,7 @@
 		    				$table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
 
 							$cookievalue = '';
-							if(!isset($_COOKIE[$cookie_name])) {
+							if(isset($_COOKIE['pnfpb_group_push_notification_'.$bpgroupid])) {
 								$cookievalue = $_COOKIE['pnfpb_group_push_notification_'.$bpgroupid];
 							}							
 		

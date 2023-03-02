@@ -11,8 +11,8 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	public function __construct() {
 
 		parent::__construct( [
-			'singular' => __( 'Devicetoken', 'pnfpb' ), //singular name of the listed records
-			'plural'   => __( 'Devicetokens', 'pnfpb' ), //plural name of the listed records
+			'singular' => __( 'Devicetoken', 'PNFPB_TD' ), //singular name of the listed records
+			'plural'   => __( 'Devicetokens', 'PNFPB_TD' ), //plural name of the listed records
 			'ajax'     => false //does this table support ajax?
 		] );
 
@@ -27,20 +27,33 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	 *
 	 * @return mixed
 	 */
-	public static function get_devicetokens( $per_page = 20, $page_number = 1 ) {
+	public static function get_devicetokens( $per_page = 20, $page_number = 1, $search='' ) {
 
 		global $wpdb;
 
-		$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_subscribed_deviceids_web";
+		if ( !empty($search) && is_numeric($search) ) {
+			$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_subscribed_deviceids_web WHERE userid = {$search} OR device_id LIKE '%{$search}%' OR subscription_option LIKE '%{$search}%'";
+		}
+		else 
+		{
+			if ( !empty($search) && !is_numeric($search) ) {
+				$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_subscribed_deviceids_web WHERE device_id LIKE '%{$search}%' OR subscription_option LIKE '%{$search}%'";				
+			}
+			else 
+			{
+				$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_subscribed_deviceids_web";
+			}
+		}
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
 			$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
 		}
 
-		$sql .= " LIMIT $per_page";
-		$sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
-
+		if ($per_page > 0) {
+			$sql .= " LIMIT $per_page";
+			$sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;			
+		}
 
 		$result = $wpdb->get_results( $sql, 'ARRAY_A' );
 
@@ -80,7 +93,7 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 
 	/** Text displayed when no device token data is available */
 	public function no_items() {
-		_e( 'No registered device tokens avaliable.', 'pnfpb' );
+		_e( 'No registered device tokens avaliable.', 'PNFPB_TD' );
 	}
 
 
@@ -147,10 +160,10 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	function get_columns() {
 		$columns = [
 			'cb'      => '<input type="checkbox" />',
-			'id'    => __( 'Id', 'pnfpb' ),
-			'device_id' => __( 'Device token', 'pnfpb' ),
-			'userid'    => __( 'Userid', 'pnfpb' ),
-			'subscription_option' => __('Shortcode_Subscription','pnfpb')
+			'id'    => __( 'Id', 'PNFPB_TD' ),
+			'device_id' => __( 'Device token', 'PNFPB_TD' ),
+			'userid'    => __( 'Userid', 'PNFPB_TD' ),
+			'subscription_option' => __('Shortcode Subscription','PNFPB_TD')
 		];
 
 		return $columns;
@@ -165,6 +178,7 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	public function get_sortable_columns() {
 		$sortable_columns = array(
 			'id' => array( 'id', true ),
+			'device_id' => array( 'device_id', true ),
 			'userid' => array( 'userid', true ),
 			'subscription_option' => array( 'subscription_option', true )
 		);
@@ -189,7 +203,14 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	/**
 	 * Handles data query and filter, sorting, and pagination.
 	 */
-	public function prepare_items() {
+	public function prepare_items($search='') {
+		
+        //data
+        if ( isset($_REQUEST['s']) ) {
+            $this->table_data = $this->get_table_data($_REQUEST['s']);
+        } else {
+            $this->table_data = $this->get_table_data($search);
+        }		
 
 		$this->_column_headers = $this->get_column_info();
 
@@ -200,13 +221,41 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 		$current_page = $this->get_pagenum();
 		$total_items  = self::record_count();
 
-		$this->set_pagination_args( [
-			'total_items' => $total_items, //WE have to calculate the total number of items
-			'per_page'    => $per_page //WE have to determine how many items to show on a page
-		] );
-
-		$this->items = self::get_devicetokens( $per_page, $current_page );
+		if ( isset($_REQUEST['s']) ) {
+			$this->items = self::get_devicetokens( $per_page, $current_page, $_REQUEST['s'] );
+			$total_items_search = self::get_devicetokens( 0, $current_page, $_REQUEST['s'] );
+			$this->set_pagination_args( [
+				'total_items' => count($total_items_search), //WE have to calculate the total number of items
+				'per_page'    => $per_page //WE have to determine how many items to show on a page
+			] );			
+		}
+		else 
+		{
+			$this->items = self::get_devicetokens( $per_page, $current_page, '' );
+			$this->set_pagination_args( [
+				'total_items' => $total_items, //WE have to calculate the total number of items
+				'per_page'    => $per_page //WE have to determine how many items to show on a page
+			] );			
+		}
+		
+		
 	}
+		
+	public function pnfpb_url_scheme_start() {
+    	add_filter( 'set_url_scheme', [$this, 'pnfpb_url_scheme'], 10, 3 );
+	}
+		
+	public function pnfpb_url_scheme_stop() {
+    	remove_filter( 'set_url_scheme', [$this, 'pnfpb_url_scheme'], 10 );
+	}
+		
+	public function pnfpb_url_scheme( string $url, string $scheme, $orig_scheme ) {
+    	if ( ! empty( $url ) && mb_strpos( $url, '?page=pnfpb_icfm_device_tokens_list' ) !== false && isset( $_REQUEST['s'] ) ) {
+        	$url = add_query_arg( 's', urlencode( $_REQUEST['s'] ), $url );
+    	}
+    	return( $url );
+	}	
+		
 
 	public function process_bulk_action() {
 
@@ -231,11 +280,11 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 		}
 
 		// If the delete bulk action is triggered
-		if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'bulk-delete' )
-		     || ( isset( $_POST['action2'] ) && $_POST['action2'] == 'bulk-delete' )
+		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bulk-delete' )
+		     || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] == 'bulk-delete' )
 		) {
 
-			$delete_ids = esc_sql( $_POST['bulk-delete'] );
+			$delete_ids = esc_sql( $_REQUEST['bulk-delete'] );
 
 			// loop over the array of record IDs and delete them
 			foreach ( $delete_ids as $id ) {

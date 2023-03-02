@@ -8,6 +8,8 @@
 var $j = jQuery.noConflict();
 
 $j(document).ready(function() {
+	
+	const { __ } = wp.i18n;
     
 	var mediaUploader_132;
 	var mediaUploader_512;
@@ -20,9 +22,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_132 = wp.media.frames.file_frame = wp.media({
-			title: 'Select a Picture',
+			title: __('Select a Picture','PNFPB_TD'),
 			button: {
-				text: 'Select Picture'
+				text: __('Select a Picture','PNFPB_TD')
 			},
 			multiple: false
 		});
@@ -55,9 +57,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_512 = wp.media.frames.file_frame = wp.media({
-			title: 'Select a Picture',
+			title: __('Select a Picture','PNFPB_TD'),
 			button: {
-				text: 'Select Picture'
+				text: __('Select a Picture','PNFPB_TD')
 			},
 			multiple: false
 		});
@@ -82,7 +84,185 @@ $j(document).ready(function() {
 		
 	});
 	
+	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
+
+		if ($j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked')) 
+		{
+			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
+			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
+			$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',true);
+		}
+		else 
+		{
+			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').hide();
+			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').hide();
+			$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',false);
+		}
+	}
+	
+	if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"]').length) {
+
+		if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked')) 
+		{
+			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').show();
+			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').show();
+			$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',true);
+		}
+		else 
+		{
+			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').hide();
+			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').hide();
+			$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',false);
+		}
+	}
+	
+	if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"]').length) {
+
+		if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked')) 
+		{
+			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').show();
+			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').show();
+			$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',true);
+		}
+		else 
+		{
+			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').hide();
+			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').hide();
+			$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',false);
+		}
+	}	
+	
+	
 });
+
+	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
+
+		$j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').on('click',function() {
+			
+			if ($j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked'))
+			{
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
+				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',true);
+		
+			}
+			else 
+			{
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').hide();
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').hide();
+				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',false);
+			}			
+		});
+		
+		$j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').on('click',function() {
+			
+			if ($j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked'))
+			{
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
+				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',true);
+		
+			}
+			else 
+			{
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').hide();
+				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').hide();
+				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',false);
+			}			
+		});		
+	}
+
+	if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"]').length) {
+		
+		$j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').on('click',function() {
+			
+			if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked'))
+			{
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').show();
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').show();
+				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',true);
+		
+			}
+			else 
+			{
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').hide();
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').hide();
+				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',false);
+			}			
+		});		
+
+		$j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').on('click',function() {
+			
+			if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked'))
+			{
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').show();
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').show();
+				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',true);
+		
+			}
+			else 
+			{
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').hide();
+				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').hide();
+				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',false);
+			}			
+		});
+	}
+
+	if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"]').length) {
+
+		$j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').on('click',function() {
+			
+			if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked'))
+			{
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').show();
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').show();
+				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',true);
+		
+			}
+			else 
+			{
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').hide();
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').hide();
+				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',false);
+			}			
+		});
+		
+		$j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').on('click',function() {
+			
+			if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked'))
+			{
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').show();
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').show();
+				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',true);
+		
+			}
+			else 
+			{
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').hide();
+				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').hide();
+				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',false);
+			}			
+		});
+	}
+		
+	
+
+	function toggle_post_type_content_form() {
+		
+  		$j('.pnfpb_ic_post_type_content_form').toggle();
+		
+		if ($j('.pnfpb_ic_post_type_content_form').is(':visible')) {
+			
+			$j('.pnfpb_post_type_content_button').text(__('Hide form','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_post_type_content_button').text(__('Customize','PNFPB_TD'));
+		}		
+	}
+
 
 	function toggle_activity_content_form() {
 		
@@ -90,12 +270,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_activity_content_form').is(':visible')) {
 			
-			$j('.pnfpb_activity_form_button').text('Hide form');
+			$j('.pnfpb_activity_form_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_activity_form_button').text('Customize');
+			$j('.pnfpb_activity_form_button').text(__('Customize','PNFPB_TD'));
 		}		
 	}
 
@@ -105,12 +285,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_comments_content_form').is(':visible')) {
 			
-			$j('.pnfpb_comments_content_button').text('Hide form');
+			$j('.pnfpb_comments_content_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_comments_content_button').text('Customize');
+			$j('.pnfpb_comments_content_button').text(__('Customize','PNFPB_TD'));
 		}		
 	}
 
@@ -120,12 +300,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_private_message_form').is(':visible')) {
 			
-			$j('.pnfpb_private_message_button').text('Hide form');
+			$j('.pnfpb_private_message_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_private_message_button').text('Customize');
+			$j('.pnfpb_private_message_button').text(__('Customize','PNFPB_TD'));
 		}
 		
 	}
@@ -136,12 +316,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_new_member_form').is(':visible')) {
 			
-			$j('.pnfpb_new_member_button').text('Hide form');
+			$j('.pnfpb_new_member_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_new_member_button').text('Customize');
+			$j('.pnfpb_new_member_button').text(__('Customize','PNFPB_TD'));
 		}
 		
 	}
@@ -152,12 +332,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_friendship_request_form').is(':visible')) {
 			
-			$j('.pnfpb_friendship_request_button').text('Hide form');
+			$j('.pnfpb_friendship_request_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_friendship_request_button').text('Customize');
+			$j('.pnfpb_friendship_request_button').text(__('Customize','PNFPB_TD'));
 		}
 		
 	}
@@ -169,12 +349,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_friendship_accept_form').is(':visible')) {
 			
-			$j('.pnfpb_friendship_accept_button').text('Hide form');
+			$j('.pnfpb_friendship_accept_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_friendship_accept_button').text('Customize');
+			$j('.pnfpb_friendship_accept_button').text(__('Customize','PNFPB_TD'));
 		}
 		
 	}
@@ -186,12 +366,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_avatar_change_form').is(':visible')) {
 			
-			$j('.pnfpb_avatar_change_button').text('Hide form');
+			$j('.pnfpb_avatar_change_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_avatar_change_button').text('Customize');
+			$j('.pnfpb_avatar_change_button').text(__('Customize','PNFPB_TD'));
 		}
 		
 	}
@@ -202,12 +382,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_cover_image_change_form').is(':visible')) {
 			
-			$j('.pnfpb_cover_image_change_button').text('Hide form');
+			$j('.pnfpb_cover_image_change_button').text(__('Hide form','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_cover_image_change_button').text('Customize');
+			$j('.pnfpb_cover_image_change_button').text(__('Customize','PNFPB_TD'));
 		}
 		
 	}
@@ -218,12 +398,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_firebase_configuration').is(':visible')) {
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text('Hide Firebase configuration');
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Hide Firebase configuration','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_ic_firebase_configuration_button').text('Update Firebase configuration');
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Update Firebase configuration','PNFPB_TD'));
 		}	
 		
 	}
@@ -234,12 +414,26 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_firebase_configuration_help').is(':visible')) {
 			
-			$j('.pnfpb_ic_firebase_configuration_help_button').text('Hide Firebase Tutorial');
+			$j('.pnfpb_ic_firebase_configuration_help_button').text(__('Hide Firebase Tutorial','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_ic_firebase_configuration_help_button').text('Tutorial on Firebase');
+			$j('.pnfpb_ic_firebase_configuration_help_button').text(__('Tutorial on Firebase','PNFPB_TD'));
 		}	
 		
+	}
+
+	function toggle_custom_push_prompt_form() {
+  		$j('.pnfpb_ic_push_prompt_form').toggle();
+		
+		if ($j('.pnfpb_ic_push_prompt_form').is(':visible')) {
+			
+			$j('.pnfpb_custom_push_prompt_button').text(__('Hide form','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_custom_push_prompt_button').text(__('Customize','PNFPB_TD'));
+		}		
 	}

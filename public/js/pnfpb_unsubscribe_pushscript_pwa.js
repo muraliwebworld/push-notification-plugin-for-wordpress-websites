@@ -1,12 +1,14 @@
-/**
-* Script to Unsubscribe push notification using Firebase
-*
-* @since 1.0.0
-*/
-//pnfpb_ajax_object_unsubscribe_push.homeurl+
+//
+// Script to Unsubscribe push notification using Firebase
+//
+// @since 1.0.0
+//
+
 var $j = jQuery.noConflict();
 
 $j(document).ready(function() {
+	
+	const { __ } = wp.i18n;
 	
 navigator.serviceWorker.register(pnfpb_ajax_object_unsubscribe_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_unsubscribe_push.homeurl+'/'}).then(function(registration) {
    
@@ -84,7 +86,7 @@ navigator.serviceWorker.register(pnfpb_ajax_object_unsubscribe_push.homeurl+'/pn
                                                             }			       			                                                
 											            
 
-												            $j(".pnfpb-unsubscribe-alert-msg").html("<p>UnSubscribe failed..try again..Please!!</p>");
+												            $j(".pnfpb-unsubscribe-alert-msg").html(__("UnSubscribe failed..try again..Please!!",'PNFPB_TD'));
 							
 												            $j( "#pnfpb-unsubscribe-dialog" ).dialog();
 							
@@ -123,7 +125,7 @@ navigator.serviceWorker.register(pnfpb_ajax_object_unsubscribe_push.homeurl+'/pn
                         }			       			                                                
                         
 						
-						$j(".pnfpb-unsubscribe-alert-msg").html("<p>UnSubscribe failed..try again or Subscribe again..Please!! - </p>");
+						$j(".pnfpb-unsubscribe-alert-msg").html(__("UnSubscribe failed..try again or Subscribe again..Please!!",'PNFPB_TD'));
 							
 						$j( "#pnfpb-unsubscribe-dialog" ).dialog();                        
                   }
@@ -134,7 +136,7 @@ navigator.serviceWorker.register(pnfpb_ajax_object_unsubscribe_push.homeurl+'/pn
 			}
 			else
 			{
-				console.log('This browser does not support PUSHAPI Firebase messaging!!!')
+				console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'))
 			}			
         }
 	})

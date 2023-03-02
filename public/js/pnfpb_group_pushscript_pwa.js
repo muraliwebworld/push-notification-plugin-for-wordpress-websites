@@ -1,13 +1,13 @@
-/**
-* Script to Subscribe push notification for particular BuddyPress Group users using Firebase
-* To send push notification only for members belonging to group
-* @since 1.8
-*/
+//
+// Script to Subscribe push notification for particular BuddyPress Group users using Firebase
+// To send push notification only for members belonging to group
+// @since 1.8
+//
 
 var $j = jQuery.noConflict();
 
 var unsubscribeGroupid;
-var subscribeGroupid
+var subscribeGroupid;
 var pnfpb_pushtoken_fromflutter = '';
 
 var standalone_group_pwa = window.navigator.standalone;
@@ -38,12 +38,10 @@ if (ios_group_pwa) {
 
 $j(document).ready(function() {
 	
-	if (!pnfpb_webview) {
-
-	navigator.serviceWorker.register(pnfpb_ajax_object_group_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_group_push.homeurl+'/'}).then(function(registration) {
-
+		const { __ } = wp.i18n;
+		
 		if (firebase.messaging.isSupported()) {
-			navigator.serviceWorker.ready.then(function (registration) {				
+			navigator.serviceWorker.register(pnfpb_ajax_object_group_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_group_push.homeurl+'/'}).then(function(registration) {				
 				var groupId =  '0';
 				const messaging = firebase.messaging();
             	if (Notification.permission === 'granted') {
@@ -100,7 +98,7 @@ $j(document).ready(function() {
 			                                                    else
 			                                                    {
 			           
-			                                                        console.log("Push notification unsubscription failed..try again!!");
+			                                                        console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
 			                                                    }
 
 			                                            }
@@ -161,7 +159,7 @@ $j(document).ready(function() {
 			                                                    else
 			                                                    {
 			           
-			                                                        console.log("Push notification unsubscription failed..try again!!");
+			                                                        console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
 			                                                    }
 
 			                                            }
@@ -228,7 +226,7 @@ $j(document).ready(function() {
 			                                                 }
 			                                                 else
 			                                                 {
-			                                                    console.log("Already subscribed...device id already exists...not updated");
+			                                                    console.log(__("Already subscribed...device id already exists...not updated",'PNFPB_TD'));
 			                                                 }
 
 			                                            }
@@ -236,11 +234,11 @@ $j(document).ready(function() {
 			                                            {
 
                                                            
-                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html("<p>Push notification subscription failed..try again!!</p>");
+                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification subscription failed..try again!!",'PNFPB_TD'));
                                                             
                                                             $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 
-			                                                console.log("device update failed");
+			                                                console.log(__("device update failed",'PNFPB_TD'));
 			                                            }
 							
 										        });
@@ -311,7 +309,7 @@ $j(document).ready(function() {
 			                                                  else
 			                                                  {
 			           
-			                                                        console.log("Push notification unsubscription failed..try again!!");
+			                                                        console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
 			                                                    }
 
 			                                            }
@@ -319,11 +317,11 @@ $j(document).ready(function() {
 			                                            {
 
                                                            
-                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html("<p>Push notification unsubscription failed..try again!!</p>");
+                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
                                                             
                                                             $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 
-			                                                console.log("device update failed");
+			                                                console.log(__("device update failed",'PNFPB_TD'));
 			                                            }
 							
 										        });
@@ -358,7 +356,7 @@ $j(document).ready(function() {
                   else
                   {
 							
-					$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>UnSubscribe/Subscribe failed..try again ..Please!! </p>");
+					$j(".pnfpb-group-unsubscribe-alert-msg").html(__("UnSubscribe/Subscribe failed..try again ..Please!!",'PNFPB_TD'));
 							
 					$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();                        
                   }
@@ -367,8 +365,8 @@ $j(document).ready(function() {
 			}
 			else
 			{
-				if (pnfpb_pushtoken_fromflutter !== '') {
-					console.log('This browser does not support PUSHAPI Firebase messaging!!!');
+				//if (pnfpb_pushtoken_fromflutter !== '') {
+					console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'));
 					$j(document).on( "click",".subscribe-notification-group", function(e) {
 						e.preventDefault();
 						groupId = $j(this).attr("data-group-id");
@@ -463,16 +461,10 @@ $j(document).ready(function() {
 					}]
 				})
 			})				
-		}		
+		//}		
 	}
 
-})
-		
-	}
-	else 
-		{
-			console.log('This browser does not support PUSHAPI Firebase messaging!!!');
-		}
+
 
 	
 

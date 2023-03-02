@@ -6,7 +6,7 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab">Push notification</a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER);?></a></h2>
+<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab"><?php echo __( 'Push notification', 'PNFPB_TD' ); ?></a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_frontend_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_FRONTEND_SETTINGS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_action_scheduler" class="nav-tab"><?php echo __(PNFPB_PLUGIN_SCHEDULE_ACTIONS,PNFPB_TD);?></a></h2>
 
 <div class="pnfpb_column_1000">
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_PWA_SETTINGS,PNFPB_TD);?></h1>
@@ -20,7 +20,7 @@
 		<?php echo __(PNFPB_PLUGIN_PWA_SETTINGS,PNFPB_TD);?>
 	</h2>
 	<ul>
-		<li><?php echo __(PNFPB_PLUGIN_PWA_SETTINGS_DESCRIPTION);?></li>
+		<li><?php echo __(PNFPB_PLUGIN_PWA_SETTINGS_DESCRIPTION,PNFPB_TD);?></li>
 	</ul>
 	<table class="pnfpb_ic_push_settings_table widefat fixed">
     	<tbody>
@@ -81,14 +81,19 @@
 					</label>
 					<br/>
 					<select name="pnfpb_ic_pwa_app_display" id="pnfpb_ic_pwa_app_display" required="required">
-						<option value="standalone" <?php if (get_option( 'pnfpb_ic_pwa_app_backgroundcolor' ) === 'standalone'){ echo 'selected';} else {echo '';} ?>>standalone</option>
-						<option value="fullscreen" <?php if (get_option( 'pnfpb_ic_pwa_app_backgroundcolor' ) === 'fullscreen'){ echo 'selected';} else {echo '';} ?>>fullscreen</option>
-						<option value="minimal-ui" <?php if (get_option( 'pnfpb_ic_pwa_app_backgroundcolor' ) === 'minimal-ui'){ echo 'selected';} else {echo '';} ?>>minimal-ui</option>
-						<option value="browser" <?php if (get_option( 'pnfpb_ic_pwa_app_backgroundcolor' ) === 'browser'){ echo 'selected';} else {echo '';} ?>>browser</option>
+						<option value="standalone" <?php if (get_option( 'pnfpb_ic_pwa_app_display' ) === 'standalone'){ echo 'selected';} else {echo '';} ?>><?php echo __("standalone",PNFPB_TD);?></option>
+						<option value="fullscreen" <?php if (get_option( 'pnfpb_ic_pwa_app_display' ) === 'fullscreen'){ echo 'selected';} else {echo '';} ?>><?php echo __("fullscreen",PNFPB_TD);?></option>
+						<option value="minimal-ui" <?php if (get_option( 'pnfpb_ic_pwa_app_display' ) === 'minimal-ui'){ echo 'selected';} else {echo '';} ?>><?php echo __("minimal-ui",PNFPB_TD);?></option>
 					</select>					
 				</td>
 			</tr>
-			<tr><td><b>PWA icon size must be exactly as specified below for icon1 and icon2(132x132 and 512x512) otherwise it will use default plugin icons</b></td></tr>			
+			<tr>
+				<td>
+					<?php 
+						echo __( 'PWA icon size must be exactly as specified below for icon1 and icon2(132x132 and 512x512) otherwise it will use default plugin icons', 'PNFPB_TD' ); 
+					?>
+				</td>
+			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<div class="pnfpb_column_400">
@@ -135,8 +140,20 @@
 					</div>
 				</td>
 			</tr>
-			<tr><td><b>Below options are for offline facility for PWA - web app</b></td></tr>
-			<tr><td><b>Home page url to be cached for offline use(*required)</b></td></tr>
+			<tr>
+				<td>
+					<?php
+						echo __( '<b>Below options are for offline facility for PWA - web app</b>', 'PNFPB_TD' );
+					?>	
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<?php
+						echo __( '<b>Home page url to be cached for offline use(*required)</b>', 'PNFPB_TD' );
+					?>
+				</td>
+			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<label for="pnfpb_ic_pwa_app_offline_url1">
@@ -150,7 +167,7 @@
 		$homeurlselected = 'selected';
 	}				
 	if( $pages = get_pages() ){
-		echo '<option value="' . get_home_url() . '"'.$homeurlselected.'> Home page</option>';	        		
+		echo '<option value="' . get_home_url() . '"'.$homeurlselected.'>'.__('Home page', 'PNFPB_TD' ).'</option>';	        		
 		foreach( $pages as $page ){
 			echo '<option value="' . get_page_link( $page->ID ) . '" ' . selected( get_page_link( $page->ID ), get_option( 'pnfpb_ic_pwa_app_offline_url1' ) ) . '>' . $page->post_title . '</option>';						
        	}
@@ -159,7 +176,13 @@
 				</select>
 				</td>
 			</tr>
-			<tr><td><b>Default url for offline if page is not available in cache(*required)</b></td></tr>
+			<tr>
+				<td>
+					<?php
+						echo __('<b>Default url for offline if page is not available in cache(*required)</b>', 'PNFPB_TD' );
+					?>
+				</td>
+			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<label for="pnfpb_ic_pwa_app_offline_url2">
@@ -173,7 +196,7 @@
 						$homeurlselected = 'selected';
 					}				
 					if( $pages = get_pages() ){
-						echo '<option value="' . get_home_url() . '"'.$homeurlselected.'> Home page</option>';	        		
+						echo '<option value="' . get_home_url() . '"'.$homeurlselected.'>'.__('Home page', 'PNFPB_TD' ).'</option>';	        		
 						foreach( $pages as $page ){
 						echo '<option value="' . get_page_link( $page->ID ) . '" ' . selected( get_page_link( $page->ID ), get_option( 'pnfpb_ic_pwa_app_offline_url2' ) ) . '>' . $page->post_title . '</option>';						
        					}
@@ -182,7 +205,13 @@
 				</select>					
 				</td>
 			</tr>
-			<tr><td><b>Other extra pages to be cached for offline use/to be stored in cache(Optional)</b></td></tr>
+			<tr>
+				<td>
+					<?php
+						echo __('<b>Other extra pages to be cached for offline use/to be stored in cache(Optional)</b>', 'PNFPB_TD' );
+					?>
+				</td>
+			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<label for="pnfpb_ic_pwa_app_offline_url3">
@@ -236,7 +265,13 @@
 				</select>					
 				</td>
 			</tr>
-			<tr><td><b>List of urls to be excluded from offline cache separted by comma. Please note that enter list of urls to be excluded separated with comma</b></td></tr>
+			<tr>
+				<td>
+					<?php
+						echo __('<b>List of urls to be excluded from offline cache separted by comma. Please note that enter list of urls to be excluded separated with comma</b>', 'PNFPB_TD' );
+					?>
+				</td>
+			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
   					<div class="pnfpb_row">
@@ -254,7 +289,13 @@
 					</div>
 				</td>
 			</tr>
-			<tr><td><b>List of urls to be excluded from offline cache separted by comma. Please note that enter list of urls to be excluded separated with comma</b></td></tr>
+			<tr>
+				<td>
+					<?php
+						echo __('<b>List of urls to be excluded from offline cache separted by comma. Please note that enter list of urls to be excluded separated with comma</b>', 'PNFPB_TD' );
+					?>
+				</td>
+			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<label for="pnfpb_ic_pwa_app_excludeurls">			
@@ -278,74 +319,32 @@
 							</div>
 						</div>
  						<div class="pnfpb_column_400">
-    						<div class="pnfpb_card">
-								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
-									<?php echo __("Popup type prompt ",'PNFPB_TD');?>
-									<input  id="pnfpb_ic_pwa_app_custom_prompt_popup" name="pnfpb_ic_pwa_app_custom_prompt_type" type="radio" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_custom_prompt_type' ) ); ?>  />
-									<span class="pnfpb_checkmark"></span>
-								</label>
-								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
-									<?php echo __("Snackbar type prompt",'PNFPB_TD');?>
-									<input  id="pnfpb_ic_pwa_app_custom_prompt_snackbar" name="pnfpb_ic_pwa_app_custom_prompt_type" type="radio" value="2" <?php checked( '2', get_option( 'pnfpb_ic_pwa_app_custom_prompt_type' ) ); ?>  />
-									<span class="pnfpb_checkmark"></span>
-								</label>							
+								<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_pwa_prompt_text"><?php echo __("Below customize options are for custom PWA install prompt",'PNFPB_TD');?></label><br/>							
+								<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_pwa_prompt_text"><?php echo __("Custom text to for PWA custom prompt",'PNFPB_TD');?></label><br/>
+								<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_pwa_prompt_text" name="pnfpb_ic_fcm_pwa_prompt_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_pwa_prompt_text' )) {echo get_option( 'pnfpb_ic_fcm_pwa_prompt_text' );} else { echo __("Would like to install our app?",'PNFPB_TD');} ?>"  />					
+								<br/><br /><p><?php echo __("PWA custom install prompt confirmation button text",'PNFPB_TD');?></p>	
+								<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_pwa_prompt_confirm_button" name="pnfpb_ic_fcm_pwa_prompt_confirm_button" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_pwa_prompt_confirm_button' )) {echo get_option( 'pnfpb_ic_fcm_pwa_prompt_confirm_button' );} else { echo __("Install",'PNFPB_TD');} ?>"  />
+								<br/><br /><p><?php echo __("PWA custom install prompt cancel button text",'PNFPB_TD');?></p>	
+								<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_pwa_prompt_cancel_button" name="pnfpb_ic_fcm_pwa_prompt_cancel_button" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_pwa_prompt_cancel_button' )) {echo get_option( 'pnfpb_ic_fcm_pwa_prompt_cancel_button' );} else { echo __("Cancel",'PNFPB_TD');} ?>"  />
+								<br /><br/><p><?php echo __("PWA custom install prompt Button background color",'PNFPB_TD');?></p>
+								<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_pwa_prompt_button_background" id="pnfpb_ic_fcm_pwa_prompt_button_background" name="pnfpb_ic_fcm_pwa_prompt_button_background" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_pwa_prompt_button_background' )) {echo get_option( 'pnfpb_ic_fcm_pwa_prompt_button_background' ); } else { echo '#ffffff';}?>" required="required" />					
+								<br /><br/><p><?php echo __("PWA custom install prompt dialog box background color",'PNFPB_TD');?></p>
+								<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_pwa_prompt_dialog_background" id="pnfpb_ic_fcm_pwa_prompt_dialog_background" name="pnfpb_ic_fcm_pwa_prompt_dialog_background" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_pwa_prompt_dialog_background' )) {echo get_option( 'pnfpb_ic_fcm_pwa_prompt_dialog_background' ); } else { echo '#ffffff';}?>" required="required" />					
+								<br /><br/><p><?php echo __("PWA custom install prompt dialog Text color",'PNFPB_TD');?></p>
+								<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_pwa_prompt_text_color" id="pnfpb_ic_fcm_pwa_prompt_text_color" name="pnfpb_ic_fcm_pwa_prompt_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_pwa_prompt_text_color' )) {echo get_option( 'pnfpb_ic_fcm_pwa_prompt_text_color' ); } else { echo '#161515';}?>" required="required" />
+								<br /><br/><p><?php echo __("PWA custom install prompt button Text color",'PNFPB_TD');?></p>
+								<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_pwa_prompt_button_text_color" id="pnfpb_ic_fcm_pwa_prompt_button_text_color" name="pnfpb_ic_fcm_pwa_prompt_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_pwa_prompt_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_pwa_prompt_button_text_color' ); } else { echo '#161515';}?>" required="required" />
 							</div>
-						</div>
 					</div>
 				</td>
 			</tr>			
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_prompt_header_text">
-						<?php echo __("PWA Install prompt popup header text<br/> (max 50 characters)",PNFPB_TD);?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_prompt_header_text" name="pnfpb_ic_pwa_prompt_header_text" type="text" maxlength="50" value="<?php if (get_option( 'pnfpb_ic_pwa_prompt_header_text' )) {echo get_option( 'pnfpb_ic_pwa_prompt_header_text' );} else { echo "Install PWA app";} ?>" />					
-				</td>
-			</tr>
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_prompt_description">
-						<?php echo __("PWA Install prompt popup App description",PNFPB_TD);?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_prompt_description" name="pnfpb_ic_pwa_prompt_description" type="text" maxlength="50" value="<?php if (get_option( 'pnfpb_ic_pwa_prompt_description' )) {echo get_option( 'pnfpb_ic_pwa_prompt_description' );} else { echo "Install our PWA app with offline functionality";} ?>"  />					
-				</td>
-			</tr>
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_prompt_install_button_text">
-						<?php echo __("PWA Install popup install button text*",PNFPB_TD);?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_prompt_install_button_text" name="pnfpb_ic_pwa_prompt_install_button_text" type="text" maxlength="80" value="<?php if (get_option( 'pnfpb_ic_pwa_prompt_install_button_text' )) {echo get_option( 'pnfpb_ic_pwa_prompt_install_button_text' );} else { echo "Install PWA";} ?>"  />					
-				</td>
-			</tr>			
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_prompt_install_button_color">
-						<?php echo __("PWA prompt install button background color",PNFPB_TD);?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_prompt_install_button_color pnfpb_ic_push_pwa_color" id="pnfpb_ic_pwa_prompt_install_button_color" name="pnfpb_ic_pwa_prompt_install_button_color" type="color" value="<?php if (get_option( 'pnfpb_ic_pwa_prompt_install_button_color' )) {echo get_option( 'pnfpb_ic_pwa_prompt_install_button_color' ); } else { echo '#ff0000';}?>" required="required" />					
-				</td>
-			</tr>
-    		<tr class="pnfpb_ic_push_settings_table_row">
-        		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_pwa_prompt_install_text_color">
-						<?php echo __("PWA prompt install button text color",PNFPB_TD);?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_prompt_install_text_color pnfpb_ic_push_pwa_color" id="pnfpb_ic_pwa_prompt_install_text_color" name="pnfpb_ic_pwa_prompt_install_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_pwa_prompt_install_text_color' )) {echo get_option( 'pnfpb_ic_pwa_prompt_install_text_color' ); } else { echo '#ffffff';}?>"  />					
-				</td>
-			</tr>
     		<tr class="pnfpb_ic_push_settings_table_row">
         		<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<label for="pnfpb-pwa-dialog-app-installed_text">
 						<?php echo __("PWA after installed confirmation popup header text",PNFPB_TD);?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb-pwa-dialog-app-installed_text" name="pnfpb-pwa-dialog-app-installed_text" type="text" maxlength="100" value="<?php if (get_option( 'pnfpb-pwa-dialog-app-installed_text' )) {echo get_option( 'pnfpb-pwa-dialog-app-installed_text' );} else { echo "App installed successfully";} ?>" />					
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb-pwa-dialog-app-installed_text" name="pnfpb-pwa-dialog-app-installed_text" type="text" maxlength="100" value="<?php if (get_option( 'pnfpb-pwa-dialog-app-installed_text' )) {echo get_option( 'pnfpb-pwa-dialog-app-installed_text' );} else { echo __("App installed successfully",PNFPB_TD);} ?>" />					
 				</td>
 			</tr>			
     		<tr class="pnfpb_ic_push_settings_table_row">
@@ -354,11 +353,23 @@
 						<?php echo __("PWA after installed confirmation popup description",PNFPB_TD);?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb-pwa-dialog-app-installed_description" name="pnfpb-pwa-dialog-app-installed_description" type="text" maxlength="500" value="<?php if (get_option( 'pnfpb-pwa-dialog-app-installed_description' )) {echo get_option( 'pnfpb-pwa-dialog-app-installed_description' );} else { echo "Progressive Web App (PWA) is installed successfully. It will also work in offline";} ?>" />					
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb-pwa-dialog-app-installed_description" name="pnfpb-pwa-dialog-app-installed_description" type="text" maxlength="500" value="<?php if (get_option( 'pnfpb-pwa-dialog-app-installed_description' )) {echo get_option( 'pnfpb-pwa-dialog-app-installed_description' );} else { echo __("Progressive Web App (PWA) is installed successfully. It will also work in offline",PNFPB_TD);} ?>" />					
 				</td>
 			</tr>			
-			<tr><td><b>All fields marked with "*" are required fields, Please verify before submitting the changes</b></td></tr>
-			<tr><td><b>Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android,Edge for Android, Brave for Android and Samsung Interent except Firefox for desktop</b></td></tr>
+			<tr>
+				<td>
+					<?php
+						echo __("<b>All fields marked with '*' are required fields, Please verify before submitting the changes</b>",PNFPB_TD);
+					?>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<?php
+						echo __("<b>Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android,Edge for Android, Brave for Android and Samsung Interent except Firefox for desktop</b>",PNFPB_TD);
+					?>
+				</td>
+			</tr>
     		<tr>
 				<td class="column-columnname">
 					<div class="pnfpb_column_full"><?php submit_button(__('Save changes',PNFPB_TD),'pnfpb_ic_push_save_configuration_button'); ?></div>

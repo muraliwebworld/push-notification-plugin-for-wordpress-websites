@@ -98,7 +98,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v1.47.0',
+  			cache_version: 'pnfpb_v1.57.0',
   			offline_assets: []
 		};
 
@@ -445,7 +445,6 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
   			if (event.data) {
     			notification = event.data.json().notification;
 			}
-
 			// Customize notification here
 			const notificationTitle = notification.title;
 			const notificationOptions = {
@@ -463,6 +462,21 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 		self.addEventListener('notificationclick', function(event) {
 			event.waitUntil(self.clients.openWindow(event.notification.data.url));
+  			event.notification.close();
+
+  			// This looks to see if the current is already open and
+  			// focuses if it is
+  			event.waitUntil(clients.matchAll({
+    			type: "window"
+  			}).then((clientList) => {
+    			for (const client of clientList) {
+      				if (client.url === '/' && 'focus' in client)
+        				return client.focus();
+    			}
+    			if (clients.openWindow)
+      				return clients.openWindow(event.notification.data.url);
+  			}));
+
 		});
 
 		<?php 
