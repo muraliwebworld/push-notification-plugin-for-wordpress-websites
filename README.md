@@ -17,6 +17,9 @@ To send/schedule Push notifications when new item is published for following,
 
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile - settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.
 
+# Download this plugin<br/>
+https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/><br/>
+
 # REST API<br/>
 REST API to connect mobile native/hybrid apps to send push notification from WordPress site to both mobile apps and WordPress sites.
 Using this REST API WordPress site gets Firebase Push Notification subscription token from Mobile app(Android/Ios). 
@@ -110,9 +113,10 @@ The shortcode [subscribe_PNFPB_push_notification] is optional, it is a additiona
 This plugin generates PWA app based on settings in plugin admin area. Admin users will be able to enable/disable PWA app and will be customize PWA app with app name, app icon, app theme color, background color and list of pages to be included in offline cache for web app offline mode. If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed. Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android. Firefox for desktop will not support PWA.<br/><br/>
 # On demand or One time push notification to all subscribers <br/>
 Go to plugin admin area on demand push notification to send one time notification or to schedule multiple one time notifications to start at different date and time or schedule multiple campaigns to start at different date and time with image to all subscribers<br/><br/>
-# Download this plugin<br/>
-https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/><br/>
+
 # How to configure plugin<br/>
+https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/><br/>
+
 Following are steps to configure the plugin,<br/>
 1. Download the plugin<br/>
 2. Activate the plugin<br/>
