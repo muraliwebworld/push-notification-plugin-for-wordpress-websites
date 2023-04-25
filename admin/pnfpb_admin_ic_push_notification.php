@@ -6,12 +6,19 @@
 * @since 1.0.0
 */
 ?>
-
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab nav-tab-active"><?php echo __("Push notification",PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_frontend_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_FRONTEND_SETTINGS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_action_scheduler" class="nav-tab"><?php echo __(PNFPB_PLUGIN_SCHEDULE_ACTIONS,PNFPB_TD);?></a></h2>
-
+<h1 class="pnfpb_ic_push_settings_header"><?php echo __("PNFPB - Settings for Push Notification",PNFPB_TD);?></h1>
+<div class="pnfpb_admin_top_menu">
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="tab active"><?php echo __("Push Settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="tab "><?php echo __("PWA",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="tab "><?php echo __("One time push",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="tab "><?php echo __("Frontend settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="tab "><?php echo __("NGINX",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler" class="tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
+</div>
 <div class="pnfpb_column_left_900">
-<h1 class="pnfpb_ic_push_settings_header"><?php echo __(PNFPB_PLUGIN_NM_SETTINGS,PNFPB_TD);?></h1>
-
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
     <?php settings_fields( 'pnfpb_icfcm_group'); ?>
     <?php do_settings_sections( 'pnfpb_icfcm_group' ); ?>
@@ -135,11 +142,47 @@
     else
     {
            $coverimagechangecontent = get_option( 'pnfpb_ic_fcm_cover_image_change_content' );
+    }
+	
+    if (get_option( 'pnfpb_ic_fcm_group_details_updated_content' ) ==  false || get_option( 'pnfpb_ic_fcm_group_details_updated_content' ) ==  '') {
+            
+            $groupdetailsupdatedcontent = '';
+    }
+    else
+    {
+           $groupdetailsupdatedcontent = get_option( 'pnfpb_ic_fcm_group_details_updated_content' );
+    }
+	
+    if (get_option( 'pnfpb_ic_fcm_group_invitation_content' ) ==  false || get_option( 'pnfpb_ic_fcm_group_invitation_content' ) ==  '') {
+            
+            $groupinvitationcontent = '';
+    }
+    else
+    {
+           $groupinvitationcontent = get_option( 'pnfpb_ic_fcm_group_invitation_content' );
+    }
+	
+    if (get_option( 'pnfpb_ic_fcm_buddypress_new_user_registration_content_enable' ) ==  false || get_option( 'pnfpb_ic_fcm_buddypress_new_user_registration_content_enable' ) ==  '') {
+            
+            $newuserregistrationcontent = '';
+    }
+    else
+    {
+           $newuserregistrationcontent = get_option( 'pnfpb_ic_fcm_buddypress_new_user_registration_content_enable' );
+    }
+	
+    if (get_option( 'pnfpb_ic_fcm_buddypress_contact_form7_content_enable' ) ==  false || get_option( 'pnfpb_ic_fcm_buddypress_contact_form7_content_enable' ) ==  '') {
+            
+            $contactform7content = '';
+    }
+    else
+    {
+           $contactform7content = get_option( 'pnfpb_ic_fcm_buddypress_contact_form7_content_enable' );
     }	
 
 ?>
-<h2 class="pnfpb_ic_push_settings_header2"><?php echo __(PNFPB_PLUGIN_ENABLE_PUSH,PNFPB_TD);?></h2>
-<p><?php echo __(PNFPB_PLUGIN_SCHEDULE_PUSH,PNFPB_TD);?></p>
+<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Enable/Disable push notifications for following types",PNFPB_TD);?></h2>
+<p><?php echo __("If schedule is enabled then push notification will be sent as per selected schedule otherwise it will be sent whenever new item is posted.<br/>BuddyPress notifications will work only when BuddyPress plugin is installed and active.<br/><b>If you have more than 1000 subscribers, enable schedule in background mode(asynchronous).<br/>Refer scheduled action tab for background scheduled jobs</b><br/>",PNFPB_TD);?></p>
 <table class="pnfpb_ic_push_notification_settings_table widefat fixed" cellspacing="0">
     <tbody>
 		<tr class="pnfpb_ic_push_settings_table_row">
@@ -200,7 +243,7 @@
         		<?php
             		$posttypecount = 0;
             		$rowcount = 0;
-					$cutomize_post_field_notification_title = '<div class="pnfpb_ic_post_type_content_form">'.__('<br/>(use [member name] shortcode to display member name)<br/>if following custom title are blank then post title/custom post type title will be in push notification title<br/>Example "[member name] published a post" will display as "Tom published a post" where Tom is member name<br/>',PNFPB_TD).'<div class="pnfpb_ic_post_content_form"><b>'.__("Notification title for Post",PNFPB_TD).'</b><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_post_title" name="pnfpb_ic_fcm_post_title" type="text" value="'.get_option('pnfpb_ic_fcm_post_title').'" /></div><br/>';
+					$cutomize_post_field_notification_title = __('<br/>(use [member name] shortcode to display member name)<br/>if following custom title are blank then post title/custom post type title will be in push notification title<br/>Example "[member name] published a post" will display as "Tom published a post" where Tom is member name<br/>',PNFPB_TD).'<div class="pnfpb_ic_post_content_form"><b>'.__("Notification title for Post",PNFPB_TD).'</b><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_post_title" name="pnfpb_ic_fcm_post_title" type="text" value="'.get_option('pnfpb_ic_fcm_post_title').'" /></div><br/>';
 					
            			 $totalposttype = count($custposttypes);
             		foreach ( $custposttypes as $post_type ) {
@@ -219,10 +262,12 @@
                 	$posttypecount++;
                 	$rowcount++;
            	 	}
-				$cutomize_post_field_notification_title .= '</div>';
         		?>
+					<div class="pnfpb_column">
+						<button type="button" class="pnfpb_post_type_content_button" onclick="toggle_post_type_content_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+					</div>
 				</div>
-				<div class="pnfpb_row">
+				<div class="pnfpb_ic_post_type_content_form">
   					<div class="pnfpb_column_400">
     					<div class="pnfpb_card">
 							<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_post_schedule_enable">
@@ -272,10 +317,9 @@
 								<span class="pnfpb_checkmark"></span>
 							</label>
 						</div>
-					</div>
-					<button type="button" class="pnfpb_post_type_content_button" onclick="toggle_post_type_content_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+					</div>					
+					<?php echo $cutomize_post_field_notification_title; ?>
 				</div>
-				<?php echo $cutomize_post_field_notification_title; ?>
 			</td>			
 		</tr>
 		<tr class="pnfpb_ic_push_settings_table_row">
@@ -308,59 +352,59 @@
 						</div>
 					</div>
 				</div>
-				<div class="pnfpb_row">
-					<div class="pnfpb_column_400">
-    					<div class="pnfpb_card">
-							<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypressactivities_schedule_enable">
-								<?php echo __("Schedule",'PNFPB_TD');?>
+				<div class="pnfpb_ic_activity_content_form">
+					<div class="pnfpb_row">
+						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">
+								<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypressactivities_schedule_enable">
+									<?php echo __("Schedule",'PNFPB_TD');?>
+									<label class="pnfpb_switch">
+										<input  id="pnfpb_ic_fcm_buddypressactivities_schedule_enable" name="pnfpb_ic_fcm_buddypressactivities_schedule_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypressactivities_schedule_enable' ) ); ?>  />				
+										<span class="pnfpb_slider round"></span>
+									</label>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable">
+									<?php echo __("in background",'PNFPB_TD');?>
+								</label>
 								<label class="pnfpb_switch">
-									<input  id="pnfpb_ic_fcm_buddypressactivities_schedule_enable" name="pnfpb_ic_fcm_buddypressactivities_schedule_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypressactivities_schedule_enable' ) ); ?>  />				
+									<input  id="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable" name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypressactivities_schedule_background_enable' ) ); ?>  />
 									<span class="pnfpb_slider round"></span>
 								</label>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable">
-								<?php echo __("in background",'PNFPB_TD');?>
-							</label>
-							<label class="pnfpb_switch">
-								<input  id="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable" name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypressactivities_schedule_background_enable' ) ); ?>  />
-								<span class="pnfpb_slider round"></span>
-							</label>
+							</div>
 						</div>
-					</div>
-  					<div class="pnfpb_column_400">
-    					<div class="pnfpb_card">
-							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block">
-								<?php echo __("In seconds<br/>(min 300)",'PNFPB_TD');?>
-								<input  class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block" class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="seconds" <?php checked( 'seconds', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block">
-								<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" type="number" min="300" value="<?php if ((!get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds')) || (get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds' ) && get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds' ) < 300)) { echo 300; } else  { echo get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds' ); } ?>" required/>		
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container" >
-								<?php echo __("Hourly",'PNFPB_TD');?>
-								<input  id="pnfpb_ic_fcm_buddypressactivities_hourly_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="hourly" <?php checked( 'hourly', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container">
-								<?php echo __("Twicedaily",'PNFPB_TD');?>						
-								<input  id="pnfpb_ic_fcm_buddypressactivities_twicedaily_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="twicedaily" <?php checked( 'twicedaily', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container">
-								<?php echo __("Daily",'PNFPB_TD');?>						
-								<input  id="pnfpb_ic_fcm_buddypressactivities_daily_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="daily" <?php checked( 'daily', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container" >
-								<?php echo __("Weekly",'PNFPB_TD');?>						
-								<input  id="pnfpb_ic_fcm_buddypressactivities_weekly_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="weekly" <?php checked( 'weekly', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
+  						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">
+								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block">
+									<?php echo __("In seconds<br/>(min 300)",'PNFPB_TD');?>
+									<input  class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block" class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="seconds" <?php checked( 'seconds', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block">
+									<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" class="pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds" type="number" min="300" value="<?php if ((!get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds')) || (get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds' ) && get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds' ) < 300)) { echo 300; } else  { echo get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds' ); } ?>" required/>		
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container" >
+									<?php echo __("Hourly",'PNFPB_TD');?>
+									<input  id="pnfpb_ic_fcm_buddypressactivities_hourly_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="hourly" <?php checked( 'hourly', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container">
+									<?php echo __("Twicedaily",'PNFPB_TD');?>						
+									<input  id="pnfpb_ic_fcm_buddypressactivities_twicedaily_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="twicedaily" <?php checked( 'twicedaily', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container">
+									<?php echo __("Daily",'PNFPB_TD');?>						
+									<input  id="pnfpb_ic_fcm_buddypressactivities_daily_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="daily" <?php checked( 'daily', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container" >
+									<?php echo __("Weekly",'PNFPB_TD');?>						
+									<input  id="pnfpb_ic_fcm_buddypressactivities_weekly_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable" type="radio" value="weekly" <?php checked( 'weekly', get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+							</div>
 						</div>
-					</div>
-				</div>
-				<div class="pnfpb_ic_activity_content_form">
+					</div>					
 					<?php echo __("Notification title for BuddyPress new activity<br/>use [member name] shortcode to display member name along with custom title<br/>Example '[member name] posted an activity' will display as 'Tom posted an activity' where Tom is member name",PNFPB_TD);?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_activity_title" name="pnfpb_ic_fcm_activity_title" type="text" value="<?php echo $activitytitle; ?>" /><br/><br/>
 					<?php echo __("Default Notification content for BuddyPress new activity<br/> (or leave it as blank to display activity content in notification message)",PNFPB_TD); ?><br/>
@@ -370,10 +414,6 @@
 					<?php echo __("Default Notification content for BuddyPress new group activity<br/> (or leave it as blank to display activity content in notification message)",PNFPB_TD);?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_group_activity_message" name="pnfpb_ic_fcm_group_activity_message" type="text" value="<?php echo $groupactivitymessage; ?>" /><br/><br/>
 				</div>
-			</td>
-        </tr>
-		<tr class="pnfpb_ic_push_settings_table_row">
-            <td class="pnfpb_ic_push_settings_table_column column-columnname">
 				<div class="pnfpb_row">
 					<div class="pnfpb_column_400">
     					<div class="pnfpb_card">
@@ -388,70 +428,65 @@
 						</div>
 					</div>
 				</div>
-				<div class="pnfpb_row">
-					<div class="pnfpb_column_400">
-    					<div class="pnfpb_card">				
-							<label class="pnfpb_ic_push_settings_table_label_checkbox">
-								<?php echo __("Schedule",'PNFPB_TD');?>
+				<div class="pnfpb_ic_comments_content_form">
+					<div class="pnfpb_row">
+						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">				
+								<label class="pnfpb_ic_push_settings_table_label_checkbox">
+									<?php echo __("Schedule",'PNFPB_TD');?>
+									<label class="pnfpb_switch">
+										<input  id="pnfpb_ic_fcm_buddypresscomments_schedule_enable" name="pnfpb_ic_fcm_buddypresscomments_schedule_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypresscomments_schedule_enable' ) ); ?>  />				
+										<span class="pnfpb_slider round"></span>
+									</label>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable">
+									<?php echo __("in background",'PNFPB_TD');?>
+								</label>
 								<label class="pnfpb_switch">
-									<input  id="pnfpb_ic_fcm_buddypresscomments_schedule_enable" name="pnfpb_ic_fcm_buddypresscomments_schedule_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypresscomments_schedule_enable' ) ); ?>  />				
+									<input  id="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable" name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypresscomments_schedule_background_enable' ) ); ?>  />
 									<span class="pnfpb_slider round"></span>
 								</label>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable">
-								<?php echo __("in background",'PNFPB_TD');?>
-							</label>
-							<label class="pnfpb_switch">
-								<input  id="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable" name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypresscomments_schedule_background_enable' ) ); ?>  />
-								<span class="pnfpb_slider round"></span>
-							</label>
 							
+							</div>
 						</div>
-					</div>
- 					<div class="pnfpb_column_400">
-    					<div class="pnfpb_card">
-							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block">
-								<?php echo __("In seconds<br/>(min 300)",'PNFPB_TD');?>
-								<input  class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block" class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="seconds" <?php checked( 'seconds', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block">
-								<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" type="number" min="300" value="<?php if ((!get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds')) || (get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds' ) && get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds' ) < 300)) { echo 300; } else  { echo get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds' ); } ?>" required/>		
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
-								<?php echo __("Hourly",'PNFPB_TD');?>
-								<input  id="pnfpb_ic_fcm_buddypresscomments_hourly_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="hourly" <?php checked( 'hourly', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
-								<?php echo __("Twicedaily",'PNFPB_TD');?>
-								<input  id="pnfpb_ic_fcm_buddypresscomments_twicedaily_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="twicedaily" <?php checked( 'twicedaily', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
-								<?php echo __("Daily",'PNFPB_TD');?>
-								<input  id="pnfpb_ic_fcm_buddypresscomments_daily_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="daily" <?php checked( 'daily', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
-								<span class="pnfpb_checkmark"></span>
-							</label>
-							<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
-								<input  id="pnfpb_ic_fcm_buddypresscomments_weekly_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="weekly" <?php checked( 'weekly', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
-								<?php echo __("Weekly",'PNFPB_TD');?>
-								<span class="pnfpb_checkmark"></span>
-							</label>
+ 						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">
+								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block">
+									<?php echo __("In seconds<br/>(min 300)",'PNFPB_TD');?>
+									<input  class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block" class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="seconds" <?php checked( 'seconds', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block">
+									<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds" type="number" min="300" value="<?php if ((!get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds')) || (get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds' ) && get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds' ) < 300)) { echo 300; } else  { echo get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds' ); } ?>" required/>		
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
+									<?php echo __("Hourly",'PNFPB_TD');?>
+									<input  id="pnfpb_ic_fcm_buddypresscomments_hourly_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="hourly" <?php checked( 'hourly', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
+									<?php echo __("Twicedaily",'PNFPB_TD');?>
+									<input  id="pnfpb_ic_fcm_buddypresscomments_twicedaily_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="twicedaily" <?php checked( 'twicedaily', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
+									<?php echo __("Daily",'PNFPB_TD');?>
+									<input  id="pnfpb_ic_fcm_buddypresscomments_daily_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="daily" <?php checked( 'daily', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
+									<span class="pnfpb_checkmark"></span>
+								</label>
+								<label class="pnfpb_ic_push_settings_table_label_checkbox  pnfpb_container">
+									<input  id="pnfpb_ic_fcm_buddypresscomments_weekly_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="weekly" <?php checked( 'weekly', get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ); ?>  />
+									<?php echo __("Weekly",'PNFPB_TD');?>
+									<span class="pnfpb_checkmark"></span>
+								</label>
+							</div>
 						</div>
-					</div>
-				</div>
-				<div class="pnfpb_ic_comments_content_form">
+					</div>					
 					<label for="pnfpb_ic_fcm_comment_activity_title"><?php echo __("Notification title for BuddyPress new comment<br/>use [member name] shortcode to display member name along with custom title<br/>Example '[member name] posted a comment' will display as 'Tom posted a comment' where Tom is member name",PNFPB_TD);?></label><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_comment_activity_title" name="pnfpb_ic_fcm_comment_activity_title" type="text" value="<?php echo $activitycomment; ?>" /><br/><br/>
 					<label for="pnfpb_ic_fcm_comment_activity_message"><?php echo __("Default Notification content for BuddyPress new comment<br/> (or leave it as blank to display comment content in notification message)",PNFPB_TD);?></label><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_comment_activity_message" name="pnfpb_ic_fcm_comment_activity_message" type="text" value="<?php echo $commentactivitymessage; ?>" /><br/><br/>
 				</div>
-				
-			</td>
-        </tr>
-		<tr class="pnfpb_ic_push_settings_table_row">
-			<td class="pnfpb_ic_push_settings_table_column column-columnname">
 				<div class="pnfpb_row">
 					<div class="pnfpb_column_400">
 						<?php echo __("(For below BuddyPress options, user avatar image replaces notification icon in push notification)",'PNFPB_TD');?>
@@ -467,7 +502,7 @@
 									<input  id="pnfpb_ic_fcm_bprivatemessage_enable" name="pnfpb_ic_fcm_bprivatemessage_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_bprivatemessage_enable' ) ); ?>  />	
 									<span class="pnfpb_slider round"></span>
 							</label>								
-							<button type="button" class="pnfpb_private_message_button pnfpb_flex_grow_3" onclick="toggle_private_message_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_private_message_button" onclick="toggle_private_message_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_private_message_form pnfpb_column_400">
@@ -486,7 +521,7 @@
 								<input  id="pnfpb_ic_fcm_new_member_enable" name="pnfpb_ic_fcm_new_member_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_new_member_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_new_member_button pnfpb_flex_grow_3" onclick="toggle_new_member_form()"><?php echo __("Customize",PNFPB_TD); ?></button>	
+							<button type="button" class="pnfpb_new_member_button" onclick="toggle_new_member_form()"><?php echo __("Customize",PNFPB_TD); ?></button>	
 						</div>
 					</div>
 					<div class="pnfpb_ic_new_member_form pnfpb_column_400">
@@ -507,7 +542,7 @@
 								<input  id="pnfpb_ic_fcm_friendship_request_enable" name="pnfpb_ic_fcm_friendship_request_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_friendship_request_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_friendship_request_button pnfpb_flex_grow_3" onclick="toggle_friendship_request_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_friendship_request_button" onclick="toggle_friendship_request_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_friendship_request_form pnfpb_column_400">
@@ -526,7 +561,7 @@
 								<input  id="pnfpb_ic_fcm_friendship_accept_enable" name="pnfpb_ic_fcm_friendship_accept_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_friendship_accept_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_friendship_accept_button pnfpb_flex_grow_3" onclick="toggle_friendship_accept_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_friendship_accept_button" onclick="toggle_friendship_accept_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_friendship_accept_form pnfpb_column_400">
@@ -547,7 +582,7 @@
 								<input  id="pnfpb_ic_fcm_avatar_change_enable" name="pnfpb_ic_fcm_avatar_change_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_avatar_change_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_avatar_change_button pnfpb_flex_grow_3" onclick="toggle_avatar_change_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_avatar_change_button" onclick="toggle_avatar_change_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_avatar_change_form pnfpb_column_400">
@@ -566,7 +601,7 @@
 								<input  id="pnfpb_ic_fcm_cover_image_change_enable" name="pnfpb_ic_fcm_cover_image_change_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_cover_image_change_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_cover_image_change_button pnfpb_flex_grow_3" onclick="toggle_cover_image_change_form()">Customize</button>
+							<button type="button" class="pnfpb_cover_image_change_button" onclick="toggle_cover_image_change_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_cover_image_change_form pnfpb_column_400">
@@ -577,11 +612,100 @@
 						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_cover_image_change_content" name="pnfpb_ic_fcm_cover_image_change_content" type="text" value="<?php echo $coverimagechangecontent; ?>"  />
 					</div>
 				</div>
+				<div class="pnfpb_row">
+					<div class="pnfpb_column_400 pnfpb_column_buddypress_functions">
+    					<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_flex_grow_6 pnfpb_padding_top_8 pnfpb_max_width_236" for="pnfpb_ic_fcm_group_invitation_enable">
+								<?php echo __("Group Invitation",'PNFPB_TD');?>
+							</label>
+							<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_margin_top_8 pnfpb_margin_left_4 pnfpb_max_width_40">
+									<input  id="pnfpb_ic_fcm_group_invitation_enable" name="pnfpb_ic_fcm_group_invitation_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_group_invitation_enable' ) ); ?>  />	
+									<span class="pnfpb_slider round"></span>
+							</label>								
+							<button type="button" class="pnfpb_group_invitation_button" onclick="toggle_group_invitation_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+						</div>
+					</div>
+					<div class="pnfpb_ic_group_invitation_form pnfpb_column_400">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_group_invitation_text_enable"><?php echo __("Group Invitation notification title",'PNFPB_TD');?></label><br/>
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_group_invitation_text_enable" name="pnfpb_ic_fcm_buddypress_group_invitation_text_enable" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_buddypress_group_invitation_text_enable' )) {echo get_option( 'pnfpb_ic_fcm_buddypress_group_invitation_text_enable' );} else { echo __('[sender name] invited to [group name]','PNFPB_TD');} ?>"  />
+					<br/><p><?php echo __('[sender name]  and [group name] are the shortcode which replaces with sender name, group name respectively. Modify remaining text according to your choice','PNFPB_TD') ?></p><br/>
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_group_invitation_content_enable"><?php echo __("Default Group invitation notification content",'PNFPB_TD');?></label><br/>				
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_group_invitation_content_enable" name="pnfpb_ic_fcm_buddypress_group_invitation_content_enable" type="text" value="<?php echo $groupinvitationcontent; ?>"  />
+					</div>
+					<div class="pnfpb_column_400 pnfpb_column_buddypress_functions">
+    					<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_flex_grow_6 pnfpb_padding_top_8 pnfpb_max_width_236" for="pnfpb_ic_fcm_group_details_updated_enable">
+								<?php echo __("Group details update",'PNFPB_TD');?>
+							</label>
+							<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_margin_top_8 pnfpb_margin_left_4 pnfpb_max_width_40">
+									<input  id="pnfpb_ic_fcm_group_details_updated_enable" name="pnfpb_ic_fcm_group_details_updated_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_group_details_updated_enable' ) ); ?>  />	
+									<span class="pnfpb_slider round"></span>
+							</label>								
+							<button type="button" class="pnfpb_group_details_updated_button" onclick="toggle_group_details_updated_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+						</div>
+					</div>
+					<div class="pnfpb_ic_group_details_updated_form pnfpb_column_400">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_group_details_updated_text_enable"><?php echo __("Group updated notification title",'PNFPB_TD');?></label><br/>
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_group_details_updated_text_enable" name="pnfpb_ic_fcm_buddypress_group_details_updated_text_enable" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_buddypress_group_details_updated_text_enable' )) {echo get_option( 'pnfpb_ic_fcm_buddypress_group_details_updated_text_enable' );} else { echo __('[group name] group updated','PNFPB_TD');} ?>"  />
+					<br/><p><?php echo __('[group name] is the shortcode which replaces with group name. Modify remaining text according to your choice','PNFPB_TD') ?></p><br/>
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_group_details_updated_content_enable"><?php echo __("Default Group updated notification content",'PNFPB_TD');?></label><br/>				
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_group_details_updated_content_enable" name="pnfpb_ic_fcm_buddypress_group_details_updated_content_enable" type="text" value="<?php echo $groupdetailsupdatedcontent; ?>"  />
+					</div>				
+				</div>
+			</td>
+		</tr>
+		<tr class="pnfpb_ic_push_settings_table_row">
+            <td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div class="pnfpb_row">
+					<div class="pnfpb_column_400">
+						<?php echo __("(following push notifications will be sent only to admin)",'PNFPB_TD');?>
+					</div>
+				</div>
+				<div class="pnfpb_row">
+					<div class="pnfpb_column_400 pnfpb_column_buddypress_functions">
+    					<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_flex_grow_6 pnfpb_padding_top_8 pnfpb_max_width_236" for="pnfpb_ic_fcm_new_user_registration_enable">
+								<?php echo __("New user registration",'PNFPB_TD');?>
+							</label>
+							<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_margin_top_8 pnfpb_margin_left_4 pnfpb_max_width_40">
+									<input  id="pnfpb_ic_fcm_new_user_registration_enable" name="pnfpb_ic_fcm_new_user_registration_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_new_user_registration_enable' ) ); ?>  />	
+									<span class="pnfpb_slider round"></span>
+							</label>								
+							<button type="button" class="pnfpb_new_user_registration_button" onclick="toggle_new_user_registration_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+						</div>
+					</div>
+					<div class="pnfpb_ic_new_user_registration_form pnfpb_column_400">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_new_user_registration_text_enable"><?php echo __("New user registration notification title",'PNFPB_TD');?></label><br/>
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_new_user_registration_text_enable" name="pnfpb_ic_fcm_buddypress_new_user_registration_text_enable" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_buddypress_new_user_registration_text_enable' )) {echo get_option( 'pnfpb_ic_fcm_buddypress_new_user_registration_text_enable' );} else { echo __('[user name] registered as new member','PNFPB_TD');} ?>"  />
+					<br/><p><?php echo __('[user name] is the shortcode which replaces with new user name. Modify remaining text according to your choice','PNFPB_TD') ?></p><br/>
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_new_user_registration_content_enable"><?php echo __("Default New user registration notification content",'PNFPB_TD');?></label><br/>				
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_new_user_registration_content_enable" name="pnfpb_ic_fcm_buddypress_new_user_registration_content_enable" type="text" value="<?php echo $newuserregistrationcontent; ?>"  />
+					</div>
+					<div class="pnfpb_column_400 pnfpb_column_buddypress_functions">
+    					<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_flex_grow_6 pnfpb_padding_top_8 pnfpb_max_width_236" for="pnfpb_ic_fcm_contact_form7_enable">
+								<?php echo __("On Contact form7 submitted",'PNFPB_TD');?>
+							</label>
+							<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_margin_top_8 pnfpb_margin_left_4 pnfpb_max_width_40">
+									<input  id="pnfpb_ic_fcm_contact_form7_enable" name="pnfpb_ic_fcm_contact_form7_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_contact_form7_enable' ) ); ?>  />	
+									<span class="pnfpb_slider round"></span>
+							</label>								
+							<button type="button" class="pnfpb_contact_form7_button" onclick="toggle_contact_form7_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+						</div>
+					</div>
+					<div class="pnfpb_ic_contact_form7_form pnfpb_column_400">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_contact_form7_text_enable"><?php echo __("Contact form7 submitted notification title",'PNFPB_TD');?></label><br/>
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_contact_form7_text_enable" name="pnfpb_ic_fcm_buddypress_contact_form7_text_enable" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_buddypress_contact_form7_text_enable' )) {echo get_option( 'pnfpb_ic_fcm_buddypress_contact_form7_text_enable' );} else { echo __('You have received message from contact us page','PNFPB_TD');} ?>"  />
+					<br/><p><?php echo __('Modify text according to your choice','PNFPB_TD') ?></p><br/>
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_contact_form7_content_enable"><?php echo __("Default message for notification content when contact form7 submitted",'PNFPB_TD');?></label><br/>				
+					<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_buddypress_contact_form7_content_enable" name="pnfpb_ic_fcm_buddypress_contact_form7_content_enable" type="text" value="<?php echo $contactform7content; ?>"  />
+					</div>				
+				</div>				
 			</td>
 		</tr>
     </tbody>
 </table>
-<h2 class="pnfpb_ic_push_settings_header2"><?php echo __(PNFPB_PLUGIN_FIREBASE_SETTINGS,PNFPB_TD);?></h2>
+<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Firebase configuration",PNFPB_TD);?></h2>
 <div class="pnfpb_column_full">
 	<button type="button" class="pnfpb_ic_firebase_configuration_help_button" onclick="toggle_firebase_configuration_help()"><?php echo __("Tutorial on Firebase",PNFPB_TD); ?></button>
 </div>

@@ -1,35 +1,41 @@
 === Push Notification for Post and BuddyPress ===
 Contributors: murali-indiacitys
 Author URI: https://www.muraliwebworld.com
-Tags:  Push notification,Progressive Web App,PWA,Woocommerce notification,mobile notification,mobile app push,desktop notification,push notifications,BuddyPress push notification,Push notification for posts,Firebase push notification for WordPress,Free Push Notification,Push notification using Firebase,PWA offline mode
+Tags:  Push notification,Progressive Web App,PWA,Woocommerce notification,mobile notification,WordPress push notification,desktop notification,push notifications,BuddyPress push notification,Push notification for posts,Firebase push notification for WordPress,Free Push Notification,Push notification using Firebase,PWA offline mode
 Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/
 Requires at least: 5.0
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.0
-Stable tag: 1.57
+Stable tag: 1.59
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin is designed to send Push notifications for Post, custom post types, Woocommerce post types, BuddyPress activities and to generate Progressive Web App (PWA). It sends push notifications to subscribed Native/Hybrid Android/IOS mobile app users along with website users from WordPress sites.
+To send Push notifications for WordPress Post/custom post,BuddyPress,Woocommerce and to mobile apps. It also creates Progressive Web App (PWA). It sends push notifications to Native/Hybrid Android/IOS mobile app users along with website users from WordPress sites.
 
 == Description ==
 
-To send push notifications using Firebase Cloud Messaging (FCM) to websites, Android/iOS mobile apps. This plugin has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.
+It sends push notifications using Firebase Cloud Messaging (FCM) to websites, Android/iOS mobile apps. This plugin has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.
 
 **Plugin features:-** 
-To send/schedule Push notifications when new item is published for following,
+To send Push notifications for following,
 
-1. New post/custom post type published (including bbpress, Woocommerce)
-2. New BuddyPress activities published
-3. New BuddyPress group activity published
-4. New Buddypress comments published
-5. New BuddyPress message or private messages
-6. New BuddyPress member joined
-7. Friend request in BuddyPress
-8. Friendship accepted in BuddyPress
-9. User avatar change in BuddyPress
-10. Cover image change in BuddyPress
-11. Woocommerce custom post type push notifications
+1. When new post/custom post type published (including bbpress).(Notification sent to all users).
+2. When new BuddyPress activities published. (Notification sent to all users).
+3. When new BuddyPress group activity published (Notification sent only to members of group).
+4. When BuddyPress group invite sent.(Notification sent only to recipient).
+5. When BuddyPress group details updated.(Notification sent to all users).
+6. When new Buddypress comments published.(Notification sent to all users).
+7. When new BuddyPress message or private messages.(Notification sent only to recipient).(It is also compatible with Bettermessages plugin).
+8. When new BuddyPress member joined.(Notification sent to all users).
+9. For Friend request in BuddyPress. (Notification sent only to recipient).
+10. When Friendship accepted in BuddyPress. (Notification sent only to requestor).
+11. User avatar change in BuddyPress.(Notification sent to all users).
+12. Cover image change in BuddyPress. (Notification sent to all users).
+13. Woocommerce custom post type push notifications. (Notification sent to all users).
+
+Following are Admin notifications, only sent to admins.
+14. When contact form(contactform7 plugin) submitted.
+15. When new user registered in site.
 
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile - settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.
 
@@ -93,6 +99,10 @@ Following are steps to configure the plugin,
 	4.i. Friendship accepted in BuddyPress
 	4.j. User avatar change in BuddyPress
 	4.k. Cover image change in BuddyPress
+	4.l. Group invite
+	4.m. Group details update
+	4.n. Contactform7 submitted (Admin notification)
+	4.o. New user registration (Admin notification)
 	
 10. If schedule option is enabled then push notification will be sent automatically(using CRON) according to selected schedule hourly/daily/twice daily/weekly.
 
@@ -167,6 +177,10 @@ Following are steps to configure the plugin,
 	4.i. Friendship accepted in BuddyPress
 	4.j. User avatar change in BuddyPress
 	4.k. Cover image change in BuddyPress
+	4.l. Group invite
+	4.m. Group details update
+	4.n. Contactform7 submitted (Admin notification)
+	4.o. New user registration (Admin notification)	
 
 = Scheduling push notifications =
 
@@ -247,6 +261,21 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.59 version Apr 10 2023 changes =
+Bug fix (for webview mobile apps): Resolved push notification problem for webview mobile apps when frontend subscription option is null/empty.
+Bug fix (for PWA): Resolved service worker cache problem in PWA app when exclude all url option is ON - To exclude all urls including offline urls.
+Bug fix (for webview mobile apps API): Resolved problem in mobile app subscription token API to update default frontend subscription option when it receives empty value in frontend subscription option field in API.
+= 1.58 version Mar-24-2023 changes =
+New features: Push notification for BuddyPress group invite and Push notification when BuddyPress group details updated.
+New features: Admin Push notifications when new user registered and when user submitted contact form (Contact form7 plugin).
+New features: PNFPB settings admin bar menu and PNFPB plugin settings are moved to separate top level menu in WordPress Admin left sidebar.
+Update: Following shortcodes will work in both push notification title and in push notification content according to respective push notification types.
+[member name], [user name], [sender name], [friendship acceptor name], [friendship initiator name]
+New feature - Added new javascript code to communicate with IOS app in SWIFT language code with WKWEBVIEW to get push subscription token and to send push notifications to IOS app (in SWIFT language).
+Updated language related to map all strings to text level domain to support language translation.
+Plugin settings menus are moved to top level admin menu below settings menu(in admin left sidebar menu)
+Fixed PWA admin settings problems.
+Compatiable upto WordPress 6.2 version.
 = 1.57 version Feb-28-2023 changes =
 New Feature: Schedule one time/on demand push notification to start at different date and time. It allows to schedule multiple notifications to start at different date and time
 Bug fix: Fixed problems related to REST API POST parameter 'subscriptionoptions' and REST API POST parameter "userid" updation to notification database table.
@@ -518,6 +547,19 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* Bug fix (for webview mobile apps): Resolved push notification problem for webview mobile apps when frontend subscription option is null/empty.
+* Bug fix (for PWA): Resolved service worker cache problem in PWA app when exclude all url option is ON - To exclude all urls including offline urls.
+* Bug fix (for webview mobile apps API): Resolved problem in mobile app subscription token API to update default frontend subscription option when it receives empty value in frontend subscription option field in API.
+* New features: Push notification for BuddyPress group invite and Push notification when BuddyPress group details updated.
+* New features: Admin Push notifications when new user registered and when user submitted contact form (Contact form7 plugin).
+* New features: PNFPB settings admin bar menu and PNFPB plugin settings are moved to separate top level menu in WordPress Admin left sidebar.
+* Update: Following shortcodes will work in both push notification title and in push notification content according to respective push notification types.
+[member name], [user name], [sender name], [friendship acceptor name], [friendship initiator name]
+* New feature - Added new javascript code to communicate with IOS app in SWIFT language code with WKWEBVIEW to get push subscription token and to send push notifications to IOS app (in SWIFT language).
+* Updated language related to map all strings to text level domain to support language translation.
+* Plugin settings menus are moved to top level admin menu below settings menu(in admin left sidebar menu)
+* Fixed PWA admin settings problems.
+* Compatiable upto WordPress 6.2 version.
 * New Feature: Schedule one time/on demand push notification to start at different date and time. It allows to schedule multiple notifications to start at different date and time
 * Bug fix: Fixed problems related to REST API POST parameter 'subscriptionoptions' and REST API POST parameter "userid" updation to notification database table.
 * Update: Front end subscription menu update confirmation will appear in bottom below submit button.

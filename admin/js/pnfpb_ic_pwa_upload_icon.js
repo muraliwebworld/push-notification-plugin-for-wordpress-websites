@@ -133,7 +133,7 @@ $j(document).ready(function() {
 	}	
 	
 	
-});
+
 
 	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
 
@@ -245,10 +245,29 @@ $j(document).ready(function() {
 			}			
 		});
 	}
+	
+	$j('.pnfpb_admin_notice > .notice-dismiss').on('click',function() {
+		
+		
+		var data = {
+			action: 'icpushadmincallback'
+		};
+								
+		$j.post(pnfpb_ajax_object_pwa_upload_icon.ajax_url, data, function(response) {
+			
+			$j('.pnfpb_admin_notice .is-dismissable').hide();
+			
+		});
+		
+		
+		
+	});
 		
 	
-
+});
 	function toggle_post_type_content_form() {
+		
+		const { __ } = wp.i18n;
 		
   		$j('.pnfpb_ic_post_type_content_form').toggle();
 		
@@ -266,6 +285,8 @@ $j(document).ready(function() {
 
 	function toggle_activity_content_form() {
 		
+		const { __ } = wp.i18n;
+		
   		$j('.pnfpb_ic_activity_content_form').toggle();
 		
 		if ($j('.pnfpb_ic_activity_content_form').is(':visible')) {
@@ -280,6 +301,8 @@ $j(document).ready(function() {
 	}
 
 	function toggle_comments_content_form() {
+		
+		const { __ } = wp.i18n;
 
 		$j('.pnfpb_ic_comments_content_form').toggle();
 		
@@ -295,6 +318,8 @@ $j(document).ready(function() {
 	}
 
 	function toggle_private_message_form() {
+		
+		const { __ } = wp.i18n;
 	
   		$j('.pnfpb_ic_private_message_form').toggle();
 		
@@ -311,6 +336,8 @@ $j(document).ready(function() {
 	}
 
 	function toggle_new_member_form() {
+		
+		const { __ } = wp.i18n;
 	
   		$j('.pnfpb_ic_new_member_form').toggle();
 		
@@ -327,6 +354,8 @@ $j(document).ready(function() {
 	}
 
 	function toggle_friendship_request_form() {
+		
+		const { __ } = wp.i18n;
 	
   		$j('.pnfpb_ic_friendship_request_form').toggle();
 		
@@ -344,6 +373,8 @@ $j(document).ready(function() {
 
 
 	function toggle_friendship_accept_form() {
+		
+		const { __ } = wp.i18n;
 	
   		$j('.pnfpb_ic_friendship_accept_form').toggle();
 		
@@ -361,6 +392,8 @@ $j(document).ready(function() {
 
 
 	function toggle_avatar_change_form() {
+		
+		const { __ } = wp.i18n;
 	
   		$j('.pnfpb_ic_avatar_change_form').toggle();
 		
@@ -377,6 +410,8 @@ $j(document).ready(function() {
 	}
 
 	function toggle_cover_image_change_form() {
+		
+		const { __ } = wp.i18n;
 	
   		$j('.pnfpb_ic_cover_image_change_form').toggle();
 		
@@ -392,7 +427,84 @@ $j(document).ready(function() {
 		
 	}
 
+
+	function toggle_group_invitation_form() {
+		
+		const { __ } = wp.i18n;
+	
+  		$j('.pnfpb_ic_group_invitation_form').toggle();
+		
+		if ($j('.pnfpb_ic_group_invitation_form').is(':visible')) {
+			
+			$j('.pnfpb_group_invitation_button').text(__('Hide form','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_group_invitation_button').text(__('Customize','PNFPB_TD'));
+		}
+		
+	}
+
+
+	function toggle_group_details_updated_form() {
+		
+		const { __ } = wp.i18n;
+	
+  		$j('.pnfpb_ic_group_details_updated_form').toggle();
+		
+		if ($j('.pnfpb_ic_group_details_updated_form').is(':visible')) {
+			
+			$j('.pnfpb_group_details_updated_button').text(__('Hide form','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_group_details_updated_button').text(__('Customize','PNFPB_TD'));
+		}
+		
+	}
+
+	function toggle_new_user_registration_form() {
+		
+		const { __ } = wp.i18n;
+	
+  		$j('.pnfpb_ic_new_user_registration_form').toggle();
+		
+		if ($j('.pnfpb_ic_new_user_registration_form').is(':visible')) {
+			
+			$j('.pnfpb_new_user_registration_button').text(__('Hide form','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_new_user_registration_button').text(__('Customize','PNFPB_TD'));
+		}
+		
+	}
+
+	function toggle_contact_form7_form() {
+		
+		const { __ } = wp.i18n;
+	
+  		$j('.pnfpb_ic_contact_form7_form').toggle();
+		
+		if ($j('.pnfpb_ic_contact_form7_form').is(':visible')) {
+			
+			$j('.pnfpb_contact_form7_button').text(__('Hide form','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_contact_form7_button').text(__('Customize','PNFPB_TD'));
+		}
+		
+	}
+
+
 	function toggle_firebase_configuration() {
+		
+		const { __ } = wp.i18n;
 		
   		$j('.pnfpb_ic_firebase_configuration').toggle();
 		
@@ -410,21 +522,26 @@ $j(document).ready(function() {
 
 	function toggle_firebase_configuration_help() {
 		
+		const { __ } = wp.i18n;
+		
   		$j('.pnfpb_ic_firebase_configuration_help').toggle();
 		
-		if ($j('.pnfpb_ic_firebase_configuration_help').is(':visible')) {
+		if ($j('.pnfpb_ic_firebase_configuration_help').is(':hidden')) {
 			
-			$j('.pnfpb_ic_firebase_configuration_help_button').text(__('Hide Firebase Tutorial','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_help_button').html(__('Tutorial on Firebase','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_ic_firebase_configuration_help_button').text(__('Tutorial on Firebase','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_help_button').html(__('Hide Firebase Tutorial','PNFPB_TD'));
 		}	
 		
 	}
 
 	function toggle_custom_push_prompt_form() {
+		
+		const { __ } = wp.i18n;
+		
   		$j('.pnfpb_ic_push_prompt_form').toggle();
 		
 		if ($j('.pnfpb_ic_push_prompt_form').is(':visible')) {

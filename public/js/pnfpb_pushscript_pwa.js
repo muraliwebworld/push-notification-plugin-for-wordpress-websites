@@ -7,6 +7,12 @@ var $j = jQuery.noConflict();
 
 var frontendsubscriptionOptions;
 
+if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.pnfpbuserid) {
+       window.webkit.messageHandlers.pnfpbuserid.postMessage({
+                     "message": pnfpb_ajax_object_push.userid
+       });
+}
+
 var pnfpbuserid;
 
 var deviceid = '100000000000';
@@ -1129,6 +1135,8 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 			var subscribefriendshipacceptshortcode = '0';
 			var subscribeuseravatarshortcode = '0';
 			var subscribecoverimageshortcode = '0';
+			var subscribegroupinviteshortcode = '0';
+			var subscribegroupdetailsshortcode = '0';
 			var unsubscribeallshortcode = '0';
 			var subscribeactivitiesshortcode = '0';
 			
@@ -1254,7 +1262,29 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 					subscribecoverimageshortcode = '0';
 				}
 				
-				subscriptionoptions = subscribeallshortcode + subscribepostactivitiesshortcode + subscribeallcommentsshortcode + subscribemypostshortcode + subscribeprivatemessagesshortcode + subscribenewmembershortcode + subscribefriendshiprequestshortcode + subscribefriendshipacceptshortcode + subscribeuseravatarshortcode + subscribecoverimageshortcode + unsubscribeallshortcode + subscribeactivitiesshortcode;					
+				if ($j('#pnfpb_ic_fcm_front_group_invite_enable').is(":checked"))
+				{
+  					subscribegroupinviteshortcode = '1';
+					subscribeallshortcode = '0'; 
+					unsubscribeallshortcode = '0';
+				}
+				else 
+				{
+					subscribegroupinviteshortcode = '0';
+				}
+				
+				if ($j('#pnfpb_ic_fcm_front_group_details_update_enable').is(":checked"))
+				{
+  					subscribegroupdetailsshortcode = '1';
+					subscribeallshortcode = '0'; 
+					unsubscribeallshortcode = '0';
+				}
+				else 
+				{
+					subscribegroupdetailsshortcode = '0';
+				}				
+				
+				subscriptionoptions = subscribeallshortcode + subscribepostactivitiesshortcode + subscribeallcommentsshortcode + subscribemypostshortcode + subscribeprivatemessagesshortcode + subscribenewmembershortcode + subscribefriendshiprequestshortcode + subscribefriendshipacceptshortcode + subscribeuseravatarshortcode + subscribecoverimageshortcode + unsubscribeallshortcode + subscribeactivitiesshortcode + subscribegroupdetailsshortcode + subscribegroupinviteshortcode;					
 				
                 if (firebase.messaging.isSupported() && 'serviceWorker' in navigator && Notification.permission === 'granted') {
 					
@@ -1391,7 +1421,27 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									else 
 									{
 										$j('#pnfpb_ic_fcm_front_cover_image_change_enable').prop('checked', false);
-									}															
+									}
+									
+									if (subscriptionoptionsarray[13] === '1')
+									{
+  										$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', true);
+
+									}
+									else 
+									{
+										$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', false);
+									}
+									
+									if (subscriptionoptionsarray[12] === '1')
+									{
+  										$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', true);
+
+									}
+									else 
+									{
+										$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', false);
+									}									
 
 
 								}
@@ -1426,6 +1476,11 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 							//For webview mobile apps send subscriptionoptions from webview to app
 							//	
 							
+							if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.frontendsubscriptionOptions) {
+       							window.webkit.messageHandlers.frontendsubscriptionOptions.postMessage({
+                     				"message": subscriptionoptions
+       							});
+							}							
 							
 							if (frontendsubscriptionOptions) {
 								
@@ -1678,7 +1733,27 @@ async function requestPermission(registration) {
 											else 
 											{
 												$j('#pnfpb_ic_fcm_front_cover_image_change_enable').prop('checked', false);
-											}															
+											}
+											
+											if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
+											{
+  												$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', true);
+
+											}
+											else 
+											{
+												$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', false);
+											}
+											
+											if ((subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1') || subscriptionoptionsarray[0] === '1')
+											{
+  												$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', true);
+
+											}
+											else 
+											{
+												$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', false);
+											}											
 
 										}	
 							
@@ -1875,7 +1950,8 @@ async function requestPermission(registration) {
 
 					if (firebase.messaging.isSupported() && Notification.permission === 'granted') {
 						
-						messaging.getToken({serviceWorkerRegistration: registration,vapidKey:pnfpb_ajax_object_push.publicKey }).then((currentToken) => {					
+						messaging.getToken({serviceWorkerRegistration: registration,vapidKey:pnfpb_ajax_object_push.publicKey }).then((currentToken) => {
+							
 							if (currentToken) {
 							   
 								deviceid = currentToken;
@@ -1997,7 +2073,27 @@ async function requestPermission(registration) {
 											else 
 											{
 												$j('#pnfpb_ic_fcm_front_cover_image_change_enable').prop('checked', false);
-											}															
+											}
+											
+											if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
+											{
+  												$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', true);
+
+											}
+											else 
+											{
+												$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', false);
+											}
+											
+											if ((subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1') || subscriptionoptionsarray[0] === '1')
+											{
+  												$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', true);
+
+											}
+											else 
+											{
+												$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', false);
+											}											
 
 										}
 							
@@ -2165,9 +2261,7 @@ async function requestPermission(registration) {
 					    };
 								
 						$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {						
-			
-
-						
+	
 							var responseobject = JSON.parse(response);	
 
 							subscriptionoptions = responseobject.subscriptionoptions;
@@ -2183,7 +2277,7 @@ async function requestPermission(registration) {
 								}
 								else 
 								{
-								$j('#pnfpb_ic_fcm_front_post_enable').prop('checked', false);
+									$j('#pnfpb_ic_fcm_front_post_enable').prop('checked', false);
 								}
 									
 								if ((subscriptionoptionsarray[11] && subscriptionoptionsarray[11] === '1') || subscriptionoptionsarray[0] === '1')
@@ -2273,7 +2367,27 @@ async function requestPermission(registration) {
 								else 
 								{
 									$j('#pnfpb_ic_fcm_front_cover_image_change_enable').prop('checked', false);
-								}															
+								}
+								
+								if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
+								{
+  									$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', true);
+
+								}
+								else 
+								{
+									$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', false);
+								}
+											
+								if ((subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1') || subscriptionoptionsarray[0] === '1')
+								{
+  									$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', true);
+
+								}
+								else 
+								{
+									$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', false);
+								}								
 
 							}
 							
@@ -2418,13 +2532,19 @@ async function requestPermission(registration) {
 
 
 			var subscriptionoptions = '00000000000';
+		
 			var subscriptionoptionsarray = subscriptionoptions.split('');
 					
 			var pnfpbshortcodeactive = 'no';
+		
 			var isadminpage = 'no';
+		
 			if (window.location.href.match('wp-admin') !== null) {
+				
 				isadminpage = 'yes';
+				
 			}
+		
         	if( $j(".pnfpb_subscribe_button").length )
         	{
 				pnfpbshortcodeactive = 'yes';

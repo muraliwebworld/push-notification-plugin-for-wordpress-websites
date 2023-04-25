@@ -66,7 +66,19 @@ die;
 			delete_option("pnfpb_ic_fcm_avatar_change_content");
 			delete_option("pnfpb_ic_fcm_cover_image_change_enable");
 			delete_option("pnfpb_ic_fcm_cover_image_change_text");
-			delete_option("pnfpb_ic_fcm_cover_image_change_content");			
+			delete_option("pnfpb_ic_fcm_cover_image_change_content");
+			delete_option("pnfpb_ic_fcm_group_invitation_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_group_invitation_text_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_group_invitation_content_enable");
+			delete_option("pnfpb_ic_fcm_group_details_updated_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_group_details_updated_text_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_group_details_updated_content_enable");
+			delete_option("pnfpb_ic_fcm_contact_form7_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_contact_form7_text_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_contact_form7_content_enable");
+			delete_option("pnfpb_ic_fcm_new_user_registration_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_new_user_registration_text_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_new_user_registration_content_enable");			
 			delete_option("pnfpb_ic_fcm_post_schedule_enable");
 			delete_option("pnfpb_ic_fcm_post_schedule_background_enable");
 			delete_option("pnfpb_ic_fcm_post_timeschedule_seconds");
@@ -154,7 +166,9 @@ die;
 			delete_option("pnfpb_ic_fcm_buddypressactivities_schedule_enable");
 			delete_option("pnfpb_ic_fcm_buddypressactivities_timeschedule_enable");						 
 			delete_option("pnfpb_ic_fcm_buddypresscomments_schedule_enable");
-			delete_option("pnfpb_ic_fcm_buddypresscomments_timeschedule_enable");			
+			delete_option("pnfpb_ic_fcm_buddypresscomments_timeschedule_enable");
+
+			delete_option("PNFBP_admin_notice");
 		
 			$args = array(
 				'public'   => true,

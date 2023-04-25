@@ -98,7 +98,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v1.57.0',
+  			cache_version: 'pnfpb_v1.59.1',
   			offline_assets: []
 		};
 
@@ -116,21 +116,28 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 			var cacheurl4 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url4') ?>';
 			var cacheurl5 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url5') ?>';
 
-			SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url1');} else {echo get_home_url();}?>");
+			if (isExcludeallurlsincache !== '1') {
 
-			if (cacheurl3 !== '' && cacheurl3 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl3 !== cacheurl5){
-				SW.offline_assets.push(cacheurl3);
-			}
-			if (cacheurl4 !== '' && cacheurl4 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl4 !== cacheurl5){
-				SW.offline_assets.push(cacheurl4);
-			}
-			if (cacheurl5 !== '' && cacheurl5 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl5 !== cacheurl3  && cacheurl4 !== cacheurl5){
-				SW.offline_assets.push(cacheurl5);
+				SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url1');} else {echo get_home_url();}?>");
+
+				if (cacheurl3 !== '' && cacheurl3 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl3 !== cacheurl5){
+					SW.offline_assets.push(cacheurl3);
+				}
+				if (cacheurl4 !== '' && cacheurl4 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl4 !== cacheurl5){
+					SW.offline_assets.push(cacheurl4);
+				}
+				if (cacheurl5 !== '' && cacheurl5 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl5 !== cacheurl3  && cacheurl4 !== cacheurl5){
+					SW.offline_assets.push(cacheurl5);
+				}
 			}
 
 			const offlinePage = "<?php if (get_option('pnfpb_ic_pwa_app_offline_url2') && get_option('pnfpb_ic_pwa_app_offline_url2') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url2');} else {echo get_home_url();} ?>";
 
 			var pnfpbwpSysurls = ['gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];
+			
+			if (isExcludeallurlsincache === '1') {
+				pnfpbwpSysurls = ['/','gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];				
+			}
 
 			var pnfpbexcludeurls = "<?php echo get_option('pnfpb_ic_pwa_app_excludeurls'); ?>";
 
@@ -211,7 +218,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 	  				return;
 				}
 
-				if (isExcludeallurlsincache === '1' && event.request.url !== offlinePage) {
+				if (isExcludeallurlsincache === '1') {
 					return;
 				}
 

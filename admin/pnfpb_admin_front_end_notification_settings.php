@@ -6,10 +6,19 @@
 */
 ?>
 
-<h2 class="nav-tab-wrapper"><a href="options-general.php?page=pnfpb-icfcm-slug" class="nav-tab "><?php echo __("Push notification",PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_DEVICE_TOKENS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_PWA_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfmtest_notification" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_ONDEMANDPUSH_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_frontend_settings" class="nav-tab nav-tab-active"><?php echo __(PNFPB_PLUGIN_NM_FRONTEND_SETTINGS_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_button_settings" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NM_BUTTON_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_integrate_app" class="nav-tab"><?php echo __(PNFPB_PLUGIN_API_MOBILE_APP_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab"><?php echo __(PNFPB_PLUGIN_NGINX_HEADER,PNFPB_TD);?></a><a href="options-general.php?page=pnfpb_icfm_action_scheduler" class="nav-tab"><?php echo __(PNFPB_PLUGIN_SCHEDULE_ACTIONS,PNFPB_TD);?></a></h2>
-
-<div class="pnfpb_column_1000">
-
+<h1 class="pnfpb_ic_push_settings_header"><?php echo __("PNFPB - Frontend subscription settings",PNFPB_TD);?></h1>
+<div class="pnfpb_admin_top_menu">
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="tab"><?php echo __("Push Settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="tab "><?php echo __("PWA",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="tab "><?php echo __("One time push",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="tab active"><?php echo __("Frontend settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="tab "><?php echo __("NGINX",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler" class="tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
+</div>
+<div class="pnfpb_column_1200">
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
     <?php settings_fields( 'pnfpb_icfcm_frontend_buttons'); ?>
     <?php do_settings_sections( 'pnfpb_icfcm_frontend_buttons' ); ?>
@@ -82,6 +91,14 @@
     		</tr>			
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_frontend_settings_coverimage_change_text"><?php echo __("Subscription text for Cover image change",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_frontend_settings_coverimage_change_text" name="pnfpb_ic_fcm_frontend_settings_coverimage_change_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_frontend_settings_coverimage_change_text' )) {echo get_option( 'pnfpb_ic_fcm_frontend_settings_coverimage_change_text' );} else { echo __('Cover image change',PNFPB_TD); } ?>" />
+				</td>
+    		</tr>
+			<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_frontend_settings_groupdetails_text"><?php echo __("Subscription text for Group details update",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_frontend_settings_groupdetails_text" name="pnfpb_ic_fcm_frontend_settings_groupdetails_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_frontend_settings_groupdetails_text' )) {echo get_option( 'pnfpb_ic_fcm_frontend_settings_groupdetails_text' );} else { echo __('Group details update',PNFPB_TD); } ?>" />
+				</td>
+    		</tr>
+			<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_frontend_settings_groupinvite_text"><?php echo __("Subscription text for Group invite",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_frontend_settings_groupinvite_text" name="pnfpb_ic_fcm_frontend_settings_groupinvite_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_frontend_settings_groupinvite_text' )) {echo get_option( 'pnfpb_ic_fcm_frontend_settings_groupinvite_text' );} else { echo __('Group invite',PNFPB_TD); } ?>" />
 				</td>
     		</tr>
 			<tr>

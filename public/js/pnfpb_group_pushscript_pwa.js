@@ -398,6 +398,13 @@ $j(document).ready(function() {
 									let expires = "expires="+ d.toUTCString();
 									var cookievalue = "pnfpb_group_push_notification_"+groupId + "=" + "expiretime" + ";" + expires + ";path=/";
 									document.cookie = cookievalue;
+									
+									if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.subscribeGroupid) {
+       									window.webkit.messageHandlers.subscribeGroupid.postMessage({
+                     						"message": groupId
+       									});
+									}									
+									
 									if (subscribeGroupid) {
 										subscribeGroupid.postMessage(groupId);
 									}								
@@ -444,6 +451,13 @@ $j(document).ready(function() {
 								$j(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_group_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_group_push.subscribe_button_color+';border:0px');
 							},
       						click: function() {
+								
+								if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.unsubscribeGroupid) {
+       								window.webkit.messageHandlers.unsubscribeGroupid.postMessage({
+                     					"message": groupId
+       								});
+								}								
+								
 								if (unsubscribeGroupid) {
 									unsubscribeGroupid.postMessage(groupId);
 								}								
