@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.0
-Stable tag: 1.59
+Stable tag: 1.60
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,11 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.60 version Jun 05 2023 changes =
+Bug fix: Enqueue media problem resolved in plugin settings to attach images in PWA, Push notification settings area.
+Bug fix: Group notification subscribe/unsubscribe button problem resolved.
+Bug fix: Corrected text domain in Frontend push notification subscription text to Translate correctly by translation plugin.
+New feature: ICON facility for group push notification subscription/unsubscription. Custom icons for group push notification subscription/unsubscription can be uploaded in button customization tab.
 = 1.59 version Apr 10 2023 changes =
 Bug fix (for webview mobile apps): Resolved push notification problem for webview mobile apps when frontend subscription option is null/empty.
 Bug fix (for PWA): Resolved service worker cache problem in PWA app when exclude all url option is ON - To exclude all urls including offline urls.
@@ -547,6 +552,10 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* Bug fix: Enqueue media problem resolved in plugin settings to attach images in PWA, Push notification settings area.
+* Bug fix: Group notification subscribe/unsubscribe button problem resolved.
+* Bug fix: Corrected text domain in Frontend push notification subscription text to Translate correctly by translation plugin.
+* New feature: ICON facility for group push notification subscription/unsubscription. Custom icons for group push notification subscription/unsubscription can be uploaded in button customization tab.
 * Bug fix (for webview mobile apps): Resolved push notification problem for webview mobile apps when frontend subscription option is null/empty.
 * Bug fix (for PWA): Resolved service worker cache problem in PWA app when exclude all url option is ON - To exclude all urls including offline urls.
 * Bug fix (for webview mobile apps API): Resolved problem in mobile app subscription token API to update default frontend subscription option when it receives empty value in frontend subscription option field in API.
