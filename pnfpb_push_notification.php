@@ -7095,8 +7095,9 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 	    *
 	    * @since 1.8
 	    */
-		public function PNFPB_subscribe_to_group_button() {
+		public function PNFPB_subscribe_to_group_button($grp_btn = array()) {
 			global $groups_template, $wpdb;
+
 			if ( isset( $GLOBALS['groups_template']->group ) ) {
 				$group = $GLOBALS['groups_template']->group;
 			} else {
@@ -7104,8 +7105,10 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			}
 			
 			$bpuserid = 0;
+
 			if ( is_user_logged_in() && get_option('pnfpb_ic_fcm_buddypress_enable') == 2 ) {
-    			$bpuserid = get_current_user_id();
+				
+    				$bpuserid = get_current_user_id();
 			
 					$cookievalue = '';
 					if(isset($_COOKIE['pnfpb_group_push_notification_'.$group->id])) {
@@ -7168,14 +7171,71 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 					$link_unsubscribe_text = $unsubscribe_button_text;
 				
-					if ($subscribe_button_icon_text !== '') {
+					if ($subscribe_button_icon_text != '') {
 						$link_subscribe_text = '<img src="'.$subscribe_button_icon_text.'" alt="'.$subscribe_button_text.'"/>';
 					}
 				
-					if ($unsubscribe_button_icon_text !== '') {
+					if ($unsubscribe_button_icon_text != '') {
 						$link_unsubscribe_text = '<img src="'.$unsubscribe_button_icon_text.'" alt="'.$unsubscribe_button_text.'"/>';
 					}
-			
+				if ($deviceid_select_status === 0  && groups_is_user_member( $bpuserid, $group->id )) {
+						// Setup button attributes.
+
+        				$button = array(
+            				'id'                => 'subscribe_notification_group',
+            				'component'         => 'groups',
+            				'must_be_logged_in' => true,
+            				'block_self'        => false,
+            				'wrapper_class'     => 'subscribegroupbutton subscribe-display-on',
+            				'wrapper_id'        => 'subscribegroupbutton-' . $group->id,
+            				'link_text'         => $link_subscribe_text,
+							'link_href'			=> '',
+            				'link_class'        => 'subscribe-notification-group subscribe-display-on subscribegroupbutton-' . $group->id,
+							'button_element'    => 'button',
+            				'parent_attr'       => array(
+                						'id'    => '',
+                						'class' => 'bp-generic-meta groups-meta action subscribe-display-on',
+            				),							
+            				'button_attr' => array(
+								'data-group-id'		=> $group->id,
+								'data-user-id'		=> $bpuserid,
+                				'data-title'           => $subscribe_button_text,
+                				'data-title-displayed' => $subscribe_button_text
+            				)
+        				);
+						echo bp_get_button($button);
+						return ($grp_btn);
+					}
+        			else
+					{
+						// Setup button attributes.
+        				$button = array(
+            					'id'                => 'subscribe_notification_group',
+            					'component'         => 'groups',
+            					'must_be_logged_in' => true,
+            					'block_self'        => false,
+            					'wrapper_class'     => 'subscribegroupbutton subscribe-display-off',
+            					'wrapper_id'        => 'subscribegroupbutton-' . $group->id,
+            					'link_text'         => $link_subscribe_text,
+								'link_href'			=> '',
+            					'link_class'        => 'subscribe-notification-group subscribe-display-off subscribegroupbutton-' . $group->id,
+								'button_element'    => 'button',
+            					'parent_attr'       => array(
+                						'id'    => '',
+                						'class' => 'bp-generic-meta groups-meta action subscribe-display-off',
+            					),							
+            					'button_attr' => array(
+									'data-group-id'		=> $group->id,
+									'data-user-id'		=> $bpuserid,
+                					'data-title'           => $subscribe_button_text,
+                					'data-title-displayed' => $subscribe_button_text
+            					)
+        					);
+							echo bp_get_button($button);
+							return ($grp_btn);
+					}
+					
+				
 					if ($deviceid_select_status > 0 && groups_is_user_member( $bpuserid, $group->id )) {
 						// Setup button attributes.
         				$button = array(
@@ -7185,16 +7245,23 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
             				'block_self'        => false,
             				'wrapper_class'     => 'unsubscribegroupbutton subscribe-display-on',
             				'wrapper_id'        => 'unsubscribegroupbutton-' . $group->id,
-            				'link_text'         => $link_subscribe_text,
+            				'link_text'         => $link_unsubscribe_text,
+							'link_href'			=> '',
             				'link_class'        => 'unsubscribe-notification-group subscribe-display-on unsubscribegroupbutton-' . $group->id,
 							'button_element'    => 'button',
+            				'parent_attr'       => array(
+                						'id'    => '',
+                						'class' => 'bp-generic-meta groups-meta action subscribe-display-on',
+            				),							
             				'button_attr' => array(
 							'data-group-id'		=> $group->id,
 							'data-user-id'		=> $bpuserid,
                 			'data-title'           => $unsubscribe_button_text,
                 			'data-title-displayed' => $unsubscribe_button_text
             				)
-        				);				
+        				);
+						echo bp_get_button($button);
+						return ($grp_btn);
 					}
         			else
 					{
@@ -7207,65 +7274,29 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
             				'wrapper_class'     => 'unsubscribegroupbutton subscribe-display-off',
             				'wrapper_id'        => 'unsubscribegroupbutton-' . $group->id,
             				'link_text'         => $link_unsubscribe_text,
+							'link_href'			=> '',
             				'link_class'        => 'unsubscribe-notification-group subscribe-display-off unsubscribegroupbutton-' . $group->id,
 							'button_element'    => 'button',
+            				'parent_attr'       => array(
+                						'id'    => '',
+                						'class' => 'bp-generic-meta groups-meta action subscribe-display-off',
+            				),							
             				'button_attr' => array(
 								'data-group-id'		=> $group->id,
 								'data-user-id'		=> $bpuserid,
                 				'data-title'           => $unsubscribe_button_text,
                 				'data-title-displayed' => $unsubscribe_button_text
             				)
-        				);				
-					}
-					echo bp_get_button( $button );
-			
-					if ($deviceid_select_status == 0  && groups_is_user_member( $bpuserid, $group->id )) {
-						// Setup button attributes.
-        				$button = array(
-            				'id'                => 'subscribe_notification_group',
-            				'component'         => 'groups',
-            				'must_be_logged_in' => true,
-            				'block_self'        => false,
-            				'wrapper_class'     => 'subscribegroupbutton subscribe-display-on',
-            				'wrapper_id'        => 'subscribegroupbutton-' . $group->id,
-            				'link_text'         => $link_subscribe_text,
-            				'link_class'        => 'subscribe-notification-group subscribe-display-on subscribegroupbutton-' . $group->id,
-							'button_element'    => 'button',
-            				'button_attr' => array(
-								'data-group-id'		=> $group->id,
-								'data-user-id'		=> $bpuserid,
-                				'data-title'           => $subscribe_button_text,
-                				'data-title-displayed' => $subscribe_button_text
-            				)
         				);
-				 
+						echo bp_get_button($button);
+						return ($grp_btn);
 					}
-        			else
-					{
-						// Setup button attributes.
-        				$button = array(
-            					'id'                => 'subscribe_notification_group',
-            					'component'         => 'groups',
-            					'must_be_logged_in' => true,
-            					'block_self'        => false,
-            					'wrapper_class'     => 'subscribegroupbutton subscribe-display-off',
-            					'wrapper_id'        => 'subscribegroupbutton-' . $group->id,
-            					'link_text'         => $link_unsubscribe_text,
-            					'link_class'        => 'subscribe-notification-group subscribe-display-off subscribegroupbutton-' . $group->id,
-								'button_element'    => 'button',
-            					'button_attr' => array(
-									'data-group-id'		=> $group->id,
-									'data-user-id'		=> $bpuserid,
-                					'data-title'           => $subscribe_button_text,
-                					'data-title-displayed' => $subscribe_button_text
-            					)
-        					);							
-					}
-					echo bp_get_button( $button );	
+					
+					
 			}
+			return $grp_btn;
 
-		}
-	
+		}	
 	    /**
 	    * UnSubscribe push notification ajax callback.
 	    *

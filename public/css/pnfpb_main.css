@@ -96,8 +96,8 @@
 	margin-left: 1px;
 	margin-right: 5px;
 	padding: .3em .5em !important;
-	font-size: 14px !important;
-	font-weight: 100 !important;
+	/* font-size: 14px !important;
+	font-weight: 100 !important;*/
 }
 
 .unsubscribe-notification-group {
@@ -105,12 +105,12 @@
 	margin-left: 1px;
 	margin-right: 5px;
 	padding: .3em .5em !important;
-	font-size: 14px !important;
-	font-weight: 100!important;
+	/* font-size: 14px !important;
+	font-weight: 100!important; */
 }
 
 .subscribe-display-on {
-	display:block !important;
+	display:inherit !important;
 }
 
 .subscribe-display-off {
