@@ -44,7 +44,24 @@
 					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_prompt_install_text_color pnfpb_ic_push_pwa_color" id="pnfpb_ic_fcm_subscribe_button_text_color" name="pnfpb_ic_fcm_subscribe_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_button_text_color' ); } else { echo '#ffffff';}?>"  />			
 				</td>
 			</tr>
-			<tr class="pnfpb_ic_push_settings_table_row"><td class="pnfpb_ic_push_settings_table_label_column column-columnname"><h3 class="pnfpb_ic_push_settings_header"><?php echo __("BuddyPress Group subscribe/unsubscribe button customization",PNFPB_TD);?></h3></td></tr>		
+			<tr class="pnfpb_ic_push_settings_table_row"><td class="pnfpb_ic_push_settings_table_label_column column-columnname"><h3 class="pnfpb_ic_push_settings_header"><?php echo __("BuddyPress Group subscribe/unsubscribe button customization",PNFPB_TD);?></h3></td></tr>
+			<tr class="pnfpb_ic_push_settings_table_row">
+            	<td class="pnfpb_ic_push_settings_table_label column-columnname">
+					<div class="pnfpb_row">
+						<div class="pnfpb_column_400">
+							<div class="pnfpb_card">
+								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" for="pnfpb_subscribe_group_push_notification_icon_enable">
+									<label class="pnfpb_switch">
+										<input  id="pnfpb_subscribe_group_push_notification_icon_enable" name="pnfpb_subscribe_group_push_notification_icon_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_subscribe_group_push_notification_icon_enable' ) ); ?>  />
+										<span class="pnfpb_slider round"></span>
+									</label>
+										<?php echo __("Show/Hide subscribe/unsubscribe group icon<br/>(if disabled, it will display text instead of icon for subscribe/unsubscribe push notification for groups)",PNFPB_TD);?>
+								</label>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>			
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_button_text"><?php echo __("Group subscription button text",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_button_text" name="pnfpb_ic_fcm_subscribe_button_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_button_text' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_button_text' );} else { echo __('Subscribe push notification',PNFPB_TD); } ?>" />
 				</td>
@@ -55,7 +72,7 @@
 						<tr>
                 			<td class="column-columnname">
                     			<input type="button" value="<?php echo __("Select Image",PNFPB_TD);?>" id="pnfpb_select_subscribe_group_push_notification_icon" class="pnfpb_ic_push_pwa_settings_upload_icon" />
-                    			<input type="hidden" id="pnfpb_subscribe_group_push_notification_icon" name="pnfpb_subscribe_group_push_notification_icon" value="" />
+                    			<input type="hidden" id="pnfpb_subscribe_group_push_notification_icon" name="pnfpb_subscribe_group_push_notification_icon" value="<?php if (get_option('pnfpb_subscribe_group_push_notification_icon')) {echo get_option('pnfpb_subscribe_group_push_notification_icon');} else { echo plugin_dir_url( __DIR__ ).'public/img/icon_push_subscribe.png';} ?>" />
                 			</td>
 						</tr>
 						<tr>							
@@ -79,7 +96,7 @@
 						<tr>
                 			<td class="column-columnname">
                     			<input type="button" value="<?php echo __("Select Image",PNFPB_TD);?>" id="pnfpb_select_unsubscribe_group_push_notification_icon" class="pnfpb_ic_push_pwa_settings_upload_icon" />
-                    			<input type="hidden" id="pnfpb_unsubscribe_group_push_notification_icon" name="pnfpb_unsubscribe_group_push_notification_icon" value="" />
+                    			<input type="hidden" id="pnfpb_unsubscribe_group_push_notification_icon" name="pnfpb_unsubscribe_group_push_notification_icon" value="<?php if (get_option('pnfpb_unsubscribe_group_push_notification_icon')) {echo get_option('pnfpb_unsubscribe_group_push_notification_icon');} else { echo plugin_dir_url( __DIR__ ).'public/img/icon_push_unsubscribe.png';} ?>" />
                 			</td>
 						</tr>
 						<tr>							

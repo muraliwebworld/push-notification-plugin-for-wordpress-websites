@@ -196,7 +196,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				// Scheduled push notification(if enabled) for new comments in Buddypress Activities
 				add_action( $this->pre_name .'cron_buddypresscomments_hook', array($this,  $this->pre_name .'icforum_push_notifications_comment_web'));	
 										
-				add_filter( 'bp_get_group_join_button', array($this,  $this->pre_name .'subscribe_to_group_button'), 101, 1 );
+				if (  function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
+					add_filter( 'bp_get_group_join_button', array($this,  $this->pre_name .'subscribe_to_group_button'), 101, 1 );
+				}
+				else {
+					add_action ( 'bp_group_header_actions', array($this,  $this->pre_name .'subscribe_to_group_button'), 1);
+					add_action ( 'bp_directory_groups_actions' , array($this,  $this->pre_name .'subscribe_to_group_button'), 1);
+				}
 				
 				add_action ( 'bp_setup_nav', array( $this, $this->pre_name .'buddypress_setup_notification_settings_nav' ) );
 				
@@ -1796,6 +1802,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_subscribe_group_push_notification_icon");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_unsubscribe_button_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_unsubscribe_group_push_notification_icon");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_subscribe_group_push_notification_icon_enable");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_group_subscribe_dialog_text");			
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_group_subscribe_dialog_text_confirm");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_group_unsubscribe_dialog_text");
@@ -7121,28 +7128,26 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					
                     $isWebView = false;
                     
-					if((strpos($_SERVER['HTTP_USER_AGENT'], 'Mobile/') !== false) && (strpos($_SERVER['HTTP_USER_AGENT'], 'Safari/') == false)) :
+					if((strpos($_SERVER['HTTP_USER_AGENT'], 'Mobile/') !== false) && (strpos($_SERVER['HTTP_USER_AGENT'], 'Safari/') == false)) {
     					$isWebView = true;
-					elseif(isset($_SERVER['HTTP_X_REQUESTED_WITH'])) :
-    						$isWebView = true;
-					endif;
+					}
 					
                     if (strpos($_SERVER['HTTP_USER_AGENT'], 'wv') !== false) {
 						
                     	$isWebView = true;
                     }
+				
                     
-					if ($cookievalue != '' && !$isWebView) {					
+					if ($cookievalue != '' && $isWebView) {					
 
-						$deviceid_select_status = $wpdb->query("SELECT * FROM {$table} WHERE device_id LIKE '%!!{$group->id}!!{$cookievalue}%' AND userid = {$bpuserid}");                    
-						                   
+						$deviceid_select_status = $wpdb->query("SELECT * FROM {$table} WHERE device_id LIKE '%!!{$group->id}%' AND device_id LIKE '%webview%' AND userid = {$bpuserid}");      
                     }
                     else
                     {
-						$deviceid_select_status = $wpdb->query("SELECT * FROM {$table} WHERE device_id LIKE '%!!{$group->id}%' AND device_id LIKE '%webview%' AND userid = {$bpuserid}");                     
-                    }
+						$deviceid_select_status = $wpdb->query("SELECT * FROM {$table} WHERE device_id LIKE '%!!{$group->id}!!{$cookievalue}%' AND userid = {$bpuserid}");			                       }
 				
-					$unsubscribe_button_text = __('Unubscribe push notifications',PNFPB_TD);
+				
+					$unsubscribe_button_text = __('Unsubscribe push notifications',PNFPB_TD);
 				
 					if (get_option('pnfpb_ic_fcm_unsubscribe_button_text') && get_option('pnfpb_ic_fcm_unsubscribe_button_text') !== false && get_option('pnfpb_ic_fcm_unsubscribe_button_text') !== '') {
 						$unsubscribe_button_text = get_option('pnfpb_ic_fcm_unsubscribe_button_text');
@@ -7164,18 +7169,18 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					}
 				
 					if (get_option('pnfpb_unsubscribe_group_push_notification_icon') && get_option('pnfpb_unsubscribe_group_push_notification_icon') !== false && get_option('pnfpb_unsubscribe_group_push_notification_icon') !== '') {
-						$unsubscribe_button_icon_text = get_option('pnfpb_subscribe_group_push_notification_icon');
+						$unsubscribe_button_icon_text = get_option('pnfpb_unsubscribe_group_push_notification_icon');
 					}
 				
 					$link_subscribe_text = $subscribe_button_text;
 				
 					$link_unsubscribe_text = $unsubscribe_button_text;
 				
-					if ($subscribe_button_icon_text != '') {
+					if ($subscribe_button_icon_text != '' && (get_option('pnfpb_subscribe_group_push_notification_icon_enable') && get_option('pnfpb_subscribe_group_push_notification_icon_enable') === '1')) {
 						$link_subscribe_text = '<img src="'.$subscribe_button_icon_text.'" alt="'.$subscribe_button_text.'"/>';
 					}
 				
-					if ($unsubscribe_button_icon_text != '') {
+					if ($unsubscribe_button_icon_text != '' && (get_option('pnfpb_subscribe_group_push_notification_icon_enable') && get_option('pnfpb_subscribe_group_push_notification_icon_enable') === '1')) {
 						$link_unsubscribe_text = '<img src="'.$unsubscribe_button_icon_text.'" alt="'.$unsubscribe_button_text.'"/>';
 					}
 				if ($deviceid_select_status === 0  && groups_is_user_member( $bpuserid, $group->id )) {
@@ -7186,15 +7191,15 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
             				'component'         => 'groups',
             				'must_be_logged_in' => true,
             				'block_self'        => false,
-            				'wrapper_class'     => 'subscribegroupbutton subscribe-display-on',
+            				'wrapper_class'     => 'subscribegroupbutton',
             				'wrapper_id'        => 'subscribegroupbutton-' . $group->id,
             				'link_text'         => $link_subscribe_text,
 							'link_href'			=> '',
-            				'link_class'        => 'subscribe-notification-group subscribe-display-on subscribegroupbutton-' . $group->id,
+            				'link_class'        => 'subscribe-notification-group subscribegroupbutton-' . $group->id,
 							'button_element'    => 'button',
             				'parent_attr'       => array(
                 						'id'    => '',
-                						'class' => 'bp-generic-meta groups-meta action subscribe-display-on',
+                						'class' => 'bp-generic-meta groups-meta action',
             				),							
             				'button_attr' => array(
 								'data-group-id'		=> $group->id,
@@ -7203,8 +7208,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
                 				'data-title-displayed' => $subscribe_button_text
             				)
         				);
-						echo bp_get_button($button);
-						return ($grp_btn);
+
 					}
         			else
 					{
@@ -7231,10 +7235,9 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
                 					'data-title-displayed' => $subscribe_button_text
             					)
         					);
-							echo bp_get_button($button);
-							return ($grp_btn);
+							
 					}
-					
+					echo bp_get_button($button);
 				
 					if ($deviceid_select_status > 0 && groups_is_user_member( $bpuserid, $group->id )) {
 						// Setup button attributes.
@@ -7243,15 +7246,15 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
             				'component'         => 'groups',
             				'must_be_logged_in' => true,
             				'block_self'        => false,
-            				'wrapper_class'     => 'unsubscribegroupbutton subscribe-display-on',
+            				'wrapper_class'     => 'unsubscribegroupbutton',
             				'wrapper_id'        => 'unsubscribegroupbutton-' . $group->id,
             				'link_text'         => $link_unsubscribe_text,
 							'link_href'			=> '',
-            				'link_class'        => 'unsubscribe-notification-group subscribe-display-on unsubscribegroupbutton-' . $group->id,
+            				'link_class'        => 'unsubscribe-notification-group unsubscribegroupbutton-' . $group->id,
 							'button_element'    => 'button',
             				'parent_attr'       => array(
                 						'id'    => '',
-                						'class' => 'bp-generic-meta groups-meta action subscribe-display-on',
+                						'class' => 'bp-generic-meta groups-meta action ',
             				),							
             				'button_attr' => array(
 							'data-group-id'		=> $group->id,
@@ -7261,7 +7264,6 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
             				)
         				);
 						echo bp_get_button($button);
-						return ($grp_btn);
 					}
         			else
 					{
@@ -7289,14 +7291,13 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
             				)
         				);
 						echo bp_get_button($button);
-						return ($grp_btn);
 					}
 					
 					
 			}
 			return $grp_btn;
 
-		}	
+		}
 	    /**
 	    * UnSubscribe push notification ajax callback.
 	    *
