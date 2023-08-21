@@ -448,6 +448,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 	}
 
 		function receivePushNotification(event) {
+			event.stopImmediatePropagation();
 			var notification = {};
   			if (event.data) {
     			notification = event.data.json().notification;
@@ -509,58 +510,13 @@ if ( !function_exists( 'PNFPB_icfm_icpush_firebasesw_template' )) {
 'use strict';
 
 
-var firebaseappurl = '<?php echo plugin_dir_url( __DIR__ )."js/firebase-core/pnfpb_firebase_app.js"; ?>';
-var firebasemsg = '<?php echo plugin_dir_url( __DIR__ )."js/firebase-core/pnfpb_firebase_messaging.js"; ?>';
+//var firebaseappurl = '<?php echo PNFPB_PLUGIN_DIR_PATH."src/js/firebase-core/pnfpb_firebase_app.js"; ?>';
+//var firebasemsg = '<?php echo PNFPB_PLUGIN_DIR_PATH."src/js/firebase-core/pnfpb_firebase_messaging.js"; ?>';
+var firebase_sw = '<?php echo PNFPB_PLUGIN_DIR_PATH."build/service_worker/index.js"; ?>';
 
-importScripts(firebaseappurl);
-importScripts(firebasemsg);
-
-// Your web app Firebase configuration
-var firebaseConfig = {
-			apiKey: "<?php echo get_option( 'pnfpb_ic_fcm_api' ); ?>",
-			authDomain: "<?php echo get_option( 'pnfpb_ic_fcm_authdomain' ); ?>",
-			databaseURL: "<?php echo get_option( 'pnfpb_ic_fcm_databaseurl' ); ?>",
-			projectId: "<?php echo get_option( 'pnfpb_ic_fcm_projectid' ); ?>",
-			storageBucket: "<?php echo get_option( 'pnfpb_ic_fcm_storagebucket' ); ?>",
-			messagingSenderId: "<?php echo get_option( 'pnfpb_ic_fcm_messagingsenderid' ); ?>",
-			appId: "<?php echo get_option( 'pnfpb_ic_fcm_appid' ); ?>",
-		};
-		var projectidicpush = "<?php echo get_option( 'pnfpb_ic_fcm_projectid' ); ?>";
-		if (projectidicpush != false && projectidicpush != '') {
-			// Initialize Firebase
-			firebase.initializeApp(firebaseConfig);
-
-
-			// Retrieve an instance of Firebase Messaging so that it can handle background
-			// messages.
-			const messaging = firebase.messaging();
-			// [END initialize_firebase_in_sw]
-
-			// If you would like to customize notifications that are received in the
-			// background (Web app is closed or not in browser focus) then you should
-			// implement this optional method.
-			// [START background_handler]
-			messaging.setBackgroundMessageHandler(function(payload) {
-				console.log('[icpush-sw.js] Received background message ', payload);
-				const notification = JSON.parse(payload.data.notification);
-				// Customize notification here
-				const notificationTitle = notification.title;
-				const notificationOptions = {
-					body: notification.body,
-					image: notification.image,
-					icon: notification.icon,
-					data: {
-						url: notification.click_action
-					}
-
-				};
-				return self.registration.showNotification(notificationTitle,
-				notificationOptions);
-			});
-			// [END background_handler]
-
-
-		}
+//importScripts(firebaseappurl);
+//importScripts(firebasemsg);
+importScripts(firebase_sw);
 
 		<?php 
 			$firebase_sw_contents = ob_get_contents();

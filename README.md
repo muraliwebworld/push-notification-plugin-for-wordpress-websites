@@ -1,5 +1,15 @@
 # Push Notification WordPress plugin for websites, Android/IOS mobile apps with Progressive Web App (PWA)<br/>
-WordPress plugin to send push notifications using Firebase Cloud Messaging (FCM) to websites, Android/iOS mobile apps. This plugin has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.<br/><br/>
+WordPress plugin to send push notifications using Firebase Cloud Messaging (FCM) to websites, Android/iOS mobile apps. It sends push notifications using Firebase Cloud Messaging (FCM) directly using legacy or latest version of httpv1 Firebase api or users can select Onesignal as push notification provider to websites, Android/iOS mobile apps. It has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler. It includes option to use latest version of Firebase api HTTP v1. This plugin has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.<br/><br/>
+
+# 1.64 VERSION 20 AUGUST 2023 CHANGES
+1. New feature: Option to use latest version of Firebase API httpv1 for push notification. It requires service account json file to be uploaded. Instructions on how to get service account json from Firebase account is given in plugin admin area.
+2. New feature: If latest version of Firebase api httpv1 is enabled then push notification will be sent more securely using oauth token everytime generated using googleapi client using service account credential file uploaded in plugin admin area.
+3. New feature: Option to use onesignal as push notification provider instead of Firebase.
+4. New feature: Schedule One time push notification/On demand push notification with single/recurring schedule
+5. New feature: New tab to display all one time push notification which are previously sent with re-send option or to duplicate the notification to save as draft for future use.
+6. New feature: User avatar instead of push icon in activity push notifications.
+7. New feature: Custom prompt to subscribe/unsubscribe notification using a push notification icon. Admin user can update/change this icon and text according to their wish in plugin admin area.
+
 # Features<br/>
 To send/schedule Push notifications when new item is published for following,
 
@@ -14,6 +24,8 @@ To send/schedule Push notifications when new item is published for following,
 9. User avatar change in BuddyPress
 10. Cover image change in BuddyPress
 11. Woocommerce custom post type push notifications
+
+Options to use Firebase as push notification provider or to use onesignal as push notification provider.
 
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile - settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.
 

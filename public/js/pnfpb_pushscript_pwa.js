@@ -388,6 +388,8 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 				event.preventDefault();
 		        
                 if (Notification.permission === 'granted') {
+					
+						messaging = firebase.messaging();
                             
                         messaging.getToken({serviceWorkerRegistration: registration,vapidKey:pnfpb_ajax_object_push.publicKey }).then((currentToken) => 
 						{
@@ -1289,6 +1291,8 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
                 if (firebase.messaging.isSupported() && 'serviceWorker' in navigator && Notification.permission === 'granted') {
 					
 				  navigator.serviceWorker.ready.then(function (registration) {
+					  
+					messaging = firebase.messaging();
                             
                 	messaging.getToken({serviceWorkerRegistration: registration,vapidKey:pnfpb_ajax_object_push.publicKey }).then((currentToken) => 
 					{				
@@ -1592,6 +1596,8 @@ async function requestPermission(registration) {
     Notification.requestPermission().then((permission) => {
 		
       if (permission === 'granted') {
+		  
+		messaging = firebase.messaging();
 		  
         messaging.getToken({serviceWorkerRegistration: registration,vapidKey:pnfpb_ajax_object_push.publicKey }).then((currentToken) => {
 			   
@@ -1949,6 +1955,8 @@ async function requestPermission(registration) {
 					deviceid = '';
 
 					if (firebase.messaging.isSupported() && Notification.permission === 'granted') {
+						
+						messaging = firebase.messaging();
 						
 						messaging.getToken({serviceWorkerRegistration: registration,vapidKey:pnfpb_ajax_object_push.publicKey }).then((currentToken) => {
 							
@@ -3333,13 +3341,13 @@ async function requestPermission(registration) {
   }
   $j(".pnfpb_pwa_shortcode_box").hide();
   if ($j(".pnfpb_pwa_shortcode_box").length) {
+	if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
+	}
+	$j(".pnfpb_pwa_shortcode_box").show();	  
  	window.addEventListener('beforeinstallprompt', (e) => {
 		e.preventDefault();
 		deferredPrompt = e;
-		if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
-			$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
-		}
-		$j(".pnfpb_pwa_shortcode_box").show();
 		$j( ".pnfpb_pwa_button" ).on("click", function() {
 			if (deferredPrompt) {
 				deferredPrompt.prompt();
@@ -3362,7 +3370,31 @@ async function requestPermission(registration) {
     				}
 				})
 			}
+			else {
+				$j( "#pnfpb-pwa-dialog-ios" ).dialog({
+					resizable: false,
+					closeText : '',
+					open: function(event, ui) {
+						//$j(".ui-dialog-titlebar-close").hide();
+					},			
+					height: "auto",
+					width: 350,
+					modal: true,
+					buttons: [
+						{
+							text: 'Ok',
+							open: function() {
+								$j(this).attr('style','font-weight:bold;color:white;background-color:blue;border:0px');
+							},
+							click: function() {			
+								$j( this ).dialog( "close" );
+							}
+						}
+					]
+				})				
+			}
 		})
+		
 	});
   }
  

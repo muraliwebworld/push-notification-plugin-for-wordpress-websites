@@ -157,6 +157,9 @@ die;
 			delete_option("pnfpb_ic_fcm_frontend_settings_avatar_change_text");
 			delete_option("pnfpb_ic_fcm_frontend_settings_coverimage_change_text");
 			
+			delete_option("pnfpb_subscribe_group_push_notification_icon");
+			delete_option("pnfpb_unsubscribe_group_push_notification_icon");
+			delete_option("pnfpb_subscribe_group_push_notification_icon_enable");
 			delete_option("pnfpb_ic_fcm_token_delete_without_user_enable");
 			delete_option("pnfpb_ic_fcm_token_delete_without_useridtoken_enable");
 			

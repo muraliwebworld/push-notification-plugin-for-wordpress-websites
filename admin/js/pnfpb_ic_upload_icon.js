@@ -1,7 +1,6 @@
 /**
 * Upload custom icon for push notification from plugin settings area.
 *
-*
 * @since 1.0.0
 */
 var $j = jQuery.noConflict();
@@ -89,5 +88,42 @@ $j(document).ready(function() {
 		mediaUploadericon_for_group_unsubscribe.open();
 		
 	});	
+	
+	var pushprompt_subscribe_icon_mediaUploader_512;
+	
+	$j('#pnfpb_ic_fcm_popup_subscribe_button_icon').on('click',function(e) {
+		e.preventDefault();
+		if( pushprompt_subscribe_icon_mediaUploader_512 ) {
+			pushprompt_subscribe_icon_mediaUploader_512.open();
+			return;
+		}
+		
+		pushprompt_subscribe_icon_mediaUploader_512 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		pushprompt_subscribe_icon_mediaUploader_512.on('select', function() {
+			attachment = pushprompt_subscribe_icon_mediaUploader_512.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			if (imagewidth === 32 && imageheight === 32){
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').text('');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon').val(attachment.url);
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('background-image','url(' + attachment.url + ')');
+			}
+			else
+			{
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('background-image','none');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').text('Image size must be 32x32 pixels');
+			}
+		});
+		
+		pushprompt_subscribe_icon_mediaUploader_512.open();
+		
+	});
 	
 });

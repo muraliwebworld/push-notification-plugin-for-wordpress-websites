@@ -273,7 +273,7 @@ input:checked + .pnfpb_slider:before {
     border-radius: 8px !important;
 }
 
-.pnfpb_ic_firebase_configuration_button, .pnfpb_ic_firebase_configuration_help_button {
+.pnfpb_ic_firebase_configuration_button, .pnfpb_ic_or_button, .pnfpb_ic_onesignal_configuration_button, .pnfpb_ic_firebase_configuration_help_button {
 	background-color: #135e96 !important;
     border: none !important;
     color: white !important;
@@ -342,6 +342,10 @@ input:checked + .pnfpb_slider:before {
 .pnfpb_ic_firebase_configuration_help {
 	display: none;
 	width: 100%;
+}
+
+.pnfpb_ic_onesignal_configuration {
+	display: none;
 }
 
 .pnfpb_ic_firebase_configuration {
@@ -574,4 +578,54 @@ td.pnfpb_ic_push_settings_table_column {
     margin-right: 30px;
     padding: 10px 0 10px 0;
     text-decoration: none;
+}
+
+.pnfpb-onetime-notifications-list {
+  margin: 15px 0;
+}
+.pnfpb-onetime-notifications-list tbody tr td.user-td {
+  display: flex;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+}
+.pnfpb-onetime-notifications-list tbody tr td.user-td > * {
+  margin-right: 5px;
+}
+.pnfpb-onetime-notifications-list tbody tr td img {
+  max-width: 100%;
+}
+
+.pnfpb-selectize-dropdown .selected {
+  background-color: #2271b1;
+}
+
+.pnfpb-pagination ul {
+  display: flex;
+}
+.pnfpb-pagination ul li {
+  margin-right: 5px;
+}
+.pnfpb-onetime-notifications-wrap {
+	max-width: 1200px;
+}
+
+.pnfpb_icfm_notification_search_content_class {
+	min-width: 500px;
+}
+
+@media screen and (max-width: 600px) {
+	.pnfpb_icfm_notification_search_content_class {
+		min-width: 330px;
+	}
+}
+
+.pnfpb_icfm_notification_search_content_label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.pnfpb_icfcm_service_account_upload_message {
+	color:black;
+	font-weight:bold;
 }

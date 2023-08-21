@@ -1,0 +1,1 @@
+import Pnfpb_pwa_firebase_send_push from './js/pnfpb_firebase_send_push';

@@ -1,0 +1,14 @@
+{
+    "require": {
+        "google/apiclient": "^2.15"
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+             "FirebaseCloudMessaging"
+        ]
+    }
+    
+}

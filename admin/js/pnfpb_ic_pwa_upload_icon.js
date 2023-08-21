@@ -501,6 +501,32 @@ $j(document).ready(function() {
 		
 	}
 
+	function toggle_onesignal_configuration() {
+		
+		const { __ } = wp.i18n;
+		
+  		$j('.pnfpb_ic_onesignal_configuration').toggle();
+		
+		if ($j('.pnfpb_ic_onesignal_configuration').is(':visible')) {
+			
+			$j('.pnfpb_ic_firebase_configuration').hide();
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Show Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_ic_firebase_configuration').show();
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Show Onesignal configuration','PNFPB_TD'));
+			
+		}	
+		
+	}
 
 	function toggle_firebase_configuration() {
 		
@@ -508,14 +534,23 @@ $j(document).ready(function() {
 		
   		$j('.pnfpb_ic_firebase_configuration').toggle();
 		
+		
 		if ($j('.pnfpb_ic_firebase_configuration').is(':visible')) {
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Hide Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration').hide();
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Show onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
 			
 		}
 		else
 		{
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Update Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration').show();
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Show Firebase configuration','PNFPB_TD'));
 		}	
 		
 	}

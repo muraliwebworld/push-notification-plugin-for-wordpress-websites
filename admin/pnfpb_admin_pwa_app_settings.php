@@ -11,6 +11,7 @@
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="tab active"><?php echo __("PWA",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="tab "><?php echo __("One time push",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="tab"><?php echo __("Notifications",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="tab"><?php echo __("Frontend settings",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
@@ -27,6 +28,9 @@
 		<?php echo __("Below settings are to generate Progressive Web App(PWA) with offline facility",PNFPB_TD);?>
 	</h2>
 	<ul>
+		<li><?php echo __("<b>PWA can also be installed using shortcode option [PNFPB_PWA_PROMPT] in below compatible browsers. Customize this shortcode button/text in button customization tab - admin settings of this plugin</b>",PNFPB_TD);?></li>
+		<li><?php echo __("<b>PWA will work only in chrome, edge browsers and in android app chrome,firefox and other compatible browsers</b>",PNFPB_TD);?></li>
+		<li><?php echo __("<b>PWA may not be compatible in IOS and IPAD browsers. In IOS/IPAD devices use add to home screen to install PWA</b>",PNFPB_TD);?></li>	
 		<li><?php echo __("All below fields are required to generate Progressive Web App (PWA). Additionally, Enable/disable PWA app by selecting appropriate check box and Enter appropriate URLs to store in cache for offline PWA app, selected pages can be viewed in offline without internet. In offline mode, if page is not available/stored in cache then 404 offline page will be displayed",PNFPB_TD);?></li>
 	</ul>
 	<table class="pnfpb_ic_push_settings_table widefat fixed">

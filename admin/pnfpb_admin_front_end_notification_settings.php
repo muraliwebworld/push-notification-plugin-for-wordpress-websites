@@ -12,6 +12,7 @@
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="tab "><?php echo __("PWA",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="tab "><?php echo __("One time push",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="tab"><?php echo __("Notifications",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="tab active"><?php echo __("Frontend settings",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
@@ -22,6 +23,17 @@
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
     <?php settings_fields( 'pnfpb_icfcm_frontend_buttons'); ?>
     <?php do_settings_sections( 'pnfpb_icfcm_frontend_buttons' ); ?>
+	<?php
+	if ( ! class_exists( 'OneSignal' ) && get_option('pnfpb_onesignal_push') === '1' ) { ?>
+		
+		<div class="notice notice-success is-dismissible">
+        	<p><?php _e( 'Onesignal plugin is required to use Onesignal as push notification provider. Please install and configure Onesignal plugin', 'PNFPB_TD' ); ?></p>
+    	</div>
+	
+	<?php
+	}
+	?>
+
 	
 	<table class="pnfpb_ic_push_settings_table widefat fixed">
   		<tbody>

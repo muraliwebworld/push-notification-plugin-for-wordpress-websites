@@ -18,7 +18,7 @@ navigator.serviceWorker.register(pnfpb_ajax_object_unsubscribe_push.homeurl+'/pn
 			navigator.serviceWorker.ready.then(function (registration) {	
 	        // [START get_messaging_object]
             // Retrieve Firebase Messaging object.
-            const messaging = firebase.messaging();
+            var messaging = firebase.messaging();
             // [END get_messaging_object]
             // [START set_public_vapid_key]
             // Add the public key generated from the console here.
@@ -28,6 +28,8 @@ navigator.serviceWorker.register(pnfpb_ajax_object_unsubscribe_push.homeurl+'/pn
 		                
 				            
                 if (Notification.permission === 'granted') {
+					
+						messaging = firebase.messaging();
                             
                         messaging.getToken({serviceWorkerRegistration: registration, vapidKey:pnfpb_ajax_object_unsubscribe_push.publicKey }).then((currentToken) => {
                                 
