@@ -71,12 +71,53 @@
 		}
 	}
 
+	$pnfpb_endpoint = null;
+	$pnfpb_options = null;
+	$pnfpb_ipaddress = null;
+
+	if (isset($_POST['pnfpb_endpoint'])) {
+		$pnfpb_endpoint = $_POST['pnfpb_endpoint'];
+	}
+
+	if (isset($_POST['pnfpb_options'])) {
+		$pnfpb_options = $_POST['pnfpb_options'];
+	}
+
+	if(!empty($_SERVER['HTTP_CLIENT_IP'])) {  
+        $pnfpb_ipaddress = $_SERVER['HTTP_CLIENT_IP'];  
+    }  
+    //whether ip is from the proxy  
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {  
+         $pnfpb_ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];  
+     }  
+	//whether ip is from the remote address  
+    else{  
+         $pnfpb_ipaddress = $_SERVER['REMOTE_ADDR'];  
+     }  
+
 	$bpuserid = 0;
 	
 	if ( is_user_logged_in() ) {
 		
     	$bpuserid = get_current_user_id();
 	}
+
+
+	if ($pushtype == 'icfirebasecred') {
+
+		echo json_encode(array(
+			'apiKey' => get_option( 'pnfpb_ic_fcm_api' ), 
+			'authDomain' => get_option( 'pnfpb_ic_fcm_authdomain' ),
+			'databaseURL' => get_option( 'pnfpb_ic_fcm_databaseurl' ), 
+			'projectId' => get_option( 'pnfpb_ic_fcm_projectid' ), 
+			'storageBucket' => get_option( 'pnfpb_ic_fcm_storagebucket' ), 
+			'messagingSenderId' => get_option( 'pnfpb_ic_fcm_messagingsenderid' ), 
+			'appId' => get_option( 'pnfpb_ic_fcm_appid' ),
+			'publicKey' => get_option( 'pnfpb_ic_fcm_publickey' )
+		));
+
+	}
+
     
 	if ($bpdeviceid != '' && $pushtype == 'normal') {
 	
@@ -97,8 +138,26 @@
 			
 				if ($result->userid == 0 || $result->userid != $bpuserid){
 
-					$deviceid_update_status = $wpdb->query("UPDATE $table SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
-				}  
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
+				}
+			
+				if (is_null($result->web_auth)) {
+					
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET web_auth = '{$pnfpb_endpoint}' WHERE device_id = '{$bpdeviceid}'") ;
+					
+				}
+			
+				if (is_null($result->web_256)) {
+					
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET web_256 = '{$pnfpb_options}' WHERE device_id = '{$bpdeviceid}'") ;
+					
+				}
+			
+				if (is_null($result->ip_address)) {
+					
+					$deviceid_update_status = $wpdb->query("UPDATE {$table} SET ip_address = '{$pnfpb_ipaddress}' WHERE device_id = '{$bpdeviceid}'") ;
+					
+				}	
 		}		
 	
 		if(count($deviceid_exists) > 0) {
@@ -109,7 +168,7 @@
 				$version_value = $value;
 			}
 			
-			if ($version_value !== 'v1') {
+			if ($version_value !== 'httpv1' && get_option('pnfpb_httpv1_push') === '1') {
 			
 						$client = new Google_Client();
 						// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
@@ -134,7 +193,7 @@
 						);
 			
 						$fields = array( 
-	          				"to" => "/topics/general",
+	          				"to" => "/topics/pnfpbgeneral",
 			  				"registration_tokens"=> array($bpdeviceid)
 						);			
     
@@ -152,14 +211,15 @@
 						$apiresults = wp_remote_post($url, $args);
 						$apibody = wp_remote_retrieve_body($apiresults);
 						$bodyresults = json_decode($apibody,true);
-						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'") ;
 			}
 			
 			echo "duplicate";
 		}
 		else
 		{
-			$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'subscription_option' => $bpsubscribeoptions);
+			$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'subscription_option' => $bpsubscribeoptions, 'web_auth' => $pnfpb_endpoint, 'web_256' => $pnfpb_options, 'ip_address' => $pnfpb_ipaddress);
+			
 			$insertstatus = $wpdb->insert($table,$data);
 			if (!$insertstatus || $insertstatus != 0){
 				$my_id = $wpdb->insert_id;
@@ -170,48 +230,51 @@
 				echo json_encode(array('subscriptionstatus' => 'fail', 'subscriptionoptions' => $bpsubscribeoptions));
 			}
 			
-			$client = new Google_Client();
-			// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-			$client->useApplicationDefaultCredentials(); 
+			if (get_option('pnfpb_httpv1_push') === '1') {
+			
+				$client = new Google_Client();
+				// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
+				$client->useApplicationDefaultCredentials(); 
 							
-			// Alternatively, provide the JSON authentication file directly.
-			$configArray = json_decode(get_option('pnfpb_sa_json_data'),true);
-			$client->setAuthConfig($configArray);
+				// Alternatively, provide the JSON authentication file directly.
+				$configArray = json_decode(get_option('pnfpb_sa_json_data'),true);
+				$client->setAuthConfig($configArray);
 							
-			// Add the scope as a string (multiple scopes can be provided as an array)
-			$client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-			$client->refreshTokenWithAssertion();
-			$pnfpb_fbauth_token_array = $client->getAccessToken();
-			$pnfpb_fbauth_token = $pnfpb_fbauth_token_array['access_token'];
+				// Add the scope as a string (multiple scopes can be provided as an array)
+				$client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+				$client->refreshTokenWithAssertion();
+				$pnfpb_fbauth_token_array = $client->getAccessToken();
+				$pnfpb_fbauth_token = $pnfpb_fbauth_token_array['access_token'];
 			
-			$url = 'https://iid.googleapis.com/iid/v1:batchAdd';
+				$url = 'https://iid.googleapis.com/iid/v1:batchAdd';
 			
-			$headers = array( 
-				'Authorization' => 'Bearer '.$pnfpb_fbauth_token, 
-				'Content-Type' => 'application/json',
-				'access_token_auth'=> 'true'
-			);
+				$headers = array( 
+					'Authorization' => 'Bearer '.$pnfpb_fbauth_token, 
+					'Content-Type' => 'application/json',
+					'access_token_auth'=> 'true'
+				);
 			
-			$fields = array( 
-	          "to" => "/topics/general",
-			  "registration_tokens"=> array($bpdeviceid)
-			);			
+				$fields = array( 
+	          		"to" => "/topics/pnfpbgeneral",
+			  		"registration_tokens"=> array($bpdeviceid)
+				);			
     
 				
-			$body = json_encode($fields);
+				$body = json_encode($fields);
 			
-			$args = array(
-			    'httpversion' => '1.0',
-				'blocking' => true,
-				'sslverify' => false,
-				'body' => $body,
-				'headers' => $headers
-			);
+				$args = array(
+			    	'httpversion' => '1.0',
+					'blocking' => true,
+					'sslverify' => false,
+					'body' => $body,
+					'headers' => $headers
+				);
 			
-			$apiresults = wp_remote_post($url, $args);
-			$apibody = wp_remote_retrieve_body($apiresults);
-			$bodyresults = json_decode($apibody,true);
-			$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+				$apiresults = wp_remote_post($url, $args);
+				$apibody = wp_remote_retrieve_body($apiresults);
+				$bodyresults = json_decode($apibody,true);
+				$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'");
+			}
 		}
 		
 
@@ -247,6 +310,8 @@
 			
 					$deviceid_group_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE device_id LIKE '%{$bpdeviceid}%' AND device_id LIKE '%!!%'") ;				
 				}
+				
+				
 			
 				$deviceid_select_status = $wpdb->get_results("SELECT * FROM {$table} WHERE device_id LIKE '%".$bpdeviceid."%'");			
 		
@@ -258,7 +323,7 @@
 						$version_value = $value;
 					}
 			
-					if ($version_value !== 'v1') {					
+					if ($version_value !== 'httpv1' && get_option('pnfpb_httpv1_push') === '1') {				
 					
 						$client = new Google_Client();
 						// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
@@ -283,7 +348,7 @@
 						);
 			
 						$fields = array( 
-	          				"to" => "/topics/general",
+	          				"to" => "/topics/pnfpbgeneral",
 			  				"registration_tokens"=> array($bpdeviceid)
 						);			
     
@@ -301,7 +366,7 @@
 						$apiresults = wp_remote_post($url, $args);
 						$apibody = wp_remote_retrieve_body($apiresults);
 						$bodyresults = json_decode($apibody,true);
-						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'") ;
 
 					}
 					
@@ -313,7 +378,7 @@
 				{
 					if(count($deviceid_select_status) <= 0) {
 						$bpdeviceid = $bpdeviceid;
-						$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'subscription_option' => $bpsubscribeoptions);
+						$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'subscription_option' => $bpsubscribeoptions, 'web_auth' => $pnfpb_endpoint, 'web_256' => $pnfpb_options, 'ip_address' => $pnfpb_ipaddress);
 						$insertstatus = $wpdb->insert($table,$data);
 						if (!$insertstatus || $insertstatus != 0){
 							$my_id = $wpdb->insert_id;
@@ -325,13 +390,7 @@
 							echo json_encode(array('subscriptionstatus' => 'fail', 'subscriptionoptions' => $bpsubscribeoptions));
 						}
 						
-						$version_values = $wpdb->get_col( "SELECT firebase_version FROM {$table} WHERE device_id LIKE '%{$bpdeviceid}%'" );
-						$version_value = 'L';
-						foreach ( $version_values as $value ) {
-							$version_value = $value;
-						}
-			
-						if ($version_value !== 'v1') {						
+						if (get_option('pnfpb_httpv1_push') === '1') {						
 						
 							$client = new Google_Client();
 							// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
@@ -356,7 +415,7 @@
 							);
 			
 							$fields = array( 
-								"to" => "/topics/general",
+								"to" => "/topics/pnfpbgeneral",
 								"registration_tokens"=> array($bpdeviceid)
 							);			
     
@@ -374,7 +433,7 @@
 							$apiresults = wp_remote_post($url, $args);
 							$apibody = wp_remote_retrieve_body($apiresults);
 							$bodyresults = json_decode($apibody,true);
-							$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+							$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'") ;
 						}
 						
 					}
@@ -409,7 +468,7 @@
 						$version_value = $value;
 					}
 			
-					if ($version_value !== 'v1') {					
+					if ($version_value !== 'httpv1' && get_option('pnfpb_httpv1_push') === '1') {				
 					
 						$client = new Google_Client();
 						// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
@@ -434,7 +493,7 @@
 						);
 			
 						$fields = array( 
-	          				"to" => "/topics/general",
+	          				"to" => "/topics/pnfpbgeneral",
 			  				"registration_tokens"=> array($bpdeviceid)
 						);			
     
@@ -452,14 +511,14 @@
 						$apiresults = wp_remote_post($url, $args);
 						$apibody = wp_remote_retrieve_body($apiresults);
 						$bodyresults = json_decode($apibody,true);
-						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'") ;
 
 					}
 					
 
 					echo json_encode(array('subscriptionstatus' => 'subscribed webview', 'subscriptionoptions' => $bpsubscribeoptions));
 			
-				}				
+				}
 			}
 		}
 		else
@@ -492,6 +551,24 @@
 
 							$deviceid_update_status = $wpdb->query("UPDATE {$table} SET userid = {$bpuserid} WHERE device_id = '{$bpdeviceid}'") ;	
 						}
+						
+						if (is_null($result->web_auth)) {
+					
+							$deviceid_update_status = $wpdb->query("UPDATE {$table} SET web_auth = '{$pnfpb_endpoint}' WHERE device_id = '{$bpdeviceid}'") ;
+					
+						}
+			
+						if (is_null($result->web_256)) {
+					
+							$deviceid_update_status = $wpdb->query("UPDATE {$table} SET web_256 = '{$pnfpb_options}' WHERE device_id = '{$bpdeviceid}'") ;
+					
+						}
+			
+						if (is_null($result->ip_address)) {
+					
+							$deviceid_update_status = $wpdb->query("UPDATE {$table} SET ip_address = '{$pnfpb_ipaddress}' WHERE device_id = '{$bpdeviceid}'") ;
+					
+						}					
 					
 						$subscriptionoptions = $result->subscription_option;
 					
@@ -534,7 +611,7 @@
 							$version_value = $value;
 						}
 			
-						if ($version_value !== 'v1') {						
+						if ($version_value !== 'httpv1' && get_option('pnfpb_httpv1_push') === '1') {						
 						
 							$client = new Google_Client();
 							// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
@@ -559,7 +636,7 @@
 							);
 			
 							$fields = array( 
-								"to" => "/topics/general",
+								"to" => "/topics/pnfpbgeneral",
 								"registration_tokens"=> array($bpdeviceid)
 							);			
     
@@ -577,7 +654,7 @@
 							$apiresults = wp_remote_post($url, $args);
 							$apibody = wp_remote_retrieve_body($apiresults);
 							$bodyresults = json_decode($apibody,true);
-							$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+							$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'") ;
 
 						}
 						
@@ -593,7 +670,7 @@
 		        else
 		        {
 					if ($bpdeviceid !== '') {
-						$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid);
+						$data = array('userid' => $bpuserid, 'device_id' => $bpdeviceid, 'web_auth' => $pnfpb_endpoint, 'web_256' => $pnfpb_options, 'ip_address' => $pnfpb_ipaddress);
 						$insertstatus = $wpdb->insert($table,$data);
 						if (!$insertstatus || $insertstatus != 0){
 							$my_id = $wpdb->insert_id;
@@ -604,54 +681,58 @@
 							echo json_encode(array('subscriptionstatus' => 'not-subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
 						}
 						
-						$client = new Google_Client();
-						// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-						$client->useApplicationDefaultCredentials(); 
+						
+						if (get_option('pnfpb_httpv1_push') === '1') {
+						
+							$client = new Google_Client();
+							// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
+							$client->useApplicationDefaultCredentials(); 
 							
-						// Alternatively, provide the JSON authentication file directly.
-						$configArray = json_decode(get_option('pnfpb_sa_json_data'),true);
-						$client->setAuthConfig($configArray);
+							// Alternatively, provide the JSON authentication file directly.
+							$configArray = json_decode(get_option('pnfpb_sa_json_data'),true);
+							$client->setAuthConfig($configArray);
 							
-						// Add the scope as a string (multiple scopes can be provided as an array)
-						$client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-						$client->refreshTokenWithAssertion();
-						$pnfpb_fbauth_token_array = $client->getAccessToken();
-						$pnfpb_fbauth_token = $pnfpb_fbauth_token_array['access_token'];
+							// Add the scope as a string (multiple scopes can be provided as an array)
+							$client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+							$client->refreshTokenWithAssertion();
+							$pnfpb_fbauth_token_array = $client->getAccessToken();
+							$pnfpb_fbauth_token = $pnfpb_fbauth_token_array['access_token'];
 			
-						$url = 'https://iid.googleapis.com/iid/v1:batchAdd';
+							$url = 'https://iid.googleapis.com/iid/v1:batchAdd';
 			
-						$headers = array( 
-							'Authorization' => 'Bearer '.$pnfpb_fbauth_token, 
-							'Content-Type' => 'application/json',
-							'access_token_auth'=> 'true'
-						);
+							$headers = array( 
+								'Authorization' => 'Bearer '.$pnfpb_fbauth_token, 
+								'Content-Type' => 'application/json',
+								'access_token_auth'=> 'true'
+							);
 			
-						$fields = array( 
-	          				"to" => "/topics/general",
-			  				"registration_tokens"=> array($bpdeviceid)
-						);			
+							$fields = array( 
+	          					"to" => "/topics/pnfpbgeneral",
+			  					"registration_tokens"=> array($bpdeviceid)
+							);			
     
 				
-						$body = json_encode($fields);
+							$body = json_encode($fields);
 			
-						$args = array(
-			    			'httpversion' => '1.0',
-							'blocking' => true,
-							'sslverify' => false,
-							'body' => $body,
-							'headers' => $headers
-						);
+							$args = array(
+			    				'httpversion' => '1.0',
+								'blocking' => true,
+								'sslverify' => false,
+								'body' => $body,
+								'headers' => $headers
+							);
 			
-						$apiresults = wp_remote_post($url, $args);
-						$apibody = wp_remote_retrieve_body($apiresults);
-						$bodyresults = json_decode($apibody,true);
-						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+							$apiresults = wp_remote_post($url, $args);
+							$apibody = wp_remote_retrieve_body($apiresults);
+							$bodyresults = json_decode($apibody,true);
+							$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'") ;
+							
+						}
 						
 					}
 				}
 		        
 		    }
-		    
 		    else
 		    {
 		    	if ($bpdeviceid != '' && $pushtype == 'checkdeviceidforgroup') {
@@ -673,7 +754,7 @@
 							$version_value = $value;
 						}
 			
-						if ($version_value !== 'v1') {						
+						if ($version_value !== 'httpv1' && get_option('pnfpb_httpv1_push') === '1') {						
 						
 							$group_name = bp_get_group_name( groups_get_group( $bpgroupid));
 							$client = new Google_Client();
@@ -717,10 +798,10 @@
 							$apiresults = wp_remote_post($url, $args);
 							$apibody = wp_remote_retrieve_body($apiresults);
 							$bodyresults = json_decode($apibody,true);
-							$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpdeviceid}'") ;
+							$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpdeviceid}'");
 							
 						}
-		    
+							
 			        	echo "subscribed";
 			
 		        	}
@@ -767,7 +848,7 @@
 						$uniqueid = uniqid();
 						setcookie('pnfpb_group_push_notification_'.$bpgroupid, $uniqueid, time() + (86400 * 30), "/"); // 86400 = 1 day
 						$bpnewdeviceid = $bpdeviceid.'!!'.$bpgroupid.'!!'.$uniqueid;
-    					$data = array('userid' => $bpuserid, 'device_id' => $bpnewdeviceid,'subscription_option' => $subscriptionoptions);
+    					$data = array('userid' => $bpuserid, 'device_id' => $bpnewdeviceid,'subscription_option' => $subscriptionoptions, 'web_auth' => $pnfpb_endpoint, 'web_256' => $pnfpb_options, 'ip_address' => $pnfpb_ipaddress);
     					$insertstatus = $wpdb->insert($table,$data);
    						if (!$insertstatus || $insertstatus != 0){
 	    					$my_id = $wpdb->insert_id;
@@ -777,6 +858,8 @@
     					{
 	    					echo json_encode(array('subscriptionstatus' => 'deleted'));
     					}
+						
+						if (get_option('pnfpb_httpv1_push') === '1') {
 						
 						$group_name = bp_get_group_name( groups_get_group( $bpgroupid));
 						$client = new Google_Client();
@@ -820,7 +903,8 @@
 						$apiresults = wp_remote_post($url, $args);
 						$apibody = wp_remote_retrieve_body($apiresults);
 						$bodyresults = json_decode($apibody,true);
-						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'v1' WHERE device_id = '{$bpnewdeviceid}'") ;						
+						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv1' WHERE device_id = '{$bpnewdeviceid}'");
+						}
 						
 		        
 		    		}
@@ -842,6 +926,8 @@
 		    				$deviceid_update_status = $wpdb->query("DELETE from {$table} WHERE userid = {$bpuserid} AND device_id = '{$bpolddeviceid}'") ;
 							
 							$group_name = bp_get_group_name( groups_get_group($bpgroupid));
+							
+							if (get_option('pnfpb_httpv1_push') === '1') {
 							
 							$client = new Google_Client();
 							// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
@@ -885,17 +971,19 @@
 			
 							$apiresults = wp_remote_post($url, $args);
 							$apibody = wp_remote_retrieve_body($apiresults);
-							$bodyresults = json_decode($apibody,true);			
+							$bodyresults = json_decode($apibody,true);
+								
+							}
 							
 		
 		    				if($deviceid_update_status > 0) {
 		    
-			    				echo "unsubscribed";
+			    				echo json_encode(array('subscriptionstatus' => 'deleted'));
 			
 		    				}
 		    				else
 		   					{
-				    			echo json_encode(array('subscriptionstatus' => 'deleted'));
+				    			echo json_encode(array('subscriptionstatus' => 'failed in unsubscribe button'));
 		    				}		        
 		        
 		    			}
@@ -909,18 +997,20 @@
 								
 								if($deviceid_update_status > 0) {
 									
-									echo json_encode(array('subscriptionstatus' => 'deleted'));
+									echo json_encode(array('subscriptionstatus' => 'deleted','deviceidupdatestauts' => $deviceid_update_status,'deviceid' => $bpdeviceid));
 									
 								}
 								else {
 									
-									echo json_encode(array('subscriptionstatus' => 'failed'));
+									echo json_encode(array('subscriptionstatus' => 'failed in deleting push token','deviceidupdatestauts' => $deviceid_update_status,'deviceid' => $bpdeviceid));
 									
 								}
 							}
 							else {
 								
-                				echo json_encode(array('subscriptionstatus' => 'failed'));
+								if ($pushtype !== 'icfirebasecred') {
+                					echo json_encode(array('subscriptionstatus' => 'failed'));
+								}
 								
 							}
 						}		    

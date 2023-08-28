@@ -1,12 +1,12 @@
 === Push Notification for Post and BuddyPress ===
 Contributors: murali-indiacitys
 Author URI: https://www.muraliwebworld.com
-Tags:  Push notification,Progressive Web App,PWA,Woocommerce notification,mobile notification,WordPress push notification,desktop notification,push notifications,BuddyPress push notification,Push notification for posts,Firebase push notification for WordPress,Free Push Notification,Push notification using Firebase,PWA offline mode
+Tags:  push notification,mobile app,Progressive Web App,PWA,firebase,fcm,mobile app notification,wordPress push notification,Woocommerce,Onesignal,push notifications,desktop notification,buddyPress push notification,push notification for posts,push notification for wordPress
 Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/
 Requires at least: 5.0
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable tag: 1.64
+Stable tag: 1.66
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ To send Push notifications for WordPress Post/custom post,BuddyPress,Woocommerce
 
 == Description ==
 
-It sends push notifications using Firebase Cloud Messaging (FCM) directly using (legacy or latest version of httpv1 Firebase api) or users can select Onesignal as push notification provider to websites, Android/iOS mobile apps. It has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler. It includes option to use latest version of Firebase api HTTP v1.
+It sends push notifications to desktop, android/ios mobile apps using Firebase Cloud Messaging (FCM) with latest version Firebase API httpv1 or with legacy Firebase api or users can select Onesignal as push notification provider. It has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.
 
 **Plugin features:-** 
 To send Push notifications for following,
@@ -272,6 +272,13 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.66 version 29 August 2023 changes =
+Bug fix: To fix push notification problems related to multiple devices for same user id in friendship request, friendship accepted, private messages.
+= 1.65 version 27 August 2023 changes =
+Update: Modified custom prompt toggle between subscribe/unsubscribe notifications.
+Update: Security fix to secure Firebase credentials in ajax routines.
+Update: Automatic migration of subscription tokens according to latest version of Firebase api httpv1 to subscribe to relavant topics.
+New feature: Store subscription endpoint and subscription server key from browser pushsubscrition in database for future use, incase if user wants to migrate to other Push notification providers.
 = 1.64 version 20 August 2023 changes =
 New feature: Option to use latest version of Firebase API httpv1 for push notification. It requires service account json file to be uploaded. Instructions on how to get service account json from Firebase account is given in plugin admin area.
 New feature: If latest version of Firebase api httpv1 is enabled then push notification will be sent more securely using oauth token everytime generated using googleapi client using service account credential file uploaded in plugin admin area.
@@ -579,6 +586,11 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* Bug fix: To fix push notification problems related to multiple devices for same user id in friendship request, friendship accepted, private messages.
+* Update: Modified custom prompt toggle between subscribe/unsubscribe notifications.
+* Update: Security fix to secure Firebase credentials in ajax routines.
+* Update: Automatic migration of subscription tokens according to latest version of Firebase api httpv1 to subscribe to relavant topics.
+* New feature: Store subscription endpoint and subscription server key from browser pushsubscrition in database for future use, incase if user wants to migrate to other Push notification providers.
 * New feature: Option to use latest version of Firebase API httpv1 for push notification. It requires service account json file to be uploaded. Instructions on how to get service account json from Firebase account is given in plugin admin area.
 * New feature: If latest version of Firebase api httpv1 is enabled then push notification will be sent more securely using oauth token everytime generated using googleapi client using service account credential file uploaded in plugin admin area.
 * New feature: Option to use onesignal as push notification provider instead of Firebase.
