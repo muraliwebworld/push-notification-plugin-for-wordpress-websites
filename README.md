@@ -1,6 +1,9 @@
 # Push Notification WordPress plugin for websites, Android/IOS mobile apps with Progressive Web App (PWA)<br/>
 WordPress plugin to send push notifications using Firebase Cloud Messaging (FCM) to websites, Android/iOS mobile apps. It sends push notifications using Firebase Cloud Messaging (FCM) directly using legacy or latest version of httpv1 Firebase api or users can select Onesignal as push notification provider to websites, Android/iOS mobile apps. It has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler. It includes option to use latest version of Firebase api HTTP v1. This plugin has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.<br/><br/>
 
+# Download this plugin<br/>
+https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/><br/>
+
 # Changes related to latest version of Firebase API httpv1
 1. New feature: Option to use latest version of Firebase API httpv1 for push notification. It requires service account json file to be uploaded. Instructions on how to get service account json from Firebase account is given in plugin admin area.
 2. New feature: If latest version of Firebase api httpv1 is enabled then push notification will be sent more securely using oauth token everytime generated using googleapi client using service account credential file uploaded in plugin admin area.
@@ -28,9 +31,6 @@ To send/schedule Push notifications when new item is published for following,
 Options to use Firebase as push notification provider or to use onesignal as push notification provider.
 
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile - settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.
-
-# Download this plugin<br/>
-https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/><br/>
 
 # REST API<br/>
 REST API to connect mobile native/hybrid apps to send push notification from WordPress site to both mobile apps and WordPress sites.
