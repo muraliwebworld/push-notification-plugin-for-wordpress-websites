@@ -1,0 +1,189 @@
+{
+  
+    "name": "@muraliwebworld/push-notification-subscription-using-firebase-for-wordpress",
+  
+    "version": "1.0.0",
+  
+    "description": "It needs to be used along with plugin - Push notification for wordpress websites (WordPress plugin).It sends push notifications to desktop, android/ios mobile apps using Firebase Cloud Messaging (FCM) with latest version Firebase API httpv1 or with legacy Firebase api or users can select Onesignal as push notification provider. It has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.",
+  
+    "author": "Muralidharan Ramasamy",
+  
+    "license": "GPL-2.0-or-later",
+  
+    "keywords": [
+  
+      
+    "wordpress",
+  
+      
+    "wordpress plugin",
+  
+      
+    "firebase",
+  
+      
+    "push notification",
+  
+      
+    "cloud messaging",
+  
+      
+    "buddypress",
+  
+      
+    "pwa",
+  
+      
+    "progressive web app",
+  
+      
+    "javascript",
+  
+      
+    "php",
+  
+      
+    "wordpress scripts",
+  
+      
+    "push notifications"
+  
+    ],
+  
+    "homepage": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites",
+  
+    "repository": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites.git",
+  
+    "bugs": {
+  
+      
+    "url": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites/issues"
+  
+    },
+  
+    "main": "build/index.js",
+  
+    "devDependencies": {
+  
+      
+    "@wordpress/scripts": "^26.8.0",
+  
+      
+    "assert": "^2.0.0",
+  
+      
+    "browserify-zlib": "^0.2.0",
+  
+      
+    "buffer": "^6.0.3",
+  
+      
+    "crypto-browserify": "^3.12.0",
+  
+      
+    "http2": "^3.3.7",
+  
+      
+    "https-browserify": "^1.0.0",
+  
+      
+    "net": "^1.0.2",
+  
+      
+    "os-browserify": "^0.3.0",
+  
+      
+    "path": "^0.12.7",
+  
+      
+    "process": "^0.11.10",
+  
+      
+    "querystring-es3": "^0.2.1",
+  
+      
+    "stream-browserify": "^3.0.0",
+  
+      
+    "stream-http": "^3.2.0",
+  
+      
+    "tls": "^0.0.1",
+  
+      
+    "url": "^0.11.1",
+  
+      
+    "util": "^0.12.5",
+  
+      
+    "webpack": "^5.88.2",
+  
+      
+    "webpack-cli": "^5.1.4"
+  
+    },
+  
+    "scripts": {
+  
+      
+    "build": "wp-scripts build",
+  
+      
+    "build:pnfpb_push_notification": "wp-scripts build --webpack-src-dir=push-notification-subscription-using-firebase-for-wordpress --output-path=build/pnfpb_push_notification",
+  
+      
+    "format": "wp-scripts format",
+  
+      
+    "lint:js": "wp-scripts lint-js",
+  
+      
+    "packages-update": "wp-scripts packages-update",
+  
+      
+    "start": "wp-scripts start"
+  
+    },
+  
+    "dependencies": {
+  
+      
+    "@wordpress/blocks": "^12.15.0",
+  
+      
+    "@wordpress/e2e-test-utils": "^10.8.0",
+  
+      
+    "@wordpress/env": "^8.3.0",
+  
+      
+    "firebase": "^10.1.0",
+  
+      
+    "install": "^0.13.0",
+  
+      
+    "jquery": "^3.7.1",
+  
+      
+    "jquery-ui": "^1.13.2",
+  
+      
+    "jquery-ui-dist": "^1.13.2"
+  
+    },
+  
+    "browser": {
+  
+      
+    "fs": false,
+  
+      
+    "path": false,
+  
+      
+    "os": false
+  
+    }
+}
