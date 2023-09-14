@@ -19,6 +19,53 @@
 					<h4><?php echo __("Edit/Resend link will redirect to one time push notification form, so that same content/modified content can be send as push notification<br/>Delete link is to delete push notification entry<br />More actions link will show details of in action scheduler page, Hovering over the entry on action scheduler will show options to Run-now or Cancel the scheduled push notification",'PNFPB_TD');?></h4>
 				</div>
 			</div>
+			<div  class="pnfpb_row">
+			<ul class="subsubsub">
+				<li class="all">
+					<a href="/wp-admin/admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc">All</a>
+				</li> | 
+				<li class="ondemand">
+					<a href="/wp-admin/admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc&scheduled_type=onetime"><?php echo __("On demand",'PNFPB_TD');?></a>
+				</li> | 
+				<li class="singleschedule">
+					<a href="/wp-admin/admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc&scheduled_type=single"><?php echo __("Single/One time schedule",'PNFPB_TD');?></a>
+				</li> | 
+				<li class="recurringschedule">
+					<a href="/wp-admin/admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc&scheduled_type=recurring"><?php echo __("Recurring schedule",'PNFPB_TD');?></a>
+				</li> |
+				<li class="recurringschedule">
+					<a href="/wp-admin/admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc&scheduled_status=complete"><?php echo __("Complete",'PNFPB_TD');?></a>
+				</li> |
+				<li class="recurringschedule">
+					<a href="/wp-admin/admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc&scheduled_type=draft"><?php echo __("Draft",'PNFPB_TD');?></a>
+				</li> |
+				<li class="recurringschedule">
+					<a href="/wp-admin/admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc&scheduled_status=pending"><?php echo __("Pending (scheduled for future date)",'PNFPB_TD');?></a>
+				</li>				
+			</ul>
+			</div>
+			<div  class="pnfpb_row">
+			<?php
+				if (isset($_GET['scheduled_type']) && $_GET['scheduled_type'] === 'onetime') {
+					echo '<h3>'.__('On demand push notifications list','PNFPB_TD').'</h3>';
+				}
+				if (isset($_GET['scheduled_type']) && $_GET['scheduled_type'] === 'single') {
+					echo '<h3>'.__('Single/One time schedule push notifications','PNFPB_TD').'</h3>';
+				}
+				if (isset($_GET['scheduled_type']) && $_GET['scheduled_type'] === 'recurring') {
+					echo '<h3>'.__('Recurring schedule push notifications','PNFPB_TD').'</h3>';
+				}
+				if (isset($_GET['scheduled_type']) && $_GET['scheduled_type'] === 'draft') {
+					echo '<h3>'.__('Draft push notification list to be sent future','PNFPB_TD').'</h3>';
+				}
+				if (isset($_GET['scheduled_status']) && $_GET['scheduled_status'] === 'complete') {
+					echo '<h3>'.__('Completed schedule list of push notifications','PNFPB_TD').'</h3>';
+				}
+				if (isset($_GET['scheduled_status']) && $_GET['scheduled_status'] === 'pending') {
+					echo '<h3>'.__('Pending/upcoming/future scheduled list of push notifications','PNFPB_TD').'</h3>';
+				}			
+			?>		
+			</div>
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder">
 					<div id="post-body-content">

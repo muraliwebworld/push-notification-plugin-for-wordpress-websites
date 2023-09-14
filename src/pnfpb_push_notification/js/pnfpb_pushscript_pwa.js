@@ -30,16 +30,6 @@ var vapidKey = '';
 
 
 
-/*var firebaseConfig = {
-    apiKey: pnfpb_ajax_object_push.apiKey,
-    authDomain: pnfpb_ajax_object_push.authDomain,
-    databaseURL: pnfpb_ajax_object_push.databaseURL,
-    projectId: pnfpb_ajax_object_push.projectId,
-    storageBucket: pnfpb_ajax_object_push.storageBucket,
-    messagingSenderId: pnfpb_ajax_object_push.messagingSenderId,
-    appId: pnfpb_ajax_object_push.appId
-};*/
-
 var firebaseConfig = {};
 
 var firebaseApp;
@@ -55,51 +45,6 @@ function createFirebaseApp(config) {
         return initializeApp(config)
     }
 }
-
-async function get_firebase_details() {
-
-	var data = {
-		action: 'icpushcallback',
-		device_id:'',
-		subscriptionoptions:'',
-		pushtype: 'icfirebasecred'
-	};
-
-	$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
-
-		console.log(responseajax);
-
-		var firebasecredentialsobject = JSON.parse(responseajax);
-
-		if (firebasecredentialsobject.apiKey && firebasecredentialsobject.apiKey != '') {
-		
-			firebaseConfig = {
-				apiKey: firebasecredentialsobject.apiKey,
-				authDomain: firebasecredentialsobject.authDomain,
-				databaseURL: firebasecredentialsobject.databaseURL,
-				projectId: firebasecredentialsobject.projectId,
-				storageBucket: firebasecredentialsobject.storageBucket,
-				messagingSenderId: firebasecredentialsobject.messagingSenderId,
-				appId: firebasecredentialsobject.appId
-			};
-
-			vapidKey = firebasecredentialsobject.publicKey;
-
-			console.log(firebaseConfig);
-
-			firebaseApp = createFirebaseApp(firebaseConfig)
-			
-			messaging = getMessaging(firebaseApp);
-			
-			hasFirebaseMessagingSupport = await isSupported();			
-		
-		}		
-
-	});
-
-}
-
-
 
 var pnfpb_pushtoken_fromflutter;
 var pnfpb_pushtoken_fromAndroid;
@@ -139,8 +84,6 @@ $j(function() {
 	
 const { __ } = wp.i18n;
 
-//await get_firebase_details();
-
 var data = {
 	action: 'icpushcallback',
 	device_id:'',
@@ -148,9 +91,173 @@ var data = {
 	pushtype: 'icfirebasecred'
 };
 
-$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
+let deferredPrompt;
 
-	//console.log(responseajax);
+var PNFPBcustominstallprompt = '';
+
+window.addEventListener('beforeinstallprompt', (e) => {
+
+	e.preventDefault();
+
+	deferredPrompt = e;
+
+	console.log(e);
+
+	if (deferredPrompt && $j(".pnfpb_pwa_shortcode_box").length) {
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".widget_block").show();
+
+		$j(".pnfpb_pwa_shortcode_box").show();
+
+	} else  {
+
+		$j(".pnfpb_pwa_shortcode_box").hide();
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").hide();
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".widget_block").hide();
+
+	}
+	
+	if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1' || $j('.pnfpb-pwa-dialog-container').length) {
+
+		$j('.pnfpb-pwa-dialog-container').hide();
+	}
+
+	let name = 'PNFPB_pwa_prompt' + "=";
+
+	let decodedCookie = decodeURIComponent(document.cookie);
+
+	let ca = decodedCookie.split(';');
+
+	for(let i = 0; i <ca.length; i++) {
+
+		let c = ca[i];
+
+		while (c.charAt(0) == ' ') {
+
+			  c = c.substring(1);
+
+		}
+
+		if (c.indexOf(name) == 0) {
+
+			if (c.substring(name.length, c.length) !== 'Thu, 01 Jan 2029 00:00:00 UTC') {
+
+				PNFPBcustominstallprompt = c.substring(name.length, c.length);
+
+				if ($j(".pnfpb_pwa_shortcode_box").length) {
+
+					$j(".pnfpb_pwa_shortcode_box").hide();
+
+				}
+
+				if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1' || $j('.pnfpb-pwa-dialog-container').length) {
+
+					$j('.pnfpb-pwa-dialog-container').hide();
+
+				}				
+
+			}			
+		}
+	}	
+
+	$j( ".pnfpb_pwa_button" ).on("click", () => {
+		if (deferredPrompt) {
+			deferredPrompt.prompt();
+			deferredPrompt.userChoice.then((response) => {
+				if (response.outcome === 'accepted') {
+					console.log(__('User accepted PWA installation','PNFPB_TD'));
+					//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 2029 00:00:00 UTC; path=/;";	
+					if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
+						$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").hide();
+					}
+					$j(".pnfpb_pwa_shortcode_box").hide();
+					deferredPrompt = null;
+				}
+				   else {
+					   console.log(__('User did not accept PWA installation. No thanks, I am good!','PNFPB_TD'));
+					const d = new Date();
+					d.setTime(d.getTime() + (5*24*60*60*1000));
+					let expires = "expires="+ d.toUTCString();
+					document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";						
+					deferredPrompt = null;
+					location.reload();
+					if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {						
+						$( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
+					}
+					$j(".pnfpb_pwa_shortcode_box").show();
+				}
+			})
+		
+		}
+		else 
+		{
+			$j( "#pnfpb-pwa-dialog-ios" ).dialog({
+				autoOpen: true,
+				resizable: false,
+				closeText : '',
+				open: function(event, ui) {
+				},			
+				height: "auto",
+				width: 350,
+				modal: true,
+				buttons: [
+				{
+					text: 'Ok',
+					open: function() {
+						$j(this).attr('style','font-weight:bold;color:white;background-color:blue;border:0px');
+					},
+					click: function() {			
+						$j( this ).dialog( "close" );
+					}
+				}
+				]
+			})				
+		}
+	})		
+	if (deferredPrompt && pnfpb_ajax_object_push.pwainstallpromptenabled === '1' && PNFPBcustominstallprompt == '') {
+		$j('.pnfpb-pwa-dialog-container').show();
+		$j('#pnfpb-pwa-dialog-subscribe').on( "click", async function() {
+			$j('.pnfpb-pwa-dialog-container').hide();
+				if (deferredPrompt) {
+					deferredPrompt.prompt();
+					deferredPrompt.userChoice.then((response) => {
+						if (response.outcome === 'accepted') {
+							console.log(__('User accepted PWA installation','PNFPB_TD'));
+							//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+							$j(".pnfpb_pwa_shortcode_box").hide();
+							deferredPrompt = null;								
+						}
+						else {
+							if (response.outcome === 'dismissed') {
+								console.log(__('User did not accept PWA installation.No thanks, I am good!','PNFPB_TD'));
+								const d = new Date();
+								  d.setTime(d.getTime() + (5*24*60*60*1000));
+								  let expires = "expires="+ d.toUTCString();
+								  document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
+								deferredPrompt = null;
+								location.reload();
+							}
+						}
+					})
+				}
+		});
+
+		$j('#pnfpb-pwa-dialog-cancel').on( "click", function() {
+			$j('.pnfpb-pwa-dialog-container').hide();
+			const d = new Date();
+			  d.setTime(d.getTime() + (5*24*60*60*1000));
+			  let expires = "expires="+ d.toUTCString();
+			document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
+				
+		});
+	}	
+});  
+
+$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 
 	var firebasecredentialsobject = JSON.parse(responseajax);
 
@@ -195,8 +302,6 @@ var deviceid = '';
 
 var homeurl = pnfpb_ajax_object_push.homeurl;
 	
-//var messaging = '';
-
 if (pnfpb_ajax_object_push.pwainstallbuttontext === '') {
 	pnfpb_ajax_object_push.pwainstallbuttontext = __('Install PWA app','PNFPB_TD');
 }
@@ -307,13 +412,13 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
      
           				}
         			}
-     			}			
-	
+     			}
+				
 				if( $j(".pnfpb_subscribe_button").length )
 				{
-					$j(".pnfpb_subscribe_button").show();
-				}
-		
+					 $j(".pnfpb_subscribe_button").show();
+				}				
+	
 				if ('serviceWorker' in navigator && 'PushManager' in window && hasFirebaseMessagingSupport) {
 
 					navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
@@ -410,6 +515,12 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 						}
 						else
 						{
+							if( $j(".pnfpb_subscribe_button").length && !pnfpb_webview)
+							{
+								console.log(__("Browser notification permission not granted or blocked!!!",'PNFPB_TD'));
+								$( ".pnfpb-unsubscribe-notifications" ).append("<p>"+__("Push notification browser permission not granted. Please allow browser for push notification for this website before subscribing notification","PNFPB_TD")+"</p>");
+				
+							}							
 							console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'))
 						}
 
@@ -494,6 +605,13 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 				}
 				else
 				{
+
+					if( $j(".pnfpb_subscribe_button").length && !pnfpb_webview)
+					{
+						console.log(__("Browser notification permission not granted or blocked!!!",'PNFPB_TD'));
+						$( ".pnfpb-unsubscribe-notifications" ).append("<p>"+__("Push notification browser permission not granted. Please allow browser for push notification for this website before subscribing notification","PNFPB_TD")+"</p>");
+		
+					}					
 					console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'));
 					checkdeviceid('');
 					mobileapp_subscribe_shortcode();
@@ -525,7 +643,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 		$j('.pnfpb-push-subscribe-icon').on( "mouseenter", function(event) {
 
-			$j('.pnfpb-push-status-text').text("Verifying subscription status...");
+			$j('.pnfpb-push-status-text').text(__('Verifying subscription status...','PNFPB_TD'));
 
 			navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
 
@@ -533,12 +651,12 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 					if (subscription) {
 
-						$j('.pnfpb-push-status-text').text("You are subscribed to push notification");
+						$j('.pnfpb-push-status-text').text(__('You are subscribed to push notification','PNFPB_TD'));
 
 					}
 					else {
 
-						$j('.pnfpb-push-status-text').text("Push notification not subscribed");
+						$j('.pnfpb-push-status-text').text(__("Push notification not subscribed",'PNFPB_TD'));
 
 					}
 					$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
@@ -573,13 +691,13 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 			}
 
-			$j('.pnfpb-push-subscribe-button').text("Please wait...verifying status");
+			$j('.pnfpb-push-subscribe-button').text(__('Please wait...verifying status','PNFPB_TD'));
 	
 			registration.pushManager.getSubscription().then(async function (subscription) {
 
 				if (subscription) {
 	
-					$j('.pnfpb-push-subscribe-button').text("Unsubscribe");
+					$j('.pnfpb-push-subscribe-button').text(__("Unsubscribe",'PNFPB_TD'));
 
 					$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-subscribe-class");
 
@@ -587,7 +705,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 				} else  {
 
-					$j('.pnfpb-push-subscribe-button').text("Subscribe");
+					$j('.pnfpb-push-subscribe-button').text(__("Subscribe",'PNFPB_TD'));
 
 					$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-unsubscribe-class");
 
@@ -600,8 +718,6 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 					var subscribetext = $j('.pnfpb-push-subscribe-button').text();
 
-					console.log(subscribetext);
-
 					event.stopPropagation(); 
 	
 					event.preventDefault();
@@ -612,7 +728,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 						if (subscription && subscribetext === 'Unsubscribe') {
 
-							$j('.pnfpb-push-status-text').text("Please wait...processing");
+							$j('.pnfpb-push-status-text').text(__("Please wait...processing",'PNFPB_TD'));
 
 							$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");	
 
@@ -651,14 +767,14 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 											
 												if (responseobject.subscriptionstatus === 'deleted') {
 											
-													console.log('Push subscription token deleted successfully');
+													console.log(__('Push subscription token deleted successfully','PNFPB_TD'));
 											
 												}
 												else {
-													console.log('Push subscription token deletion failed in database');
+													console.log(__('Push subscription token deletion failed in database','PNFPB_TD'));
 												}
 
-												$j('.pnfpb-push-subscribe-button').text("Subscribe");
+												$j('.pnfpb-push-subscribe-button').text(__("Subscribe",'PNFPB_TD'));
 
 												$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-unsubscribe-class");
 
@@ -666,7 +782,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 												$j('.pnfpb-push-status-text').removeClass("pnfpb-push-status-text-opened");	
 
-												$j('.pnfpb-push-status-text').text("Push notification not subscribed");
+												$j('.pnfpb-push-status-text').text(__("Push notification not subscribed",'PNFPB_TD'));
 	
 												$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");													
 											
@@ -677,19 +793,19 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	
 									}).catch((e) => {
 
-										console.log("Unsubscribe token failed");
+										console.log(__("Unsubscribe token failed",'PNFPB_TD'));
 
 									});
 								}).catch((e) => {
 
-									console.log("Unsubscribe token failed");
+									console.log(__("Unsubscribe token failed",'PNFPB_TD'));
 
 								});
 							})
 						}
 					}).catch((e) => {
 
-						console.log("Unsubscribe subscription failed");
+						console.log(__("Unsubscribe subscription failed",'PNFPB_TD'));
 
 					});
 				});							
@@ -702,19 +818,19 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 						$j('.pnfpb-push-subscribe-button-layout').hide();
 
-						$j('.pnfpb-push-status-text').text("Please wait...processing");
+						$j('.pnfpb-push-status-text').text(__("Please wait...processing",'PNFPB_TD'));
 
 						$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");	
 				
 						await requestPermission(registration);
 				
-						$j('.pnfpb-push-subscribe-button').text("Unsubscribe");
+						$j('.pnfpb-push-subscribe-button').text(__("Unsubscribe",'PNFPB_TD'));
 
 						$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-subscribe-class");
 
 						$j('.pnfpb-push-subscribe-button').addClass("pnfpb-popup-unsubscribe-class");
 			
-						$j('.pnfpb-push-status-text').text("You are subscribed to push notification");
+						$j('.pnfpb-push-status-text').text(__("You are subscribed to push notification",'PNFPB_TD'));
 			
 						$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
 					}
@@ -745,6 +861,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 async function shortcode_subscription_menu(refreshedToken) {
     if( $j(".pnfpb_subscribe_button").length )
     {
+	  if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.ready.then(function (registration) {		
 	        // [START get_messaging_object]
             // Retrieve Firebase Messaging object.
@@ -1214,8 +1331,6 @@ async function shortcode_subscription_menu(refreshedToken) {
 								
 										        $j.post(pnfpb_ajax_object_push.ajax_url, data, function(responseajax) {
 													
-														console.log(responseajax);
-
 														var response = JSON.parse(responseajax);
 													
 														subscriptionoptions = response.subscriptionoptions;
@@ -1478,15 +1593,31 @@ async function shortcode_subscription_menu(refreshedToken) {
                    }
                    else
                    {
+						console.log(__("Notification from permission not granted or blocked!!!",'PNFPB_TD'));
+						alert(__("Notification from permission not granted or blocked!!!",'PNFPB_TD'));
+						$j('<div>__("Push notification permission not given in browser. Please allow browser for push notification for this website before subscribing notification","PNFPB_TD")</div>')
+						.dialog(
+						{
+							title: 'Permission for notification',
+							close: function(event, ui)
+							{
+								$j(this).dialog("close");
+								$j(this).remove();
+							}
+						});				
 							
 						$j(".pnfpb-unsubscribe-alert-msg").html(__("UnSubscribe failed..try again or Subscribe again..Please!!",'PNFPB_TD'));
 							
 						$j( "#pnfpb-unsubscribe-dialog" ).dialog({ closeText:''});                        
-                 }
+                 	}
 				    
 		    	})
-			})
-			} 
+			}) 
+			  } else  {
+				console.log(__("Notification from permission not granted or blocked!!!",'PNFPB_TD'));
+				$( ".pnfpb-unsubscribe-notifications" ).append("<p>"+__("Push notification permission not given in browser. Please allow browser for push notification for this website before subscribing notification","PNFPB_TD")+"</p>");
+			  }
+		} 
 }
 
 async function frontend_subscription_menu(refreshedToken) {
@@ -1948,7 +2079,7 @@ async function requestPermission(registration) {
 
 		if( $j(".pnfpb-push-subscribe-button").length ) {
 
-			$j('.pnfpb-push-status-text').text("Please wait...processing");
+			$j('.pnfpb-push-status-text').text(__("Please wait...processing",'PNFPB_TD'));
 
 			$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
 			
@@ -2004,19 +2135,9 @@ async function requestPermission(registration) {
 							
 									var subscriptionoptions = responseobject.subscriptionoptions;							
 			                
-				            		//navigator.serviceWorker.ready.then(function (registration) {
-								
-				   		            	//registration.pushManager.subscribe({
-										
-                			            //	userVisibleOnly: true,
-										
-                			            //	applicationServerKey: urlBase64ToUint8Array(vapidKey)
-										
-            	   		            	//}).then(function (subscription) {
-
 										if( $j(".pnfpb-push-subscribe-button").length ) {
 
-										   $j('.pnfpb-push-subscribe-button').text("Unsubscribe");
+										   $j('.pnfpb-push-subscribe-button').text(__("Unsubscribe",'PNFPB_TD'));
 
 										   $j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-subscribe-class");
 				   
@@ -2024,7 +2145,7 @@ async function requestPermission(registration) {
 
 										   $j('.pnfpb-push-status-text').removeClass("pnfpb-push-status-text-opened");	
 							   
-										   $j('.pnfpb-push-status-text').text("You are subscribed to push notification");
+										   $j('.pnfpb-push-status-text').text(__("You are subscribed to push notification",'PNFPB_TD'));
 							   
 										   $j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");								
 										
@@ -2267,12 +2388,7 @@ async function requestPermission(registration) {
 			               	 				}
 										}
 			       			            
-			                       		//}).catch(function (err) {
-                			            //	console.log(__("cloud messaging push notification - device update failed",'PNFPB_TD'));
-										//	console.log(err);
-            			            	//});
-				            	//});
-				    
+			                       						    
 			           	 	}
 			            	else
 			            	{
@@ -2409,8 +2525,6 @@ async function requestPermission(registration) {
 								
 								$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
 							
-										console.log(response);
-
 										var responseobject = JSON.parse(response);	
 
 										subscriptionoptions = responseobject.subscriptionoptions;
@@ -2693,7 +2807,6 @@ async function requestPermission(registration) {
 							deviceid = pnfpb_pushtoken_fromAndroid;
 				
 						}						
-						//console.log(deviceid);
 								
 						var data = {
 							action: 'icpushcallback',
@@ -2966,10 +3079,6 @@ async function requestPermission(registration) {
     }
 
 
-
-	
-
-	
  async function mobileapp_subscribe_shortcode() {
     if( $j(".pnfpb_subscribe_button").length  && (pnfpb_pushtoken_fromflutter && pnfpb_pushtoken_fromflutter !== '') || (pnfpb_pushtoken_fromAndroid && pnfpb_pushtoken_fromAndroid != ''))
     {
@@ -3031,38 +3140,38 @@ async function requestPermission(registration) {
 
 				if (subscriptionoptionsarray[0] === '1')
 				{
-  								$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
+  					$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
 				}
 				else 
 				{
-								$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
+					$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
 				}
 							
 				if (subscriptionoptionsarray[1] === '1')
 				{
-  								$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
+  					$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
 				}
 				else 
 				{
-								$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
+					$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
 				}
 							
 				if (subscriptionoptionsarray[2] === '1')
 				{
-  								$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
+  					$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
 				}
 				else 
 				{
-								$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
+					$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
 				}
 							
 				if (subscriptionoptionsarray[3] === '1')
 				{
-  								$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
+  					$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
 				}
 				else 
 				{
-								$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
+					$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
 				}							
 
 				if (subscriptionoptionsarray[4] === '1')
@@ -3156,7 +3265,7 @@ async function requestPermission(registration) {
  					
                      if( $j(".pnfpb_subscribe_button").length )
                      {
-	                                $j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text);
+	                    $j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text);
                      }			                             
 			    }
 			    else
@@ -3164,7 +3273,7 @@ async function requestPermission(registration) {
  					
                     if( $j(".pnfpb_subscribe_button").length )
                     {
-	                                $j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text);
+	                    $j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text);
                      }			                    
 			    }
 
@@ -3231,12 +3340,12 @@ async function requestPermission(registration) {
 			{
 				subscribemypostshortcode = '0';
 				if (pnfpb_ajax_object_push.isloggedin != 1) {
-						$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Login required to subscribe notifications on comments from my Posts/my BuddyPress activities",'PNFPB_TD'));
-						$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',true);
+					$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Login required to subscribe notifications on comments from my Posts/my BuddyPress activities",'PNFPB_TD'));
+					$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',true);
 				}
 				else 
 				{
-						$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);										
+					$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);										
 				}
 			}
 			
@@ -3764,7 +3873,6 @@ async function requestPermission(registration) {
 										 });
 							
 								
-										 //$j( "#pnfpb_subscribe_dialog_confirm" ).dialog( "close" );
 								        },
 							        }]
     						    });
@@ -3780,252 +3888,10 @@ async function requestPermission(registration) {
 	 
  }
  
-  	if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
-  		$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").hide();
-  	}
 
-  	$j(".pnfpb_pwa_shortcode_box").hide();
-
-  	if ($j(".pnfpb_pwa_shortcode_box").length) {
-
-		if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
-			$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
-		}
-	}
-
-	var deferredPrompt;
-
-	$j(".pnfpb_pwa_shortcode_box").show();
-	var PNFPBcustominstallprompt = '';
-	var allcookies  =  document.cookie;
-
-	// Get all the cookies pairs in an array  
-	var cookiearray = allcookies.split(';');  			
-
-	// Now take key value pair out of this array  
-	for(var i = 0; i<cookiearray.length; i++) {
-		var cookiename  =  cookiearray[i].split('=')[0];
-		var cookievalue  =  cookiearray[i].split('=')[1];
-		if (cookievalue.trim() != 'Thu, 01 Jan 2029 00:00:00 UTC' && cookievalue.trim()) {
-			PNFPBcustominstallprompt = cookievalue.trim();
-			$j(".pnfpb_pwa_shortcode_box").hide();
-		}
-	}
-
-	if ($j(".pnfpb_pwa_shortcode_box").length) 
-	{
-		$j(".pnfpb_pwa_shortcode_box").hide();
- 		window.addEventListener('beforeinstallprompt', (e) => {
-			e.preventDefault();
-			deferredPrompt = e;
-			$j(".pnfpb_pwa_shortcode_box").show();
-			if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1') {
-				$j('.pnfpb-pwa-dialog-container').show();
-				$j('#pnfpb-pwa-dialog-subscribe').on( "click", async function() {
-					$j('.pnfpb-pwa-dialog-container').hide();
-						if (deferredPrompt) {
-							deferredPrompt.prompt();
-							deferredPrompt.userChoice.then((response) => {
-								if (response.outcome === 'accepted') {
-									console.log(__('User accepted PWA installation','PNFPB_TD'));
-									document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-									$j(".pnfpb_pwa_shortcode_box").hide();
-									deferredPrompt = null;								
-								}
-								else {
-									console.log(__('User did not accept PWA installation.No thanks, I am good!','PNFPB_TD'));
-									const d = new Date();
-								  	d.setTime(d.getTime() + (5*24*60*60*1000));
-								  	let expires = "expires="+ d.toUTCString();
-								  	document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
-									deferredPrompt = null;
-									location.reload();
-								}
-							})
-						}
-				});
-
-				$j('#pnfpb-pwa-dialog-cancel').on( "click", function() {
-					$j('.pnfpb-pwa-dialog-container').hide();
-					const d = new Date();
-					  d.setTime(d.getTime() + (5*24*60*60*1000));
-					  let expires = "expires="+ d.toUTCString();
-					document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
-						
-				});
-			} else {			
-				$j( ".pnfpb_pwa_button" ).on("click", () => {
-					if (deferredPrompt) {
-						deferredPrompt.prompt();
-						deferredPrompt.userChoice.then((response) => {
-							if (response.outcome === 'accepted') {
-								console.log(__('User accepted PWA installation','PNFPB_TD'));
-								document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 2029 00:00:00 UTC; path=/;";	
-								if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
-									$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").hide();
-								}
-								$j(".pnfpb_pwa_shortcode_box").hide();
-								deferredPrompt = null;
-							}
-   							else {
-   								console.log(__('User did not accept PWA installation. No thanks, I am good!','PNFPB_TD'));
-								const d = new Date();
-								d.setTime(d.getTime() + (5*24*60*60*1000));
-								let expires = "expires="+ d.toUTCString();
-								document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";						
-								deferredPrompt = null;
-								location.reload();
-								if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {						
-									$( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
-								}
-								$j(".pnfpb_pwa_shortcode_box").show();
-    						}
-						})
-					
-					}
-					else 
-					{
-						$j( "#pnfpb-pwa-dialog-ios" ).dialog({
-							autoOpen: true,
-							resizable: false,
-							closeText : '',
-							open: function(event, ui) {
-							},			
-							height: "auto",
-							width: 350,
-							modal: true,
-							buttons: [
-							{
-								text: 'Ok',
-								open: function() {
-									$j(this).attr('style','font-weight:bold;color:white;background-color:blue;border:0px');
-								},
-								click: function() {			
-									$j( this ).dialog( "close" );
-								}
-							}
-							]
-						})				
-					}
-				})
-			}
-		
-		})
-  	}
-  	else 
-	{
-		$j(".pnfpb_pwa_shortcode_box").hide();
-		$j('.pnfpb-pwa-dialog-container').hide();
-		if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1') {
-			window.addEventListener('beforeinstallprompt', (e) => {
-				e.preventDefault();
-				deferredPrompt = e;
-				if ($j(".pnfpb_pwa_shortcode_box").length && (!PNFPBcustominstallprompt || PNFPBcustominstallprompt == '')) {
-					$j(".pnfpb_pwa_shortcode_box").show();
-				}
-				else {
-					$j(".pnfpb_pwa_shortcode_box").hide();
-				}
-				$j('.pnfpb-pwa-dialog-container').show();
-				$j('#pnfpb-pwa-dialog-subscribe').on( "click", async function() {
-					$j('.pnfpb-pwa-dialog-container').hide();
-						if (deferredPrompt) {
-							deferredPrompt.prompt();
-							deferredPrompt.userChoice.then((response) => {
-								if (response.outcome === 'accepted') {
-									console.log(__('User accepted PWA installation','PNFPB_TD'));
-									document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-									$j(".pnfpb_pwa_shortcode_box").hide();
-									deferredPrompt = null;								
-								}
-    							else {
-    								console.log(__('User did not accept PWA installation.No thanks, I am good!','PNFPB_TD'));
-									const d = new Date();
-  									d.setTime(d.getTime() + (5*24*60*60*1000));
-  									let expires = "expires="+ d.toUTCString();
-  									document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
-									deferredPrompt = null;
-									location.reload();
-    							}
-							})
-						}
-					});
-	
-					$j('#pnfpb-pwa-dialog-cancel').on( "click", function() {
-						$j('.pnfpb-pwa-dialog-container').hide();
-						const d = new Date();
-  						d.setTime(d.getTime() + (5*24*60*60*1000));
-  						let expires = "expires="+ d.toUTCString();
-						document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
-							
-					});	
-			})
-		}
-		else 
-		{	
-			window.addEventListener('beforeinstallprompt', (e) => {
-				e.preventDefault();
-				deferredPrompt = e;
-				if (deferredPrompt) {
-					deferredPrompt.prompt();
-					deferredPrompt.userChoice.then((response) => {
-						if (response.outcome === 'accepted') {
-							console.log(__('User accepted PWA installation','PNFPB_TD'));
-							document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 2029 00:00:00 UTC; path=/;";	
-							if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
-								$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").hide();
-							}
-							$j(".pnfpb_pwa_shortcode_box").hide();
-							deferredPrompt = null;
-						
-						}
-					   	else {
-						   console.log(__('User did not accept PWA installation. No thanks, I am good!','PNFPB_TD'));
-							const d = new Date();
-							d.setTime(d.getTime() + (5*24*60*60*1000));
-							let expires = "expires="+ d.toUTCString();
-							document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";						
-							deferredPrompt = null;
-							location.reload();
-							if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {						
-								$( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
-							}
-							$j(".pnfpb_pwa_shortcode_box").show();
-						}
-					})
-				
-				}
-				else 
-				{
-					$j( "#pnfpb-pwa-dialog-ios" ).dialog({
-						autoOpen: true,
-						resizable: false,
-						closeText : '',
-						open: function(event, ui) {
-						},			
-						height: "auto",
-						width: 350,
-						modal: true,
-						buttons: [
-						{
-							text: 'Ok',
-							open: function() {
-								$j(this).attr('style','font-weight:bold;color:white;background-color:blue;border:0px');
-							},
-							click: function() {			
-								$j( this ).dialog( "close" );
-							}
-						}
-						]	
-					})				
-				}
-			})	
-  		}
-	}
- 
 
 	window.addEventListener('appinstalled', function(evt){
-		document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		$j( "#pnfpb-pwa-dialog-app-installed" ).dialog({
 			autoOpen: true,
 			resizable: false,
@@ -4050,22 +3916,6 @@ async function requestPermission(registration) {
 		})
 	});	
 
-function getCookie(cname) {
-  console.log(cname);
-  let name = cname + "=";
-  let ca = document.cookie.split(';');
-  for(let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-		console.log(name);
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
 
 }
 

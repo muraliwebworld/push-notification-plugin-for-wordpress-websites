@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 5.0
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable tag: 1.66
+Stable tag: 1.68
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -272,6 +272,42 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.68 version 13 September 2023 changes =
+New feature: Admin notification list tab - New submenu added to filter notification list, following are menu added,
+	All - To show all ondemand/onetime/recurring notification list
+	On demand - To show on demand notification list without schedule
+	One time - To show one time/single schedule notification list
+	Recurring - To show all recurring scheduled notification list
+	Completed - To get all completed schedule notification list
+	Draft - To get all draft notification list using duplicate action. These notifications can be scheduled/sent in future date/time.
+	Pending - To get all pending recurring notification list scheduled for future date.
+Update: Admin one time Notification list status field updated with more relavent details with next scheduled date for recurring notification.
+Update: Admin one time Notification list duplicate action logic is updated to create draft with date and time fields.
+Update: While re-sending duplicated notification, it will use same draft id.
+Update: After deleting notification in one time notification, logic updated to delete action scheduler entries also.
+Bug fix: Shortcode to install PWA problem is resolved.
+Bug fix: On demand legacy push notification title problem resolved
+Update: Language related changes for hardcoded text.
+Bug fix: httpv1 firebase latest version notification logic updated for private messages/friendship request/accept.
+= 1.67 version 12 September 2023 changes =
+New feature: Admin notification list tab - New submenu added to filter notification list, following are menu added,
+	All - To show all ondemand/onetime/recurring notification list
+	On demand - To show on demand notification list without schedule
+	One time - To show one time/single schedule notification list
+	Recurring - To show all recurring scheduled notification list
+	Completed - To get all completed schedule notification list
+	Draft - To get all draft notification list using duplicate action. These notifications can be scheduled/sent in future date/time.
+	Pending - To get all pending recurring notification list scheduled for future date.
+Update: Admin one time Notification list status field updated with more relavent details with next scheduled date for recurring notification.
+Update: Admin one time Notification list duplicate action logic is updated to create draft with date and time fields.
+Update: While re-sending duplicated notification, it will use same draft id.
+Update: After deleting notification in one time notification, logic updated to delete action scheduler entries also.
+Bug fix: Shortcode to install PWA problem is resolved.
+Bug fix: On demand legacy push notification title problem resolved
+Update: Language related changes for hardcoded text.
+Bug fix: httpv1 firebase latest version notification logic updated for private messages/friendship request/accept.
+= 1.66 version 29 August 2023 changes =
+Bug fix: To fix push notification problems related to multiple devices for same user id in friendship request, friendship accepted, private messages.
 = 1.66 version 29 August 2023 changes =
 Bug fix: To fix push notification problems related to multiple devices for same user id in friendship request, friendship accepted, private messages.
 = 1.65 version 27 August 2023 changes =
@@ -586,6 +622,22 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* New feature: Admin notification list tab - New submenu added to filter notification list, following are menu added,
+	All - To show all ondemand/onetime/recurring notification list
+	On demand - To show on demand notification list without schedule
+	One time - To show one time/single schedule notification list
+	Recurring - To show all recurring scheduled notification list
+	Completed - To get all completed schedule notification list
+	Draft - To get all draft notification list using duplicate action. These notifications can be scheduled/sent in future date/time.
+	Pending - To get all pending recurring notification list scheduled for future date.
+* Update: Admin one time Notification list status field updated with more relavent details with next scheduled date for recurring notification.
+* Update: Admin one time Notification list duplicate action logic is updated to create draft with date and time fields.
+* Update: While re-sending duplicated notification, it will use same draft id.
+* Update: After deleting notification in one time notification, logic updated to delete action scheduler entries also.
+* Bug fix: Shortcode to install PWA problem is resolved.
+* Bug fix: On demand legacy push notification title problem resolved
+* Update: Language related changes for hardcoded text.
+* Bug fix: httpv1 firebase latest version notification logic updated for private messages/friendship request/accept.
 * Bug fix: To fix push notification problems related to multiple devices for same user id in friendship request, friendship accepted, private messages.
 * Update: Modified custom prompt toggle between subscribe/unsubscribe notifications.
 * Update: Security fix to secure Firebase credentials in ajax routines.

@@ -18,7 +18,6 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 			'ajax'     => false //does this table support ajax?
 		] );
 		
-		//add_filter('manage_pnfpb-push-notification_page_pnfpb_icfm_onetime_notifications_list_columns', array($this,  $this->pre_name .'push_notifications_list_add_column'));
 
 	}
 
@@ -31,21 +30,53 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 	 *
 	 * @return mixed
 	 */
-	public static function get_pushnotifications( $per_page = 20, $page_number = 1, $search='' ) {
+	public static function get_pushnotifications( $per_page = 20, $page_number = 1, $search='',$schedule_type='',$schedule_status='' ) {
 
 		global $wpdb;
-
-		if ( !empty($search) && is_numeric($search) ) {
+		
+		if ( !empty($search) && is_numeric($search) && $schedule_type === '' ) {
 			$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications WHERE title = {$search} OR content LIKE '%{$search}%'";
 		}
 		else 
 		{
-			if ( !empty($search) && !is_numeric($search) ) {
+			if ( !empty($search) && !is_numeric($search)  && $schedule_type === '') {
 				$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications WHERE title LIKE '%{$search}%' OR content LIKE '%{$search}%'";				
 			}
 			else 
 			{
-				$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications";
+				if ($schedule_type != '' && $search != '') {
+					
+					$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications WHERE scheduled_type LIKE '%{$schedule_type}%' OR title LIKE '%{$search}%' OR content LIKE '%{$search}%'";
+					
+				}
+				else {
+					
+					if ($schedule_type != '' && $search === '') {
+						
+						$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications WHERE scheduled_type LIKE '%{$schedule_type}%'";
+						
+					} else {
+						
+						if ($schedule_status != '') {
+						
+							if ($schedule_status === 'complete') {
+								
+								$sql = "SELECT {$wpdb->prefix}pnfpb_ic_schedule_push_notifications.id,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.action_scheduler_id,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.title,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.content,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.image_url,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.click_url,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.scheduled_timestamp,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.scheduled_type,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.status FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$wpdb->prefix}pnfpb_ic_schedule_push_notifications.action_scheduler_id,',',{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.id, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%{$schedule_status}%' AND NOT EXISTS (SELECT * FROM {$wpdb->prefix}actionscheduler_actions
+                    WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$wpdb->prefix}pnfpb_ic_schedule_push_notifications.action_scheduler_id,',',{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.id, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%pending%' ) ";
+							}
+							else {
+								
+								$sql = "SELECT {$wpdb->prefix}pnfpb_ic_schedule_push_notifications.id,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.action_scheduler_id,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.title,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.content,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.image_url,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.click_url,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.scheduled_timestamp,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.scheduled_type,{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.status FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$wpdb->prefix}pnfpb_ic_schedule_push_notifications.action_scheduler_id,',',{$wpdb->prefix}pnfpb_ic_schedule_push_notifications.id, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%{$schedule_status}%'";								
+							}
+							
+						} else {
+						
+							$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications";
+						}
+						
+					}
+				}
+				
 			}
 		}
 
@@ -96,7 +127,6 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 		$selected_recurring_schedule_formatted_notification_db = strtotime($pnfpb_selected_datetime_notification_cancel->format('Y-m-d H:i:s'));
 		
 		if ($onetime_push_action_scheduler_id != NULL) {
-			//as_unschedule_all_actions( $hook, $args, $group )
 			as_unschedule_all_actions( 'PNFPB_ondemand_schedule_push_notification_hook', array( $selected_recurring_schedule_formatted_notification_db,$id,'recurring',$onetime_push_status ) );						
 		}
 		
@@ -149,12 +179,199 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 				return $item[ $column_name ];
 			case 'scheduled_timestamp':
 				return date('Y/m/d H:i:s',$item[ $column_name ]);
+			case 'scheduled_type':
 			case 'status':
 			case 'action':
 				return $item[ $column_name ];
 			default:
 				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
 		}
+	}
+		
+	function column_scheduled_type ( $item ) {
+		
+		$scheduled_type = $item['scheduled_type'];
+		
+		if ($item['scheduled_type'] === 'onetime') {
+			
+			$scheduled_type = 'On demand';
+			
+		}
+		
+		if ($item['scheduled_type'] === 'single') {
+			
+			$scheduled_type = 'One time schedule';
+			
+		}
+		
+		if ($item['scheduled_type'] === 'recurring') {
+			
+			$scheduled_type = 'Recurring schedule';
+			
+		}
+		
+		return $scheduled_type;
+	}
+		
+	function column_scheduled_timestamp ( $item ) {
+		
+		global $wpdb;
+				
+		$pnfpb_selected_datetime_ondemand = new DateTime();
+				
+		$pnfpb_selected_datetime_ondemand->setTimestamp($item['scheduled_timestamp']);
+		
+		$pnfpb_selected_datetime_ondemand->setTimezone(new DateTimeZone(wp_timezone_string()));
+					
+		$recurring_status = $pnfpb_selected_datetime_ondemand->format('Y-m-d H:i:s').__('<br/>(Local time)','PNFPB_TD');
+		
+		if (strtolower($item['status']) !== 'draft' && $item['status'] !== 'sent' && $item['scheduled_type'] !== 'onetime' && $item['scheduled_type'] !== NULL ) {
+		
+			try {
+				
+				if ($item['scheduled_type'] !== 'recurring') {
+					$pnfpb_selected_datetime_onetime = new DateTime();
+				
+					$pnfpb_selected_datetime_onetime->setTimestamp($item['action_scheduler_id']);
+		
+					$pnfpb_selected_datetime_onetime->setTimezone(new DateTimeZone(wp_timezone_string()));
+					
+					$recurring_status = 'In Queue, scheduled for <br/>'.$pnfpb_selected_datetime_onetime->format('Y-m-d H:i:s').__('<br/>(Local time)','PNFPB_TD');
+				}
+				else {
+					$recurring_status = 'In Queue';					
+				}
+
+				$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%complete%'";
+				
+				$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+				$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+
+				$sql .= " LIMIT 1";
+
+				$result = $wpdb->get_results( $sql, 'ARRAY_A' );
+				
+				if (count($result) > 0  && isset($result[0]['scheduled_date_gmt'])) {
+					
+					$pnfpb_selected_datetime = new DateTime($result[0]['scheduled_date_gmt'],new DateTimeZone("UTC"));			
+		
+					$pnfpb_selected_datetime->setTimezone(new DateTimeZone(wp_timezone_string()));					
+					
+					$recurring_status = $pnfpb_selected_datetime->format('Y-m-d H:i:s').__('<br/>(Local time)','PNFPB_TD');
+					
+				}
+
+			} catch ( Exception $e ) {
+			
+				error_log(serialize($e));
+			
+			}
+		}
+		return $recurring_status;
+			
+	}
+	
+		
+	function column_status ( $item ) {
+		
+		global $wpdb;
+		
+		$recurring_status = $item['status'];
+		
+		if ($item['scheduled_type'] === 'recurring') {
+		
+			try {
+				
+				$recurring_status = 'In Queue';
+				
+				$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%pending%'";
+				
+				$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+				$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+
+				$sql .= " LIMIT 1";
+
+				$result = $wpdb->get_results( $sql, 'ARRAY_A' );
+				
+			
+				if (count($result) > 0 && isset($result[0]['scheduled_date_gmt'])) {
+					
+					$pnfpb_selected_datetime = new DateTime($result[0]['scheduled_date_gmt'],new DateTimeZone("UTC"));	
+				
+					$pnfpb_selected_datetime->setTimezone(new DateTimeZone(wp_timezone_string()));
+					
+					$recurring_status = __('Scheduled.<br/>Next run is on ','PNFPB_TD').$pnfpb_selected_datetime->format('Y/m/d H:i:s').__('<br/>(Local time)','PNFPB_TD').$item['status'];					
+				
+				} else {
+					
+					$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%complete%'";
+				
+					$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+					$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+
+					$sql .= " LIMIT 1";
+
+					$result = $wpdb->get_results( $sql, 'ARRAY_A' );
+				
+					if (count($result) > 0  && isset($result[0]['scheduled_date_gmt'])) {
+					
+						$pnfpb_selected_datetime = new DateTime($result[0]['scheduled_date_gmt'],new DateTimeZone("UTC"));	
+				
+						$pnfpb_selected_datetime->setTimezone(new DateTimeZone(wp_timezone_string()));					
+					
+						$recurring_status = __('Finished on <br/>','PNFPB_TD').$pnfpb_selected_datetime->format('Y-m-d H:i:s');
+					
+				} else {
+					$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%failed%'";
+				
+					$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+					$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+
+					$sql .= " LIMIT 1";
+
+					$result = $wpdb->get_results( $sql, 'ARRAY_A' );
+				
+					if (count($result) > 0  && isset($result[0]['scheduled_date_gmt'])) {
+					
+						$pnfpb_selected_datetime = new DateTime($result[0]['scheduled_date_gmt'],new DateTimeZone("UTC"));	
+				
+						$pnfpb_selected_datetime->setTimezone(new DateTimeZone(wp_timezone_string()));					
+					
+						$recurring_status = __('Failed on <br/>','PNFPB_TD').$pnfpb_selected_datetime->format('Y-m-d H:i:s');
+						
+					} else {
+						$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%running%'";
+				
+						$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+						$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+
+						$sql .= " LIMIT 1";
+
+						$result = $wpdb->get_results( $sql, 'ARRAY_A' );
+				
+						if (count($result) > 0  && isset($result[0]['scheduled_date_gmt'])) {
+					
+ 							$pnfpb_selected_datetime = new DateTime($result[0]['scheduled_date_gmt'],new DateTimeZone("UTC"));	
+		
+							$pnfpb_selected_datetime->setTimezone(new DateTimeZone(wp_timezone_string()));					
+					
+							$recurring_status = __('In Queue - scheduled on <br/>','PNFPB_TD').$pnfpb_selected_datetime->format('Y-m-d H:i:s');
+						
+						}							
+					}				
+					
+				}
+			}				
+				
+		
+			} catch ( Exception $e ) {
+			
+				error_log(serialize($e));
+			
+			}
+		}
+		return $recurring_status;
+			
 	}
 
 	/**
@@ -183,14 +400,14 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 		$delete_nonce = wp_create_nonce( 'pnfpb_delete_pushnotification' );
 		if ($item['action_scheduler_id'] != NULL) {
 			$actions = [
-				'edit' => sprintf('<a href="?page=%s&action=%s&pushnotificationid=%s">%s</a>','pnfpb_icfmtest_notification','edit', absint( $item['id'] ), __('Edit/Resend', 'PNFPB_TD')),
+				'edit' => sprintf('<a href="?page=%s&status=%s&action=%s&pushnotificationid=%s">%s</a>','pnfpb_icfmtest_notification',$item['status'],'edit', absint( $item['id'] ), __('Edit/Resend', 'PNFPB_TD')),
 				'delete' => sprintf( '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">%s</a><br /><br />','pnfpb_icfm_onetime_notifications_list', 'delete', absint( $item['id'] ), $delete_nonce,__('Delete', 'PNFPB_TD') ),
 				'duplicate' => sprintf( '<a href="?page=%s&action=%s&pushnotificationid=%s&orderby=id&order=desc">%s</a><br /><br />','pnfpb_icfm_onetime_notifications_list', 'duplicate', absint( $item['id'] ),__('Duplicate', 'PNFPB_TD') ),
 				'cancel' => sprintf( '<a href="?page=pnfpb_icfm_action_scheduler&status=pending&action=-1&action2=-1&s=%d&paged=1">%s</a>',absint( $item['action_scheduler_id'] ) ,__('More actions...', 'PNFPB_TD')	)		
 			];
 		} else {
 			$actions = [
-				'edit' => sprintf('<a href="?page=%s&action=%s&pushnotificationid=%s">%s</a>','pnfpb_icfmtest_notification','edit', absint( $item['id'] ), __('Edit/Resend', 'PNFPB_TD')),
+				'edit' => sprintf('<a href="?page=%s&status=%s&action=%s&pushnotificationid=%s">%s</a>','pnfpb_icfmtest_notification',$item['status'],'edit', absint( $item['id'] ), __('Edit/Resend', 'PNFPB_TD')),
 				'delete' => sprintf( '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">%s</a>','pnfpb_icfm_onetime_notifications_list', 'delete', absint( $item['id'] ), $delete_nonce,__('Delete', 'PNFPB_TD') ),
 				'duplicate' => sprintf( '<a href="?page=%s&action=%s&pushnotificationid=%s&orderby=id&order=desc">%s</a><br /><br />','pnfpb_icfm_onetime_notifications_list', 'duplicate', absint( $item['id'] ),__('Duplicate', 'PNFPB_TD') )
 			];			
@@ -221,18 +438,7 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 			'delete' => sprintf( '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">Delete</a>','pnfpb_icfm_onetime_notifications_list', 'delete', absint( $item['id'] ), $delete_nonce )
 		];
 		
-        // links going to /admin.php?page=[your_plugin_page][&other_params]
-        // notice how we used $_REQUEST['page'], so action will be done on curren page
-        // also notice how we use $this->_args['singular'] so in this example it will
-        // be something like &dathangnhanh=2
-        //$actions = array(
-        //    'edit' => sprintf('<a href="?page=persons_form&id=%s">%s</a>', $item['id'], __('Edit', 'cltd_example')),
-        //    'delete' => sprintf('<a href="?page=%s&action=delete&id=%s">%s</a>', $_REQUEST['page'], $item['id'], __('Delete', 'cltd_example')),
-        //);
-        //return sprintf('%s %s',
-         //   $item['madonhang'],
-        //    $this->row_actions($actions)
-        //);		
+	
 
 		return $title . $this->row_actions( $actions );
 	}
@@ -251,7 +457,8 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 			'content'    => __( 'Content', 'PNFPB_TD' ),
 			'image_url' => __('Image url','PNFPB_TD'),
 			'click_url' => __('Click url','PNFPB_TD'),
-			'scheduled_timestamp' => __('Date & Time<br />(Current run<br/>/Scheduled)','PNFPB_TD'),
+			'scheduled_timestamp' => __('Current run<br/>date & time','PNFPB_TD'),
+			'scheduled_type' => __('Schedule type','PNFPB_TD'),
 			'status' => __('Status','PNFPB_TD'),
 			'action' => __('Action','PNFPB_TD')
 		];
@@ -273,7 +480,7 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 			'image_url' => array( 'image_url', true ),
 			'click_url' => array( 'click_url', true ),
 			'scheduled_timestamp' => array( 'scheduled_timestamp', true ),
-			'status' => array( 'status', true ),
+			'scheduled_type'  => array( 'scheduled_type', true )
 		);
 
 		return $sortable_columns;
@@ -316,9 +523,9 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 		
 		//$_SERVER['REQUEST_URI'] = remove_query_arg( '_wp_http_referer', $_SERVER['REQUEST_URI'] );
 
-		if ( isset($_REQUEST['s']) ) {
-			$this->items = self::get_pushnotifications( $per_page, $current_page, $_REQUEST['s'] );
-			$total_items_search = self::get_pushnotifications( 0, $current_page, $_REQUEST['s'] );
+		if ( isset($_REQUEST['s']) && !isset($_REQUEST['scheduled_type']) ) {
+			$this->items = self::get_pushnotifications( $per_page, $current_page, $_REQUEST['s'],'' );
+			$total_items_search = self::get_pushnotifications( 0, $current_page, $_REQUEST['s'], '' );
 			$this->set_pagination_args( [
 				'total_items' => count($total_items_search), //WE have to calculate the total number of items
 				'per_page'    => $per_page //WE have to determine how many items to show on a page
@@ -326,11 +533,40 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 		}
 		else 
 		{
-			$this->items = self::get_pushnotifications( $per_page, $current_page, '' );
-			$this->set_pagination_args( [
-				'total_items' => $total_items, //WE have to calculate the total number of items
-				'per_page'    => $per_page //WE have to determine how many items to show on a page
-			] );			
+			if ( isset($_REQUEST['scheduled_type']) ) {
+				if (isset($_REQUEST['s'])) {
+					$this->items = self::get_pushnotifications( $per_page, $current_page, $_REQUEST['s'],$_REQUEST['scheduled_type'] );
+					$total_items_search = self::get_pushnotifications( 0, $current_page, $_REQUEST['s'],$_REQUEST['scheduled_type'] );
+					$this->set_pagination_args( [
+						'total_items' => count($total_items_search), //WE have to calculate the total number of items
+						'per_page'    => $per_page //WE have to determine how many items to show on a page
+					] );
+				}
+				else {
+					$this->items = self::get_pushnotifications( $per_page, $current_page, '',$_REQUEST['scheduled_type'] );
+					$total_items_search = self::get_pushnotifications( 0, $current_page, '', $_REQUEST['scheduled_type'] );
+					$this->set_pagination_args( [
+						'total_items' => count($total_items_search), //WE have to calculate the total number of items
+						'per_page'    => $per_page //WE have to determine how many items to show on a page
+					] );					
+				}
+			}
+			else {
+				if ( isset($_REQUEST['scheduled_status']) ) {
+					$this->items = self::get_pushnotifications( $per_page, $current_page, '','',$_REQUEST['scheduled_status'] );
+					$total_items_search = self::get_pushnotifications( 0, $current_page, '', '',$_REQUEST['scheduled_status'] );
+					$this->set_pagination_args( [
+						'total_items' => count($total_items_search), //WE have to calculate the total number of items
+						'per_page'    => $per_page //WE have to determine how many items to show on a page
+					] );					
+				} else {
+					$this->items = self::get_pushnotifications( $per_page, $current_page, '','' );
+					$this->set_pagination_args( [
+						'total_items' => $total_items, //WE have to calculate the total number of items
+						'per_page'    => $per_page //WE have to determine how many items to show on a page
+					] );
+				}
+			}
 		}
 		
 		
@@ -345,7 +581,6 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 	}
 		
 	public function pnfpb_url_scheme( string $url, string $scheme, $orig_scheme ) {
-		//print_r($_REQUEST);
     	if ( ! empty( $url ) && mb_strpos( $url, '?page=pnfpb_icfm_push_notifications_list' ) !== false && isset( $_REQUEST['s'] ) ) {
         	$url = add_query_arg( 's', urlencode( $_REQUEST['s'] ), $url );
     	}
@@ -371,16 +606,29 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 				$notifications = $wpdb->get_results("SELECT * FROM {$notification_table_name} WHERE `id` = {$_REQUEST['pushnotificationid']} ");
 				
 				if (count($notifications) > 0) {
+					
 					foreach ( $notifications as $notification ){
+						
 						$onetime_push_id = $notification->id;
 						$onetime_push_action_scheduler_id = $notification->action_scheduler_id;
 						$onetime_push_title = $notification->title;
 						$onetime_push_content = $notification->content;
 						$onetime_push_imageurl = $notification->image_url;
 						$onetime_push_clickurl = $notification->click_url;
+						$onetime_scheduled_type = $notification->scheduled_type;
 						$onetime_push_timestamp = $notification->scheduled_timestamp;
 						$onetime_push_status = $notification->status;
-					}				
+						
+					}
+					
+					$occurence = 'recurring';
+					
+					if ($onetime_scheduled_type === 'single') {
+						
+						$occurence = 'Onetime scheduled';
+					}
+					
+					as_unschedule_all_actions( 'PNFPB_ondemand_schedule_push_notification_hook', array( $onetime_push_action_scheduler_id,$onetime_push_id,$occurence,$onetime_push_status ) );					
 
 					self::delete_pushnotification( absint( $_REQUEST['pushnotificationid'] ),$onetime_push_action_scheduler_id,$onetime_push_timestamp,$onetime_push_status );
 				}
@@ -396,6 +644,10 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 					
 			$notifications = $wpdb->get_results("SELECT * FROM {$notification_table_name} WHERE `id` = {$_REQUEST['pushnotificationid']} ");
 			
+			$onetime_recurring_day_number = NULL;
+			$onetime_recurring_month_number = NULL;
+			$onetime_recurring_day_name  = NULL;
+			
 			if (count($notifications) > 0) {
 				foreach ( $notifications as $notification ){
 					$onetime_push_id = $notification->id;
@@ -405,6 +657,17 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 					$onetime_push_imageurl = $notification->image_url;
 					$onetime_push_clickurl = $notification->click_url;
 					$onetime_push_timestamp = $notification->scheduled_timestamp;
+					if ($notification->recurring_day_number != NULL) {
+						$onetime_recurring_day_number = $notification->recurring_day_number;
+					}
+							
+					if ($notification->recurring_month_number != NULL) {
+						$onetime_recurring_month_number = $notification->recurring_month_number;
+					}
+							
+					if ($notification->recurring_day_name != NULL) {
+						$onetime_recurring_day_name = $notification->recurring_day_name;
+					}					
 					$onetime_push_status = $notification->status;
 				}				
 
@@ -417,28 +680,31 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 				
 				$data = array('userid' => $bpuserid,
 								'action_scheduler_id' => NULL,
-							  'title' => $notification->title,
-							  'content' => $notification->content,
-							  'image_url' => $notification->image_url,
-							  'click_url' => $notification->click_url,
-							  'scheduled_timestamp' => $notification->scheduled_timestamp,
-								'status'	=> 'draft'
+								'title' => $onetime_push_title,
+							 	'content' => $onetime_push_content,
+							 	'image_url' => $onetime_push_imageurl,
+							 	'click_url' => $onetime_push_clickurl,
+							 	'scheduled_timestamp' => $onetime_push_timestamp,
+								'recurring_day_number' => $onetime_recurring_day_number,
+								'recurring_month_number'=> $onetime_recurring_month_number,
+								'recurring_day_name'=> $onetime_recurring_day_name,							  	
+							 	'status'	=> __('Draft', 'PNFPB_TD')
 							 );
 				$insertstatus = $wpdb->insert($notification_table_name,$data);
 			}			
 		
-	}		
+		}		
 		
 		if ( 'cancel' === $this->current_action() ) {
 
 
 			
 			$selected_day_push_notification_cancel = date('Y/m/d H:i:s',$notification->scheduled_timestamp);
-			//print_r($selected_day_push_notification_cancel);
+
 			$pnfpb_selected_datetime_notification_cancel = new DateTime($selected_day_push_notification_cancel, new DateTimeZone(wp_timezone_string()));
-			//print_r($pnfpb_selected_datetime_notification_cancel);
+
 			$pnfpb_selected_datetime_notification_cancel = $pnfpb_selected_datetime_notification_cancel->setTimezone(new DateTimeZone("UTC"));
-			//print_r($pnfpb_selected_datetime_notification_cancel);	
+	
 			$selected_recurring_schedule_formatted_notification_db = strtotime($pnfpb_selected_datetime_notification_cancel->format('Y-m-d H:i:s'));
 			as_unschedule_all_actions( 'PNFPB_ondemand_schedule_push_notification_hook', array( $selected_recurring_schedule_formatted_notification_db,$onetime_push_id,'recurring',$notification->status ) );
 			
@@ -481,10 +747,7 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 				}
 			}
 
-			// esc_url_raw() is used to prevent converting ampersand in url to "#038;"
-		    // add_query_arg() return the current url
-		    //wp_redirect( esc_url_raw(add_query_arg()) );
-			//exit;
+
 		}
 	}
 

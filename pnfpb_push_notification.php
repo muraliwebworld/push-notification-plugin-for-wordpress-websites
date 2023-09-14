@@ -2,12 +2,12 @@
 /*
 Plugin Name: Push Notification for Post and BuddyPress
 Plugin URI: https://www.muraliwebworld.com/groups/wordpress-plugins-by-muralidharan-indiacitys-com-technologies/forum/topic/push-notification-for-post-and-buddypress/
-Description: Push notification for Post,custom post,BuddyPress,Woocommerce,mobile apps. Configure push notification settings in <a href="admin.php?page=pnfpb-icfcm-slug"><strong>settings page</strong></a>
-Version: 1.66
+Description: Push notification for Post,custom post,BuddyPress,Woocommerce,Android/IOS mobile apps. Configure push notification settings in <a href="admin.php?page=pnfpb-icfcm-slug"><strong>settings page</strong></a>
+Version: 1.68
 Author: Muralidharan Ramasamy
 Author URI: https://www.muraliwebworld.com
 Text Domain: PNFPB_TD
-Updated: 29 August 2023
+Updated: 12 September 2023
 */
 /**
  * License: GPLv2 or later
@@ -234,8 +234,8 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				add_action( 'groups_group_details_edited', array( $this, $this->pre_name .'buddypress_group_details_updated_notification' ) );
 				
 
-			}		
-			
+			}
+	
 			//Shortcode to unsubscribe push notification
 			add_shortcode( 'subscribe_PNFPB_push_notification', array($this,  $this->pre_name .'subscribe_push_notification_shortcode') );
 			
@@ -259,6 +259,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 	
 		}
 		
+	
 		/**
 		* 
 		* @since 1.65
@@ -323,6 +324,10 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					image_url VARCHAR(300) NULL DEFAULT NULL,
 					click_url VARCHAR(300) NULL DEFAULT NULL,
 					scheduled_timestamp bigint(20) NULL DEFAULT NULL,
+					scheduled_type varchar(100) NULL  DEFAULT NULL,
+					recurring_day_number varchar(100) NULL  DEFAULT NULL,
+					recurring_month_number varchar(100) NULL  DEFAULT NULL,
+					recurring_day_name varchar(100) NULL  DEFAULT NULL,					
 					status varchar(300) NULL  DEFAULT NULL,
                     PRIMARY KEY (id)
                 ) {$charset_collate};";
@@ -382,6 +387,37 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					
 				}				
 			}
+			
+		
+			$dbname = $wpdb->dbname;
+
+			$pnfpb_table_name = $wpdb->prefix . "pnfpb_ic_schedule_push_notifications";
+			
+			$is_recurring_day_number = $wpdb->get_results(  "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS`    WHERE `table_name` = '{$pnfpb_table_name}' AND `TABLE_SCHEMA` = '{$dbname}' AND `COLUMN_NAME` = 'recurring_day_number'"  );
+			
+			if( empty($is_recurring_day_number) ) {
+
+				$add_recurring_columns = "ALTER TABLE `{$pnfpb_table_name}` 
+						ADD `recurring_day_number` VARCHAR(100)  NULL DEFAULT NULL,
+						ADD `recurring_month_number` VARCHAR(100)  NULL DEFAULT NULL,
+						ADD `recurring_day_name` VARCHAR(100)  NULL DEFAULT NULL;";
+					
+				$wpdb->query( $add_recurring_columns );
+				
+				
+			}
+			
+			$is_scheduled_type = $wpdb->get_results(  "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS`    WHERE `table_name` = '{$pnfpb_table_name}' AND `TABLE_SCHEMA` = '{$dbname}' AND `COLUMN_NAME` = 'scheduled_type'"  );
+			
+			if( empty($is_scheduled_type) ) {
+
+				$add_scheduled_type = "ALTER TABLE `{$pnfpb_table_name}` 
+						ADD `scheduled_type` VARCHAR(100)  NULL DEFAULT NULL;";
+					
+				$wpdb->query( $add_scheduled_type );
+				
+			}			
+			
 		}
 		
 
@@ -428,6 +464,10 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					image_url VARCHAR(300) NULL DEFAULT NULL,
 					click_url VARCHAR(300) NULL DEFAULT NULL,
 					scheduled_timestamp bigint(20) NULL DEFAULT NULL,
+					scheduled_type varchar(100) NULL  DEFAULT NULL,
+					recurring_day_number varchar(100) NULL  DEFAULT NULL,
+					recurring_month_number varchar(100) NULL  DEFAULT NULL,
+					recurring_day_name varchar(100) NULL  DEFAULT NULL,
 					status varchar(300) NULL  DEFAULT NULL,
 					firebase_version VARCHAR(100) DEFAULT 'L',
                     PRIMARY KEY (id)
@@ -834,7 +874,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 
 				$filename = '/build/pnfpb_push_notification/index.js';
 				$ajaxobject = 'pnfpb_ajax_object_push';
-				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.65.111',true);
+				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.67.1',true);
 				wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'groupId' => '9','group_unsubscribe_dialog_text_confirm' => $group_unsubscribe_dialog_text_confirm, 'group_subscribe_dialog_text_confirm' => $group_subscribe_dialog_text_confirm, 'group_unsubscribe_dialog_text' => $group_unsubscribe_dialog_text, 'group_subscribe_dialog_text' => $group_subscribe_dialog_text, 'homeurl' => $homeurl, 'pwaapponlyenable' => '0', 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwainstallpromptenabled' => $pwainstallpromptenabled,  'pwacustominstalltype' => $pwacustominstalltype,'unsubscribe_dialog_text_confirm' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text_confirm' => $subscribe_dialog_text_confirm,'unsubscribe_button_text' => $unsubscribe_button_text_shortcode, 'subscribe_button_text' => $subscribe_button_text_shortcode, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color, 'cancel_button_text' => $cancel_button_text, 'save_button_text' => $save_button_text, 'unsubscribe_button_text' => $unsubscribe_button_text, 'subscribe_button_text' => $subscribe_button_text,'isloggedin' => is_user_logged_in(), 'pnfpb_push_prompt' => $pnfpb_push_prompt, 'userid' => get_current_user_id()) );
 				
 				$nonce = wp_create_nonce( 'icpushadmincallback' );
@@ -849,7 +889,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					$pnfpb_push_prompt = get_option('pnfpb_ic_fcm_push_prompt_enable');
 					$filename = '/build/pnfpb_push_notification/index.js';
 					$ajaxobject = 'pnfpb_ajax_object_push';
-					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.65.111',true);
+					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.67.1',true);
 					wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'homeurl' => $homeurl, 'pwaapponlyenable' => $pwaappenable, 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwacustominstalltype' => $pwacustominstalltype,  'pwainstallpromptenabled' => $pwainstallpromptenabled, 'pnfpb_push_prompt'=> $pnfpb_push_prompt) );					
 				}
 			}
@@ -1035,7 +1075,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 
 				$filename = '/build/pnfpb_push_notification/index.js';
 				$ajaxobject = 'pnfpb_ajax_object_push';
-				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ),array(),'1.65.111',true);
+				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ),array(),'1.67.1',true);
 				wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'groupId' => '9','group_unsubscribe_dialog_text_confirm' => $group_unsubscribe_dialog_text_confirm, 'group_subscribe_dialog_text_confirm' => $group_subscribe_dialog_text_confirm, 'group_unsubscribe_dialog_text' => $group_unsubscribe_dialog_text, 'group_subscribe_dialog_text' => $group_subscribe_dialog_text, 'homeurl' => $homeurl, 'pwaapponlyenable' => '0', 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwainstallpromptenabled' => $pwainstallpromptenabled,  'pwacustominstalltype' => $pwacustominstalltype,'unsubscribe_dialog_text_confirm' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text_confirm' => $subscribe_dialog_text_confirm,'unsubscribe_button_text' => $unsubscribe_button_text_shortcode, 'subscribe_button_text' => $subscribe_button_text_shortcode, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color, 'cancel_button_text' => $cancel_button_text, 'save_button_text' => $save_button_text, 'unsubscribe_button_text' => $unsubscribe_button_text, 'subscribe_button_text' => $subscribe_button_text,'isloggedin' => is_user_logged_in(), 'pnfpb_push_prompt' => $pnfpb_push_prompt, 'userid' => get_current_user_id()) );
 				
 				
@@ -1046,7 +1086,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					$pnfpb_push_prompt = get_option('pnfpb_ic_fcm_push_prompt_enable');
 					$filename = '/build/pnfpb_push_notification/index.js';
 					$ajaxobject = 'pnfpb_ajax_object_push';
-					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.65.111',true);
+					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.67.1',true);
 					wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'homeurl' => $homeurl, 'pwaapponlyenable' => $pwaappenable, 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwacustominstalltype' => $pwacustominstalltype,  'pwainstallpromptenabled' => $pwainstallpromptenabled, 'pnfpb_push_prompt'=> $pnfpb_push_prompt) );						
 					
 					
@@ -1474,7 +1514,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 						else 
 						{
 							$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($onetime_push_title.'test')),
+																			stripslashes(strip_tags($onetime_push_title)),
 																			stripslashes(strip_tags($onetime_push_content)),
 																			$onetime_push_imageurl,
 																			$onetime_push_imageurl,
@@ -1510,19 +1550,70 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			}
 			
 			
-				$table = $table = $wpdb->prefix.'pnfpb_ic_schedule_push_notifications';
+			$table = $table = $wpdb->prefix.'pnfpb_ic_schedule_push_notifications';
 
-
-				$selected_day_push_notification_current = date('Y/m/d H:i:s');
-				$pnfpb_selected_datetime_notification_current = new DateTime($selected_day_push_notification_current, new DateTimeZone("UTC"));
-				$pnfpb_selected_datetime_notification_current = $pnfpb_selected_datetime_notification_current->setTimezone(new DateTimeZone(wp_timezone_string()));
-				$selected_recurring_schedule_formatted_notification_current = strtotime($pnfpb_selected_datetime_notification_current->format('Y-m-d H:i:s'));			
-
-			if ($occurence === 'recurring') {		
-				$onetime_push_update_status = $wpdb->query("UPDATE {$table} SET scheduled_timestamp = {$selected_recurring_schedule_formatted_notification_current},status = '{$selected_recurring_status}' WHERE id = {$notification_id}") ;
+		
+			if ($occurence === 'recurring') {
+				
+				
+				$recurring_status = $selected_recurring_status;
+				
+				try {
+					
+				
+					$future_action_id = ActionScheduler::store()->query_action( [
+    					'hook'   => 'PNFPB_ondemand_schedule_push_notification_hook',
+						'date' => $scheduled_day_push_notification,
+						'date_compare' => '=',
+						'status' => array( ActionScheduler_Store::STATUS_RUNNING, ActionScheduler_Store::STATUS_PENDING ),
+					] );
+					
+					if ( !$future_action_id ) {
+						
+						$datetime = new DateTime();
+						$datetime->setTimestamp($scheduled_day_push_notification);
+						$datetime->setTimezone(new DateTimeZone(wp_timezone_string()));	
+    					$recurring_status = __('Finished on ','PNFPB_TD').$datetime->format('Y-m-d H:i:s');
+						
+					} else {
+						
+							$action         = ActionScheduler::store()->fetch_action( $future_action_id );
+							$scheduled_date = $action->get_schedule()->get_date();
+							$scheduled_date->setTimezone(new DateTimeZone(wp_timezone_string()));
+							if ( $scheduled_date ) {
+								$recurring_status = '<br/>'.$selected_recurring_status;
+							} elseif ( null === $scheduled_date ) { // pending async action with NullSchedule.
+								error_log('null');
+							}
+						
+					}
+					
+				} catch ( Exception $e ) {
+					error_log(serialize($e));
+				}
+				
+				$datetime = new DateTime();
+				$datetime->setTimestamp($scheduled_day_push_notification);
+				$datetime->setTimezone(new DateTimeZone(wp_timezone_string()));				
+				$current_run_timestamp = strtotime($datetime->format('Y-m-d H:i:s'));
+				$onetime_push_update_status = $wpdb->query("UPDATE {$table} SET scheduled_timestamp = {$current_run_timestamp},status = '{$recurring_status}' WHERE id = {$notification_id}") ;
+				
 			}
 			else {
-				$onetime_push_update_status = $wpdb->query("UPDATE {$table} SET status = 'sent' WHERE id = {$notification_id}") ;
+				
+				$future_action_id = ActionScheduler::store()->query_action( [
+    					'hook'   => 'PNFPB_ondemand_schedule_push_notification_hook',
+						'date' => $scheduled_day_push_notification,
+						'date_compare' => '=',
+						'status' => array( ActionScheduler_Store::STATUS_RUNNING, ActionScheduler_Store::STATUS_PENDING ),
+				] );
+				
+				$datetime = new DateTime();
+				$datetime->setTimestamp($scheduled_day_push_notification);
+				$datetime->setTimezone(new DateTimeZone(wp_timezone_string()));				
+				$recurring_status = __('Finished on '.$datetime->format('Y/m/d H:i:s'),'PNFPB_TD');
+				$onetime_push_update_status = $wpdb->query("UPDATE {$table} SET status = '{$recurring_status}' WHERE id = {$notification_id}");
+				
 			}
 	
 		}
