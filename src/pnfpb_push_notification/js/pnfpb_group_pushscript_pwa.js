@@ -5,6 +5,7 @@
 //
 import { initializeApp, getApp } from 'firebase/app';
 import { getToken, isSupported, getMessaging } from "firebase/messaging";
+import { __ } from '@wordpress/i18n';
 import $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 
@@ -39,17 +40,18 @@ if (ios_group_pwa) {
   }
 };
 
-const hasFirebaseMessagingSupport_group = await isSupported();
+var firebaseConfig = {};
 
-var firebaseConfig = {
-    apiKey: pnfpb_ajax_object_push.apiKey,
-    authDomain: pnfpb_ajax_object_push.authDomain,
-    databaseURL: pnfpb_ajax_object_push.databaseURL,
-    projectId: pnfpb_ajax_object_push.projectId,
-    storageBucket: pnfpb_ajax_object_push.storageBucket,
-    messagingSenderId: pnfpb_ajax_object_push.messagingSenderId,
-    appId: pnfpb_ajax_object_push.appId
-};
+var firebaseApp;
+			
+var messaging;
+
+var hasFirebaseMessagingSupport_group;
+
+var deviceid = '100000000000';
+
+var vapidKey = '';
+
 
 function createFirebaseApp(config) {
     try {
@@ -59,20 +61,43 @@ function createFirebaseApp(config) {
     }
 }
 
-// Initialize Firebase
-/*if (!firebase.apps.length) {
-   	firebase.initializeApp(firebaseConfig);
-} else {
-   	firebase.app(); // if already initialized, use that one
-}*/
-
-var firebaseApp = createFirebaseApp(firebaseConfig)
-
-var messaging = getMessaging(firebaseApp);
 
 $j(function() {
 	
-		const { __ } = wp.i18n;
+//const { __ } = wp.i18n;
+
+var data = {
+	action: 'icpushcallback',
+	device_id:'',
+	subscriptionoptions:'',
+	pushtype: 'icfirebasecred'
+};
+		
+$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
+		
+	//console.log(responseajax);
+		
+	var firebasecredentialsobject = JSON.parse(responseajax);
+		
+	if (firebasecredentialsobject.apiKey && firebasecredentialsobject.apiKey != '') {
+				
+		firebaseConfig = {
+			apiKey: firebasecredentialsobject.apiKey,
+			authDomain: firebasecredentialsobject.authDomain,
+			databaseURL: firebasecredentialsobject.databaseURL,
+			projectId: firebasecredentialsobject.projectId,
+			storageBucket: firebasecredentialsobject.storageBucket,
+			messagingSenderId: firebasecredentialsobject.messagingSenderId,
+			appId: firebasecredentialsobject.appId
+		};
+		
+		vapidKey = firebasecredentialsobject.publicKey
+		
+		firebaseApp = createFirebaseApp(firebaseConfig)
+					
+		messaging = getMessaging(firebaseApp);
+					
+		hasFirebaseMessagingSupport_group = await isSupported();		
 		
 		if (hasFirebaseMessagingSupport_group) {
 			navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_push.homeurl+'/'}).then(function(registration) {				
@@ -82,7 +107,7 @@ $j(function() {
 					serviceWorkerRegistration.pushManager.getSubscription().then(async function (subscription) {
             		//if (Notification.permission === 'granted') {
 					if (subscription) {
-                        getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:pnfpb_ajax_object_push.publicKey }).then((currentToken) => {
+                        getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then((currentToken) => {
 							if (currentToken) {
 								var deviceid = currentToken;
 								$j(".group-button").on("click",".join-group", function() {
@@ -524,6 +549,6 @@ $j(function() {
  return pnfpb_pushtoken_fromflutter;
 	
 }*/
-	
+}})
 
 });

@@ -1159,3 +1159,7 @@ td.pnfpb_ic_push_settings_table_label_column {
   padding: 7.4px;
   right: 45px;
 }
+
+.pnfpb_subscribe_dialog_confirm_heading_notoken, .pnfpb_subscribe_dialog_confirm_heading_token {
+	font-size: 14px !important;	
+}

@@ -3,11 +3,11 @@
 Plugin Name: Push Notification for Post and BuddyPress
 Plugin URI: https://www.muraliwebworld.com/groups/wordpress-plugins-by-muralidharan-indiacitys-com-technologies/forum/topic/push-notification-for-post-and-buddypress/
 Description: Push notification for Post,custom post,BuddyPress,Woocommerce,Android/IOS mobile apps. Configure push notification settings in <a href="admin.php?page=pnfpb-icfcm-slug"><strong>settings page</strong></a>
-Version: 1.68
+Version: 1.69
 Author: Muralidharan Ramasamy
 Author URI: https://www.muraliwebworld.com
 Text Domain: PNFPB_TD
-Updated: 12 September 2023
+Updated: 19 September 2023
 */
 /**
  * License: GPLv2 or later
@@ -747,6 +747,8 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			wp_enqueue_style( 'pnfpb-admin-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_admin.css',array(),'1.64.1' );
 			wp_enqueue_style( 'pnfpb-admin-pwa-icpstyle-name', plugin_dir_url( __FILE__ ).'admin/css/pnfpb_pwa_admin.css',array(),'1.64.1' );
 			
+			if (get_option("pnfpb_onesignal_push") !== '1') {
+			
 			$apiKey = get_option( 'pnfpb_ic_fcm_api' );
 			$authDomain = get_option( 'pnfpb_ic_fcm_authdomain' );
 			$databaseURL =get_option( 'pnfpb_ic_fcm_databaseurl' );
@@ -874,7 +876,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 
 				$filename = '/build/pnfpb_push_notification/index.js';
 				$ajaxobject = 'pnfpb_ajax_object_push';
-				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.67.1',true);
+				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.68.11',true);
 				wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'groupId' => '9','group_unsubscribe_dialog_text_confirm' => $group_unsubscribe_dialog_text_confirm, 'group_subscribe_dialog_text_confirm' => $group_subscribe_dialog_text_confirm, 'group_unsubscribe_dialog_text' => $group_unsubscribe_dialog_text, 'group_subscribe_dialog_text' => $group_subscribe_dialog_text, 'homeurl' => $homeurl, 'pwaapponlyenable' => '0', 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwainstallpromptenabled' => $pwainstallpromptenabled,  'pwacustominstalltype' => $pwacustominstalltype,'unsubscribe_dialog_text_confirm' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text_confirm' => $subscribe_dialog_text_confirm,'unsubscribe_button_text' => $unsubscribe_button_text_shortcode, 'subscribe_button_text' => $subscribe_button_text_shortcode, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color, 'cancel_button_text' => $cancel_button_text, 'save_button_text' => $save_button_text, 'unsubscribe_button_text' => $unsubscribe_button_text, 'subscribe_button_text' => $subscribe_button_text,'isloggedin' => is_user_logged_in(), 'pnfpb_push_prompt' => $pnfpb_push_prompt, 'userid' => get_current_user_id()) );
 				
 				$nonce = wp_create_nonce( 'icpushadmincallback' );
@@ -889,9 +891,14 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					$pnfpb_push_prompt = get_option('pnfpb_ic_fcm_push_prompt_enable');
 					$filename = '/build/pnfpb_push_notification/index.js';
 					$ajaxobject = 'pnfpb_ajax_object_push';
-					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.67.1',true);
+					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.68.11',true);
 					wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'homeurl' => $homeurl, 'pwaapponlyenable' => $pwaappenable, 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwacustominstalltype' => $pwacustominstalltype,  'pwainstallpromptenabled' => $pwainstallpromptenabled, 'pnfpb_push_prompt'=> $pnfpb_push_prompt) );					
 				}
+			}
+			}  else {
+				
+				wp_enqueue_script('pwebtonative_app', 'https://unpkg.com/webtonative@1.0.44/webtonative.min.js', array(), '1.0.44', true);
+				
 			}
 			
 			
@@ -936,14 +943,14 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			wp_enqueue_script( 'jquery-ui-dialog' ); 
 			wp_enqueue_style( 'wp-jquery-ui-dialog' );
 			
-			wp_enqueue_style( 'pnfpb-icpstyle-es6-name', plugin_dir_url( __FILE__ ).'build/pnfpb_push_notification/index.css',array(),'1.64.1' );
+			wp_enqueue_style( 'pnfpb-icpstyle-es6-name', plugin_dir_url( __FILE__ ).'build/pnfpb_push_notification/index.css',array(),'1.68.1' );
+			
 			
 			if (get_option("pnfpb_onesignal_push") !== '1') {
 
 	
-            wp_enqueue_style( 'pnfpb-icpstyle-name', plugin_dir_url( __FILE__ ).'src/pnfpb_push_notification/css/pnfpb_main.css',array(),'1.64.1' );
+            wp_enqueue_style( 'pnfpb-icpstyle-name', plugin_dir_url( __FILE__ ).'src/pnfpb_push_notification/css/pnfpb_main.css',array(),'1.68.1' );
 				
-			wp_enqueue_script('pwebtonative_app', 'https://unpkg.com/webtonative@1.0.44/webtonative.min.js', array(), '1.0.44', true);
             
 			$apiKey = get_option( 'pnfpb_ic_fcm_api' );
 			$authDomain = get_option( 'pnfpb_ic_fcm_authdomain' );
@@ -1075,7 +1082,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 
 				$filename = '/build/pnfpb_push_notification/index.js';
 				$ajaxobject = 'pnfpb_ajax_object_push';
-				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ),array(),'1.67.1',true);
+				wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ),array(),'1.68.11',true);
 				wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'groupId' => '9','group_unsubscribe_dialog_text_confirm' => $group_unsubscribe_dialog_text_confirm, 'group_subscribe_dialog_text_confirm' => $group_subscribe_dialog_text_confirm, 'group_unsubscribe_dialog_text' => $group_unsubscribe_dialog_text, 'group_subscribe_dialog_text' => $group_subscribe_dialog_text, 'homeurl' => $homeurl, 'pwaapponlyenable' => '0', 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwainstallpromptenabled' => $pwainstallpromptenabled,  'pwacustominstalltype' => $pwacustominstalltype,'unsubscribe_dialog_text_confirm' => $unsubscribe_dialog_text_confirm, 'subscribe_dialog_text_confirm' => $subscribe_dialog_text_confirm,'unsubscribe_button_text' => $unsubscribe_button_text_shortcode, 'subscribe_button_text' => $subscribe_button_text_shortcode, 'subscribe_button_text_color' => $subscribe_button_text_color, 'subscribe_button_color' => $subscribe_button_color, 'cancel_button_text' => $cancel_button_text, 'save_button_text' => $save_button_text, 'unsubscribe_button_text' => $unsubscribe_button_text, 'subscribe_button_text' => $subscribe_button_text,'isloggedin' => is_user_logged_in(), 'pnfpb_push_prompt' => $pnfpb_push_prompt, 'userid' => get_current_user_id()) );
 				
 				
@@ -1086,12 +1093,16 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 					$pnfpb_push_prompt = get_option('pnfpb_ic_fcm_push_prompt_enable');
 					$filename = '/build/pnfpb_push_notification/index.js';
 					$ajaxobject = 'pnfpb_ajax_object_push';
-					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.67.1',true);
+					wp_enqueue_script( 'pnfpb-icajax-script-push', plugins_url( $filename, __FILE__ ), array( 'jquery' ),'1.68.11',true);
 					wp_localize_script( 'pnfpb-icajax-script-push', $ajaxobject,array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'homeurl' => $homeurl, 'pwaapponlyenable' => $pwaappenable, 'pwainstallheadertext' => $pwainstallheadertext , 'pwainstalltext' => $pwainstalltext, 'pwainstallbuttoncolor' => $pwainstallbuttoncolor, 'pwainstallbuttontextcolor' => $pwainstallbuttontextcolor, 'pwainstallbuttontext' => $pwainstallbuttontext, 'pwacustominstalltype' => $pwacustominstalltype,  'pwainstallpromptenabled' => $pwainstallpromptenabled, 'pnfpb_push_prompt'=> $pnfpb_push_prompt) );						
 					
 					
 				}
 			}
+			} else {
+				
+				wp_enqueue_script('pwebtonative_app', 'https://unpkg.com/webtonative@1.0.44/webtonative.min.js', array(), '1.0.44', true);
+				
 			}
   
 		}
@@ -2017,7 +2028,9 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_unsubscribe_button_shortcode_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_button_shortcode_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_save_button_text_shortcode");
-			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_unsubscribe_cancel_button_text_shortcode");		
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_unsubscribe_cancel_button_text_shortcode");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text");
+			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text");			
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_all_dialog_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_post_activity_dialog_text");
 			register_setting("pnfpb_icfcm_buttons", "pnfpb_ic_fcm_subscribe_all_comments_dialog_text");
@@ -6461,9 +6474,20 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 		    
 		    $pnfpb_notification_shortcode .= '<button type="button" id="pnfpb_subscribe_button" class="pnfpb_subscribe_button" style="color:'.$subscribe_button_text_color.';background-color:'.$subscribe_button_color.'">'.$subscribe_shortcode_dialog_text.'</button></div>';
 		
+			$pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text = __('You are subscribed. Change/Update subscriptions according to your choice.',PNFPB_TD);
+			if (get_option('pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text') !== '') {
+				$pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text = get_option('pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text');
+			}
+			
+			$pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text = __('Please wait...subscribing push notification is in progress.',PNFPB_TD);
+			if (get_option('pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text') && get_option('pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text') !== false && get_option('pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text') !== '') {
+				$pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text = get_option('pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text');
+			}			
 	    
 		    $pnfpb_notification_shortcode .= '
 			<div id="pnfpb_subscribe_dialog_confirm" class="pnfpb_subscribe_dialog_confirm  ui-helper-clearfix" title="Subscribe notification?">
+				<div id="pnfpb_subscribe_dialog_confirm_heading_notoken" class="pnfpb_subscribe_dialog_confirm_heading_notoken">'.$pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text.'</div>
+				<div id="pnfpb_subscribe_dialog_confirm_heading_token" class="pnfpb_subscribe_dialog_confirm_heading_token">'.$pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text.'</div>				
 				<div class="pnfpb_ic_subscription_menu">
 					<div class="pnfpb_ic_subscription_input">
 						<input id="pnfpb_ic_subscribe_all_shortcode_enable" name="pnfpb_ic_subscribe_all_shortcode_enable" type="checkbox" value="1" '.checked( '1', get_option( 'pnfpb_ic_subscribe_all_shortcode_enable' ) ).'  />

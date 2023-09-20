@@ -7,17 +7,19 @@
 import { initializeApp, getApp } from 'firebase/app';
 import { getToken, isSupported, getMessaging } from "firebase/messaging";
 
-var vapidKey = pnfpb_ajax_object_push.publicKey;
+import { __ } from '@wordpress/i18n';
 
-var firebaseConfig = {
-    apiKey: pnfpb_ajax_object_push.apiKey,
-    authDomain: pnfpb_ajax_object_push.authDomain,
-    databaseURL: pnfpb_ajax_object_push.databaseURL,
-    projectId: pnfpb_ajax_object_push.projectId,
-    storageBucket: pnfpb_ajax_object_push.storageBucket,
-    messagingSenderId: pnfpb_ajax_object_push.messagingSenderId,
-    appId: pnfpb_ajax_object_push.appId
-};
+var firebaseConfig = {};
+
+var firebaseApp;
+			
+var messaging;
+
+var deviceid = '100000000000';
+
+var vapidKey = '';
+
+var hasFirebaseMessagingSupport_unsubscribe;	
 
 function createFirebaseApp(config) {
     try {
@@ -27,19 +29,47 @@ function createFirebaseApp(config) {
     }
 }
 
-var firebaseApp = createFirebaseApp(firebaseConfig)
-
-var messaging = getMessaging(firebaseApp);
-
-var hasFirebaseMessagingSupport = await isSupported();
 
 var $j = jQuery.noConflict();
 
-const hasFirebaseMessagingSupport_unsubscribe = await isSupported();
-
 $j(function() {
 	
-	const { __ } = wp.i18n;
+	//const { __ } = wp.i18n;
+
+	var data = {
+		action: 'icpushcallback',
+		device_id:'',
+		subscriptionoptions:'',
+		pushtype: 'icfirebasecred'
+	};
+			
+	$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
+			
+		//console.log(responseajax);
+			
+		var firebasecredentialsobject = JSON.parse(responseajax);
+			
+		if (firebasecredentialsobject.apiKey && firebasecredentialsobject.apiKey != '') {
+					
+			firebaseConfig = {
+				apiKey: firebasecredentialsobject.apiKey,
+				authDomain: firebasecredentialsobject.authDomain,
+				databaseURL: firebasecredentialsobject.databaseURL,
+				projectId: firebasecredentialsobject.projectId,
+				storageBucket: firebasecredentialsobject.storageBucket,
+				messagingSenderId: firebasecredentialsobject.messagingSenderId,
+				appId: firebasecredentialsobject.appId
+			};
+			
+			vapidKey = firebasecredentialsobject.publicKey
+			
+			firebaseApp = createFirebaseApp(firebaseConfig)
+						
+			messaging = getMessaging(firebaseApp);
+						
+			hasFirebaseMessagingSupport_unsubscribe = await isSupported();
+
+			if (hasFirebaseMessagingSupport_unsubscribe) {
 	
 navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_push.homeurl+'/'}).then(function(registration) {
    
@@ -165,13 +195,16 @@ navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_p
                     
 				})
 				    
-		    })
+			})}
 			}
 			else
 			{
 				console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'))
-			}			
-        }
+			}
+					
 	})
-	
+
+	}}
+})
+
 });

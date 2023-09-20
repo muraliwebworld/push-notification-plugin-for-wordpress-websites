@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 5.0
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable tag: 1.68
+Stable tag: 1.69
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,7 @@ Go to plugin settings page to enable/disable PWA app and to customize PWA app wi
 	
 = Shortcode =
 For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications for following,
+This shortcode is applicable only for Firebase push notification not for other providers.
 1. Subscribe all notifications
 2. Subscribe to all new post/new BuddyPress activity notifications
 3. Subscribe to all new comments for post,BuddyPress activities notifications
@@ -272,6 +273,16 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.69 version 19 September 2023 changes =
+Update: Plugin is compatible for mobile apps designed using WebtoNative with onesignal as push notification provider. Included webtonative script in this plugin to enable push notification for mobile apps using webtonative with onesignal.
+Update: Shortcode  [subscribe_PNFPB_push_notification] is updated to subscribe new push notification along with changing/updating various subscription options.
+Push notification can be subscribed in following 3 ways,
+1. Direct browser default promptt with user interaction,
+2. By enabling custom prompt for push notification settings (from plugin admin settings),
+3. By using shortcode [subscribe_PNFPB_push_notification]. Texts in shortcode can be customized using plugin admin settings under button customization tab.
+Update: Language translation for all es6 javascripts are updated. Language translation will work on new es6 javascripts for push notification subscription.
+Bug fix: To fix problem for private messages/friendship request/accepted push notifications using onesignal in webview app created with Webtonative.
+Bug fix: To display warning message for permission not granted when PNFPB subscription shortcode is used in webview mobile app and  not to display warning for desktop/web mobile view websites.
 = 1.68 version 13 September 2023 changes =
 New feature: Admin notification list tab - New submenu added to filter notification list, following are menu added,
 	All - To show all ondemand/onetime/recurring notification list
@@ -622,6 +633,15 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* Update: Plugin is compatible for mobile apps designed using WebtoNative with onesignal as push notification provider. Included webtonative script in this plugin to enable push notification for mobile apps using webtonative with onesignal.
+* Update: Shortcode  [subscribe_PNFPB_push_notification] is updated to subscribe new push notification along with changing/updating various subscription options. Shortcode will work only for * push notification using Firebase settings for Push notification, it is not for onesignal push as onesignal uses different subscription method.
+* Push notification can be subscribed in following 3 ways,
+	1. Direct browser default promptt with user interaction,
+	2. By enabling custom prompt for push notification settings (from plugin admin settings),
+	3. By using shortcode [subscribe_PNFPB_push_notification]. Texts in shortcode can be customized using plugin admin settings under button customization tab.
+* Update: Language translation for all es6 javascripts are updated. Language translation will work on new es6 javascripts for push notification subscription.
+* Bug fix: To fix problem for private messages/friendship request/accepted push notifications using onesignal in webview app created with Webtonative.
+* Bug fix: To display warning message for permission not granted when PNFPB subscription shortcode is used in webview mobile app and  not to display warning for desktop/web mobile view websites. websites.
 * New feature: Admin notification list tab - New submenu added to filter notification list, following are menu added,
 	All - To show all ondemand/onetime/recurring notification list
 	On demand - To show on demand notification list without schedule
