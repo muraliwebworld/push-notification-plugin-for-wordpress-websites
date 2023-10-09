@@ -461,32 +461,74 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 				image: notification.image,
 				data: {
 					url: notification.click_action
-				}
+				},
 			};
   			event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 		}
 
 		self.addEventListener("push", receivePushNotification);
 
-		self.addEventListener('notificationclick', function(event) {
-			event.waitUntil(self.clients.openWindow(event.notification.data.url));
-  			event.notification.close();
+		self.addEventListener("notificationclick",(event) => {
+			event.preventDefault();
+			if (event.action === "read_more") {
+				event.notification.close();
+ 				// This looks to see if the current is already open and
+ 				// focuses if it is
+ 				event.waitUntil(clients.matchAll({
+ 					type: "window"
+ 				}).then((clientList) => {
+ 					for (client of clientList) {
+ 						if (client.url === event.notification.data.url && 'focus' in client) {
+        					return client.focus();
+						}
 
-  			// This looks to see if the current is already open and
-  			// focuses if it is
-  			event.waitUntil(clients.matchAll({
-    			type: "window"
-  			}).then((clientList) => {
-    			for (const client of clientList) {
-      				if (client.url === '/' && 'focus' in client)
-        				return client.focus();
-    			}
-    			if (clients.openWindow)
-      				return clients.openWindow(event.notification.data.url);
-  			}));
-
-		});
-
+    				}
+    				if (clients.openWindow) {
+      					return clients.openWindow(event.notification.data.url)
+					}
+  				}))
+    		} else {
+				if (event.action === "custom_url") {
+					//console.log('custom_url');
+					var pnfpb_custom_click_action_url = '<?php echo get_option('pnfpb_ic_custom_click_action_url') ?>';
+					//event.waitUntil(self.clients.openWindow(pnfpb_custom_click_action_url));
+					event.notification.close();
+  					// This looks to see if the current is already open and
+  					// focuses if it is
+  					event.waitUntil(clients.matchAll({
+    					type: "window"
+  					}).then((clientList) => {
+    					for (const client of clientList) {
+      						if (client.url === pnfpb_custom_click_action_url && 'focus' in client)
+        						return client.focus();
+    					}
+    					if (clients.openWindow)
+      						return clients.openWindow(pnfpb_custom_click_action_url);
+  					}))					
+				} else {
+					if (event.action === "close_notification") {
+						event.notification.close();
+					} else {
+						//event.waitUntil(self.clients.openWindow(event.notification.data.url));
+						event.notification.close();
+  						// This looks to see if the current is already open and
+  						// focuses if it is
+  						event.waitUntil(clients.matchAll({
+    						type: "window"
+  						}).then((clientList) => {
+    						for (const client of clientList) {
+      							if (client.url === event.notification.data.url && 'focus' in client)
+        							return client.focus();
+    						}
+    						if (clients.openWindow)
+      							return clients.openWindow(event.notification.data.url);
+  						}))
+					}
+				}
+			}
+		},
+		false,
+		);
 		<?php 
 			$sw_contents = ob_get_contents();
 		

@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 5.0
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable tag: 1.69
+Stable tag: 1.70
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,24 +22,34 @@ To send Push notifications for following,
 1. New post/custom post type published (including bbpress).
 2. New BuddyPress activities published.
 3. New BuddyPress group activity published (Notification sent only to members of group).
-4. BuddyPress group invite sent.(Notification sent only to recipient).
-5. BuddyPress group details updated.
-6. New Buddypress comments published..
-7. New BuddyPress message or private messages.(Notification sent only to recipient).(It is also compatible with Bettermessages plugin).
-8. New BuddyPress member joined.
-9. For Friend request in BuddyPress. (Notification sent only to recipient).
-10. Friendship accepted in BuddyPress. (Notification sent only to requestor).
-11. User avatar change in BuddyPress.
-12. Cover image change in BuddyPress.
-13. Woocommerce custom post type push notifications.
+4. Notifications for BuddyPress mentions in activities.(Notification sent only to recipient).
+5. BuddyPress group invite sent.(Notification sent only to recipient).
+6. BuddyPress group details updated.
+7. New Buddypress comments published..
+8. New BuddyPress message or private messages.(Notification sent only to recipient).(It is also compatible with Bettermessages plugin).
+9. New BuddyPress member joined.
+10. For Friend request in BuddyPress. (Notification sent only to recipient).
+11. Friendship accepted in BuddyPress. (Notification sent only to requestor).
+12. User avatar change in BuddyPress.
+13. Cover image change in BuddyPress.
+14. Woocommerce custom post type push notifications.
 
-Following are Admin notifications, only sent to admins.
-14. When contact form(contactform7 plugin) submitted.
-15. When new user registered in site.
-16. BuddyPress Public Group push notification subscription can be displayed using buttons/icons, customize this option in admin settings button customization area. 
-17. Options to use Firebase as push notification provider or to use onesignal as push notification provider.
+Following are Admin only push notifications, only sent to admins.
+1. When contact form(contactform7 plugin) submitted.
+2. When new user registered in site.
 
+= Custom prompt to subscribe push notifications =
+Enable/Disable custom prompt with icon to subscribe/unsubscribe push notifications in front end in admin settings. This option can be customized with custom icon and text with local languages.
+
+= Push notification providers Firebase  or Onesignal =
+Options to use Firebase as push notification provider or to use onesignal as push notification provider are available in admin settings area.
+
+= Subscribe/Unsubscribe various push notifications in front end = 
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile - settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.
+
+= Scheduling Push notification =
+It allows Scheduled Push notifications to send push notifications hourly(every hour), twice daily(2 times per day), daily, weekly as per WordPress CRON. It also provides option to schedule push notification in background using action scheduler, this will be useful to send notification more than 100000 subscribers simultaneously in background mode.
+Push notification scheduling is available for On demand/One time, WordPress Post, BuddyPress activities, BuddyPress group activities and for BuddyPress comments.
 
 = REST API =
 REST API to connect mobile native/hybrid apps to send push notification from WordPress site to both mobile apps and WordPress sites.
@@ -51,9 +61,6 @@ REST API url is https:/<domain>/wp-json/PNFPBpush/v1/subscriptiontoken
 Sample code libraries containing how to use this plugin REST API to integrate with Android and IOS mobile apps
 [Android app code to integrate with this plugin](https://github.com/muraliwebworld/android-app-to-integrate-push-notification-wordpress-plugin/)
 [IOS app code to integrate with this plugin](https://github.com/muraliwebworld/ios-swift-app-to-integrate-push-notification-wordpress-plugin/)
-
-= Frontend push notification menu =
-Front-end push notification subscription menu for Frontend BuddyPress users under user profile to optout for various push notifications.
 
 Refer video tutorial under "How to use this plugin" section to configure Firebase options in plugin admin area.
 	
@@ -76,9 +83,6 @@ This shortcode is applicable only for Firebase push notification not for other p
 9. Cover image change in BuddyPress
 10. Unsubscribe all notifications
 Front end users/customers can opt/remove for various push notifications using above shortcode according to their own choice.
-
-- Scheduling Push notification =
-It allows Scheduled Push notifications to send push notifications hourly(every hour), twice daily(2 times per day), daily, weekly as per WordPress CRON. It also provides option to schedule push notification in background using action scheduler, this will be useful to send notification more than 100000 subscribers simultaneously in background mode.
 
 = Extra settings for NGINX server =
 If server is NGINX and not able to create dynamic service worker file https:/<domain>/pnfpb_icpush_pwa_sw.js & PWA manifest json file https:/<domain>/pnfpbmanifest.json then go to plugin settings->nginx tab, enable static file creation option, it will create required static service worker file, PWA manifest json files in root folder. This option is applicable only if hosting/server is based on NGINX and not creating dynamic service worker file, manifest json files. By default, this plugin creates dynamic service worker file and PWA manifest json file. 
@@ -273,6 +277,18 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.70 version - 8 Oct 2023 changes =
+BuddyPress Mentions push notifications - one to one notification only to user mentioned in BuddyPress activity
+Scheduling notifications changes to delete old data when it is reset/switched off.
+Merged cron schedule notifications with action scheduler to schedule notifications in background.
+Admin panel changes for scheduling notifications.
+Links to action scheduler tab in admin panel to view list of scheduled notifications for BuddyPress activities/group activities/comments and for post, custom post types.
+Scheduling notifications changes to start at entered time instead of immediate start.
+Customise options for Frontend Custom prompt to subscribe/unsubscribe notifications  are added in admin push settings panel to customise button text for custom prompt, customise display message text in custom prompt.
+New meta box with checkbox added for every post/page to send or not to send push notifications while creating post.
+Admin settings to enable BuddyPress comments notifications only for author  of particular activity (comment notifications only for My post/My activities).
+PWA install prompt shortcake will work independent of custom prompt of PWA.
+PWA custom install prompt can be enabled/disabled for desktop/mobile/tablet/according to screen size. Various custom options added in PWA settings tab.
 = 1.69 version 19 September 2023 changes =
 Update: Plugin is compatible for mobile apps designed using WebtoNative with onesignal as push notification provider. Included webtonative script in this plugin to enable push notification for mobile apps using webtonative with onesignal.
 Update: Shortcode  [subscribe_PNFPB_push_notification] is updated to subscribe new push notification along with changing/updating various subscription options.
@@ -633,6 +649,17 @@ Compatible and tested upto WordPress Version 5.4.2
 
 
 == Upgrade Notice ==
+* BuddyPress Mentions push notifications - one to one notification only to user mentioned in BuddyPress activity
+* Scheduling notifications changes to delete old data when it is reset/switched off.
+* Merged cron schedule notifications with action scheduler to schedule notifications in background.
+* Admin panel changes for scheduling notifications.
+* Links to action scheduler tab in admin panel to view list of scheduled notifications for BuddyPress activities/group activities/comments and for post, custom post types.
+* Scheduling notifications changes to start at entered time instead of immediate start.
+* Customise options for Frontend Custom prompt to subscribe/unsubscribe notifications  are added in admin push settings panel to customise button text for custom prompt, customise display message text in custom prompt.
+* New meta box with checkbox added for every post/page to send or not to send push notifications while creating post.
+* Admin settings to enable BuddyPress comments notifications only for author  of particular activity (comment notifications only for My post/My activities).
+* PWA install prompt shortcake will work independent of custom prompt of PWA.
+* PWA custom install prompt can be enabled/disabled for desktop/mobile/tablet/according to screen size. Various custom options added in PWA settings tab.
 * Update: Plugin is compatible for mobile apps designed using WebtoNative with onesignal as push notification provider. Included webtonative script in this plugin to enable push notification for mobile apps using webtonative with onesignal.
 * Update: Shortcode  [subscribe_PNFPB_push_notification] is updated to subscribe new push notification along with changing/updating various subscription options. Shortcode will work only for * push notification using Firebase settings for Push notification, it is not for onesignal push as onesignal uses different subscription method.
 * Push notification can be subscribed in following 3 ways,

@@ -16,7 +16,7 @@
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
 	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="tab "><?php echo __("NGINX",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler" class="tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1" class="tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
 </div>
 <div class="pnfpb_column_1200">
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
@@ -315,19 +315,55 @@
 					</label>
 				</td>
 			</tr>
+	
 			<tr class="pnfpb_ic_push_settings_table_row">
 				<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<div class="pnfpb_row">
+						<?php echo '<div class="pnfpb_column_full"><b>&nbsp;&nbsp;&nbsp;'.__("Custom install prompt for PWA",PNFPB_TD).'</b></div>';?>
   						<div class="pnfpb_column_400">
     						<div class="pnfpb_card">
 								<label for="pnfpb_ic_pwa_app_custom_prompt_enable">
-									<?php echo __("Enable/Disable custom prompt install*",'PNFPB_TD');?>
+									<?php echo __("Custom prompt for all devices",'PNFPB_TD');?>
 								</label>
 								<label class="pnfpb_switch">
 									<input  id="pnfpb_ic_pwa_app_custom_prompt_enable" name="pnfpb_ic_pwa_app_custom_prompt_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_custom_prompt_enable' ) ); ?>  />
 									<span class="pnfpb_slider round"></span>
 								</label>
 							</div>
+						</div>
+  						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">								
+								<label for="pnfpb_ic_pwa_app_desktop_custom_prompt_enable">
+									<?php echo __("Only for desktop devices",'PNFPB_TD');?>
+								</label>
+								<label class="pnfpb_switch">
+									<input  id="pnfpb_ic_pwa_app_desktop_custom_prompt_enable" name="pnfpb_ic_pwa_app_desktop_custom_prompt_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_desktop_custom_prompt_enable' ) ); ?>  />
+									<span class="pnfpb_slider round"></span>
+								</label>
+							</div>
+						</div>
+  						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">								
+								<label for="pnfpb_ic_pwa_app_mobile_custom_prompt_enable">
+									<?php echo __("Only for mobile/tablet devices",'PNFPB_TD');?>
+								</label>
+								<label class="pnfpb_switch">
+									<input  id="pnfpb_ic_pwa_app_mobile_custom_prompt_enable" name="pnfpb_ic_pwa_app_mobile_custom_prompt_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_mobile_custom_prompt_enable' ) ); ?>  />
+									<span class="pnfpb_slider round"></span>
+								</label>
+							</div>
+						</div>
+  						<div class="pnfpb_column_400">
+    						<div class="pnfpb_card">								
+								<label for="pnfpb_ic_pwa_app_pixels_custom_prompt_enable">
+									<?php echo __("For devices width greater than entered pixels",'PNFPB_TD');?>
+								</label>
+								<label class="pnfpb_switch">
+									<input  id="pnfpb_ic_pwa_app_pixels_custom_prompt_enable" name="pnfpb_ic_pwa_app_pixels_custom_prompt_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_pwa_app_pixels_custom_prompt_enable' ) ); ?>  />
+									<span class="pnfpb_slider round"></span>									
+								</label>
+								<input  class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable" id="pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable" name="pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable" type="number" value="<?php if(get_option( 'pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable' )) {echo get_option( 'pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable' );} ?>"  />Pixels								
+							</div>							
 						</div>
 					</div>
 					<div class="pnfpb_row">

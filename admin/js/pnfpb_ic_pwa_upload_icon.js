@@ -84,9 +84,9 @@ $j(document).ready(function() {
 		
 	});
 	
-	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
+/*	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
 
-		if ($j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked')) 
+		if ($j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked')) 
 		{
 			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
 			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
@@ -102,7 +102,7 @@ $j(document).ready(function() {
 	
 	if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"]').length) {
 
-		if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked')) 
+		if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked')) 
 		{
 			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').show();
 			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').show();
@@ -118,7 +118,7 @@ $j(document).ready(function() {
 	
 	if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"]').length) {
 
-		if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked')) 
+		if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked')) 
 		{
 			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').show();
 			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').show();
@@ -137,26 +137,10 @@ $j(document).ready(function() {
 
 	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
 
-		$j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').on('click',function() {
-			
-			if ($j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked'))
-			{
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
-				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',true);
-		
-			}
-			else 
-			{
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').hide();
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').hide();
-				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',false);
-			}			
-		});
-		
+
 		$j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').on('click',function() {
 			
-			if ($j('input[name="pnfpb_ic_fcm_post_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked'))
+			if ($j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked'))
 			{
 				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
 				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
@@ -244,7 +228,7 @@ $j(document).ready(function() {
 				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',false);
 			}			
 		});
-	}
+	}*/
 	
 	$j('.pnfpb_admin_notice > .notice-dismiss').on('click',function() {
 		

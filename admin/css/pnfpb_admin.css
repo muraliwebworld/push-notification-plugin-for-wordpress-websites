@@ -496,14 +496,10 @@ td.pnfpb_ic_push_settings_table_column {
 	margin-left: 4px;
 }
 
-.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block {
-	display: none;
-}
 
 .pnfpb_ic_fcm_post_timeschedule_seconds_block {
 	width:100px;
 	margin-right:10px;
-	display: none;
 }
 
 #pnfpb_ic_fcm_post_timeschedule_seconds_block {
@@ -511,28 +507,18 @@ td.pnfpb_ic_push_settings_table_column {
 	color: #000;
 }
 
-.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block {
-	display:none;
-}
-
 .pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block {
 	width:100px;
 	margin-right:10px;
-	display:none;
 }
 #pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block {
 	background-color: #fff;
 	color: #000;
 }
 
-.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block {
-	display:none;
-}
-
 .pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block {
 	width:100px;
 	margin-right:10px;
-	display:none;
 }
 #pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block {
 	background-color: #fff;
@@ -628,4 +614,7 @@ td.pnfpb_ic_push_settings_table_column {
 .pnfpb_icfcm_service_account_upload_message {
 	color:black;
 	font-weight:bold;
+}
+.pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable {
+	width:100px !important;
 }
