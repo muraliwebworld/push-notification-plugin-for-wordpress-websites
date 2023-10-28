@@ -1,12 +1,10 @@
 {
   
-    "name": "push-notification-for-post-and-buddypress",
+    "name": "@muraliwebworld/push-notification-plugin-for-wordpress-websites",
   
-    "version": "1.1.0",
+    "version": "1.66.0",
   
-    "private": true,
-  
-    "description": "push notification for post and buddypress",
+    "description": "To send push notifications to desktop, android/ios mobile apps using Firebase Cloud Messaging (FCM) with latest version Firebase API httpv1 or with legacy Firebase api or users can select Onesignal as push notification provider. It has REST API facility to integrate with native/hybrid Android/iOS mobile apps for push notifications. It sends notification whenever new WordPress post, custom post types,new BuddyPress activities,comments published. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.",
   
     "author": "Muralidharan Ramasamy",
   
@@ -15,21 +13,40 @@
     "keywords": [
   
       
-    "WordPress",
-  
-      
-    "block"
+    "wordpress",
+
+    "wordpress plugin",
+
+    "firebase",
+
+    "push notification",
+
+    "cloud messaging",
+
+    "buddypress",
+
+    "pwa",
+
+    "progressive web app",
+
+    "javascript",
+
+    "php",
+
+    "wordpress scripts",
+
+    "push notifications"
   
     ],
   
-    "homepage": "https://github.com/WordPress/gutenberg-examples/",
+    "homepage": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites",
   
-    "repository": "git+https://github.com/WordPress/gutenberg-examples.git",
+    "repository": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites.git",
   
     "bugs": {
   
       
-    "url": "https://github.com/WordPress/gutenberg-examples/issues"
+    "url": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites/issues"
   
     },
   
