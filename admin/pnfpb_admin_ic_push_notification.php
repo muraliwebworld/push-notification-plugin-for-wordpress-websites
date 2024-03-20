@@ -24,6 +24,11 @@
     <?php settings_fields( 'pnfpb_icfcm_group'); ?>
     <?php do_settings_sections( 'pnfpb_icfcm_group' ); ?>
 	<?php
+		if (get_option( 'pnfpb_bell_icon_prompt_options_on_off','0' ) === '0') {
+					
+			update_option( 'pnfpb_bell_icon_prompt_options_on_off', '1' );
+					
+		}
 	if ( ! class_exists( 'OneSignal' )  && get_option('pnfpb_onesignal_push') === '1') {
 	?>
     	<div class="notice notice-error is-dismissible">
@@ -81,7 +86,7 @@
         
     if (get_option( 'pnfpb_ic_fcm_group_activity_title' ) ==  false || get_option( 'pnfpb_ic_fcm_group_activity_title' ) ==  '') {
             
-            $activitygroup = '[member name] posted a new group post in '.$blog_title;
+            $activitygroup = '[member name] posted a new group post in [group name]';
     }
     else
     {
@@ -194,7 +199,9 @@
     else
     {
            $contactform7content = get_option( 'pnfpb_ic_fcm_buddypress_contact_form7_content_enable' );
-    }	
+    }
+	
+	$pnfpb_popup_subscribe_icon = plugin_dir_url( __DIR__ ).'public/img/pushbell-pnfpb.png';
 
 ?>
 <h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Enable/Disable push notifications for following types",PNFPB_TD);?></h2>
@@ -222,82 +229,462 @@
 				</div>
 				<div class="pnfpb_ic_push_prompt_form pnfpb_column_400">
 					<table class="pnfpb_ic_push_firebase_settings_table widefat fixed">
+						<thead>
+							<tr>
+								<th>
+									<?php echo __("Turn ON prompt style checkbox to display custom prompt style-1 or 2 followed by turn on radio button of prompt style 1 or 2. If cancel button is clicked on custom prompt push notification by front end user then custom prompt will not be displayed for next 7 days.",PNFPB_TD);?>
+								</th>
+							</tr>
+						</thead>						
     					<tbody>
-    						<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_popup_subscribe_button_icon"><?php echo __("Push Subscribe prompt Icon(32x32 pixels)",PNFPB_TD);?></label><br/>          
-									<table>
+							<tr class="pnfpb_ic_push_settings_table_row pnfpb_ic_push_settings_table_border_bottom">
+								<td class="column-columnname pnfpb-push-msg-model-column-head widefat">
+									<div class="pnfpb-push-msg-model-column">
+										<div class="pnfpb-push-msg-model-outer-container">
+											<div class="pnfpb-push-msg-model-container">
+												<div class="pnfpb-push-model-icon">
+													<div class="pnfpb-push-msg-model-square"></div>																																	</div>
+												<div class="pnfpb-push-msg-model-text-layout">
+													<div class="pnfpb-push-msg-model-text-long-line"></div>
+													<div class="pnfpb-push-msg-model-text-line"></div>
+													<div class="pnfpb-push-msg-model-cancel-button"></div>
+													<div class="pnfpb-push-msg-model-yes-button"></div>
+												</div>
+											</div>
+											<div class="pnfpb-push-msg-model-prompt-button-container">
+												<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" for="pnfpb_ic_fcm_prompt_on_off">
+													<?php echo __("Prompt style",'PNFPB_TD');?>
+												</label>
+												<label class="pnfpb_switch">
+													<input  id="pnfpb_ic_fcm_prompt_on_off" name="pnfpb_ic_fcm_prompt_on_off" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_prompt_on_off' ) ); ?>  />
+													<span class="pnfpb_slider round"></span>
+												</label>
+											</div>												
+										</div>									
+										<div class="pnfpb-push-msg-model-prompt-button-container">
+											<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container pnfpb_margin_left_4 pnfpb_padding_top_8">
+												<?php echo __("Prompt Style-1",'PNFPB_TD');?>
+												<input  id="pnfpb_ic_fcm_prompt_style" name="pnfpb_ic_fcm_prompt_style" type="radio" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_prompt_style' ) ); ?>  />
+												<span class="pnfpb_checkmark pnfpb_margin_top_6"></span>
+											</label>
+										</div>
+									</div>
+									<div class="pnfpb-push-msg-model-column">
+										<div class="pnfpb-push-msg-model-outer-container">
+											<div class="pnfpb-push-msg-vertical-model-container">
+												<div class="pnfpb-push-msg-vertical-model-text-layout">
+													<div class="pnfpb-push-vertical-model-icon">
+														<div class="pnfpb-push-msg-model-square"></div>																										</div>														
+													<div class="pnfpb-push-msg-vertical-model-text-long-line"></div>
+													<div class="pnfpb-push-msg-vertical-model-text-line"></div>
+													<div class="pnfpb-push-msg-vertical-model-cancel-button"></div>
+													<div class="pnfpb-push-msg-vertical-model-yes-button"></div>
+												</div>
+											</div>
+										</div>
+										<div class="pnfpb-push-msg-model-prompt-button-container">
+											<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container pnfpb_margin_left_4 pnfpb_padding_top_8">
+												<?php echo __("Prompt Style-2",'PNFPB_TD');?>
+												<input  id="pnfpb_ic_fcm_prompt_style" name="pnfpb_ic_fcm_prompt_style" type="radio" value="2" <?php checked( '2', get_option( 'pnfpb_ic_fcm_prompt_style' ) ); ?>  />
+												<span class="pnfpb_checkmark pnfpb_margin_top_6"></span>
+											</label>
+										</div>
+									</div>
+									<div class="pnfpb-push-msg-model-column">
+										<div class="pnfpb-push-msg-model-outer-container">				
+											<div class="pnfpb-push-msg-vertical-model-container">
+												<div class="pnfpb-push-msg-vertical-model-text-layout">
+													<div class="pnfpb-push-vertical-model-bell">
+														<div class="pnfpb-push-msg-vertical-model-bell-square">
+															<img src="<?php echo $pnfpb_popup_subscribe_icon; ?>" width="30px" height="30px" />
+														</div>																																											</div>														
+												</div>
+											</div>
+										</div>
+										<div class="pnfpb-push-msg-model-prompt-button-container">
+											<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" for="pnfpb_ic_fcm_prompt_style3">
+												<?php echo __("Bell prompt",'PNFPB_TD');?>
+											</label>
+											<label class="pnfpb_switch">
+												<input  id="pnfpb_ic_fcm_prompt_style3" name="pnfpb_ic_fcm_prompt_style3" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_prompt_style3' ) ); ?>  />
+												<span class="pnfpb_slider round"></span>
+											</label>
+										</div>
+									</div>									
+								</td>
+							</tr>
+							<tr class="pnfpb_ic_push_settings_table_row pnfpb_ic_push_settings_table_border_bottom">
+								<td class="pnfpb_ic_push_settings_table_label_column column-columnname pnfpb_ic_push_settings_table_label_custom_prompt_column">
+								<table class="pnfpb_ic_push_firebase_settings_table widefat fixed">
+									<thead>
 										<tr>
-                							<td class="column-columnname">
-                    							<input type="button" value="<?php echo __("Upload Icon",PNFPB_TD);?>" id="pnfpb_ic_fcm_popup_subscribe_button_icon" class="pnfpb_ic_push_settings_upload_icon" />
-                    							<input type="hidden" id="pnfpb_ic_fcm_popup_subscribe_button_icon" name="pnfpb_ic_fcm_popup_subscribe_button_icon" value="<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_icon' )) { echo get_option('pnfpb_ic_fcm_popup_subscribe_button_icon'); } else { echo plugin_dir_url( __DIR__ ).'public/img/pushbell-pnfpb.png';} ?>" />
-                							</td>
-            							</tr>
-										<tr>
-                							<td class="column-columnname">
-                    							<div style="display:block;width:100%; overflow:hidden; text-align:center;">
-                        							<div id="pnfpb_ic_fcm_popup_subscribe_button_icon_preview" style="background-image: url(<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_icon' )) { echo get_option('pnfpb_ic_fcm_popup_subscribe_button_icon'); } else { echo plugin_dir_url( __DIR__ ).'public/img/pushbell-pnfpb.png';} ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:20px auto;background-position:center;background-repeat:no-repeat;background-size:cover;">
-													</div>
-                    							</div>
-                							</td>
-            							</tr>
+											<th>
+												<?php echo "<b>".__("Customize prompt style color and text",PNFPB_TD)."</b>";?>
+											</th>
+										</tr>
+									</thead>									
+									<tbody>
+    									<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname pnfpb_ic_push_settings_table_label_custom_prompt_column">
+												<p>
+													<?php echo __("Custom prompt Icon(recommended 80x80 pixels or less than 80x80 pixels)",PNFPB_TD);?>
+												</p>
+												<table>
+													<tr>
+                										<td class="column-columnname">
+                    										<button id="pnfpb_ic_fcm_popup_custom_prompt_icon" class="pnfpb_ic_push_settings_upload_icon">
+																<?php echo __("Upload Icon",PNFPB_TD);?>
+															</button>
+                    										<input type="hidden" id="pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon" name="pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon" value="<?php if (get_option( 'pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon' )) { echo get_option('pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon'); } else { echo plugin_dir_url( __DIR__ ).'public/img/pushbell-pnfpb.png';} ?>" />
+                										</td>
+            										</tr>
+													<tr>
+                										<td class="column-columnname">
+                    										<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+                        										<div id="pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview" style="background-image: url(<?php if (get_option( 'pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon' )) { echo get_option('pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon'); } else { echo plugin_dir_url( __DIR__ ).'public/img/pushbell-pnfpb.png';} ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:20px auto;background-position:center;background-repeat:no-repeat;background-size:cover;">
+																</div>
+                    										</div>
+                										</td>
+            										</tr>
+												</table>
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+											<td class="pnfpb_ic_push_settings_table_label_column column-columnname pnfpb_ic_push_settings_table_label_custom_prompt_column">
+												<p><?php echo __("Custom prompt Animation style",'PNFPB_TD');?></p>
+												<select id="pnfpb_ic_fcm_custom_prompt_animation" name="pnfpb_ic_fcm_custom_prompt_animation">
+					    							<option value="slideDown" <?php if (get_option( 'pnfpb_ic_fcm_custom_prompt_animation' ) === 'slideDown'){ echo 'selected';} else {echo '';} ?>><?php echo __("Slide Down",PNFPB_TD);?></option>
+													<option value="slideUp" <?php if (get_option( 'pnfpb_ic_fcm_custom_prompt_animation' ) === 'slideUp'){ echo 'selected';} else {echo '';} ?>><?php echo __("Slide Up",PNFPB_TD);?></option>
+												</select>
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname pnfpb_ic_push_settings_table_label_custom_prompt_column">		
+												<p><?php echo __("Header text in custom prompt",'PNFPB_TD');?></p>
+												<textarea  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_custom_prompt_header_text" name="pnfpb_ic_fcm_custom_prompt_header_text" ><?php if(get_option( 'pnfpb_ic_fcm_custom_prompt_header_text' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_header_text' );} else { echo __("We would like to show you notifications for the latest news and updates.",'PNFPB_TD');} ?></textarea>
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">		
+												<p><?php echo __("If cancel button is pressed while subscribing, show custom prompt after below number of days",'PNFPB_TD');?></p>
+												<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_custom_prompt_show_again_days" name="pnfpb_ic_fcm_custom_prompt_show_again_days" type="number" value="<?php if(get_option( 'pnfpb_ic_fcm_custom_prompt_show_again_days' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_show_again_days' );} else { echo "7";} ?>"/>
+											</td>
+										</tr>										
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Allow Notification Button text color",'PNFPB_TD');?></p>
+												<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_custom_prompt_allow_button_background" id="pnfpb_ic_fcm_custom_prompt_allow_button_text_color" name="pnfpb_ic_fcm_custom_prompt_allow_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_custom_prompt_allow_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_allow_button_text_color' ); } else { echo '#ffffff'; }?>" />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Push notification subscribe Button background color",'PNFPB_TD');?></p>
+												<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_custom_prompt_allow_button_background" id="pnfpb_ic_fcm_push_custom_prompt_allow_button_background" name="pnfpb_ic_fcm_push_custom_prompt_allow_button_background" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_push_custom_prompt_allow_button_background' )) {echo get_option( 'pnfpb_ic_fcm_push_custom_prompt_allow_button_background' ); } else { echo '#0078d1';}?>" />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Allow notification button text",'PNFPB_TD');?></p>
+												<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_custom_prompt_allow_button_text" name="pnfpb_ic_fcm_custom_prompt_allow_button_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_custom_prompt_allow_button_text' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_allow_button_text' );} else { echo __("Allow",'PNFPB_TD');} ?>"  />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Cancel Notification Button text color",'PNFPB_TD');?></p>
+												<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_custom_prompt_cancel_button_background" id="pnfpb_ic_fcm_custom_prompt_cancel_button_text_color" name="pnfpb_ic_fcm_custom_prompt_cancel_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_custom_prompt_cancel_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_cancel_button_text_color' ); } else { echo '#0078d1'; }?>" />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Cancel Button background color",'PNFPB_TD');?></p>
+												<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_custom_prompt_cancel_button_background" id="pnfpb_ic_fcm_push_custom_prompt_cancel_button_background" name="pnfpb_ic_fcm_push_custom_prompt_cancel_button_background" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_push_custom_prompt_cancel_button_background' )) {echo get_option( 'pnfpb_ic_fcm_push_custom_prompt_cancel_button_background' ); } else { echo '#ffffff';}?>" />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Cancel button text",'PNFPB_TD');?></p>
+												<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_custom_prompt_cancel_button_text" name="pnfpb_ic_fcm_custom_prompt_cancel_button_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_custom_prompt_cancel_button_text' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_cancel_button_text' );} else { echo __("Cancel",'PNFPB_TD');} ?>"  />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Close Button text color",'PNFPB_TD');?></p>
+												<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_custom_prompt_close_button_background" id="pnfpb_ic_fcm_custom_prompt_close_button_text_color" name="pnfpb_ic_fcm_custom_prompt_close_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_custom_prompt_close_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_close_button_text_color' ); } else { echo '#0078d1'; }?>" />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Close Button background color",'PNFPB_TD');?></p>
+												<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_custom_prompt_close_button_background" id="pnfpb_ic_fcm_push_custom_prompt_close_button_background" name="pnfpb_ic_fcm_push_custom_prompt_close_button_background" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_push_custom_prompt_close_button_background' )) {echo get_option( 'pnfpb_ic_fcm_push_custom_prompt_close_button_background' ); } else { echo '#ffffff';}?>" />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Close button text",'PNFPB_TD');?></p>
+												<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_custom_prompt_close_button_text" name="pnfpb_ic_fcm_custom_prompt_close_button_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_custom_prompt_close_button_text' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_close_button_text' );} else { echo __("Close",'PNFPB_TD');} ?>"  />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<p><?php echo __("Wait message while processing push subscription",'PNFPB_TD');?></p>
+												<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_custom_prompt_popup_wait_message" name="pnfpb_ic_fcm_custom_prompt_popup_wait_message" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_custom_prompt_popup_wait_message' )) {echo get_option( 'pnfpb_ic_fcm_custom_prompt_popup_wait_message' );} else { echo __("Please wait...processing",'PNFPB_TD');} ?>"  />
+											</td>
+										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+												<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" for="pnfpb_custom_prompt_options_on_off">
+													<?php echo __("Show subscription options button",'PNFPB_TD');?>
+												</label>												
+												<label class="pnfpb_switch">
+													<input  id="pnfpb_custom_prompt_options_on_off" name="pnfpb_custom_prompt_options_on_off" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_custom_prompt_options_on_off' ) ); ?>  />
+													<span class="pnfpb_slider round"></span>
+												</label>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								</td>
+							</tr>
+    						<tr class="pnfpb_ic_push_settings_table_row pnfpb_ic_push_settings_table_border_bottom">
+        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname pnfpb_ic_push_settings_table_label_custom_prompt_column">
+									<table class="pnfpb_ic_push_firebase_settings_table widefat fixed">
+										<thead>
+											<tr>
+												<th>
+													<?php echo "<b>".__("Customize Bell prompt icon, Button color and text",PNFPB_TD)."</b>";?>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+    										<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">										
+													<p>
+														<?php echo __("Push Subscribe prompt Icon(32x32 pixels)",PNFPB_TD);?>
+													</p>
+													<table>
+														<tr>
+                											<td class="column-columnname">
+                    											<button id="pnfpb_ic_fcm_popup_subscribe_button_icon" class="pnfpb_ic_push_settings_upload_icon">
+																	<?php echo __("Upload Icon",PNFPB_TD);?>
+																</button>
+                    											<input type="hidden" id="pnfpb_ic_fcm_popup_subscribe_button_icon" name="pnfpb_ic_fcm_popup_subscribe_button_icon" value="<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_icon' )) { echo get_option('pnfpb_ic_fcm_popup_subscribe_button_icon'); } else { echo plugin_dir_url( __DIR__ ).'public/img/pushbell-pnfpb.png';} ?>" />
+                											</td>
+            											</tr>
+														<tr>
+                											<td class="column-columnname">
+                    											<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+                        											<div id="pnfpb_ic_fcm_popup_subscribe_button_icon_preview" style="background-image: url(<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_icon' )) { echo get_option('pnfpb_ic_fcm_popup_subscribe_button_icon'); } else { echo plugin_dir_url( __DIR__ ).'public/img/pushbell-pnfpb.png';} ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:20px auto;background-position:center;background-repeat:no-repeat;background-size:cover;">
+																	</div>
+                    											</div>
+                											</td>
+            											</tr>
+													</table>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Header text in custom prompt",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_header_text" name="pnfpb_ic_fcm_popup_header_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_header_text' )) {echo get_option( 'pnfpb_ic_fcm_popup_header_text' );} else { echo __("Manage push notifications",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Button text color",'PNFPB_TD');?></p>
+													<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_prompt_button_background" id="pnfpb_ic_fcm_popup_subscribe_button_text_color" name="pnfpb_ic_fcm_popup_subscribe_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_button_text_color' ); } else { echo '#ffffff'; }?>" />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Push notification subscribe Button background color",'PNFPB_TD');?></p>
+													<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_prompt_button_background" id="pnfpb_ic_fcm_popup_subscribe_button_color" name="pnfpb_ic_fcm_popup_subscribe_button_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_color' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_button_color' ); } else { echo '#e54b4d';}?>" />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Push notification subscribe text",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_subscribe_button" name="pnfpb_ic_fcm_popup_subscribe_button" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_subscribe_button' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_button' );} else { echo __("Subscribe",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Push notification unsubscribe text",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_unsubscribe_button" name="pnfpb_ic_fcm_popup_unsubscribe_button" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_unsubscribe_button' )) {echo get_option( 'pnfpb_ic_fcm_popup_unsubscribe_button' );} else { echo __("Unsubscribe",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Notification subscribed message when hover on push icon",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_subscribe_message" name="pnfpb_ic_fcm_popup_subscribe_message" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_subscribe_message' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_message' );} else { echo __("You are subscribed to push notification",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Notification not subscribed message when hover on push icon",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_unsubscribe_message" name="pnfpb_ic_fcm_popup_unsubscribe_message" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_unsubscribe_message' )) {echo get_option( 'pnfpb_ic_fcm_popup_unsubscribe_message' );} else { echo __("Push notification not subscribed",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Wait message while processing push subscription",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_wait_message" name="pnfpb_ic_fcm_popup_wait_message" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_wait_message' )) {echo get_option( 'pnfpb_ic_fcm_popup_wait_message' );} else { echo __("Please wait...processing",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" for="pnfpb_bell_icon_prompt_options_on_off">
+														<?php echo __("Show subscription options button",'PNFPB_TD');?>
+													</label>												
+													<label class="pnfpb_switch">
+														<input  id="pnfpb_bell_icon_prompt_options_on_off" name="pnfpb_bell_icon_prompt_options_on_off" type="checkbox" value="1" <?php  if(get_option( 'pnfpb_bell_icon_prompt_options_on_off','0' ) === '0' || get_option( 'pnfpb_bell_icon_prompt_options_on_off','0' ) === '1' ) { echo 'checked';
+} ?>  />
+														<span class="pnfpb_slider round"></span>
+													</label>
+												</td>
+											</tr>											
+										</tbody>
 									</table>
 								</td>
 							</tr>
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Header text in custom prompt",'PNFPB_TD');?></p>
-										<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_header_text" name="pnfpb_ic_fcm_popup_header_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_header_text' )) {echo get_option( 'pnfpb_ic_fcm_popup_header_text' );} else { echo __("Manage push notifications",'PNFPB_TD');} ?>"  />
-								</td>
-							</tr>							
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Button text color",'PNFPB_TD');?></p>
-										<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_prompt_button_background" id="pnfpb_ic_fcm_popup_subscribe_button_text_color" name="pnfpb_ic_fcm_popup_subscribe_button_text_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_text_color' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_button_text_color' ); } else { echo '#ffffff'; }?>" />
+    						<tr class="pnfpb_ic_push_settings_table_row pnfpb_ic_push_settings_table_border_bottom">
+        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname pnfpb_ic_push_settings_table_label_custom_prompt_column">
+									<table class="pnfpb_ic_push_firebase_settings_table widefat fixed">
+										<thead>
+											<tr>
+												<th>
+													<?php echo "<b>".__("Customize Subscription options text,color,button in bell icon and in custom prompt",PNFPB_TD)."</b>";?>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option update button text",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_update_text" name="pnfpb_bell_icon_subscription_option_update_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_update_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_update_text' );} else { echo __("Update",'PNFPB_TD');} ?>"  />
+												</td>
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option update button text color",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_update_text_color" name="pnfpb_bell_icon_subscription_option_update_text_color" type="color" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_update_text_color' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_update_text_color' );} else { echo '#ffffff';} ?>"  />
+												</td>
+<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option update button background color",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_update_background_color" name="pnfpb_bell_icon_subscription_option_update_background_color" type="color" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_update_background_color' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_update_background_color' );} else { echo '#135e96';} ?>"  />
+												</td>												
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option list background color ",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_list_background_color" name="pnfpb_bell_icon_subscription_option_list_background_color" type="color" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_list_background_color' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_list_background_color' );} else { echo '#cccccc';} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option list text color ",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_list_text_color" name="pnfpb_bell_icon_subscription_option_list_text_color" type="color" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_list_text_color' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_list_text_color' );} else { echo '#000000';} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option list checkbox color ",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_list_checkbox_color" name="pnfpb_bell_icon_subscription_option_list_checkbox_color" type="color" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_list_checkbox_color' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_list_checkbox_color' );} else { echo '#135e96';} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option update confirmation message ",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_update_confirmation_message" name="pnfpb_bell_icon_subscription_option_update_confirmation_message" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_update_confirmation_message' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_update_confirmation_message' );} else { echo __("subscription updated",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>											
+											<tr class="pnfpb_ic_push_settings_table_row">
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for all subscriptions",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_activity_text" name="pnfpb_bell_icon_subscription_option_all_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_all_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_all_text' );} else { echo __("All",'PNFPB_TD');} ?>"  />
+												</td>												
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Post",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_post_text" name="pnfpb_bell_icon_subscription_option_post_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_post_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_post_text' );} else { echo __("Post",'PNFPB_TD');} ?>"  />
+												</td>
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Activity",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_activity_text" name="pnfpb_bell_icon_subscription_option_activity_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_activity_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_activity_text' );} else { echo __("Activity",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for all comments",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_all_comments_text" name="pnfpb_bell_icon_subscription_option_all_comments_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_all_comments_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_all_comments_text' );} else { echo __("All Comments",'PNFPB_TD');} ?>"  />
+												</td>												
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for my comments",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_my_comments_text" name="pnfpb_bell_icon_subscription_option_my_comments_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_my_comments_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_my_comments_text' );} else { echo __("My Comments",'PNFPB_TD');} ?>"  />
+												</td>
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Private message",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_private_message_text" name="pnfpb_bell_icon_subscription_option_private_message_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_private_message_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_private_messsage_text' );} else { echo __("Private Message",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for New member joined",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_new_member_joined_text" name="pnfpb_bell_icon_subscription_option_new_member_joined_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_new_member_joined_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_new_member_joined_text' );} else { echo __("New Member joined",'PNFPB_TD');} ?>"  />
+												</td>												
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Friendship request",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_friendship_request_text" name="pnfpb_bell_icon_subscription_option_friendship_request_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_friendship_request_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_friendship_request_text' );} else { echo __("Friendship request",'PNFPB_TD');} ?>"  />
+												</td>
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Friendship accepted",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_friendship_accepted_text" name="pnfpb_bell_icon_subscription_option_friendship_accepted_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_friendship_accepted_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_friendship_accepted_text' );} else { echo __("Friendship accepted",'PNFPB_TD');} ?>"  />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Avatar change",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_avatar_change_text" name="pnfpb_bell_icon_subscription_option_avatar_change_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_avatar_change_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_avatar_change_text' );} else { echo __("Avatar change",'PNFPB_TD');} ?>"  />
+												</td>												
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Cover image change",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_cover_image_change_text" name="pnfpb_bell_icon_subscription_option_cover_image_change_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_cover_image_change_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_cover_image_change_text' );} else { echo __("Cover image change",'PNFPB_TD');} ?>"  />
+												</td>
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Group details update",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_group_details_update_text" name="pnfpb_bell_icon_subscription_option_group_details_update_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_group_details_update_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_group_details_update_text' );} else { echo __("Group details update",'PNFPB_TD');} ?>"  />
+												</td>
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo __("Subscription option text for Group invite",'PNFPB_TD');?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_bell_icon_subscription_option_group_invite_text" name="pnfpb_bell_icon_subscription_option_group_invite_text" type="text" value="<?php if(get_option( 'pnfpb_bell_icon_subscription_option_group_invite_text' )) {echo get_option( 'pnfpb_bell_icon_subscription_option_group_invite_text' );} else { echo __("Group invite",'PNFPB_TD');} ?>"  />
+												</td>												
+											</tr>											
+										</tbody>
+									</table>
 								</td>
 							</tr>
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Push notification subscribe Button background color",'PNFPB_TD');?></p>
-										<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_fcm_push_prompt_button_background" id="pnfpb_ic_fcm_popup_subscribe_button_color" name="pnfpb_ic_fcm_popup_subscribe_button_color" type="color" value="<?php if (get_option( 'pnfpb_ic_fcm_popup_subscribe_button_color' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_button_color' ); } else { echo '#e54b4d';}?>" />
-								</td>
-							</tr>
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Push notification subscribe text",'PNFPB_TD');?></p>
-										<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_subscribe_button" name="pnfpb_ic_fcm_popup_subscribe_button" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_subscribe_button' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_button' );} else { echo __("Subscribe",'PNFPB_TD');} ?>"  />
-								</td>
-							</tr>
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Push notification unsubscribe text",'PNFPB_TD');?></p>
-										<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_unsubscribe_button" name="pnfpb_ic_fcm_popup_unsubscribe_button" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_unsubscribe_button' )) {echo get_option( 'pnfpb_ic_fcm_popup_unsubscribe_button' );} else { echo __("Unsubscribe",'PNFPB_TD');} ?>"  />
-								</td>
-							</tr>
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Notification subscribed message when hover on push icon",'PNFPB_TD');?></p>
-										<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_subscribe_message" name="pnfpb_ic_fcm_popup_subscribe_message" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_subscribe_message' )) {echo get_option( 'pnfpb_ic_fcm_popup_subscribe_message' );} else { echo __("You are subscribed to push notification",'PNFPB_TD');} ?>"  />
-								</td>
-							</tr>
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Notification not subscribed message when hover on push icon",'PNFPB_TD');?></p>
-										<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_unsubscribe_message" name="pnfpb_ic_fcm_popup_unsubscribe_message" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_unsubscribe_message' )) {echo get_option( 'pnfpb_ic_fcm_popup_unsubscribe_message' );} else { echo __("Push notification not subscribed",'PNFPB_TD');} ?>"  />
-								</td>
-							</tr>
-							<tr class="pnfpb_ic_push_settings_table_row">
-        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
-									<p><?php echo __("Wait message while processing push subscription",'PNFPB_TD');?></p>
-										<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_popup_wait_message" name="pnfpb_ic_fcm_popup_wait_message" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_popup_wait_message' )) {echo get_option( 'pnfpb_ic_fcm_popup_wait_message' );} else { echo __("Please wait...processing",'PNFPB_TD');} ?>"  />
-								</td>
-							</tr>							
 						</tbody>
 					</table>
 				</div>				
 			</td>
 		</tr>
+		<tr class="pnfpb_ic_push_settings_table_row">
+			<td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div class="pnfpb_row">
+					<div class="pnfpb_column_400">
+						<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" for="pnfpb_ic_fcm_push_prompt_enable">
+								<label class="pnfpb_switch">
+									<input  id="pnfpb_ic_fcm_loggedin_notify" name="pnfpb_ic_fcm_loggedin_notify" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_loggedin_notify' ) ); ?>  />
+									<span class="pnfpb_slider round"></span>
+								</label>
+									<?php echo __("Push notification only for loggedin users<br/>(if you enable this then all old prior subscriptions for httpv1 version needs to be re-subscribed and if you use legacy api then no need to re-subscribe)",'PNFPB_TD');?>
+							</label>
+						</div>						
+					</div>
+				</div>
+			</td>
+		</tr>
         <tr class="pnfpb_ic_push_settings_table_row">
 			<td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div  class="pnfpb_row">
+					<?php echo '<b>'.__('In edit/New post page with posttype=post, make sure metabox for PNFPB Push notification is switched on to send notification. <br/>For frontend post/custom post,it will work as it is without metabox',PNFPB_TD).'</b>'; ?>
+				</div>				
 				<div class="pnfpb_row">
   					<div class="pnfpb_column">
     					<div class="pnfpb_card">				
@@ -484,7 +871,7 @@
 					<?php } ?>
 				</div>				
 				<div class="pnfpb_ic_activity_content_form">
-					<?php echo __("Notification title for BuddyPress new activity<br/>use [member name] shortcode to display member name along with custom title<br/>Example '[member name] posted an activity' will display as 'Tom posted an activity' where Tom is member name",PNFPB_TD);?><br/>
+					<?php echo __("Notification title for BuddyPress new activity<br/>use [member name] shortcode to display member name along with custom title<br/>(use [group name] shortcode only for group buddypress activities to display member name)<br/>Example '[member name] posted an activity' will display as 'Tom posted an activity' where Tom is member name",PNFPB_TD);?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_activity_title" name="pnfpb_ic_fcm_activity_title" type="text" value="<?php echo $activitytitle; ?>" /><br/><br/>
 					<?php echo __("Default Notification content for BuddyPress new activity<br/> (or leave it as blank to display activity content in notification message)",PNFPB_TD); ?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_activity_message" name="pnfpb_ic_fcm_activity_message" type="text" value="<?php echo $activitymessage; ?>" /><br/><br/>					
@@ -492,6 +879,23 @@
 					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_group_activity_title" name="pnfpb_ic_fcm_group_activity_title" type="text" value="<?php echo $activitygroup; ?>"/><br/><br/>
 					<?php echo __("Default Notification content for BuddyPress new group activity<br/> (or leave it as blank to display activity content in notification message)",PNFPB_TD);?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_group_activity_message" name="pnfpb_ic_fcm_group_activity_message" type="text" value="<?php echo $groupactivitymessage; ?>" /><br/><br/>
+					<div class="pnfpb_column_400">
+    					<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_followers_enable">
+								<?php echo __("Notify only BuddyPress user followers<br/><b>(it requires BuddyPress-followers plugin)</b>",'PNFPB_TD');?>
+								<label class="pnfpb_switch">
+									<?php
+										$pnfpb_ic_fcm_buddypress_followers_enable = '0';
+										if ((get_option( 'pnfpb_ic_fcm_buddypress_followers_enable') && get_option( 'pnfpb_ic_fcm_buddypress_followers_enable')  === '1') || (get_option( 'pnfpb_ic_fcm_buddypress_followers_enable') && get_option( 'pnfpb_ic_fcm_buddypress_followers_enable')  === '1')) {
+												$pnfpb_ic_fcm_buddypress_followers_enable = '1';
+										}
+									?>										
+									<input  id="pnfpb_ic_fcm_buddypress_followers_enable" name="pnfpb_ic_fcm_buddypress_followers_enable" type="checkbox" value="1" <?php checked( '1', $pnfpb_ic_fcm_buddypress_followers_enable ); ?>  />				
+									<span class="pnfpb_slider round"></span>
+								</label>
+							</label>
+						</div>
+					</div>					
 				</div>
 			</td>
 		</tr>

@@ -331,6 +331,10 @@
 								</label>
 							</div>
 						</div>
+						<div class="pnfpb_column_400">
+							<p><?php echo __("If cancel button is pressed while subscribing, show custom prompt after below number of days",'PNFPB_TD');?></p>
+							<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_pwa_show_again_days" name="pnfpb_ic_fcm_pwa_show_again_days" type="number" value="<?php if(get_option( 'pnfpb_ic_fcm_pwa_show_again_days' )) {echo get_option( 'pnfpb_ic_fcm_pwa_show_again_days' );} else { echo "7";} ?>"/>
+						</div>
   						<div class="pnfpb_column_400">
     						<div class="pnfpb_card">								
 								<label for="pnfpb_ic_pwa_app_desktop_custom_prompt_enable">

@@ -144,6 +144,10 @@
 				</td>
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_shortcode_close_button_text"><?php echo __("Close",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_shortcode_close_button_text" name="pnfpb_ic_fcm_shortcode_close_button_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_shortcode_close_button_text' )) {echo get_option( 'pnfpb_ic_fcm_shortcode_close_button_text' );} else { echo __('Close',PNFPB_TD); } ?>" />
+				</td>
+    		</tr>			
+			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_text"><?php echo __("Sub-heading text while subscribing for (first time) push notification in shortcode popup box",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text" name="pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text' );} else { echo __('Please wait...subscribing push notification is in progress.',PNFPB_TD); } ?>" />
 				</td>
     		</tr>
@@ -192,7 +196,7 @@
 				</td>
     		</tr>			
 			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_text"><?php echo __("Un-subscribe all notifications option text in shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_all_dialog_text" name="pnfpb_ic_fcm_unsubscribe_all_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_unsubscribe_all_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_unsubscribe_all_dialog_text' );} else { echo __('Subscription option updated',PNFPB_TD); } ?>" />
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_text"><?php echo __("Un-subscribe all notifications option text in shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_all_dialog_text" name="pnfpb_ic_fcm_unsubscribe_all_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_unsubscribe_all_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_unsubscribe_all_dialog_text' );} else { echo __('Unsubscribe all notifications',PNFPB_TD); } ?>" />
 				</td>
     		</tr>			
 			<tr class="pnfpb_ic_push_settings_table_row">

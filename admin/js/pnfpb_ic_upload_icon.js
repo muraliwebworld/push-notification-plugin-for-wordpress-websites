@@ -126,4 +126,41 @@ $j(document).ready(function() {
 		
 	});
 	
+	var pnfpb_custom_prompt_subscribe_icon_mediaUploader_512;
+	
+	$j('#pnfpb_ic_fcm_popup_custom_prompt_icon').on('click',function(e) {
+		e.preventDefault();
+		if( pnfpb_custom_prompt_subscribe_icon_mediaUploader_512 ) {
+			pnfpb_custom_prompt_subscribe_icon_mediaUploader_512.open();
+			return;
+		}
+		
+		pnfpb_custom_prompt_subscribe_icon_mediaUploader_512 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		pnfpb_custom_prompt_subscribe_icon_mediaUploader_512.on('select', function() {
+			attachment = pnfpb_custom_prompt_subscribe_icon_mediaUploader_512.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			if (imagewidth < 85 && imageheight < 85){
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').text('');
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon').val(attachment.url);
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('background-image','url(' + attachment.url + ')');
+			}
+			else
+			{
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('background-image','none');
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').text('Image size must be less than 85x85 pixels');
+			}
+		});
+		
+		pnfpb_custom_prompt_subscribe_icon_mediaUploader_512.open();
+		
+	});	
+	
 });

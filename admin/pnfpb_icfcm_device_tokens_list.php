@@ -6,6 +6,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	
 	class PNFPB_ICFM_Device_tokens_List extends WP_List_Table {
+		
+	private $table_data;
 
 	/** Class constructor */
 	public function __construct() {

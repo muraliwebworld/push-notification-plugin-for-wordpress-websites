@@ -47,9 +47,9 @@
 			
 		
 			$apiaccesskey = get_option('pnfpb_ic_fcm_google_api');
+		
 			
-			
-			if ($apiaccesskey != '' && $apiaccesskey != false) {
+			if (($apiaccesskey != '' && $apiaccesskey != false)  || (get_option( 'pnfpb_onesignal_push' ) === '1')) {
 	
 			    $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 	
@@ -114,14 +114,14 @@
 				if (count($deviceidswebview) > 0) {
 					
 						$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																		 stripslashes(strip_tags($post_title)),
+																		 stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),
 																		 stripslashes(strip_tags($activity_content_push)),
 																		 $imageurl,
 																		 $imageurl,
 																		 $postlink,
 																		 array(),
-																		 $regid,
 																		 array(),
+																		 $deviceidswebview,
 																		 0,
 																	     0																					 
 																		);

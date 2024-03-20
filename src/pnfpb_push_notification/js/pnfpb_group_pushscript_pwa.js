@@ -429,8 +429,8 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			else
 			{
 				//if (pnfpb_pushtoken_fromflutter !== '') {
-					console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'));
-					$j(document).on( "click",".subscribe-notification-group", function(e) {
+					console.log(__('Web View!!!','PNFPB_TD'));
+				/*	$j(document).on( "click",".subscribe-notification-group", function(e) {
 						e.preventDefault();
 						var groupId = $j(this).attr("data-group-id");
 						var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
@@ -535,7 +535,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 							}
 						}]
 					})
-				})				
+				})	*/			
 			}
 
 

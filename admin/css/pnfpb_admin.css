@@ -618,3 +618,211 @@ td.pnfpb_ic_push_settings_table_column {
 .pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable {
 	width:100px !important;
 }
+
+.pnfpb-push-msg-model-column-head {
+	width:100%;
+}
+
+.pnfpb-push-msg-model-column {
+	width: 180px;
+    flex-direction: row;
+    margin-right: 1em;
+    text-align: center;
+	background: #e3e3e3;
+	margin-bottom: 10px;
+	padding-bottom: 8px;
+	float: left;
+}
+
+
+.pnfpb-push-msg-model-prompt-button-container {
+	margin: 6px;
+    width: 180px;
+	height:25px;
+}
+
+.pnfpb-push-msg-model-outer-container {
+    width: 180px;
+	height: 150px;
+}
+
+.pnfpb-push-msg-model-container {
+    display: flex;
+    width: 150px;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 3px;
+    background: #ffffff;
+    overflow: auto;
+    margin: 0.5em 0;
+	margin: 0 auto;
+	margin-top: 0.9em;
+	height: 84px;
+}
+
+.pnfpb-push-msg-vertical-model-container {
+    display: flex;
+    width: 120px;
+	text-align: center;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 3px;
+    background: #ffffff;
+    overflow: auto;
+    margin: 0.5em 0;
+	margin: 0 auto;
+	margin-top: 0.9em;
+	height: 150px;
+}
+
+.pnfpb-push-model-icon {
+    width: 30px;
+    height: 30px;
+    margin: 6px;
+    margin-right: 3px;
+    border-radius: 2px;
+}
+
+.pnfpb-push-vertical-model-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    margin-top: 5px;
+	margin-bottom: 5px;
+    border-radius: 2px;
+}
+
+.pnfpb-push-vertical-model-bell {
+    margin-top: 5px;
+	margin-bottom: 5px;
+    border-radius: 2px;
+}
+
+.pnfpb-push-msg-vertical-model-bell-square {
+  	border-radius: 50%;
+  	padding: 5px; 
+  	width: 20px;
+ 	height: 20px;	
+	margin-top:80%;
+	margin-left:70%;
+}
+
+.pnfpb-push-msg-model-square {
+  border-radius: 50%;
+  background: #e5eb90;
+  padding: 5px; 
+  width: 20px;
+  height: 20px; 	
+}
+
+.pnfpb-push-msg-vertical-model-text-layout {
+    margin: 6px;
+    -ms-flex: 1;
+    flex: 1;
+	text-align: center;
+}
+
+.pnfpb-push-msg-model-text-layout {
+    margin: 6px;
+    margin-left: 3px;
+    -ms-flex: 1;
+    flex: 1;
+	text-align: right;
+}
+
+.pnfpb-push-msg-model-text-header-line {
+    height: 5px;
+    width: 80%;
+	text-align: center;
+    background: #7f8285;
+    margin: 10px 0;
+    border-radius: 1px;
+}
+
+.pnfpb-push-msg-model-text-line {
+    width: 85%;
+    height: 5px;
+    background: #e3e4e5;
+    margin: 5px 0;
+    border-radius: 1px;    
+}
+
+.pnfpb-push-msg-vertical-model-text-line {
+    width: 85%;
+    height: 5px;
+    background: #e3e4e5;
+    margin: 0 auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+    border-radius: 1px;    
+}
+
+.pnfpb-push-msg-model-text-long-line {
+    height: 5px;
+    width: 100%;
+    background: #e3e4e5;
+    margin: 5px 0;
+    border-radius: 1px;
+}
+
+.pnfpb-push-msg-vertical-model-text-long-line {
+    height: 5px;
+    width: 100%;
+    background: #e3e4e5;
+    margin: 0 auto;
+	margin-top: 5px;
+	margin-bottom: 5px;	
+    border-radius: 1px;
+}
+
+.pnfpb-push-msg-model-yes-button {
+	background-color: #7691e1;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 40px;
+    height: 20px;
+}
+
+.pnfpb-push-msg-model-cancel-button {
+	background-color: #c5c6c9;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 40px;
+    height: 20px;
+}
+
+.pnfpb-push-msg-vertical-model-yes-button {
+	background-color: #7691e1;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 80px;
+    height: 20px;
+}
+
+.pnfpb-push-msg-vertical-model-cancel-button {
+	background-color: #c5c6c9;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 80px;
+    height: 20px;
+}
+
+.pnfpb_ic_push_settings_table_border_bottom {
+	border-bottom: 1px solid #000;
+}
+
+.pnfpb_ic_push_settings_table_label_custom_prompt_column {
+	width:93% !important;
+	display: inline-block;
+}
+
+.pnfpb_ic_push_settings_custom_prompt_table_label_column {
+    width: 100% !important;
+    display: inline-block;
+}

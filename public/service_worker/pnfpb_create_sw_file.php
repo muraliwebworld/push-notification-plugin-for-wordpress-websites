@@ -91,18 +91,17 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		'use strict';
 
 		var isPWAenabled = '<?php echo get_option('pnfpb_ic_pwa_app_enable'); ?>';
-		var isExcludeallurlsincache = '<?php echo get_option('pnfpb_ic_pwa_app_excludeallurls'); ?>';
-
+		var isExcludeallurlsincache = '<?php echo get_option('pnfpb_ic_pwa_app_excludeallurls','no'); ?>';
 
 
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v1.59.1',
+  			cache_version: 'pnfpb_v1.81.1',
   			offline_assets: []
 		};
 
-		if (isExcludeallurlsincache === '1') {
+		if (isExcludeallurlsincache === '1'  && isExcludeallurlsincache === 'no') {
 			caches.delete(SW.cache_version);
 		}
 
@@ -116,7 +115,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 			var cacheurl4 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url4') ?>';
 			var cacheurl5 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url5') ?>';
 
-			if (isExcludeallurlsincache !== '1') {
+			if (isExcludeallurlsincache !== '1' && isExcludeallurlsincache !== 'no') {
 
 				SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url1');} else {echo get_home_url();}?>");
 
@@ -135,7 +134,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 			var pnfpbwpSysurls = ['gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];
 			
-			if (isExcludeallurlsincache === '1') {
+			if (isExcludeallurlsincache === '1'  && isExcludeallurlsincache === 'no') {
 				pnfpbwpSysurls = ['/','gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];				
 			}
 
@@ -218,7 +217,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 	  				return;
 				}
 
-				if (isExcludeallurlsincache === '1') {
+				if (isExcludeallurlsincache === '1'  && isExcludeallurlsincache === 'no') {
 					return;
 				}
 

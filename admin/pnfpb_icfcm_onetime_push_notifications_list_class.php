@@ -8,6 +8,8 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 	class PNFPB_ICFM_onetime_push_notifications_List extends WP_List_Table {
 		
 	public $pre_name = 'PNFPB_onetime_';
+	
+	private $table_data;
 
 	/** Class constructor */
 	public function __construct() {
@@ -244,8 +246,10 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 
 				$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%complete%'";
 				
-				$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-				$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+				if ( ! empty( $_REQUEST['orderby'] ) ) {
+					$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+					$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+				}
 
 				$sql .= " LIMIT 1";
 
@@ -286,8 +290,10 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 				
 				$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%pending%'";
 				
-				$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-				$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+				if ( ! empty( $_REQUEST['orderby'] ) ) {
+					$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+					$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+				}
 
 				$sql .= " LIMIT 1";
 
@@ -306,8 +312,10 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 					
 					$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%complete%'";
 				
-					$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-					$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+					if ( ! empty( $_REQUEST['orderby'] ) ) {
+						$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+						$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+					}
 
 					$sql .= " LIMIT 1";
 
@@ -324,8 +332,10 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 				} else {
 					$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%failed%'";
 				
-					$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-					$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+					if ( ! empty( $_REQUEST['orderby'] ) ) {
+						$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+						$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+					}
 
 					$sql .= " LIMIT 1";
 
@@ -342,8 +352,10 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 					} else {
 						$sql = "SELECT {$wpdb->prefix}actionscheduler_actions.scheduled_date_gmt FROM {$wpdb->prefix}pnfpb_ic_schedule_push_notifications,{$wpdb->prefix}actionscheduler_actions WHERE {$wpdb->prefix}actionscheduler_actions.args LIKE CONCAT('%', {$item['action_scheduler_id']},',',{$item['id']}, '%') AND {$wpdb->prefix}actionscheduler_actions.status LIKE '%running%'";
 				
-						$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-						$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+						if ( ! empty( $_REQUEST['orderby'] ) ) {
+							$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
+							$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
+						}
 
 						$sql .= " LIMIT 1";
 

@@ -197,10 +197,6 @@ navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_p
 				    
 			})}
 			}
-			else
-			{
-				console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'))
-			}
 					
 	})
 
