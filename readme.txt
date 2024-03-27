@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 5.0
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.81
+Stable tag: 1.82
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -197,6 +197,8 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.82 version Mar 26 2024 =
+Update: Compatible with Bedrock roots-io WordPress boilerplate. Static service worker file for push notification and PWA manifest json static files can also be generated using Bedrock (roots.io) WordPress boilerplate. 
 = 1.81 version Mar 15 2024 =
 New feature: New admin settings field added for number of days to show custom prompt for push notification again for front end users who cancels push notification in custom prompt.
 PWA New feature: New admin settings field added for number of days to show PWA custom prompt for push notification again for front end users who cancels push notification in PWA custom prompt.
@@ -255,23 +257,12 @@ Update: In Shortcode – Loading spinner added while subscribing and unsubscribi
 Update: In Shortcode – Close button added in confirmation dialog.
 Bug fix: Rectified problem related to wrongly displayed subscription option updated text for last checkbox option in shortcode. Updated code to display correct text for that option.
 Update: Shortcode push notifications options will be displayed as per settings enabled in admin push settings for frontend users.
-= 1.70 version – 8 Oct 2023 changes =
-BuddyPress Mentions push notifications – one to one notification only to user mentioned in BuddyPress activity
-Scheduling notifications changes to delete old data when it is reset/switched off.
-Merged cron schedule notifications with action scheduler to schedule notifications in background.
-Admin panel changes for scheduling notifications.
-Links to action scheduler tab in admin panel to view list of scheduled notifications for BuddyPress activities/group activities/comments and for post, custom post types.
-Scheduling notifications changes to start at entered time instead of immediate start.
-Customise options for Frontend Custom prompt to subscribe/unsubscribe notifications are added in admin push settings panel to customise button text for custom prompt, customise display message text in custom prompt.
-New meta box with checkbox added for every post/page to send or not to send push notifications while creating post.
-Admin settings to enable BuddyPress comments notifications only for author of particular activity (comment notifications only for My post/My activities).
-PWA install prompt shortcake will work independent of custom prompt of PWA.
-PWA custom install prompt can be enabled/disabled for desktop/mobile/tablet/according to screen size. Various custom options added in PWA settings tab.
 = For all older releases, details are available in below link =
 [Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
 
 
 == Upgrade Notice ==
+* Update: Compatible with Bedrock roots-io WordPress boilerplate. Static service worker file for push notification and PWA manifest json static files can also be generated using Bedrock (roots.io) WordPress boilerplate. 
 * New feature: New admin settings field added for number of days to show custom prompt for push notification again for front end users who cancels push notification in custom prompt.
 PWA New feature: New admin settings field added for number of days to show PWA custom prompt for push notification again for front end users who cancels push notification in PWA custom prompt.
 * Update: Removed please wait processing message while subscribing notification.

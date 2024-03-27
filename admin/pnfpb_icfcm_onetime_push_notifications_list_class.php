@@ -151,7 +151,7 @@ if ( !class_exists( 'PNFPB_ICFM_onetime_push_notifications_List' ) ) {
 
 	/** Text displayed when no device token data is available */
 	public function no_items() {
-		_e( 'No registered device tokens avaliable.', 'PNFPB_TD' );
+		_e( 'No one time or scheduled push notifications sent', 'PNFPB_TD' );
 	}
 
 

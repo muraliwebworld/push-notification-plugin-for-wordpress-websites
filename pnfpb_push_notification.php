@@ -3,11 +3,11 @@
 Plugin Name: Push Notification for Post and BuddyPress
 Plugin URI: https://www.muraliwebworld.com/groups/wordpress-plugins-by-muralidharan-indiacitys-com-technologies/forum/topic/push-notification-for-post-and-buddypress/
 Description: Push notification for Post,custom post,BuddyPress,Woocommerce,Android/IOS mobile apps. Configure push notification settings in <a href="admin.php?page=pnfpb-icfcm-slug"><strong>settings page</strong></a>
-Version: 1.81
+Version: 1.82
 Author: Muralidharan Ramasamy
 Author URI: https://www.muraliwebworld.com
 Text Domain: PNFPB_TD
-Updated: 15 March 2024
+Updated: 26 March 2024
 */
 /**
  * License: GPLv2 or later
@@ -3705,7 +3705,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 	
 				if ( 200 !== $swresponse_code ) {
 				
-					$createfileresult = $wp_filesystem->put_contents( trailingslashit( ABSPATH ) . 'pnfpb_icpush_pwa_sw.js',$sw_content, 0644);
+					$createfileresult = $wp_filesystem->put_contents( trailingslashit( get_home_path() ) . 'pnfpb_icpush_pwa_sw.js',$sw_content, 0644);
 
 				}
 			
@@ -3717,7 +3717,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 	
 				if ( 200 !== $firebase_swresponse_code ) {
 				
-					$createfileresult = $wp_filesystem->put_contents( trailingslashit( ABSPATH ) . 'firebase-messaging-sw.js',$firebase_sw_contents, 0644);
+					$createfileresult = $wp_filesystem->put_contents( trailingslashit( get_home_path() ) . 'firebase-messaging-sw.js',$firebase_sw_contents, 0644);
 
 				}
 			
@@ -3731,7 +3731,7 @@ if ( !class_exists( 'PNFPB_ICFM_Push_Notification_Post_BuddyPress' ) ) {
 				
 					if ( 200 !== $pwa_manifest_response_code ) {
 				
-						$createfileresult = $wp_filesystem->put_contents( trailingslashit( ABSPATH ) . 'pnfpbmanifest.json',$pwa_manifest_contents, 0644);
+						$createfileresult = $wp_filesystem->put_contents( trailingslashit( get_home_path() ) . 'pnfpbmanifest.json',$pwa_manifest_contents, 0644);
 
 					}
 					
@@ -9781,7 +9781,7 @@ https://domainname.com/wp-json/PNFPBpush/v1/subscriptiontoken</h4>
 						
 						if ( 200 === $swresponse_code ) {
 
-							$createfileresult = $wp_filesystem->delete( trailingslashit( ABSPATH ) . 'pnfpb_icpush_pwa_sw.js');
+							$createfileresult = $wp_filesystem->delete( trailingslashit( get_home_path() ) . 'pnfpb_icpush_pwa_sw.js');
 						
 						}
 			
@@ -9792,7 +9792,7 @@ https://domainname.com/wp-json/PNFPBpush/v1/subscriptiontoken</h4>
 	
 						if ( 200 === $firebase_swresponse_code ) {
 				
-							$createfileresult = $wp_filesystem->delete( trailingslashit( ABSPATH ) . 'firebase-messaging-sw.js');
+							$createfileresult = $wp_filesystem->delete( trailingslashit( get_home_path() ) . 'firebase-messaging-sw.js');
 
 						}
 			
@@ -9804,7 +9804,7 @@ https://domainname.com/wp-json/PNFPBpush/v1/subscriptiontoken</h4>
 				
 							if ( 200 === $pwa_manifest_response_code ) {
 				
-								$createfileresult = $wp_filesystem->delete( trailingslashit( ABSPATH ) . 'pnfpbmanifest.json');
+								$createfileresult = $wp_filesystem->delete( trailingslashit( get_home_path() ) . 'pnfpbmanifest.json');
 
 							}
 					
@@ -9847,6 +9847,11 @@ https://domainname.com/wp-json/PNFPBpush/v1/subscriptiontoken</h4>
 										<li><?php echo __(PNFPB_PLUGIN_NGINX_SETTINGS_DESCRIPTION2);?></li>
 					
 									</ul>
+									<ul>
+					
+										<li><?php echo __("If Push notification admin settings or PWA admin settings are changed then regenerate service worker file by switching off this option, save changes, switch on again and save the changes again, so that service worker file and PWA manifest files will be regenerated",'PNFPB_TD');?></li>
+					
+									</ul>									
 								</td>							
     						</tr>							
 						</tbody>
