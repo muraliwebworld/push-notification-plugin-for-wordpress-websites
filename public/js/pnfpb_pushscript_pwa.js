@@ -89,7 +89,7 @@ if (pnfpb_webview) {
 			
 			//console.log('firebasecredentialsobject');
 			
-			console.log(responseajax);
+			//console.log(responseajax);
 
 			var firebasecredentialsobject = JSON.parse(responseajax);
 			
@@ -121,21 +121,19 @@ if (pnfpb_webview) {
 				
 				if( $jwebview(".subscribe-notification-group").length ) {
 				
-					$j(document).on( "click",".subscribe-notification-group", function(e) {
+					$jwebview(document).on( "click",".subscribe-notification-group", function(e) {
 						e.preventDefault();
 						var groupId = $j(this).attr("data-group-id");
 						var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
 						var subscribebuttonname = '.subscribegroupbutton-'+groupId;
 						var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
 						var subscribebuttonid = '#subscribegroupbutton-'+groupId;										
-						if( $j("#pnfpb_group_users_subscribe_dialog_confirm").length ) {
+						if( $jwebview("#pnfpb_group_users_subscribe_dialog_confirm").length === 0 ) {
+
+							$jwebview(this).append( '<div id="pnfpb_group_users_subscribe_dialog_confirm" class="pnfpb_group_users_subscribe_dialog_confirm" title="Subscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_push.group_subscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
 						}
-						else
-						{
-							$j(this).append( '<div id="pnfpb_group_users_subscribe_dialog_confirm" class="pnfpb_group_users_subscribe_dialog_confirm" title="Subscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_push.group_subscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
-						}
- 						var subscribe_button_text = pnfpb_ajax_object_push.subscribe_button_text;
-						$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog({  
+ 						var subscribe_button_text = pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_text;
+						$jwebview( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog({  
 							resizable: false,
 							height: "auto",
 							closeText : '',
@@ -161,16 +159,16 @@ if (pnfpb_webview) {
 									if (subscribeGroupid) {
 										subscribeGroupid.postMessage(groupId);
 									}								
-									$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_push.group_subscribe_dialog_text_confirm+"</p>");
-			       			    	$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
-									$j(subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
-									$j(unsubscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
-									$j(subscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
-									$j(unsubscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );														
-						 	 		$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
+									$jwebview(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_push.group_subscribe_dialog_text_confirm+"</p>");
+			       			    	$jwebview( "#pnfpb-group-unsubscribe-dialog" ).dialog();
+									$jwebview(subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+									$jwebview(unsubscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
+									$jwebview(subscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+									$jwebview(unsubscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );														
+						 	 		$jwebview( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
 								},
 								Cancel: function() {
-									$j( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
+									$jwebview( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog("close");
 								}
 							}]
     					})
@@ -180,22 +178,20 @@ if (pnfpb_webview) {
 				
 				if( $jwebview(".unsubscribe-notification-group").length ) {
 					
-		    		$j(document).on( "click",".unsubscribe-notification-group", function(e) {
+		    		$jwebview(document).on( "click",".unsubscribe-notification-group", function(e) {
 						e.preventDefault();
-						var groupId = $j(this).attr("data-group-id");
+						var groupId = $jwebview(this).attr("data-group-id");
 						document.cookie = "pnfpb_group_push_notification_"+groupId + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"				
 						var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
 						var subscribebuttonname = '.subscribegroupbutton-'+groupId;
 						var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
 						var subscribebuttonid = '#subscribegroupbutton-'+groupId;
-						if( $j("#pnfpb_group_users_unsubscribe_dialog_confirm").length ) {
+						if( $jwebview("#pnfpb_group_users_unsubscribe_dialog_confirm").length === 0 ) {
+
+							$jwebview(this).append( '<div id="pnfpb_group_users_unsubscribe_dialog_confirm" class="pnfpb_group_users_unsubscribe_dialog_confirm" title="Unsubscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_push.group_unsubscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
 						}
-						else
-						{
-							$j(this).append( '<div id="pnfpb_group_users_unsubscribe_dialog_confirm" class="pnfpb_group_users_unsubscribe_dialog_confirm" title="Unsubscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_push.group_unsubscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
-						}
-						var unsubscribe_button_text = pnfpb_ajax_object_push.unsubscribe_button_text;									
-						$j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog({  
+						var unsubscribe_button_text = pnfpb_ajax_object_mobile_app_interface_script.unsubscribe_button_text;									
+						$jwebview( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog({  
 							resizable: false,
 							height: "auto",
 							closeText : '',
@@ -203,7 +199,7 @@ if (pnfpb_webview) {
 							buttons: [{
       							text: unsubscribe_button_text,
 								open: function() {
-									$j(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_push.subscribe_button_color+';border:0px');
+									$jwebview(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_push.subscribe_button_color+';border:0px');
 								},
       							click: function() {
 								
@@ -216,16 +212,16 @@ if (pnfpb_webview) {
 									if (unsubscribeGroupid) {
 										unsubscribeGroupid.postMessage(groupId);
 									}								
-									$j(unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
-									$j(subscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
-									$j(unsubscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
-									$j(subscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
-									$j(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_push.group_unsubscribe_dialog_text_confirm+"</p>");
-									$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
-									$j("#pnfpb_group_users_unsubscribe_dialog_confirm").dialog("close");
+									$jwebview(unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+									$jwebview(subscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
+									$jwebview(unsubscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
+									$jwebview(subscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
+									$jwebview(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_push.group_unsubscribe_dialog_text_confirm+"</p>");
+									$jwebview( "#pnfpb-group-unsubscribe-dialog" ).dialog();
+									$jwebview("#pnfpb_group_users_unsubscribe_dialog_confirm").dialog("close");
 								},
 								Cancel: function() {
-									$j( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog( "close" );
+									$jwebview( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog( "close" );
 								}
 							}]
 						})
@@ -238,7 +234,7 @@ if (pnfpb_webview) {
 		async function frontend_subscription_menu_webview(refreshedToken) {
 
 			if (pnfpb_webview) {
-				console.log('frontend_subscription_menu_webview');
+				//console.log('frontend_subscription_menu_webview');
 				//For webview mobile apps send subscriptionoptions from webview to app
 				//
 			
@@ -498,7 +494,7 @@ if (pnfpb_webview) {
 						$jwebview('#pnfpb_ic_fcm_front_post_enable').prop('checked', false);
 					}
 					
-					if (subscriptionoptionsarray[11] && subscriptionoptionsarray[11] === '1')
+					if (subscriptionoptionsarray[1] === '1' && subscriptionoptionsarray[11] === '1')
 					{
 					  	$jwebview('#pnfpb_ic_fcm_front_bactivity_enable').prop('checked', true);
 
@@ -511,6 +507,7 @@ if (pnfpb_webview) {
 					if (subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[0] === '1')
 					{
 					  	$jwebview('#pnfpb_ic_fcm_front_bcomment_enable').prop('checked', true);
+						$jwebview('#pnfpb_ic_fcm_front_mybcomment_enable').prop('checked', false);
 					}
 					else 
 					{
@@ -520,6 +517,7 @@ if (pnfpb_webview) {
 					if (subscriptionoptionsarray[3] === '1' || subscriptionoptionsarray[0] === '1')
 					{
 					  	$jwebview('#pnfpb_ic_fcm_front_mybcomment_enable').prop('checked', true);
+						$jwebview('#pnfpb_ic_fcm_front_bcomment_enable').prop('checked', false);
 					}
 					else 
 					{

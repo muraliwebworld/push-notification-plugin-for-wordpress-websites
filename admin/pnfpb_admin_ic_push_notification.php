@@ -801,13 +801,13 @@
 								<input  id="pnfpb_ic_fcm_buddypress_enable" name="pnfpb_ic_fcm_buddypress_enable" type="radio" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_buddypress_enable' ) ); ?>  />
 								<span class="pnfpb_checkmark pnfpb_margin_top_6"></span>
 							</label>
-							<?php if (get_option('pnfpb_onesignal_push') !== '1') { ?>
+							<?php //if (get_option('pnfpb_onesignal_push') !== '1') { ?>
 								<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_container  pnfpb_padding_top_8">
 									<input  id="pnfpb_ic_fcm_buddypress_group_enable" name="pnfpb_ic_fcm_buddypress_enable" type="radio" value="2" <?php checked( '2', get_option( 'pnfpb_ic_fcm_buddypress_enable' ) ); ?>  />
 									<span class="pnfpb_checkmark  pnfpb_margin_top_6"></span>
 									<?php echo __("Group activity (only for group members)",'PNFPB_TD');?>
 								</label>
-							<?php } ?>
+							<?php //} ?>
 							<button type="button" class="pnfpb_activity_form_button" onclick="toggle_activity_content_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
 						</div>
 					</div>
@@ -1403,5 +1403,12 @@
 	<ol>
 	<li><a href="https://github.com/muraliwebworld/android-app-to-integrate-push-notification-wordpress-plugin" target="_blank"><?php echo __("Procedure/Sample code to Integrate Android mobile app with this plugin using API",PNFPB_TD);?></a></li>
 	<li><a href="https://github.com/muraliwebworld/ios-swift-app-to-integrate-push-notification-wordpress-plugin" target="_blank"><?php echo __("Procedure/Sample code to Integrate IOS mobile app with this plugin using API",PNFPB_TD);?></a></li>
+	</ol>
+</div>
+
+<div id="pnfpb-admin-right_sidebar" class="pnfpb_column_left_300 pnfpb-admin-right_sidebar" >
+	<h4><?php echo __("Demo site using WordPress Playground to test this plugin",PNFPB_TD);?></h4>
+	<ol>
+	<li><a href="https://demo.pnfpb.com" target="_blank"><?php echo __("Test this PNFPB plugin here. It uses WordPress playground to create separate WordPress site for you to test this plugin",PNFPB_TD);?></a></li>
 	</ol>
 </div>

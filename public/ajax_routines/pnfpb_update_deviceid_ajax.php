@@ -27,8 +27,29 @@
     	$bpsubscribeoptions = sanitize_text_field($_POST['subscriptionoptions']);
 	}
 
+	if (isset($_POST['onesignal_subscriptionoptions'])) {
+    	$bpsubscribeoptions = sanitize_text_field($_POST['onesignal_subscriptionoptions']);
+	}
+
 	if ($bpsubscribeoptions === '') {
 		$bpsubscribeoptions = '10000000000';
+	}
+
+	$bponesignalid = 0;
+
+	if (isset($_POST['onesignal_get_subscriptionoptions_id'])) {
+		
+    	$bponesignalid = sanitize_text_field($_POST['onesignal_get_subscriptionoptions_id']);
+		
+		if ($bponesignalid === '1pnfpbadm') {
+			
+			$bponesignalid = 1;
+			
+		}
+	}
+
+	if ($bponesignalid === '') {
+		$bponesignalid  = '0';
 	}
 	
 	/** securing data from Firebase who subscribed push notification  **/
@@ -150,6 +171,46 @@
 			}
 		}
 
+	}
+
+	if ($pushtype == 'onesignal_get_frontend_subscriptions') {
+
+		$table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
+			
+		$dbname = $wpdb->dbname;
+		
+		$data = '';
+		
+		if ( $bponesignalid !== 0 ) {
+			
+			$results = $wpdb->get_results( "SELECT * FROM {$table} WHERE userid = {$bponesignalid} AND device_id LIKE '%onesignal%'" );
+			
+			foreach( $results as $result ) {
+				
+				$data = array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $result->subscription_option);			
+			}
+			
+			echo json_encode($data);
+			
+		} else {
+			
+			echo json_encode(array('subscriptionstatus' => 'notsubscribed', 'subscriptionoptions' => ''));
+		}
+	}
+
+	if ($pushtype == 'onesignal_frontend_subscriptions') {
+
+		$table = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
+			
+		$dbname = $wpdb->dbname;
+		
+		if ( $bpuserid !== 0 ) {
+					
+			$deviceid_update_status = $wpdb->query("UPDATE {$table} SET subscription_option = '{$bpsubscribeoptions}' WHERE userid = {$bpuserid}") ;
+			
+		}
+			
+		echo json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
 	}
     
 	if ($bpdeviceid != '' && $pushtype == 'normal') {
@@ -1134,9 +1195,9 @@
 							'body' => $body,
 							'headers' => $headers
 						);
-						error_log(serialize($args));
+
 						$apiresults = wp_remote_post($url, $args);
-						error_log(serialize($apiresults));
+
 						$apibody = wp_remote_retrieve_body($apiresults);
 						$bodyresults = json_decode($apibody,true);
 						$deviceid_version_update_status = $wpdb->query("UPDATE {$table} SET firebase_version = 'httpv3' WHERE device_id = '{$bpnewdeviceid}'");
@@ -1244,7 +1305,7 @@
 							}
 							else {
 								
-								if ($pushtype !== 'icfirebasecred' && $pushtype !== 'onesignal_subscribed_users') {
+								if ($pushtype !== 'icfirebasecred' && $pushtype !== 'onesignal_subscribed_users' && $pushtype !== 'onesignal_frontend_subscriptions' && $pushtype !== 'onesignal_get_frontend_subscriptions') {
                 					echo json_encode(array('subscriptionstatus' => 'failed'));
 								}
 								

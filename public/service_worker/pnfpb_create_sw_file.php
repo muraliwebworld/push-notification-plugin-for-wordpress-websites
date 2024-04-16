@@ -97,11 +97,11 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v1.81.1',
+  			cache_version: 'pnfpb_v1.83.1',
   			offline_assets: []
 		};
 
-		if (isExcludeallurlsincache === '1'  && isExcludeallurlsincache === 'no') {
+		if (isExcludeallurlsincache === '1'  || isExcludeallurlsincache === 'no') {
 			caches.delete(SW.cache_version);
 		}
 
@@ -134,7 +134,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 			var pnfpbwpSysurls = ['gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];
 			
-			if (isExcludeallurlsincache === '1'  && isExcludeallurlsincache === 'no') {
+			if (isExcludeallurlsincache === '1'  || isExcludeallurlsincache === 'no') {
 				pnfpbwpSysurls = ['/','gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];				
 			}
 
@@ -217,7 +217,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 	  				return;
 				}
 
-				if (isExcludeallurlsincache === '1'  && isExcludeallurlsincache === 'no') {
+				if (isExcludeallurlsincache === '1'  || isExcludeallurlsincache === 'no') {
 					return;
 				}
 

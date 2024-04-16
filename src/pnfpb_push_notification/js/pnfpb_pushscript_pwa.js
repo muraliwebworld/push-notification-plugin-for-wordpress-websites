@@ -7,8 +7,8 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 
-import { initializeApp, getApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage, isSupported, deleteToken } from "firebase/messaging";
+import { getApp, initializeApp } from 'firebase/app';
+import { deleteToken, getMessaging, getToken, isSupported, onMessage } from "firebase/messaging";
 
 import { __ } from '@wordpress/i18n';
 
@@ -5020,28 +5020,26 @@ async function frontend_subscription_menu(refreshedToken) {
 			})
 			.catch((err) => {
 				console.error('Error during getSubscription(): ${err}');
-			  $j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
-			  $j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-			  $j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','PNFPB_TD'));
-			  $j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');					
-		  });				
+			  	$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
+			  	$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
+			  	$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','PNFPB_TD'));
+			  	$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');					
+		  	});				
 		} 
 		else 
 		{
-			if (!pnfpb_webview) {
-
+			if (!pnfpb_webview) 
+			{
 				console.error('Error during getSubscription()');
 				$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 				$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
 				$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','PNFPB_TD'));
-				$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');					
-	
+				$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
+
 			}
-
 		}
+	
 	}
-		
-
 
 }
 

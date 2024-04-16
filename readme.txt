@@ -4,9 +4,9 @@ Author URI: https://www.muraliwebworld.com
 Tags:  push notification,mobile app,progressive web app,buddypress,firebase
 Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.82
+Stable tag: 1.85
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,7 +86,11 @@ If server is NGINX and not able to create dynamic service worker file https:/<do
 
 This plugin uses Firebase Cloud Messaging to send push notification using Firebase registration credentials which is free of cost.
 
-** Video tutorial showing how to configure Firebase for this plugin **
+= Plugin Demo using Customized WordPress Playground site =
+
+[Test PNFPB plugin here](https://demo.pnfpb.com/)
+
+= Video tutorial showing how to configure Firebase for this plugin =
 	
 [youtube https://www.youtube.com/watch?v=02oymYLt3qo]
 
@@ -120,9 +124,9 @@ Following are steps to configure the plugin,
 
 = Scheduling push notifications =
 
-5.Optionally it allows to Schedule push notifications for post types,BuddyPress new activities, BuddyPress new Group activities and for BuddyPress new comments. Push notifications can be scheduled in following schedules. Go to admin settings and schedule it accordingly.Schedule push notifications in Hourly, twice daily,daily,weekly schedules. If schedule is off then push notification will be sent whenever new item is published in corresponding post types/BuddyPress activities/messages/comments.
+5.Optionally it allows to Schedule push notifications for post types,BuddyPress new activities, BuddyPress new Group activities and for BuddyPress new comments. Push notifications can be scheduled in following schedules. Go to admin settings and schedule it accordingly.Schedule push notifications in Hourly, twice daily,daily,weekly schedules. 
 6.When BuddyPress Group Members option is enabled, it will send push notification only to users who joined in Group/to Particular group members.
-7.When Buddypress private message notification is enabled, Private message notification will be sent only to the recipient id sent by sender. Admin can customize the text for push notification title from admin options.
+7.When Buddypress private message notification is enabled, Private message notification will be sent only to the recipient id sent by sender. 
 
 = Firebase configuration =
 
@@ -197,6 +201,16 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.85 version Apr 16 2024 =
+* New feature for Onesignal Push notification: Frontend push notification settings for onesignal push notification for BuddyPress frontend users. Frontend user will be able to subscribe/unsubscribe various BuddyPress related push notifications. Frontend push notification menu is available in BuddyPress user profile -> settings -> push notification subscription.
+* New feature for Onesignal Push notification: BuddyPress group push notifications with subscribe/unsubscribe group push notifications for every group are available for Onesignal push notifications.
+* Changes to make it compatible with PHP 8.2 version.
+* Replaced bp_core_get_user_domain function with latest version of BuddyPress function bp_members_get_user_url to get members click url in push notification.
+= 1.84 version Apr 08 2024 =
+Bug fix: Resolved problem related to OneSignal Push notifcation already defined window.OneSignal variable. OneSignal plugin is required along with this PNFPB plugin to send OneSignal push notifications for BuddyPress, custom post, on demand push notifications.
+= 1.83 version Apr 05 2024 =
+Compatible with latest WordPress version 6.5
+Bug fix: Fixed problem related to exclude all urls from PWA cache.
 = 1.82 version Mar 26 2024 =
 Update: Compatible with Bedrock roots-io WordPress boilerplate. Static service worker file for push notification and PWA manifest json static files can also be generated using Bedrock (roots.io) WordPress boilerplate. 
 = 1.81 version Mar 15 2024 =
@@ -247,21 +261,17 @@ Bug fix: Fixed problem related to post and custom post type notifications relate
 Bug fix: Fixed problem related to mycomments notification using Firebase httpv1 version.
 Bug fix: Fixed problem on private messages notification for webview using Firebase httpv1 version.
 Bug fix: Fixed problem on Firebase httpv1 notifications for webview.
-Bug fix: Fixed problem related to onesignal on demand push notifications to work independent of Firebase settings in PNFPB admin settings. If you enable onesignal has push notification provider then ondemand push notification will work without filling firebase credentials independently using Onesignal credentials.
-= 1.71 version 20 Oct 2023 =
-Update: Allow push notification for post when meta box for notification is turned on irrespective of admin settings.
-Bug fix: Fixed problems in Group push notification using Firebase httpv1 version.
-For Shortcode [[subscribe_PNFPB_push_notification]]
-Bug fix: Shortcode button text changes during subscribe/unsubscribe notification.
-Update: In Shortcode – Loading spinner added while subscribing and unsubscribing notification.
-Update: In Shortcode – Close button added in confirmation dialog.
-Bug fix: Rectified problem related to wrongly displayed subscription option updated text for last checkbox option in shortcode. Updated code to display correct text for that option.
-Update: Shortcode push notifications options will be displayed as per settings enabled in admin push settings for frontend users.
 = For all older releases, details are available in below link =
 [Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
 
 
 == Upgrade Notice ==
+* New feature: Frontend push notification settings for onesignal push notification for BuddyPress frontend users. Frontend user will be able to subscribe/unsubscribe various BuddyPress related push notifications. Frontend push notification menu is available in BuddyPress user profile -> settings -> push notification subscription.
+* New feature: BuddyPress group push notifications with subscribe/unsubscribe group push notifications for every group are available for Onesignal push notifications.
+* Compatible with PHP 8.2 version.
+* Bug fix: Resolved problem related to OneSignal Push notifcation already defined window.OneSignal variable. OneSignal plugin is required along with this PNFPB plugin to send OneSignal push notifications for BuddyPress, custom post, on demand push notifications.
+* Compatible with latest WordPress version 6.5
+* Bug fix: Fixed problem related to exclude all urls from PWA cache.
 * Update: Compatible with Bedrock roots-io WordPress boilerplate. Static service worker file for push notification and PWA manifest json static files can also be generated using Bedrock (roots.io) WordPress boilerplate. 
 * New feature: New admin settings field added for number of days to show custom prompt for push notification again for front end users who cancels push notification in custom prompt.
 PWA New feature: New admin settings field added for number of days to show PWA custom prompt for push notification again for front end users who cancels push notification in PWA custom prompt.
@@ -276,10 +286,4 @@ PWA New feature: New admin settings field added for number of days to show PWA c
 * New feature: Included [group name] place holder for group title push notification.
 * New feature: If Buddypress followers plugin installed then notification can be sent only to followers for buddypress activities/group activities/comments.
 * Bug fix for webview mobile app: Fixed problems related to android/ios mobile app push notification subscription option update to database, saving front end subscription options in webview app.
-* Bug fix for Firebase httpv1 version: Fixed problem in admin settings on uploading service account json file to enable firebase httpv1 version api independent of other firebase settings.
-* Bug fix for BuddyBoss users: Updated logic to send notifications for activity comments only to liked users for particular activity.
-* Bug fix for BuddyBoss users: Updated logic in group forum activities to send notifications only for subscribed users for particular forum.
-* Bug fix for onesignal users: Updated logic to control onesignal push notifications based on admin options enabled for various push notifications in plugin admin page. 
-* New feature: New custom prompt styles introduced to display prompt in horizontal pattern, vertical pattern to subscribe push notifications. 
-Customization of prompt is available in admin settings of custom prompt. Bell icon prompt will work with or without custom prompt.
 [Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
