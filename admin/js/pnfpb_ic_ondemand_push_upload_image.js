@@ -38,7 +38,7 @@ $j(document).ready(function() {
 		
 	});
 	
-	$j('#pnfpb_ic_on_demand_push_url').on('click',function(e) {
+	$j('#pnfpb_ic_on_demand_push_url').on('change',function(e) {
 		$j('#pnfpb_ic_on_demand_push_url_link').val($j('#pnfpb_ic_on_demand_push_url').find(":selected").val());
 	});
 	

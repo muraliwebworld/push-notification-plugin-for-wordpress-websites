@@ -1,15 +1,15 @@
-# Copyright (C) 2023 Muralidharan Ramasamy
+# Copyright (C) 2024 Muralidharan Ramasamy
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Push Notification for Post and BuddyPress 1.69\n"
+"Project-Id-Version: Push Notification for Post and BuddyPress 1.87\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-09-18T22:48:52+05:30\n"
+"POT-Creation-Date: 2024-04-21T18:08:24+05:30\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: PNFPB_TD\n"
@@ -48,8 +48,10 @@ msgstr ""
 
 #: admin/pnfpb_admin_bar_menu_settings.php:98
 #: admin/pnfpb_onetime_notifications_list.php:5
-#: pnfpb_push_notification.php:1670
-#: pnfpb_push_notification.php:1714
+#: pnfpb_push_notification.php:2794
+#: pnfpb_push_notification.php:2838
+#: pnfpb_push_notification.php:9841
+#: pnfpb_push_notification.php:9920
 msgid "PWA"
 msgstr ""
 
@@ -57,327 +59,924 @@ msgstr ""
 msgid "Onesignal plugin is required to use Onesignal as push notification provider. Please install and configure Onesignal plugin"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:30
+#: admin/pnfpb_admin_ic_push_notification.php:35
 msgid "Onesignal plugin is required. Please install Onesignal plugin to enable onesignal as push notification provider"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:214
+#: admin/pnfpb_admin_ic_push_notification.php:221
 msgid "Show custom prompt to subscribe push notification"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:248
-msgid "Button text color"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:254
-msgid "Push notification subscribe Button background color"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:260
-msgid "Push notification subscribe text"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:261
-#: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:713
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:782
-msgid "Subscribe"
+#: admin/pnfpb_admin_ic_push_notification.php:256
+msgid "Prompt style"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:266
+msgid "Prompt Style-1"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:288
+msgid "Prompt Style-2"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:308
+msgid "Bell prompt"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:356
+msgid "Custom prompt Animation style"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:365
+#: admin/pnfpb_admin_ic_push_notification.php:488
+msgid "Header text in custom prompt"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:366
+#: pnfpb_push_notification.php:1559
+msgid "We would like to show you notifications for the latest news and updates."
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:371
+#: admin/pnfpb_admin_pwa_app_settings.php:335
+msgid "If cancel button is pressed while subscribing, show custom prompt after below number of days"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:377
+msgid "Allow Notification Button text color"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:383
+#: admin/pnfpb_admin_ic_push_notification.php:500
+msgid "Push notification subscribe Button background color"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:389
+msgid "Allow notification button text"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:390
+#: pnfpb_push_notification.php:1567
+msgid "Allow"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:395
+msgid "Cancel Notification Button text color"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:401
+msgid "Cancel Button background color"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:407
+msgid "Cancel button text"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:408
+#: admin/pnfpb_admin_pwa_app_settings.php:381
+#: pnfpb_push_notification.php:994
+#: pnfpb_push_notification.php:1223
+#: pnfpb_push_notification.php:1464
+#: pnfpb_push_notification.php:1575
+msgid "Cancel"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:413
+msgid "Close Button text color"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:419
+msgid "Close Button background color"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:425
+msgid "Close button text"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:426
+#: pnfpb_push_notification.php:1049
+#: pnfpb_push_notification.php:1280
+#: pnfpb_push_notification.php:1583
+msgid "Close"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:431
+#: admin/pnfpb_admin_ic_push_notification.php:530
+msgid "Wait message while processing push subscription"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:432
+#: admin/pnfpb_admin_ic_push_notification.php:531
+#: build/pnfpb_push_notification/index.js:1
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2722
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5103
+msgid "Please wait...processing"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:438
+#: admin/pnfpb_admin_ic_push_notification.php:537
+msgid "Show subscription options button"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:489
+msgid "Manage push notifications"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:494
+msgid "Button text color"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:506
+msgid "Push notification subscribe text"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:507
+#: build/pnfpb_push_notification/index.js:1
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2730
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5127
+msgid "Subscribe"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:512
 msgid "Push notification unsubscribe text"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:267
+#: admin/pnfpb_admin_ic_push_notification.php:513
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:705
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:832
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2268
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2738
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5135
 msgid "Unsubscribe"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:280
-#: pnfpb_push_notification.php:6145
-msgid "Post"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:317
-#: admin/pnfpb_admin_ic_push_notification.php:405
-#: admin/pnfpb_admin_ic_push_notification.php:481
-msgid "Schedule"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:324
-#: admin/pnfpb_admin_ic_push_notification.php:412
-#: admin/pnfpb_admin_ic_push_notification.php:488
-msgid "in background"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:335
-#: admin/pnfpb_admin_ic_push_notification.php:423
-#: admin/pnfpb_admin_ic_push_notification.php:500
-msgid "In seconds<br/>(min 300)"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:343
-#: admin/pnfpb_admin_ic_push_notification.php:431
-#: admin/pnfpb_admin_ic_push_notification.php:508
-msgid "Hourly"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:348
-#: admin/pnfpb_admin_ic_push_notification.php:436
-#: admin/pnfpb_admin_ic_push_notification.php:513
-#: pnfpb_push_notification.php:1769
-msgid "Twicedaily"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:353
-#: admin/pnfpb_admin_ic_push_notification.php:441
 #: admin/pnfpb_admin_ic_push_notification.php:518
-#: pnfpb_push_notification.php:1773
-msgid "Daily"
+msgid "Notification subscribed message when hover on push icon"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:358
-#: admin/pnfpb_admin_ic_push_notification.php:446
+#: admin/pnfpb_admin_ic_push_notification.php:519
+#: build/pnfpb_push_notification/index.js:1
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2706
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5087
+msgid "You are subscribed to push notification"
+msgstr ""
+
 #: admin/pnfpb_admin_ic_push_notification.php:524
-#: pnfpb_push_notification.php:1778
-msgid "Weekly"
+msgid "Notification not subscribed message when hover on push icon"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:378
-msgid "BuddyPress activities"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:385
-msgid "All activities"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:393
-msgid "Group activity (only for group members)"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:466
-msgid "New comments in BuddyPress/Post types"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:537
-msgid "(For below BuddyPress options, user avatar image replaces notification icon in push notification)"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:544
-#: pnfpb_push_notification.php:6203
-msgid "New private message"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:554
-msgid "Private messages notification title"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:555
-msgid "[sender name] sent you a private message"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:556
-msgid "[sender name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:557
-msgid "Default Private message notification content"
+#: admin/pnfpb_admin_ic_push_notification.php:525
+#: build/pnfpb_push_notification/index.js:1
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2714
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5095
+msgid "Push notification not subscribed"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:563
-msgid "New Member joined"
+msgid "Subscription option update button text"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:573
-msgid "New member notification title"
+#: admin/pnfpb_admin_ic_push_notification.php:564
+#: build/pnfpb_push_notification/index.js:1
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2746
+msgid "Update"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:575
-#: admin/pnfpb_admin_ic_push_notification.php:636
-#: admin/pnfpb_admin_ic_push_notification.php:655
-msgid "[member name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
+#: admin/pnfpb_admin_ic_push_notification.php:567
+msgid "Subscription option update button text color"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:576
-msgid "Default New member notification content"
+#: admin/pnfpb_admin_ic_push_notification.php:571
+msgid "Subscription option update button background color"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:584
-#: pnfpb_push_notification.php:6235
-msgid "Friendship request"
+#: admin/pnfpb_admin_ic_push_notification.php:577
+msgid "Subscription option list background color "
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:594
-msgid "Friendship request notification title"
+#: admin/pnfpb_admin_ic_push_notification.php:583
+msgid "Subscription option list text color "
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:589
+msgid "Subscription option list checkbox color "
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:595
+msgid "Subscription option update confirmation message "
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:596
-msgid "[friendship initiator name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
+msgid "subscription updated"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:597
-msgid "Default Friendship request notification content"
+#: admin/pnfpb_admin_ic_push_notification.php:601
+msgid "Subscription option text for all subscriptions"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:603
-#: pnfpb_push_notification.php:6250
-msgid "Friendship accepted"
+#: admin/pnfpb_admin_ic_push_notification.php:602
+#: admin/pnfpb_admin_ic_push_notification.php:936
+msgid "All"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:613
-msgid "Friendship accepted notification title"
+#: admin/pnfpb_admin_ic_push_notification.php:605
+msgid "Subscription option text for Post"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:614
-msgid "[friendship acceptor name] accepted your friendship request"
+#: admin/pnfpb_admin_ic_push_notification.php:606
+#: admin/pnfpb_admin_ic_push_notification.php:696
+#: pnfpb_push_notification.php:8621
+msgid "Post"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:609
+msgid "Subscription option text for Activity"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:610
+msgid "Activity"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:615
-msgid "[friendship acceptor name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
+msgid "Subscription option text for all comments"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:616
-msgid "Default Friendship accepted notification content"
+msgid "All Comments"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:619
+msgid "Subscription option text for my comments"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:620
+msgid "My Comments"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:623
+msgid "Subscription option text for Private message"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:624
-msgid "User avatar change"
+msgid "Private Message"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:629
+msgid "Subscription option text for New member joined"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:630
+#: admin/pnfpb_admin_ic_push_notification.php:1044
+msgid "New Member joined"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:633
+msgid "Subscription option text for Friendship request"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:634
-msgid "User avatar change notification title"
+#: admin/pnfpb_admin_ic_push_notification.php:1065
+#: pnfpb_push_notification.php:8711
+msgid "Friendship request"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:637
-msgid "Default Avatar change notification content"
+msgid "Subscription option text for Friendship accepted"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:638
+#: admin/pnfpb_admin_ic_push_notification.php:1084
+#: pnfpb_push_notification.php:8726
+#: pnfpb_push_notification.php:8922
+msgid "Friendship accepted"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:643
-msgid "User cover image change"
+msgid "Subscription option text for Avatar change"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:653
-msgid "User cover image notification title"
+#: admin/pnfpb_admin_ic_push_notification.php:644
+#: pnfpb_push_notification.php:8741
+msgid "Avatar change"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:656
-msgid "Default user cover image change notification content"
+#: admin/pnfpb_admin_ic_push_notification.php:647
+msgid "Subscription option text for Cover image change"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:664
-msgid "Group Invitation"
+#: admin/pnfpb_admin_ic_push_notification.php:648
+#: pnfpb_push_notification.php:8756
+#: pnfpb_push_notification.php:8934
+msgid "Cover image change"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:674
-msgid "Group Invitation notification title"
+#: admin/pnfpb_admin_ic_push_notification.php:651
+msgid "Subscription option text for Group details update"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:675
-msgid "[sender name] invited to [group name]"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:676
-msgid "[sender name]  and [group name] are the shortcode which replaces with sender name, group name respectively. Modify remaining text according to your choice"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:677
-msgid "Default Group invitation notification content"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:683
-#: pnfpb_push_notification.php:6295
+#: admin/pnfpb_admin_ic_push_notification.php:652
+#: admin/pnfpb_admin_ic_push_notification.php:1164
+#: pnfpb_push_notification.php:8771
 msgid "Group details update"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:693
-msgid "Group updated notification title"
+#: admin/pnfpb_admin_ic_push_notification.php:655
+msgid "Subscription option text for Group invite"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:694
-msgid "[group name] group updated"
+#: admin/pnfpb_admin_ic_push_notification.php:656
+msgid "Group invite"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:695
-msgid "[group name] is the shortcode which replaces with group name. Modify remaining text according to your choice"
+#: admin/pnfpb_admin_ic_push_notification.php:678
+msgid "Push notification only for loggedin users<br/>(if you enable this then all old prior subscriptions for httpv1 version needs to be re-subscribed and if you use legacy api then no need to re-subscribe)"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:696
-msgid "Default Group updated notification content"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:706
-msgid "(following push notifications will be sent only to admin)"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:713
-msgid "New user registration"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:723
-msgid "New user registration notification title"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:724
-msgid "[user name] registered as new member"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:725
-msgid "[user name] is the shortcode which replaces with new user name. Modify remaining text according to your choice"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:726
-msgid "Default New user registration notification content"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:732
-msgid "On Contact form7 submitted"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:742
-msgid "Contact form7 submitted notification title"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:743
-msgid "You have received message from contact us page"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:744
-msgid "Modify text according to your choice"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:745
-msgid "Default message for notification content when contact form7 submitted"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:754
-msgid "(Since Google depreceted legacy version of Firebase API (work until next year June 2024), <br/>please enable below option to use latest version of Firebase API - http v1. Recommended PHP version for this is 8.0 or above. It will work with PHP version 7.4 but recommended PHP version is 8.0 to use latest version of Firebase API httpv1)"
-msgstr ""
-
-#: admin/pnfpb_admin_ic_push_notification.php:755
-msgid "(It requires service account json file to be uploaded)"
+#: admin/pnfpb_admin_ic_push_notification.php:739
+msgid "Schedule <br/>(using action scheduler)"
 msgstr ""
 
 #: admin/pnfpb_admin_ic_push_notification.php:756
+#: admin/pnfpb_admin_ic_push_notification.php:850
+#: admin/pnfpb_admin_ic_push_notification.php:970
+msgid "In seconds<br/>(min 300)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:764
+#: admin/pnfpb_admin_ic_push_notification.php:858
+#: admin/pnfpb_admin_ic_push_notification.php:978
+msgid "Hourly"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:769
+#: admin/pnfpb_admin_ic_push_notification.php:863
+#: admin/pnfpb_admin_ic_push_notification.php:983
+#: pnfpb_push_notification.php:2893
+msgid "Twicedaily"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:774
+#: admin/pnfpb_admin_ic_push_notification.php:868
+#: admin/pnfpb_admin_ic_push_notification.php:988
+#: pnfpb_push_notification.php:2897
+msgid "Daily"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:779
+#: admin/pnfpb_admin_ic_push_notification.php:873
+#: admin/pnfpb_admin_ic_push_notification.php:994
+#: pnfpb_push_notification.php:2902
+msgid "Weekly"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:807
+msgid "BuddyPress activities"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:814
+msgid "All activities"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:822
+msgid "Group activity (only for group members)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:825
+#: admin/pnfpb_admin_ic_push_notification.php:945
+#: admin/pnfpb_admin_ic_push_notification.php:1031
+#: admin/pnfpb_admin_ic_push_notification.php:1050
+#: admin/pnfpb_admin_ic_push_notification.php:1071
+#: admin/pnfpb_admin_ic_push_notification.php:1090
+#: admin/pnfpb_admin_ic_push_notification.php:1111
+#: admin/pnfpb_admin_ic_push_notification.php:1130
+#: admin/pnfpb_admin_ic_push_notification.php:1151
+#: admin/pnfpb_admin_ic_push_notification.php:1170
+#: admin/pnfpb_admin_ic_push_notification.php:1203
+#: admin/pnfpb_admin_ic_push_notification.php:1222
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:265
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:283
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:300
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:317
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:335
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:353
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:372
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:391
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:409
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:428
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:447
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:465
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:483
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:573
+msgid "Customize"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:833
+#: admin/pnfpb_admin_ic_push_notification.php:953
+msgid "Schedule  <br/>(using action scheduler)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:882
+msgid "Manage your scheduled tasks for BuddyPress activities notifications in action scheduler tab - click here"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:884
+msgid "Manage your scheduled tasks for BuddyPress group activities notifications in action scheduler tab - click here"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:888
+msgid "Notification title for BuddyPress new activity<br/>use [member name] shortcode to display member name along with custom title<br/>(use [group name] shortcode only for group buddypress activities to display member name)<br/>Example '[member name] posted an activity' will display as 'Tom posted an activity' where Tom is member name"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:890
+msgid "Default Notification content for BuddyPress new activity<br/> (or leave it as blank to display activity content in notification message)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:892
+msgid "Notification title for BuddyPress new group activity"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:894
+msgid "Default Notification content for BuddyPress new group activity<br/> (or leave it as blank to display activity content in notification message)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:899
+msgid "Notify only BuddyPress user followers<br/><b>(it requires BuddyPress-followers plugin)</b>"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:919
+msgid "BuddyPress or BuddyBoss comment push notification options"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:925
+msgid "BuddyPress/Post comments"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:943
+msgid "Only for User's activities/Posts/My activities"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1001
+msgid "Manage your scheduled tasks for BuddyPress comments/Post comments notifications in action scheduler tab - click here"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1004
+msgid "Notification title for BuddyPress new comment<br/>use [member name] shortcode to display member name along with custom title<br/>Example '[member name] posted a comment' will display as 'Tom posted a comment' where Tom is member name"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1006
+msgid "Default Notification content for BuddyPress new comment<br/> (or leave it as blank to display comment content in notification message)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1014
+msgid "Other BuddyPress or BuddyBoss push notification options"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1018
+msgid "(For below BuddyPress options, user avatar image replaces notification icon in push notification)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1025
+#: pnfpb_push_notification.php:8679
+msgid "New private message"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1035
+msgid "Private messages notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1036
+msgid "[sender name] sent you a private message"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1037
+msgid "[sender name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1038
+msgid "Default Private message notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1054
+msgid "New member notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1056
+#: admin/pnfpb_admin_ic_push_notification.php:1117
+#: admin/pnfpb_admin_ic_push_notification.php:1136
+msgid "[member name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1057
+msgid "Default New member notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1075
+msgid "Friendship request notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1076
+msgid "[friendship initiator name] sent friendship request"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1077
+msgid "[friendship initiator name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1078
+msgid "Default Friendship request notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1094
+msgid "Friendship accepted notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1095
+msgid "[friendship acceptor name] accepted your friendship request"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1096
+msgid "[friendship acceptor name] is the shortcode which replaces with sender name and modify remaining text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1097
+msgid "Default Friendship accepted notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1105
+#: pnfpb_push_notification.php:8928
+msgid "User avatar change"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1115
+msgid "User avatar change notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1116
+msgid "[member name] updated avatar"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1118
+msgid "Default Avatar change notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1124
+msgid "User cover image change"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1134
+msgid "User cover image notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1135
+msgid "[member name] updated cover photo"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1137
+msgid "Default user cover image change notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1145
+msgid "Group Invitation"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1155
+msgid "Group Invitation notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1156
+msgid "[sender name] invited to [group name]"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1157
+msgid "[sender name]  and [group name] are the shortcode which replaces with sender name, group name respectively. Modify remaining text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1158
+msgid "Default Group invitation notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1174
+msgid "Group updated notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1175
+msgid "[group name] group updated"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1176
+msgid "[group name] is the shortcode which replaces with group name. Modify remaining text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1177
+msgid "Default Group updated notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1186
+msgid "Admin only push notification options"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1190
+msgid "(following push notifications will be sent only to admin)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1197
+msgid "New user registration"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1207
+msgid "New user registration notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1208
+msgid "[user name] registered as new member"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1209
+msgid "[user name] is the shortcode which replaces with new user name. Modify remaining text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1210
+msgid "Default New user registration notification content"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1216
+msgid "On Contact form7 submitted"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1226
+msgid "Contact form7 submitted notification title"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1227
+msgid "You have received message from contact us page"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1228
+msgid "Modify text according to your choice"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1229
+msgid "Default message for notification content when contact form7 submitted"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1237
+msgid "Use latest version of Firebase API httpv1"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1238
+msgid "(Since Google depreceted legacy version of Firebase API (work until next year June 2024), <br/>please enable below option to use latest version of Firebase API - http v1. Recommended PHP version for this is 8.0 or above. It will work with PHP version 7.4 but recommended PHP version is 8.0 to use latest version of Firebase API httpv1)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1239
+msgid "(It requires service account json file to be uploaded)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1240
 msgid "(In the Firebase console, open Settings > Service Accounts.Click Generate New Private Key, then confirm by clicking Generate Key.Download & store the JSON file containing the key. Select service account json file in below field , Plugin will read and update required data in database for push notification. Physical file will not be stored.)"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:768
+#: admin/pnfpb_admin_ic_push_notification.php:1241
+msgid "Upload Service account json file for latest version of Firebase API httpv1"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1252
 msgid "Use latest version of Firebase api httpv1"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:779
+#: admin/pnfpb_admin_ic_push_notification.php:1263
 msgid "Service account file already uploaded. If you want to update it, select new file"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:779
+#: admin/pnfpb_admin_ic_push_notification.php:1263
 msgid "Service account data not available. Upload now"
 msgstr ""
 
-#: admin/pnfpb_admin_ic_push_notification.php:901
+#: admin/pnfpb_admin_ic_push_notification.php:1272
+msgid "Use Firebase (or) Onesignal as push notification provider"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1274
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:550
+msgid "Tutorial on Firebase"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1277
+msgid "Watch this tutorial on Firebase settings and configuration"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1279
+msgid "Sign in to Firebase, then open your project, click settings icon & select Project settings"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1281
+msgid "To get Firebase server key (for field 1 in admin firebase settings)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1282
+msgid "project settings > cloud messaging tab > get server key or add server key button to get server key"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1284
+msgid "To get Firebase config fields (for fields 2 to 8 in admin firebase settings)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1285
+msgid "If you do not have web app, Create a new web app. After creating a new app, it will show firebase config fields"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1286
+msgid "Project settings > General under your apps section > click on config button to view configuration fields"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1288
+msgid "To get Firebase public key (for field 9 in admin firebase settings)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1289
+msgid "Open the Cloud Messaging tab of the Firebase console Settings pane and scroll to the Web configuration section"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1290
+msgid "project settings > cloud messaging tab > Under web push certificates > Generate key pair to get public key"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1291
+msgid "In the Web Push certificates tab, click Generate Key Pair. The console displays a notice that the key pair was generated, and displays the public key string and date added"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1292
+msgid "If you already Generated key pair then no need to generate it again"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1293
+msgid "After saving below fields, you will get browser prompt asking to allow notification for this website, click on allow notification"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1294
+msgid "After completing above steps, push notification will work based on option selected for posts/buddypress"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1298
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:507
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:528
+msgid "Firebase configuration"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1299
+msgid " (or) "
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1300
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:509
+msgid "Show Onesignal configuration"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1302
+msgid "In Firebase configuration, <b>all fields are required except database url. Please follow above tutorial for configuration</b>"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1305
+msgid "If Onesignal is enabled then, <b>it requires onesignal wordpress plugin installed and activated with required configuration</b>"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1312
+msgid "Firebase Server Key"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1316
+msgid "Firebase API Key"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1319
+msgid "Firebase Auth domain"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1323
+msgid "Firebase Database url (optional)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1327
+msgid "Firebase Project id"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1331
+msgid "Firebase Storage Bucket"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1335
+msgid "Firebase Messaging Sender id"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1339
+msgid "Firebase App id"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1342
+msgid "Firebase Public key"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1345
+msgid "FCM Push Icon(16x16 pixels)"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1349
+msgid "Upload Icon"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1385
 msgid "Use ONESIGNAL to send PUSH notification instead of FIREBASE"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1389
+msgid "If enabled, it will use onesignal to send push notification provided ONESIGNAL Push notification installed and activated in your site. It will take onesignal credentials entered in ONESIGNAL push notification plugin"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1398
+#: pnfpb_push_notification.php:2909
+#: pnfpb_push_notification.php:10016
+msgid "Save changes"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1403
+#: admin/pnfpb_admin_ic_push_notification.php:1405
+msgid "Test Notification"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1404
+msgid "Click below link to send test notification to your subscribed device. Please make sure you already subscribed to notification for this website from browser"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1413
+msgid "Need Help?"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1415
+msgid "Check out the"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1415
+msgid "support forum"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1415
+msgid "and"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1415
+msgid "FAQ"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1416
+msgid "Github repository sample code To Integrate mobile app with this plugin using API"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1417
+msgid "Visit "
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1417
+msgid "plugin homepage"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1418
+msgid "If you need help, Please feel free to send us your queries"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1420
+msgid "Rate This Plugin"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1421
+msgid "Please"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1421
+msgid "give your rating"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1421
+msgid " and feedback."
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1425
+#: pnfpb_push_notification.php:9873
+msgid "Mobile app integration help on github respository"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1427
+#: pnfpb_push_notification.php:9875
+msgid "Procedure/Sample code to Integrate Android mobile app with this plugin using API"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1428
+#: pnfpb_push_notification.php:9876
+msgid "Procedure/Sample code to Integrate IOS mobile app with this plugin using API"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1433
+msgid "Demo site using WordPress Playground to test this plugin"
+msgstr ""
+
+#: admin/pnfpb_admin_ic_push_notification.php:1435
+msgid "Test this PNFPB plugin here. It uses WordPress playground to create separate WordPress site for you to test this plugin"
 msgstr ""
 
 #: admin/pnfpb_admin_ondemand_notification_settings.php:130
@@ -551,175 +1150,183 @@ msgstr ""
 msgid "Exclude all Urls from PWA offline cache"
 msgstr ""
 
-#: admin/pnfpb_admin_pwa_app_settings.php:324
-msgid "Enable/Disable custom prompt install*"
-msgstr ""
-
-#: admin/pnfpb_admin_pwa_app_settings.php:335
-msgid "Below customize options are for custom PWA install prompt"
-msgstr ""
-
-#: admin/pnfpb_admin_pwa_app_settings.php:336
-msgid "Custom text to for PWA custom prompt"
-msgstr ""
-
-#: admin/pnfpb_admin_pwa_app_settings.php:337
-msgid "Would like to install our app?"
-msgstr ""
-
-#: admin/pnfpb_admin_pwa_app_settings.php:338
-msgid "PWA custom install prompt confirmation button text"
-msgstr ""
-
-#: admin/pnfpb_admin_pwa_app_settings.php:339
-#: pnfpb_push_notification.php:1184
-msgid "Install"
-msgstr ""
-
-#: admin/pnfpb_admin_pwa_app_settings.php:340
-msgid "PWA custom install prompt cancel button text"
+#: admin/pnfpb_admin_pwa_app_settings.php:326
+msgid "Custom prompt for all devices"
 msgstr ""
 
 #: admin/pnfpb_admin_pwa_app_settings.php:341
-#: pnfpb_push_notification.php:821
-#: pnfpb_push_notification.php:1024
-#: pnfpb_push_notification.php:1190
-msgid "Cancel"
+msgid "Only for desktop devices"
 msgstr ""
 
-#: admin/pnfpb_admin_pwa_app_settings.php:342
+#: admin/pnfpb_admin_pwa_app_settings.php:352
+msgid "Only for mobile/tablet devices"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:363
+msgid "For devices width greater than entered pixels"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:375
+msgid "Below customize options are for custom PWA install prompt"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:376
+msgid "Custom text to for PWA custom prompt"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:377
+msgid "Would like to install our app?"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:378
+msgid "PWA custom install prompt confirmation button text"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:379
+#: pnfpb_push_notification.php:1458
+msgid "Install"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:380
+msgid "PWA custom install prompt cancel button text"
+msgstr ""
+
+#: admin/pnfpb_admin_pwa_app_settings.php:382
 msgid "PWA custom install prompt Button background color"
 msgstr ""
 
-#: admin/pnfpb_admin_pwa_app_settings.php:344
+#: admin/pnfpb_admin_pwa_app_settings.php:384
 msgid "PWA custom install prompt dialog box background color"
 msgstr ""
 
-#: admin/pnfpb_admin_pwa_app_settings.php:346
+#: admin/pnfpb_admin_pwa_app_settings.php:386
 msgid "PWA custom install prompt dialog Text color"
 msgstr ""
 
-#: admin/pnfpb_admin_pwa_app_settings.php:348
+#: admin/pnfpb_admin_pwa_app_settings.php:388
 msgid "PWA custom install prompt button Text color"
 msgstr ""
 
-#: admin/pnfpb_icfcm_device_tokens_list.php:14
+#: admin/pnfpb_icfcm_device_tokens_list.php:16
 msgid "Devicetoken"
 msgstr ""
 
-#: admin/pnfpb_icfcm_device_tokens_list.php:15
+#: admin/pnfpb_icfcm_device_tokens_list.php:17
 msgid "Devicetokens"
 msgstr ""
 
-#: admin/pnfpb_icfcm_device_tokens_list.php:96
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:152
+#: admin/pnfpb_icfcm_device_tokens_list.php:98
 msgid "No registered device tokens avaliable."
 msgstr ""
 
-#: admin/pnfpb_icfcm_device_tokens_list.php:163
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:455
+#: admin/pnfpb_icfcm_device_tokens_list.php:165
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:467
 msgid "Id"
 msgstr ""
 
-#: admin/pnfpb_icfcm_device_tokens_list.php:164
+#: admin/pnfpb_icfcm_device_tokens_list.php:166
 msgid "Device token"
 msgstr ""
 
-#: admin/pnfpb_icfcm_device_tokens_list.php:165
+#: admin/pnfpb_icfcm_device_tokens_list.php:167
 msgid "Userid"
 msgstr ""
 
-#: admin/pnfpb_icfcm_device_tokens_list.php:166
+#: admin/pnfpb_icfcm_device_tokens_list.php:168
 msgid "Shortcode Subscription"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:16
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:18
 msgid "PushNotification"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:17
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:19
 msgid "PushNotifications"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:226
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:239
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:260
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:303
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:154
+msgid "No one time or scheduled push notifications sent"
+msgstr ""
+
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:228
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:241
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:264
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:309
 msgid "<br/>(Local time)"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:303
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:309
 msgid "Scheduled.<br/>Next run is on "
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:322
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:330
 msgid "Finished on <br/>"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:340
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:350
 msgid "Failed on <br/>"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:358
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:370
 msgid "In Queue - scheduled on <br/>"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:403
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:410
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:415
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:422
 msgid "Edit/Resend"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:404
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:411
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:416
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:423
 msgid "Delete"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:405
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:412
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:417
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:424
 msgid "Duplicate"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:406
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:418
 msgid "More actions..."
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:437
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:449
 msgid "Edit"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:456
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:468
 msgid "Title"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:457
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:469
 msgid "Content"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:458
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:470
 msgid "Image url"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:459
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:471
 msgid "Click url"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:460
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:472
 msgid "Current run<br/>date & time"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:461
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:473
 msgid "Schedule type"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:462
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:474
 msgid "Status"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:463
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:475
 msgid "Action"
 msgstr ""
 
-#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:691
+#: admin/pnfpb_icfcm_onetime_push_notifications_list_class.php:703
 #: admin/pnfpb_onetime_notifications_list.php:40
 msgid "Draft"
 msgstr ""
@@ -729,54 +1336,74 @@ msgid "PNFPB - Push notifications list"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:3
-#: pnfpb_push_notification.php:1668
-#: pnfpb_push_notification.php:1712
+#: pnfpb_push_notification.php:2792
+#: pnfpb_push_notification.php:2836
+#: pnfpb_push_notification.php:9839
+#: pnfpb_push_notification.php:9918
 msgid "Push Settings"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:4
-#: pnfpb_push_notification.php:1669
-#: pnfpb_push_notification.php:1713
+#: pnfpb_push_notification.php:2793
+#: pnfpb_push_notification.php:2837
+#: pnfpb_push_notification.php:9840
+#: pnfpb_push_notification.php:9919
 msgid "Device tokens"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:6
-#: pnfpb_push_notification.php:1671
-#: pnfpb_push_notification.php:1715
+#: pnfpb_push_notification.php:2795
+#: pnfpb_push_notification.php:2839
+#: pnfpb_push_notification.php:9842
+#: pnfpb_push_notification.php:9921
 msgid "One time push"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:7
+#: pnfpb_push_notification.php:2796
+#: pnfpb_push_notification.php:2840
+#: pnfpb_push_notification.php:9843
+#: pnfpb_push_notification.php:9922
 msgid "Notifications"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:8
-#: pnfpb_push_notification.php:1673
-#: pnfpb_push_notification.php:1717
+#: pnfpb_push_notification.php:2797
+#: pnfpb_push_notification.php:2841
+#: pnfpb_push_notification.php:9844
+#: pnfpb_push_notification.php:9923
 msgid "Frontend settings"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:9
-#: pnfpb_push_notification.php:1674
-#: pnfpb_push_notification.php:1718
+#: pnfpb_push_notification.php:2798
+#: pnfpb_push_notification.php:2842
+#: pnfpb_push_notification.php:9845
+#: pnfpb_push_notification.php:9924
 msgid "Customize buttons"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:10
-#: pnfpb_push_notification.php:1675
-#: pnfpb_push_notification.php:1719
+#: pnfpb_push_notification.php:2799
+#: pnfpb_push_notification.php:2843
+#: pnfpb_push_notification.php:9846
+#: pnfpb_push_notification.php:9925
 msgid "Mobile app"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:11
-#: pnfpb_push_notification.php:1676
-#: pnfpb_push_notification.php:1720
+#: pnfpb_push_notification.php:2800
+#: pnfpb_push_notification.php:2844
+#: pnfpb_push_notification.php:9847
+#: pnfpb_push_notification.php:9926
 msgid "NGINX"
 msgstr ""
 
 #: admin/pnfpb_onetime_notifications_list.php:12
-#: pnfpb_push_notification.php:1677
-#: pnfpb_push_notification.php:1721
+#: pnfpb_push_notification.php:2801
+#: pnfpb_push_notification.php:2845
+#: pnfpb_push_notification.php:9848
+#: pnfpb_push_notification.php:9927
 msgid "Action Scheduler"
 msgstr ""
 
@@ -832,285 +1459,436 @@ msgstr ""
 msgid "Pending/upcoming/future scheduled list of push notifications"
 msgstr ""
 
-#: pnfpb_push_notification.php:730
+#: pnfpb_push_notification.php:885
 msgid "Settings"
 msgstr ""
 
-#: pnfpb_push_notification.php:764
-#: pnfpb_push_notification.php:967
+#: pnfpb_push_notification.php:919
+#: pnfpb_push_notification.php:1155
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:101
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:308
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:463
 msgid "Install PWA app"
 msgstr ""
 
-#: pnfpb_push_notification.php:768
+#: pnfpb_push_notification.php:923
 msgid "Install our PWA app"
 msgstr ""
 
-#: pnfpb_push_notification.php:772
-#: pnfpb_push_notification.php:975
+#: pnfpb_push_notification.php:927
+#: pnfpb_push_notification.php:1163
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:109
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:316
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:471
 msgid "Install PWA"
 msgstr ""
 
-#: pnfpb_push_notification.php:790
-#: pnfpb_push_notification.php:852
-#: pnfpb_push_notification.php:1057
+#: pnfpb_push_notification.php:963
+#: pnfpb_push_notification.php:1025
+#: pnfpb_push_notification.php:1256
+#: pnfpb_push_notification.php:2361
 msgid "Your device is unsubscribed from notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:796
-#: pnfpb_push_notification.php:999
+#: pnfpb_push_notification.php:969
+#: pnfpb_push_notification.php:1198
 msgid "Subscription updated"
 msgstr ""
 
-#: pnfpb_push_notification.php:802
-#: pnfpb_push_notification.php:1005
+#: pnfpb_push_notification.php:975
+#: pnfpb_push_notification.php:1204
+#: pnfpb_push_notification.php:9160
 msgid "Unsubscribe push notifications"
 msgstr ""
 
-#: pnfpb_push_notification.php:808
-#: pnfpb_push_notification.php:1011
+#: pnfpb_push_notification.php:981
+#: pnfpb_push_notification.php:1210
+#: pnfpb_push_notification.php:8872
 msgid "Subscribe push notifications"
 msgstr ""
 
-#: pnfpb_push_notification.php:815
-#: pnfpb_push_notification.php:1018
+#: pnfpb_push_notification.php:988
+#: pnfpb_push_notification.php:1217
 msgid "Save"
 msgstr ""
 
-#: pnfpb_push_notification.php:827
-#: pnfpb_push_notification.php:1030
+#: pnfpb_push_notification.php:1000
+#: pnfpb_push_notification.php:1229
+#: pnfpb_push_notification.php:2336
 msgid "Subscribe push notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:833
-#: pnfpb_push_notification.php:1036
+#: pnfpb_push_notification.php:1006
+#: pnfpb_push_notification.php:1235
+#: pnfpb_push_notification.php:2342
 msgid "Unsubscribe push notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:858
-#: pnfpb_push_notification.php:1063
+#: pnfpb_push_notification.php:1031
+#: pnfpb_push_notification.php:1262
+#: pnfpb_push_notification.php:2367
 msgid "Your device is subscribed from notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:864
-#: pnfpb_push_notification.php:1069
+#: pnfpb_push_notification.php:1037
+#: pnfpb_push_notification.php:1268
 msgid "Would you like to remove push notifications?"
 msgstr ""
 
-#: pnfpb_push_notification.php:870
-#: pnfpb_push_notification.php:1075
+#: pnfpb_push_notification.php:1043
+#: pnfpb_push_notification.php:1274
+#: pnfpb_push_notification.php:2379
 msgid "Would you like to subscribe to push notifications?"
 msgstr ""
 
-#: pnfpb_push_notification.php:971
+#: pnfpb_push_notification.php:1159
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:105
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:312
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:467
 msgid "Install our PWA app with offline functionality"
 msgstr ""
 
-#: pnfpb_push_notification.php:1129
+#: pnfpb_push_notification.php:1403
 msgid "Would you like to subscribe to our notifications?"
 msgstr ""
 
-#: pnfpb_push_notification.php:1135
+#: pnfpb_push_notification.php:1409
 msgid "Yes"
 msgstr ""
 
-#: pnfpb_push_notification.php:1141
+#: pnfpb_push_notification.php:1415
 msgid "No"
 msgstr ""
 
-#: pnfpb_push_notification.php:1171
+#: pnfpb_push_notification.php:1445
 msgid "pnfpb-top-left"
 msgstr ""
 
-#: pnfpb_push_notification.php:1264
+#: pnfpb_push_notification.php:1452
+msgid "Would you like to install our app?"
+msgstr ""
+
+#: pnfpb_push_notification.php:1503
+msgid "Manage Push Notifications"
+msgstr ""
+
+#: pnfpb_push_notification.php:1591
+msgid "Please wait...it is processing"
+msgstr ""
+
+#: pnfpb_push_notification.php:2325
 msgid "PWA for IOS browsers"
 msgstr ""
 
-#: pnfpb_push_notification.php:1265
+#: pnfpb_push_notification.php:2326
 msgid "For IOS and IPAD browsers, Only option to install PWA is to use add to home screen in safari browser"
 msgstr ""
 
-#: pnfpb_push_notification.php:1268
+#: pnfpb_push_notification.php:2329
 msgid "App installed successfully"
 msgstr ""
 
-#: pnfpb_push_notification.php:1269
+#: pnfpb_push_notification.php:2330
 msgid "Progressive Web App (PWA) is installed successfully."
 msgstr ""
 
-#: pnfpb_push_notification.php:1316
-#: pnfpb_push_notification.php:1317
+#: pnfpb_push_notification.php:2373
+msgid "Would you like to unsubscribe push notifications?"
+msgstr ""
+
+#: pnfpb_push_notification.php:2430
+#: pnfpb_push_notification.php:2431
 msgid "PNFPB Push Notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:1326
+#: pnfpb_push_notification.php:2440
 msgid "Push settings"
 msgstr ""
 
-#: pnfpb_push_notification.php:1329
+#: pnfpb_push_notification.php:2443
 msgid "Device tokens list"
 msgstr ""
 
-#: pnfpb_push_notification.php:1339
+#: pnfpb_push_notification.php:2453
 msgid "PWA app settings"
 msgstr ""
 
-#: pnfpb_push_notification.php:1348
+#: pnfpb_push_notification.php:2462
 msgid "On demand Notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:1357
+#: pnfpb_push_notification.php:2471
 msgid "Onetime Notifications list"
 msgstr ""
 
-#: pnfpb_push_notification.php:1367
+#: pnfpb_push_notification.php:2481
 msgid "Frontend subscription"
 msgstr ""
 
-#: pnfpb_push_notification.php:1376
+#: pnfpb_push_notification.php:2490
 msgid "Customize Buttons"
 msgstr ""
 
-#: pnfpb_push_notification.php:1385
+#: pnfpb_push_notification.php:2499
 msgid "Integrate Mobile Apps"
 msgstr ""
 
-#: pnfpb_push_notification.php:1394
+#: pnfpb_push_notification.php:2508
 msgid "NGNIX"
 msgstr ""
 
-#: pnfpb_push_notification.php:1403
+#: pnfpb_push_notification.php:2517
 msgid "Action scheduler"
 msgstr ""
 
-#: pnfpb_push_notification.php:1587
-#: pnfpb_push_notification.php:1625
+#: pnfpb_push_notification.php:2711
+#: pnfpb_push_notification.php:2749
 msgid "Finished on "
 msgstr ""
 
-#: pnfpb_push_notification.php:1651
+#: pnfpb_push_notification.php:2775
 msgid "From release 1.58 onwards, PNFPB settings page moved to new location as separate admin menu. click here for PNFPB plugin settings menu"
 msgstr ""
 
-#: pnfpb_push_notification.php:1653
+#: pnfpb_push_notification.php:2777
 msgid "Push notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:1666
+#: pnfpb_push_notification.php:2790
 msgid "PNFPB - Action scheduler"
 msgstr ""
 
-#: pnfpb_push_notification.php:1681
+#: pnfpb_push_notification.php:2805
 msgid "Action Scheduler library is also used by other plugins, like WPForms and WooCommerce, so you might see tasks that are not related to our plugin in the table below."
 msgstr ""
 
-#: pnfpb_push_notification.php:1710
+#: pnfpb_push_notification.php:2834
 msgid "PNFPB - Device tokens list"
 msgstr ""
 
-#: pnfpb_push_notification.php:1727
+#: pnfpb_push_notification.php:2851
 msgid "List of device tokens registered for push notification"
 msgstr ""
 
-#: pnfpb_push_notification.php:1746
+#: pnfpb_push_notification.php:2870
 msgid "Schedule automatic delete tokens with userid no longer exist"
 msgstr ""
 
-#: pnfpb_push_notification.php:1757
+#: pnfpb_push_notification.php:2881
 msgid "Schedule automatic delete tokens without userid (userid=0)"
 msgstr ""
 
-#: pnfpb_push_notification.php:1785
-msgid "Save changes"
-msgstr ""
-
-#: pnfpb_push_notification.php:2663
-#: pnfpb_push_notification.php:2720
+#: pnfpb_push_notification.php:4138
 msgid "New post from "
 msgstr ""
 
-#: pnfpb_push_notification.php:2886
-#: pnfpb_push_notification.php:2904
-#: pnfpb_push_notification.php:3245
-#: pnfpb_push_notification.php:3270
-msgid "New contents available in "
+#: pnfpb_push_notification.php:4570
+msgid " posted new activity in "
 msgstr ""
 
-#: pnfpb_push_notification.php:2895
-msgid "New activity post in "
+#: pnfpb_push_notification.php:5115
+#: pnfpb_push_notification.php:5601
+msgid " posted activity in group "
 msgstr ""
 
-#: pnfpb_push_notification.php:3256
-msgid "New group post in "
+#: pnfpb_push_notification.php:6058
+msgid " sent you private message"
 msgstr ""
 
-#: pnfpb_push_notification.php:6075
+#: pnfpb_push_notification.php:6206
+msgid "Welcome our new member "
+msgstr ""
+
+#: pnfpb_push_notification.php:6208
+#: pnfpb_push_notification.php:7992
+msgid " registered as new member"
+msgstr ""
+
+#: pnfpb_push_notification.php:6380
+msgid " sent you friendship request"
+msgstr ""
+
+#: pnfpb_push_notification.php:6382
+msgid " sent you friend request"
+msgstr ""
+
+#: pnfpb_push_notification.php:6522
+#: pnfpb_push_notification.php:6524
+msgid " accepted your friendship request"
+msgstr ""
+
+#: pnfpb_push_notification.php:6666
+msgid " updated avatar"
+msgstr ""
+
+#: pnfpb_push_notification.php:6840
+msgid " updated cover photo"
+msgstr ""
+
+#: pnfpb_push_notification.php:7073
+#: pnfpb_push_notification.php:7129
+#: pnfpb_push_notification.php:7134
+msgid "New comment for post - "
+msgstr ""
+
+#: pnfpb_push_notification.php:7143
+#: pnfpb_push_notification.php:7351
+msgid "New comments for post - "
+msgstr ""
+
+#: pnfpb_push_notification.php:7396
+msgid "New comments posted in "
+msgstr ""
+
+#: pnfpb_push_notification.php:7481
+msgid "New comment posted in "
+msgstr ""
+
+#: pnfpb_push_notification.php:7817
+msgid "New message from contact us page"
+msgstr ""
+
+#: pnfpb_push_notification.php:8162
+msgid "Group update "
+msgstr ""
+
+#: pnfpb_push_notification.php:8175
+msgid " group details updated"
+msgstr ""
+
+#: pnfpb_push_notification.php:8372
+msgid " invited you to join in group "
+msgstr ""
+
+#: pnfpb_push_notification.php:8374
+msgid "Group invite to join in group "
+msgstr ""
+
+#: pnfpb_push_notification.php:8550
 msgctxt "Push Notification subscription sub nav"
 msgid "Push Notification subscription"
 msgstr ""
 
-#: pnfpb_push_notification.php:6159
+#: pnfpb_push_notification.php:8635
 msgid "Activities"
 msgstr ""
 
-#: pnfpb_push_notification.php:6175
+#: pnfpb_push_notification.php:8651
 msgid "Comments in Activity/Post"
 msgstr ""
 
-#: pnfpb_push_notification.php:6187
+#: pnfpb_push_notification.php:8663
 msgid "Comments in My Activity/My Post"
 msgstr ""
 
-#: pnfpb_push_notification.php:6219
+#: pnfpb_push_notification.php:8695
+#: pnfpb_push_notification.php:8910
 msgid "New member joined"
 msgstr ""
 
-#: pnfpb_push_notification.php:6265
-msgid "Avatar change"
-msgstr ""
-
-#: pnfpb_push_notification.php:6280
-msgid "Cover image change"
-msgstr ""
-
-#: pnfpb_push_notification.php:6310
+#: pnfpb_push_notification.php:8786
 msgid "Group Invites"
 msgstr ""
 
-#: pnfpb_push_notification.php:6333
+#: pnfpb_push_notification.php:8809
 msgid "Your notification settings have been saved."
 msgstr ""
 
-#: pnfpb_push_notification.php:6478
-msgid "Please wait...subscribing to notification"
+#: pnfpb_push_notification.php:8866
+msgid "Change push subscriptions"
 msgstr ""
 
-#: pnfpb_push_notification.php:6479
-msgid "You are subscribed. Update/Change Subscription options according to your choice"
+#: pnfpb_push_notification.php:8878
+msgid "All notifications"
 msgstr ""
 
-#: pnfpb_push_notification.php:7375
+#: pnfpb_push_notification.php:8884
+msgid "Post/activity"
+msgstr ""
+
+#: pnfpb_push_notification.php:8891
+msgid "Comments"
+msgstr ""
+
+#: pnfpb_push_notification.php:8897
+msgid "My Posts/my activities"
+msgstr ""
+
+#: pnfpb_push_notification.php:8903
+msgid "Private messages"
+msgstr ""
+
+#: pnfpb_push_notification.php:8916
+msgid "Friend requests"
+msgstr ""
+
+#: pnfpb_push_notification.php:8940
+msgid "Un-Subscribe all"
+msgstr ""
+
+#: pnfpb_push_notification.php:8952
+msgid "You are subscribed. Change/Update subscriptions according to your choice."
+msgstr ""
+
+#: pnfpb_push_notification.php:8957
+msgid "Please wait...subscribing push notification is in progress."
+msgstr ""
+
+#: pnfpb_push_notification.php:9166
+msgid "Subscribe to push notifications"
+msgstr ""
+
+#: pnfpb_push_notification.php:9837
+msgid "PNFPB - API for Mobile app integration"
+msgstr ""
+
+#: pnfpb_push_notification.php:9851
+msgid "Generate secret key for Android/Ios app integration"
+msgstr ""
+
+#: pnfpb_push_notification.php:9852
+msgid "This secret key will be used to get subscription token in secured manner from Android/Ios app to store it in WordPress Database table to send push notifications for app users"
+msgstr ""
+
+#: pnfpb_push_notification.php:9853
+msgid "Use this secret key in http post request using this rest api from app"
+msgstr ""
+
+#: pnfpb_push_notification.php:9859
 msgid "Generate/Change secret key"
 msgstr ""
 
-#: pnfpb_push_notification.php:7406
+#: pnfpb_push_notification.php:9880
+msgid "Disable push notification service worker file and PWA"
+msgstr ""
+
+#: pnfpb_push_notification.php:9882
+msgid "Currently, Service worker file is disabled/not created. if you need push notification and PWA in website, please enable service worker file using below option"
+msgstr ""
+
+#: pnfpb_push_notification.php:9890
 msgid "Enable service worker file"
 msgstr ""
 
-#: pnfpb_push_notification.php:7408
+#: pnfpb_push_notification.php:9892
 msgid "Disable service worker file"
 msgstr ""
 
-#: pnfpb_push_notification.php:7519
+#: pnfpb_push_notification.php:9895
+msgid "This option will disable service worker file, it will switch off push notification service as well as it will switch off PWA. Use this option only, if you want to use this plugin for push notification services via REST API (example: for mobile app using WebView)"
+msgstr ""
+
+#: pnfpb_push_notification.php:9916
+msgid "PNFPB - settings for NGNIX server"
+msgstr ""
+
+#: pnfpb_push_notification.php:9930
+msgid "Settings for NGINX based server/hosting"
+msgstr ""
+
+#: pnfpb_push_notification.php:10003
 msgid "Enable/Disable static service worker and PWA manifest files"
+msgstr ""
+
+#: pnfpb_push_notification.php:10024
+msgid "If Push notification admin settings or PWA admin settings are changed then regenerate service worker file by switching off this option, save changes, switch on again and save the changes again, so that service worker file and PWA manifest files will be regenerated"
 msgstr ""
 
 #: admin/js/pnfpb_ic_pwa_upload_icon.js:25
@@ -1123,256 +1901,198 @@ msgstr ""
 #: admin/js/pnfpb_ic_upload_icon.js:76
 #: admin/js/pnfpb_ic_upload_icon.js:102
 #: admin/js/pnfpb_ic_upload_icon.js:104
+#: admin/js/pnfpb_ic_upload_icon.js:139
+#: admin/js/pnfpb_ic_upload_icon.js:141
 msgid "Select a Picture"
 msgstr ""
 
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:276
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:294
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:311
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:328
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:346
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:364
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:383
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:402
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:420
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:439
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:458
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:476
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:494
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:584
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:260
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:278
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:295
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:312
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:330
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:348
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:367
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:386
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:404
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:423
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:442
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:460
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:478
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:568
 msgid "Hide form"
 msgstr ""
 
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:281
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:299
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:316
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:333
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:351
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:369
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:388
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:407
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:425
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:444
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:463
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:481
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:499
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:589
-msgid "Customize"
-msgstr ""
-
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:514
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:553
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:498
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:537
 msgid "Show Firebase configuration"
 msgstr ""
 
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:516
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:500
 msgid "Onesignal configuration"
 msgstr ""
 
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:523
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:544
-msgid "Firebase configuration"
-msgstr ""
-
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:525
-msgid "Show Onesignal configuration"
-msgstr ""
-
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:542
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:526
 msgid "Show onesignal configuration"
 msgstr ""
 
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:551
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:535
 msgid "onesignal configuration"
 msgstr ""
 
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:566
-msgid "Tutorial on Firebase"
-msgstr ""
-
-#: admin/js/pnfpb_ic_pwa_upload_icon.js:571
+#: admin/js/pnfpb_ic_pwa_upload_icon.js:555
 msgid "Hide Firebase Tutorial"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:174
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:231
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:177
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:235
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:274
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:313
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:352
 msgid "User accepted PWA installation"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:183
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:186
 msgid "User did not accept PWA installation. No thanks, I am good!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:238
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:242
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:281
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:320
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:359
 msgid "User did not accept PWA installation.No thanks, I am good!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:651
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2768
 msgid "Verifying subscription status..."
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:659
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:838
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2276
-msgid "You are subscribed to push notification"
-msgstr ""
-
-#: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:664
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:790
-msgid "Push notification not subscribed"
-msgstr ""
-
-#: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:699
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2834
 msgid "Please wait...verifying status"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:736
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:826
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2210
-msgid "Please wait...processing"
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3251
+msgid "Subscription options updated"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:775
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3340
 msgid "Push subscription token deleted successfully"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:779
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3344
 msgid "Push subscription token deletion failed in database"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:801
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:806
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3398
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3403
 msgid "Unsubscribe token failed"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:813
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3410
 msgid "Unsubscribe subscription failed"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:904
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:968
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3572
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3636
 msgid "Notification from permission not granted or blocked!!!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:273
-#: public/js/pnfpb_pushscript_pwa.js:274
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:507
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:914
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:663
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3582
 msgid "Unable to retrieve refreshed token "
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:521
-#: public/js/pnfpb_pushscript_pwa.js:534
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1158
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1171
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3866
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3879
 msgid "Subscribe notifications on comments from my Posts/my BuddyPress activities"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:529
-#: public/js/pnfpb_pushscript_pwa.js:2791
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1166
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3368
+#: public/js/pnfpb_pushscript_pwa.js:1073
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:3874
 msgid "Login required to subscribe notifications on comments from my Posts/my BuddyPress activities"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1017
-#: public/js/pnfpb_pushscript_pwa.js:1887
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1657
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4497
 msgid "cloud messaging push notification - device update failed"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_group_pushscript_pwa.js:229
-#: public/js/pnfpb_pushscript_pwa.js:1063
-#: public/js/pnfpb_pushscript_pwa.js:1900
+#: public/js/pnfpb_group_pushscript_pwa.js:289
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:289
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1703
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2426
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4592
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5822
 msgid "Already subscribed...device id already exists...not updated"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_group_pushscript_pwa.js:241
-#: public/js/pnfpb_group_pushscript_pwa.js:324
-#: public/js/pnfpb_pushscript_pwa.js:1080
-#: public/js/pnfpb_pushscript_pwa.js:1907
+#: public/js/pnfpb_group_pushscript_pwa.js:301
+#: public/js/pnfpb_group_pushscript_pwa.js:383
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:390
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:301
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:383
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1720
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2433
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4624
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5829
 msgid "device update failed"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1726
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4630
 msgid "No refreshed token from Firebase"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1156
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1782
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:573
+#: public/js/pnfpb_pushscript_pwa.js:268
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4688
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4992
 msgid "Processing..."
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1330
-#: public/js/pnfpb_pushscript_pwa.js:1497
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:1953
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2120
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:731
+#: public/js/pnfpb_pushscript_pwa.js:418
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4855
 msgid "Your notification settings have been saved"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1456
-#: public/js/pnfpb_pushscript_pwa.js:1503
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2079
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2126
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:856
+#: public/js/pnfpb_pushscript_pwa.js:424
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:4981
 msgid "Error in saving notification settings"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1468
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2091
-msgid "No token. Error in saving notification settings"
-msgstr ""
-
-#: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1513
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2136
+#: public/js/pnfpb_pushscript_pwa.js:435
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5002
 msgid "Notification permission not granted by user. Error in saving notification settings"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2144
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5009
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5017
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5025
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5036
 msgid "Please subscribe to push notification to use this menu"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1521
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2152
-msgid "Frontend subscription settings not available"
-msgstr ""
-
-#: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1535
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2168
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5052
 msgid "Sending token to server..."
 msgstr ""
 
@@ -1381,81 +2101,72 @@ msgid "Token already sent to server so won't send it again unless it changes"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1913
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2440
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5111
+msgid "We would like to show you notifications for the latest news and updates"
+msgstr ""
+
+#: build/pnfpb_push_notification/index.js:1
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5119
+msgid "You are subscribed to push notifications"
+msgstr ""
+
+#: build/pnfpb_push_notification/index.js:1
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5836
 msgid "No Instance ID token available. Request permission to generate one."
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1918
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2447
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:5843
 msgid "An error occurred while retrieving token. "
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1928
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:2460
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:6010
 msgid "Unable to get permission to notify."
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:165
-#: public/js/pnfpb_pushscript_pwa.js:198
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:372
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:406
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:527
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:561
 msgid "New content is available; please refresh."
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:171
-#: public/js/pnfpb_pushscript_pwa.js:204
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:378
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:412
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:533
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:567
 msgid "Content is cached for offline use"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:524
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:617
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:680
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:797
 msgid "Browser notification permission not granted or blocked!!!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_group_pushscript_pwa.js:369
-#: public/js/pnfpb_pushscript_pwa.js:239
-#: public/js/pnfpb_pushscript_pwa.js:357
-#: public/js/pnfpb_unsubscribe_pushscript_pwa.js:141
-#: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:432
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:529
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:606
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:620
-#: src/pnfpb_push_notification/js/pnfpb_unsubscribe_pushscript_pwa.js:202
-msgid "This browser does not support PUSHAPI Firebase messaging!!!"
-msgstr ""
-
-#: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:337
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:586
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:753
 msgid "Service Worker Failed to Register foreground notification"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:343
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:592
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:759
 msgid "service workers not supported in this browser !!!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:309
-#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:559
+#: src/pnfpb_push_notification/js/pnfpb_pushscript_pwa.js:712
 msgid "This browser does not support system notifications"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_group_pushscript_pwa.js:101
-#: public/js/pnfpb_group_pushscript_pwa.js:162
-#: public/js/pnfpb_group_pushscript_pwa.js:312
-#: public/js/pnfpb_group_pushscript_pwa.js:320
+#: public/js/pnfpb_group_pushscript_pwa.js:163
+#: public/js/pnfpb_group_pushscript_pwa.js:224
+#: public/js/pnfpb_group_pushscript_pwa.js:371
+#: public/js/pnfpb_group_pushscript_pwa.js:379
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:150
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:220
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:380
+#: public/js/pnfpb_pushscript_onesignal_pwa.js:386
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:163
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:224
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:371
@@ -1464,31 +2175,35 @@ msgid "Push notification unsubscription failed..try again!!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_group_pushscript_pwa.js:237
+#: public/js/pnfpb_group_pushscript_pwa.js:297
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:297
 msgid "Push notification subscription failed..try again!!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_group_pushscript_pwa.js:359
+#: public/js/pnfpb_group_pushscript_pwa.js:418
 #: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:418
 msgid "UnSubscribe/Subscribe failed..try again ..Please!!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_unsubscribe_pushscript_pwa.js:91
+#: src/pnfpb_push_notification/js/pnfpb_group_pushscript_pwa.js:432
+msgid "Web View!!!"
+msgstr ""
+
+#: build/pnfpb_push_notification/index.js:1
+#: public/js/pnfpb_unsubscribe_pushscript_pwa.js:152
 #: src/pnfpb_push_notification/js/pnfpb_unsubscribe_pushscript_pwa.js:152
 msgid "UnSubscribe failed..try again..Please!!"
 msgstr ""
 
 #: build/pnfpb_push_notification/index.js:1
-#: public/js/pnfpb_pushscript_pwa.js:1102
-#: public/js/pnfpb_unsubscribe_pushscript_pwa.js:130
+#: public/js/pnfpb_unsubscribe_pushscript_pwa.js:191
 #: src/pnfpb_push_notification/js/pnfpb_unsubscribe_pushscript_pwa.js:191
 msgid "UnSubscribe failed..try again or Subscribe again..Please!!"
 msgstr ""
 
-#: public/js/pnfpb_pushscript_pwa.js:3363
-#: public/js/pnfpb_pushscript_pwa.js:3427
-msgid "No thanks, I am good!"
+#: public/js/pnfpb_group_pushscript_pwa.js:432
+#: public/js/pnfpb_unsubscribe_pushscript_pwa.js:202
+msgid "This browser does not support PUSHAPI Firebase messaging!!!"
 msgstr ""

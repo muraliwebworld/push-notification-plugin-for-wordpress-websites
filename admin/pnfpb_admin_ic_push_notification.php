@@ -274,7 +274,8 @@
 											<div class="pnfpb-push-msg-vertical-model-container">
 												<div class="pnfpb-push-msg-vertical-model-text-layout">
 													<div class="pnfpb-push-vertical-model-icon">
-														<div class="pnfpb-push-msg-model-square"></div>																										</div>														
+														<div class="pnfpb-push-msg-model-square"></div>
+													</div>														
 													<div class="pnfpb-push-msg-vertical-model-text-long-line"></div>
 													<div class="pnfpb-push-msg-vertical-model-text-line"></div>
 													<div class="pnfpb-push-msg-vertical-model-cancel-button"></div>
@@ -297,7 +298,8 @@
 													<div class="pnfpb-push-vertical-model-bell">
 														<div class="pnfpb-push-msg-vertical-model-bell-square">
 															<img src="<?php echo $pnfpb_popup_subscribe_icon; ?>" width="30px" height="30px" />
-														</div>																																											</div>														
+														</div>
+													</div>														
 												</div>
 											</div>
 										</div>
@@ -682,9 +684,12 @@
 		</tr>
         <tr class="pnfpb_ic_push_settings_table_row">
 			<td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div class="pnfpb_row pnfpb-admin-right_sidebar">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox"><?php echo __("Post/Custom post types push notifications.  For BP use options below (next block) near BuddyPress activities",PNFPB_TD); ?></label>
+				</div>	
 				<div  class="pnfpb_row">
 					<?php echo '<b>'.__('In edit/New post page with posttype=post, make sure metabox for PNFPB Push notification is switched on to send notification. <br/>For frontend post/custom post,it will work as it is without metabox',PNFPB_TD).'</b>'; ?>
-				</div>				
+				</div>
 				<div class="pnfpb_row">
   					<div class="pnfpb_column">
     					<div class="pnfpb_card">				
@@ -700,19 +705,25 @@
 					$cutomize_post_field_notification_title = '<br/><br/><br/><br/>'.__('(use [member name] shortcode to display member name)<br/>if following custom title are blank then post title/custom post type title will be in push notification title<br/>Example "[member name] published a post" will display as "Tom published a post" where Tom is member name<br/>',PNFPB_TD).'<div class="pnfpb_ic_post_content_form"><b>'.__("Notification title for Post",PNFPB_TD).'</b><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_post_title" name="pnfpb_ic_fcm_post_title" type="text" value="'.get_option('pnfpb_ic_fcm_post_title').'" /></div><br/>';
 					
            			 $totalposttype = count($custposttypes);
+					 
             		foreach ( $custposttypes as $post_type ) {
+						
                 		$labeltext = $post_type;
+						
 						$cutomize_post_field_notification_title .= '<div class="pnfpb_ic_'.$post_type.'_content_form"><b>'.__("Notification title for $post_type",PNFPB_TD).'</b><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_'.$post_type.'_title" name="pnfpb_ic_fcm_'.$post_type.'_title" type="text" value="'.get_option('pnfpb_ic_fcm_'.$post_type.'_title').'" /></div><br/>';
-        		?>  
+        		?> 
+					<?php if ($post_type !== 'buddypress') { ?>
   					<div class="pnfpb_column">
     					<div class="pnfpb_card">				
-							<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_<?php echo $labeltext; ?>_enable"><?php echo $labeltext; ?></label>		<label class="pnfpb_switch">	
+							<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_<?php echo $labeltext; ?>_enable"><?php echo $labeltext; ?></label>
+							<label class="pnfpb_switch">	
 								<input id="pnfpb_ic_fcm_<?php echo $post_type; ?>_enable" name="pnfpb_ic_fcm_<?php echo $post_type; ?>_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_'.$post_type.'_enable' ) ); ?>  />
 								<span class="pnfpb_slider round"></span>
 							</label>
 						</div>
 					</div>
-        		<?php                
+        		<?php
+					}
                 	$posttypecount++;
                 	$rowcount++;
            	 	}
@@ -782,6 +793,9 @@
 		</tr>
 		<tr class="pnfpb_ic_push_settings_table_row">
             <td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div class="pnfpb_row pnfpb-admin-right_sidebar">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_<?php echo $labeltext; ?>_enable"><?php echo __("BuddyPress or BuddyBoss push notification options for activities or group activities",PNFPB_TD); ?></label>
+				</div>				
 				<div class="pnfpb_row">
 					<div class="pnfpb_column_400">
 						<div class="pnfpb_card">
@@ -808,11 +822,11 @@
 									<?php echo __("Group activity (only for group members)",'PNFPB_TD');?>
 								</label>
 							<?php //} ?>
-							<button type="button" class="pnfpb_activity_form_button" onclick="toggle_activity_content_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_activity_form_button" onclick="toggle_activity_content_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 				</div>
-				<div class="pnfpb_row">					
+				<div class="pnfpb_row">
 						<div class="pnfpb_column_400">
     						<div class="pnfpb_card">
 								<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypressactivities_schedule_enable">
@@ -865,19 +879,19 @@
 				</div>
 				<div  class="pnfpb_row">
 					<?php if (get_option( 'pnfpb_ic_fcm_buddypress_enable' ) === '1') { ?>
-						<?php echo '<a href="'.get_home_url().'/wp-admin/admin.php?page=pnfpb_icfm_action_scheduler&s=PNFPB_cron_buddypressactivities_hook&action=-1&paged=1&action2=-1" target="_blank">'.__('Manage your scheduled tasks for BuddyPress activities notifications in action scheduler tab - click here',PNFPB_TD).'</a>'; ?>
+						<?php echo '<a href="'.get_home_url().'/wp-admin/admin.php?page=pnfpb_icfm_action_scheduler&s=PNFPB_cron_buddypressactivities_hook&action=-1&paged=1&action2=-1" target="_blank">'.__('Manage your scheduled tasks for BuddyPress activities notifications in action scheduler tab - click here','PNFPB_TD').'</a>'; ?>
 					<?php } else  { ?>
-						<?php echo '<a href="'.get_home_url().'/wp-admin/admin.php?page=pnfpb_icfm_action_scheduler&s=PNFPB_cron_buddypressgroupactivities_hook&action=-1&paged=1&action2=-1" target="_blank">'.__('Manage your scheduled tasks for BuddyPress group activities notifications in action scheduler tab - click here',PNFPB_TD).'</a>'; ?>
+						<?php echo '<a href="'.get_home_url().'/wp-admin/admin.php?page=pnfpb_icfm_action_scheduler&s=PNFPB_cron_buddypressgroupactivities_hook&action=-1&paged=1&action2=-1" target="_blank">'.__('Manage your scheduled tasks for BuddyPress group activities notifications in action scheduler tab - click here','PNFPB_TD').'</a>'; ?>
 					<?php } ?>
 				</div>				
 				<div class="pnfpb_ic_activity_content_form">
-					<?php echo __("Notification title for BuddyPress new activity<br/>use [member name] shortcode to display member name along with custom title<br/>(use [group name] shortcode only for group buddypress activities to display member name)<br/>Example '[member name] posted an activity' will display as 'Tom posted an activity' where Tom is member name",PNFPB_TD);?><br/>
+					<?php echo __("Notification title for BuddyPress new activity<br/>use [member name] shortcode to display member name along with custom title<br/>(use [group name] shortcode only for group buddypress activities to display member name)<br/>Example '[member name] posted an activity' will display as 'Tom posted an activity' where Tom is member name",'PNFPB_TD');?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_activity_title" name="pnfpb_ic_fcm_activity_title" type="text" value="<?php echo $activitytitle; ?>" /><br/><br/>
-					<?php echo __("Default Notification content for BuddyPress new activity<br/> (or leave it as blank to display activity content in notification message)",PNFPB_TD); ?><br/>
+					<?php echo __("Default Notification content for BuddyPress new activity<br/> (or leave it as blank to display activity content in notification message)",'PNFPB_TD'); ?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_activity_message" name="pnfpb_ic_fcm_activity_message" type="text" value="<?php echo $activitymessage; ?>" /><br/><br/>					
-					<?php echo __("Notification title for BuddyPress new group activity",PNFPB_TD);?><br/>
+					<?php echo __("Notification title for BuddyPress new group activity",'PNFPB_TD');?><br/>
 					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_group_activity_title" name="pnfpb_ic_fcm_group_activity_title" type="text" value="<?php echo $activitygroup; ?>"/><br/><br/>
-					<?php echo __("Default Notification content for BuddyPress new group activity<br/> (or leave it as blank to display activity content in notification message)",PNFPB_TD);?><br/>
+					<?php echo __("Default Notification content for BuddyPress new group activity<br/> (or leave it as blank to display activity content in notification message)",'PNFPB_TD');?><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_group_activity_message" name="pnfpb_ic_fcm_group_activity_message" type="text" value="<?php echo $groupactivitymessage; ?>" /><br/><br/>
 					<div class="pnfpb_column_400">
     					<div class="pnfpb_card">
@@ -900,7 +914,10 @@
 			</td>
 		</tr>
 		<tr class="pnfpb_ic_push_settings_table_row">
-            <td class="pnfpb_ic_push_settings_table_column column-columnname">		
+            <td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div class="pnfpb_row pnfpb-admin-right_sidebar">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_<?php echo $labeltext; ?>_enable"><?php echo __("BuddyPress or BuddyBoss comment push notification options",'PNFPB_TD'); ?></label>
+				</div>			
 				<div class="pnfpb_row">
 					<div class="pnfpb_column_400">
     					<div class="pnfpb_card">
@@ -925,7 +942,7 @@
 								<span class="pnfpb_checkmark  pnfpb_margin_top_6"></span>
 								<?php echo __("Only for User's activities/Posts/My activities",'PNFPB_TD');?>
 							</label>
-							<button type="button" class="pnfpb_comments_content_button" onclick="toggle_comments_content_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_comments_content_button" onclick="toggle_comments_content_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>	
 				</div>
@@ -981,18 +998,21 @@
 					</div>
 				</div>
 							<div  class="pnfpb_row">
-								<?php echo '<a href="'.get_home_url().'/wp-admin/admin.php?page=pnfpb_icfm_action_scheduler&s=PNFPB_cron_buddypresscomments_hook&action=-1&paged=1&action2=-1" target="_blank">'.__('Manage your scheduled tasks for BuddyPress comments/Post comments notifications in action scheduler tab - click here',PNFPB_TD).'</a>'; ?>
+								<?php echo '<a href="'.get_home_url().'/wp-admin/admin.php?page=pnfpb_icfm_action_scheduler&s=PNFPB_cron_buddypresscomments_hook&action=-1&paged=1&action2=-1" target="_blank">'.__('Manage your scheduled tasks for BuddyPress comments/Post comments notifications in action scheduler tab - click here','PNFPB_TD').'</a>'; ?>
 							</div>				
 				<div class="pnfpb_ic_comments_content_form">
-					<label for="pnfpb_ic_fcm_comment_activity_title"><?php echo __("Notification title for BuddyPress new comment<br/>use [member name] shortcode to display member name along with custom title<br/>Example '[member name] posted a comment' will display as 'Tom posted a comment' where Tom is member name",PNFPB_TD);?></label><br/>
+					<label for="pnfpb_ic_fcm_comment_activity_title"><?php echo __("Notification title for BuddyPress new comment<br/>use [member name] shortcode to display member name along with custom title<br/>Example '[member name] posted a comment' will display as 'Tom posted a comment' where Tom is member name",'PNFPB_TD');?></label><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_comment_activity_title" name="pnfpb_ic_fcm_comment_activity_title" type="text" value="<?php echo $activitycomment; ?>" /><br/><br/>
-					<label for="pnfpb_ic_fcm_comment_activity_message"><?php echo __("Default Notification content for BuddyPress new comment<br/> (or leave it as blank to display comment content in notification message)",PNFPB_TD);?></label><br/>
+					<label for="pnfpb_ic_fcm_comment_activity_message"><?php echo __("Default Notification content for BuddyPress new comment<br/> (or leave it as blank to display comment content in notification message)",'PNFPB_TD');?></label><br/>
         			<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_comment_activity_message" name="pnfpb_ic_fcm_comment_activity_message" type="text" value="<?php echo $commentactivitymessage; ?>" /><br/><br/>
 				</div>
 			</td>
 		</tr>
 		<tr class="pnfpb_ic_push_settings_table_row">
-            <td class="pnfpb_ic_push_settings_table_column column-columnname">		
+            <td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div class="pnfpb_row pnfpb-admin-right_sidebar">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_<?php echo $labeltext; ?>_enable"><?php echo __("Other BuddyPress or BuddyBoss push notification options",'PNFPB_TD'); ?></label>
+				</div>			
 				<div class="pnfpb_row">
 					<div class="pnfpb_column_400">
 						<?php echo __("(For below BuddyPress options, user avatar image replaces notification icon in push notification)",'PNFPB_TD');?>
@@ -1008,7 +1028,7 @@
 									<input  id="pnfpb_ic_fcm_bprivatemessage_enable" name="pnfpb_ic_fcm_bprivatemessage_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_bprivatemessage_enable' ) ); ?>  />	
 									<span class="pnfpb_slider round"></span>
 							</label>								
-							<button type="button" class="pnfpb_private_message_button" onclick="toggle_private_message_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_private_message_button" onclick="toggle_private_message_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_private_message_form pnfpb_column_400">
@@ -1027,7 +1047,7 @@
 								<input  id="pnfpb_ic_fcm_new_member_enable" name="pnfpb_ic_fcm_new_member_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_new_member_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_new_member_button" onclick="toggle_new_member_form()"><?php echo __("Customize",PNFPB_TD); ?></button>	
+							<button type="button" class="pnfpb_new_member_button" onclick="toggle_new_member_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>	
 						</div>
 					</div>
 					<div class="pnfpb_ic_new_member_form pnfpb_column_400">
@@ -1048,12 +1068,12 @@
 								<input  id="pnfpb_ic_fcm_friendship_request_enable" name="pnfpb_ic_fcm_friendship_request_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_friendship_request_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_friendship_request_button" onclick="toggle_friendship_request_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_friendship_request_button" onclick="toggle_friendship_request_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_friendship_request_form pnfpb_column_400">
 						<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_friendship_request_text_enable"><?php echo __("Friendship request notification title",'PNFPB_TD');?></label><br/>
-						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_friendship_request_text" name="pnfpb_ic_fcm_friendship_request_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_friendship_request_text' )) {echo get_option( 'pnfpb_ic_fcm_friendship_request_text' );} else { echo __('[friendship initiator name] sent friendship request',PNFPB_TD);} ?>"  />
+						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_friendship_request_text" name="pnfpb_ic_fcm_friendship_request_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_friendship_request_text' )) {echo get_option( 'pnfpb_ic_fcm_friendship_request_text' );} else { echo __('[friendship initiator name] sent friendship request','PNFPB_TD');} ?>"  />
 						<br/><p><?php echo __('[friendship initiator name] is the shortcode which replaces with sender name and modify remaining text according to your choice','PNFPB_TD');?></p><br/>
 						<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_friendship_request_text_enable"><?php echo __("Default Friendship request notification content",'PNFPB_TD');?></label><br/>				
 						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_friendship_request_content" name="pnfpb_ic_fcm_friendship_request_content" type="text" value="<?php echo $friendshiprequestcontent; ?>"  />
@@ -1067,7 +1087,7 @@
 								<input  id="pnfpb_ic_fcm_friendship_accept_enable" name="pnfpb_ic_fcm_friendship_accept_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_friendship_accept_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_friendship_accept_button" onclick="toggle_friendship_accept_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_friendship_accept_button" onclick="toggle_friendship_accept_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_friendship_accept_form pnfpb_column_400">
@@ -1088,12 +1108,12 @@
 								<input  id="pnfpb_ic_fcm_avatar_change_enable" name="pnfpb_ic_fcm_avatar_change_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_avatar_change_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_avatar_change_button" onclick="toggle_avatar_change_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_avatar_change_button" onclick="toggle_avatar_change_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_avatar_change_form pnfpb_column_400">
 						<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_avatar_change_text_enable"><?php echo __("User avatar change notification title",'PNFPB_TD');?></label><br/>
-						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_avatar_change_text" name="pnfpb_ic_fcm_avatar_change_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_avatar_change_text' )) {echo get_option( 'pnfpb_ic_fcm_avatar_change_text' );} else { echo __('[member name] updated avatar',PNFPB_TD);} ?>"  />
+						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_avatar_change_text" name="pnfpb_ic_fcm_avatar_change_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_avatar_change_text' )) {echo get_option( 'pnfpb_ic_fcm_avatar_change_text' );} else { echo __('[member name] updated avatar','PNFPB_TD');} ?>"  />
 						<br/><p><?php echo __('[member name] is the shortcode which replaces with sender name and modify remaining text according to your choice','PNFPB_TD');?></p><br/>
 						<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_avatar_change_text_enable"><?php echo __("Default Avatar change notification content",'PNFPB_TD');?></label><br/>				
 						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_avatar_change_content" name="pnfpb_ic_fcm_avatar_change_content" type="text" value="<?php echo $avatarchangecontent; ?>"  />
@@ -1107,12 +1127,12 @@
 								<input  id="pnfpb_ic_fcm_cover_image_change_enable" name="pnfpb_ic_fcm_cover_image_change_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_cover_image_change_enable' ) ); ?>  />	
 								<span class="pnfpb_slider round"></span>
 							</label>
-							<button type="button" class="pnfpb_cover_image_change_button" onclick="toggle_cover_image_change_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_cover_image_change_button" onclick="toggle_cover_image_change_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_cover_image_change_form pnfpb_column_400">
 						<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_flex_grow_6 pnfpb_padding_top_8" for="pnfpb_ic_fcm_buddypress_cover_image_change_text_enable"><?php echo __("User cover image notification title",'PNFPB_TD');?></label><br/>
-						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_cover_image_change_text" name="pnfpb_ic_fcm_cover_image_change_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_cover_image_change_text' )) {echo get_option( 'pnfpb_ic_fcm_cover_image_change_text' );} else { __('[member name] updated cover photo',PNFPB_TD);} ?>"  />
+						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_cover_image_change_text" name="pnfpb_ic_fcm_cover_image_change_text" type="text" value="<?php if(get_option( 'pnfpb_ic_fcm_cover_image_change_text' )) {echo get_option( 'pnfpb_ic_fcm_cover_image_change_text' );} else { __('[member name] updated cover photo','PNFPB_TD');} ?>"  />
 						<br/><p><?php echo __('[member name] is the shortcode which replaces with sender name and modify remaining text according to your choice','PNFPB_TD');?></p><br/>
 						<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_buddypress_cover_image_change_text_enable"><?php echo __("Default user cover image change notification content",'PNFPB_TD');?></label><br/>				
 						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_cover_image_change_content" name="pnfpb_ic_fcm_cover_image_change_content" type="text" value="<?php echo $coverimagechangecontent; ?>"  />
@@ -1128,7 +1148,7 @@
 									<input  id="pnfpb_ic_fcm_group_invitation_enable" name="pnfpb_ic_fcm_group_invitation_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_group_invitation_enable' ) ); ?>  />	
 									<span class="pnfpb_slider round"></span>
 							</label>								
-							<button type="button" class="pnfpb_group_invitation_button" onclick="toggle_group_invitation_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_group_invitation_button" onclick="toggle_group_invitation_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_group_invitation_form pnfpb_column_400">
@@ -1147,7 +1167,7 @@
 									<input  id="pnfpb_ic_fcm_group_details_updated_enable" name="pnfpb_ic_fcm_group_details_updated_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_group_details_updated_enable' ) ); ?>  />	
 									<span class="pnfpb_slider round"></span>
 							</label>								
-							<button type="button" class="pnfpb_group_details_updated_button" onclick="toggle_group_details_updated_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_group_details_updated_button" onclick="toggle_group_details_updated_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_group_details_updated_form pnfpb_column_400">
@@ -1162,6 +1182,9 @@
 		</tr>
 		<tr class="pnfpb_ic_push_settings_table_row">
             <td class="pnfpb_ic_push_settings_table_column column-columnname">
+				<div class="pnfpb_row pnfpb-admin-right_sidebar">
+					<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_<?php echo $labeltext; ?>_enable"><?php echo __("Admin only push notification options",'PNFPB_TD'); ?></label>
+				</div>			
 				<div class="pnfpb_row">
 					<div class="pnfpb_column_400">
 						<?php echo __("(following push notifications will be sent only to admin)",'PNFPB_TD');?>
@@ -1177,7 +1200,7 @@
 									<input  id="pnfpb_ic_fcm_new_user_registration_enable" name="pnfpb_ic_fcm_new_user_registration_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_new_user_registration_enable' ) ); ?>  />	
 									<span class="pnfpb_slider round"></span>
 							</label>								
-							<button type="button" class="pnfpb_new_user_registration_button" onclick="toggle_new_user_registration_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_new_user_registration_button" onclick="toggle_new_user_registration_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_new_user_registration_form pnfpb_column_400">
@@ -1196,7 +1219,7 @@
 									<input  id="pnfpb_ic_fcm_contact_form7_enable" name="pnfpb_ic_fcm_contact_form7_enable" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb_ic_fcm_contact_form7_enable' ) ); ?>  />	
 									<span class="pnfpb_slider round"></span>
 							</label>								
-							<button type="button" class="pnfpb_contact_form7_button" onclick="toggle_contact_form7_form()"><?php echo __("Customize",PNFPB_TD); ?></button>
+							<button type="button" class="pnfpb_contact_form7_button" onclick="toggle_contact_form7_form()"><?php echo __("Customize",'PNFPB_TD'); ?></button>
 						</div>
 					</div>
 					<div class="pnfpb_ic_contact_form7_form pnfpb_column_400">
@@ -1211,11 +1234,11 @@
 		</tr>
     </tbody>
 </table>
-<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Use latest version of Firebase API httpv1",PNFPB_TD);?></h2>
+<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Use latest version of Firebase API httpv1",'PNFPB_TD');?></h2>
 <p><?php echo __('(Since Google depreceted legacy version of Firebase API (work until next year June 2024), <br/>please enable below option to use latest version of Firebase API - http v1. Recommended PHP version for this is 8.0 or above. It will work with PHP version 7.4 but recommended PHP version is 8.0 to use latest version of Firebase API httpv1)','PNFPB_TD') ?></p>
 <p><?php echo __('(It requires service account json file to be uploaded)','PNFPB_TD') ?></p>
 <p><?php echo __('(In the Firebase console, open Settings > Service Accounts.Click Generate New Private Key, then confirm by clicking Generate Key.Download & store the JSON file containing the key. Select service account json file in below field , Plugin will read and update required data in database for push notification. Physical file will not be stored.)','PNFPB_TD') ?></p>	
-<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Upload Service account json file for latest version of Firebase API httpv1",PNFPB_TD);?></h2>
+<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Upload Service account json file for latest version of Firebase API httpv1",'PNFPB_TD');?></h2>
 <div class="pnfpb_row">
 	<div class="pnfpb_column_full">
 		<table class="pnfpb_ic_push_firebase_settings_table widefat fixed">
@@ -1246,84 +1269,84 @@
 		</table>
 	</div>
 </div>
-<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Use Firebase (or) Onesignal as push notification provider",PNFPB_TD);?></h2>
+<h2 class="pnfpb_ic_push_settings_header2"><?php echo __("Use Firebase (or) Onesignal as push notification provider",'PNFPB_TD');?></h2>
 <div class="pnfpb_column_full">
-	<button type="button" class="pnfpb_ic_firebase_configuration_help_button" onclick="toggle_firebase_configuration_help()"><?php echo __("Tutorial on Firebase",PNFPB_TD); ?></button>
+	<button type="button" class="pnfpb_ic_firebase_configuration_help_button" onclick="toggle_firebase_configuration_help()"><?php echo __("Tutorial on Firebase",'PNFPB_TD'); ?></button>
 </div>
 <div class="pnfpb_ic_firebase_configuration_help">
-	<a href="https://www.youtube.com/watch?v=02oymYLt3qo" target="_blank"><?php echo __("Watch this tutorial on Firebase settings and configuration",PNFPB_TD); ?></a>
+	<a href="https://www.youtube.com/watch?v=02oymYLt3qo" target="_blank"><?php echo __("Watch this tutorial on Firebase settings and configuration",'PNFPB_TD'); ?></a>
 	<ul>
-		<li><?php echo __("Sign in to Firebase, then open your project, click settings icon & select Project settings",PNFPB_TD); ?></li>
+		<li><?php echo __("Sign in to Firebase, then open your project, click settings icon & select Project settings",'PNFPB_TD'); ?></li>
 
-		<li><?php echo __("To get Firebase server key (for field 1 in admin firebase settings)",PNFPB_TD); ?></li>
-		<li><?php echo __("project settings > cloud messaging tab > get server key or add server key button to get server key",PNFPB_TD); ?></li>
+		<li><?php echo __("To get Firebase server key (for field 1 in admin firebase settings)",'PNFPB_TD'); ?></li>
+		<li><?php echo __("project settings > cloud messaging tab > get server key or add server key button to get server key",'PNFPB_TD'); ?></li>
 
-		<li><?php echo __("To get Firebase config fields (for fields 2 to 8 in admin firebase settings)",PNFPB_TD); ?></li>
-		<li><?php echo __("If you do not have web app, Create a new web app. After creating a new app, it will show firebase config fields",PNFPB_TD); ?></li>
-		<li><?php echo __("Project settings > General under your apps section > click on config button to view configuration fields",PNFPB_TD); ?></li> 
+		<li><?php echo __("To get Firebase config fields (for fields 2 to 8 in admin firebase settings)",'PNFPB_TD'); ?></li>
+		<li><?php echo __("If you do not have web app, Create a new web app. After creating a new app, it will show firebase config fields",'PNFPB_TD'); ?></li>
+		<li><?php echo __("Project settings > General under your apps section > click on config button to view configuration fields",'PNFPB_TD'); ?></li> 
 
-		<li><?php echo __("To get Firebase public key (for field 9 in admin firebase settings)",PNFPB_TD); ?></li>
-		<li><?php echo __("Open the Cloud Messaging tab of the Firebase console Settings pane and scroll to the Web configuration section",PNFPB_TD); ?></li>
-		<li><?php echo __("project settings > cloud messaging tab > Under web push certificates > Generate key pair to get public key",PNFPB_TD); ?></li>
-		<li><?php echo __("In the Web Push certificates tab, click Generate Key Pair. The console displays a notice that the key pair was generated, and displays the public key string and date added",PNFPB_TD); ?></li>
-		<li><?php echo __("If you already Generated key pair then no need to generate it again",PNFPB_TD); ?></li>
-		<li><?php echo __("After saving below fields, you will get browser prompt asking to allow notification for this website, click on allow notification",PNFPB_TD); ?></li>
-		<li><?php echo __("After completing above steps, push notification will work based on option selected for posts/buddypress",PNFPB_TD); ?></li>
+		<li><?php echo __("To get Firebase public key (for field 9 in admin firebase settings)",'PNFPB_TD'); ?></li>
+		<li><?php echo __("Open the Cloud Messaging tab of the Firebase console Settings pane and scroll to the Web configuration section",'PNFPB_TD'); ?></li>
+		<li><?php echo __("project settings > cloud messaging tab > Under web push certificates > Generate key pair to get public key",'PNFPB_TD'); ?></li>
+		<li><?php echo __("In the Web Push certificates tab, click Generate Key Pair. The console displays a notice that the key pair was generated, and displays the public key string and date added",'PNFPB_TD'); ?></li>
+		<li><?php echo __("If you already Generated key pair then no need to generate it again",'PNFPB_TD'); ?></li>
+		<li><?php echo __("After saving below fields, you will get browser prompt asking to allow notification for this website, click on allow notification",'PNFPB_TD'); ?></li>
+		<li><?php echo __("After completing above steps, push notification will work based on option selected for posts/buddypress",'PNFPB_TD'); ?></li>
 	</ul>
 </div>
 		<div class="pnfpb_column_full">
-			<button type="button" class="pnfpb_ic_firebase_configuration_button" onclick="toggle_firebase_configuration()"><?php echo __("Firebase configuration",PNFPB_TD); ?></button>
-			<button type="button" class="pnfpb_ic_or_button"><?php echo __(" (or) ",PNFPB_TD); ?></button>
-			<button type="button" class="pnfpb_ic_onesignal_configuration_button" onclick="toggle_onesignal_configuration()"><?php echo __("Show Onesignal configuration",PNFPB_TD); ?></button>
+			<button type="button" class="pnfpb_ic_firebase_configuration_button" onclick="toggle_firebase_configuration()"><?php echo __("Firebase configuration",'PNFPB_TD'); ?></button>
+			<button type="button" class="pnfpb_ic_or_button"><?php echo __(" (or) ",'PNFPB_TD'); ?></button>
+			<button type="button" class="pnfpb_ic_onesignal_configuration_button" onclick="toggle_onesignal_configuration()"><?php echo __("Show Onesignal configuration",'PNFPB_TD'); ?></button>
 			<p>
-				<?php echo __("In Firebase configuration, <b>all fields are required except database url. Please follow above tutorial for configuration</b>",PNFPB_TD); ?>
+				<?php echo __("In Firebase configuration, <b>all fields are required except database url. Please follow above tutorial for configuration</b>",'PNFPB_TD'); ?>
 			</p>
 			<p>
-				<?php echo __("If Onesignal is enabled then, <b>it requires onesignal wordpress plugin installed and activated with required configuration</b>",PNFPB_TD); ?>
+				<?php echo __("If Onesignal is enabled then, <b>it requires onesignal wordpress plugin installed and activated with required configuration</b>",'PNFPB_TD'); ?>
 			</p>			
 		</div>
 		<div class="pnfpb_ic_firebase_configuration">
 			<table class="pnfpb_ic_push_firebase_settings_table widefat fixed">
     			<tbody>
     				<tr  class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_google_api"><?php echo __("Firebase Server Key",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_google_api" name="pnfpb_ic_fcm_google_api" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_google_api' ); ?>" /></td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_google_api"><?php echo __("Firebase Server Key",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_google_api" name="pnfpb_ic_fcm_google_api" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_google_api' ); ?>" /></td>
     				</tr>
         
     				<tr  class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_api"><?php echo __("Firebase API Key",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_api" name="pnfpb_ic_fcm_api" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_api' ); ?>" /></td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_api"><?php echo __("Firebase API Key",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_api" name="pnfpb_ic_fcm_api" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_api' ); ?>" /></td>
 					</tr>
 	   				<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_authdomain"><?php echo __("Firebase Auth domain",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_authdomain" name="pnfpb_ic_fcm_authdomain" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_authdomain' ); ?>" /> </td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_authdomain"><?php echo __("Firebase Auth domain",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_authdomain" name="pnfpb_ic_fcm_authdomain" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_authdomain' ); ?>" /> </td>
     				</tr>
 		
 	   				<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_databaseurl"><?php echo __("Firebase Database url (optional)",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_databaseurl" name="pnfpb_ic_fcm_databaseurl" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_databaseurl' ); ?>" /></td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_databaseurl"><?php echo __("Firebase Database url (optional)",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_databaseurl" name="pnfpb_ic_fcm_databaseurl" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_databaseurl' ); ?>" /></td>
     				</tr>
 		
 	   				<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_projectid"><?php echo __("Firebase Project id",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_projectid" name="pnfpb_ic_fcm_projectid" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_projectid' ); ?>" /></td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_projectid"><?php echo __("Firebase Project id",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_projectid" name="pnfpb_ic_fcm_projectid" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_projectid' ); ?>" /></td>
     				</tr>
 
 					<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_storagebucket"><?php echo __("Firebase Storage Bucket",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_storagebucket" name="pnfpb_ic_fcm_storagebucket" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_storagebucket' ); ?>" /></td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_storagebucket"><?php echo __("Firebase Storage Bucket",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_storagebucket" name="pnfpb_ic_fcm_storagebucket" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_storagebucket' ); ?>" /></td>
    	 				</tr>
 		
 					<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_messagingsenderid"><?php echo __("Firebase Messaging Sender id",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_messagingsenderid" name="pnfpb_ic_fcm_messagingsenderid" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_messagingsenderid' ); ?>" /></td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_messagingsenderid"><?php echo __("Firebase Messaging Sender id",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_messagingsenderid" name="pnfpb_ic_fcm_messagingsenderid" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_messagingsenderid' ); ?>" /></td>
     				</tr>
 
 					<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_appid"><?php echo __("Firebase App id",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"   id="pnfpb_ic_fcm_appid" name="pnfpb_ic_fcm_appid" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_appid' ); ?>" /> </td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_appid"><?php echo __("Firebase App id",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"   id="pnfpb_ic_fcm_appid" name="pnfpb_ic_fcm_appid" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_appid' ); ?>" /> </td>
     				</tr>
 					<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_publickey"><?php echo __("Firebase Public key",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_publickey" name="pnfpb_ic_fcm_publickey" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_publickey' ); ?>" /></td>
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_publickey"><?php echo __("Firebase Public key",'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_fcm_publickey" name="pnfpb_ic_fcm_publickey" type="text" value="<?php echo get_option( 'pnfpb_ic_fcm_publickey' ); ?>" /></td>
     				</tr>
     				<tr class="pnfpb_ic_push_settings_table_row">
-        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_upload_icon"><?php echo __("FCM Push Icon(16x16 pixels)",PNFPB_TD);?></label><br/>          
+        				<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_upload_icon"><?php echo __("FCM Push Icon(16x16 pixels)",'PNFPB_TD');?></label><br/>          
 						<table>
 							<tr>
                 				<td class="column-columnname">
-                    				<input type="button" value="<?php echo __("Upload Icon",PNFPB_TD);?>" id="pnfpb_ic_fcm_upload_button" class="pnfpb_ic_push_settings_upload_icon" />
+                    				<input type="button" value="<?php echo __("Upload Icon",'PNFPB_TD');?>" id="pnfpb_ic_fcm_upload_button" class="pnfpb_ic_push_settings_upload_icon" />
                     				<input type="hidden" id="pnfpb_ic_fcm_upload_icon" name="pnfpb_ic_fcm_upload_icon" value="<?php echo get_option( 'pnfpb_ic_fcm_upload_icon' ); ?>" />
                 				</td>
             				</tr>
@@ -1363,7 +1386,7 @@
 									</label>
 								</div>
 								<div>
-									<?php echo __("If enabled, it will use onesignal to send push notification provided ONESIGNAL Push notification installed and activated in your site. It will take onesignal credentials entered in ONESIGNAL push notification plugin",PNFPB_TD);?>								
+									<?php echo __("If enabled, it will use onesignal to send push notification provided ONESIGNAL Push notification installed and activated in your site. It will take onesignal credentials entered in ONESIGNAL push notification plugin",'PNFPB_TD');?>								
 								</div>						
 							</div>
 						</div>
@@ -1372,14 +1395,14 @@
 			</tbody>
 		</table>
 	</div>
- <div class="pnfpb_column_full"><?php submit_button(__('Save changes',PNFPB_TD),'pnfpb_ic_push_save_configuration_button'); ?></div>
+ <div class="pnfpb_column_full"><?php submit_button(__('Save changes','PNFPB_TD'),'pnfpb_ic_push_save_configuration_button'); ?></div>
 </form>
 
 <?php if(get_option('pnfpb_ic_fcm_api')){ ?>
 <div>
-    <h3><?php echo __("Test Notification",PNFPB_TD);?></h3>
-    <p><?php echo __("Click below link to send test notification to your subscribed device. Please make sure you already subscribed to notification for this website from browser",PNFPB_TD);?></p>
-    <a href="<?php echo admin_url('admin.php'); ?>?page=pnfpb_icfmtest_notification"><?php echo __("Test Notification",PNFPB_TD);?></a>
+    <h3><?php echo __("Test Notification",'PNFPB_TD');?></h3>
+    <p><?php echo __("Click below link to send test notification to your subscribed device. Please make sure you already subscribed to notification for this website from browser",'PNFPB_TD');?></p>
+    <a href="<?php echo admin_url('admin.php'); ?>?page=pnfpb_icfmtest_notification"><?php echo __("Test Notification",'PNFPB_TD');?></a>
 </div>
 
 <?php
@@ -1387,28 +1410,24 @@
 ?>
 </div>
 <div id="pnfpb-admin-right_sidebar" class="pnfpb_column_left_300 pnfpb-admin-right_sidebar" >
-	<h4><?php echo __("Need Help?",PNFPB_TD);?></h4>
+	<h4><?php echo __("Need Help?",'PNFPB_TD');?></h4>
 	<ol>
-	<li><?php echo __("Check out the",PNFPB_TD);?><a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/"><?php echo __("support forum",PNFPB_TD);?></a> <?php echo __("and",PNFPB_TD);?> <a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F"><?php echo __("FAQ",PNFPB_TD);?></a>.</li>
-	<li><a href="https://github.com/muraliwebworld?tab=repositories" target="_blank"><?php echo __("Github repository sample code To Integrate mobile app with this plugin using API",PNFPB_TD);?></a></li>
-	<li><?php echo __("Visit ",PNFPB_TD);?><a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/"><?php echo __("plugin homepage",PNFPB_TD);?></a>.</li>
-	<li><?php echo __("If you need help, Please feel free to send us your queries",PNFPB_TD);?><code>murali@indiacitys.com</code></li>
+	<li><?php echo __("Check out the",'PNFPB_TD');?><a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/"><?php echo __("support forum",'PNFPB_TD');?></a> <?php echo __("and",'PNFPB_TD');?> <a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F"><?php echo __("FAQ",'PNFPB_TD');?></a>.</li>
+	<li><a href="https://github.com/muraliwebworld?tab=repositories" target="_blank"><?php echo __("Github repository sample code To Integrate mobile app with this plugin using API",'PNFPB_TD');?></a></li>
+	<li><?php echo __("Visit ",'PNFPB_TD');?><a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/"><?php echo __("plugin homepage",'PNFPB_TD');?></a>.</li>
+	<li><?php echo __("If you need help, Please feel free to send us your queries",'PNFPB_TD');?><code>murali@indiacitys.com</code></li>
 	</ol>
-	<h4><?php echo __("Rate This Plugin",PNFPB_TD);?></h4>
-	<p><?php echo __("Please",PNFPB_TD);?> <a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/reviews/#new-post"><?php echo __("give your rating",PNFPB_TD);?></a><?php echo __(" and feedback.",PNFPB_TD);?></p>
-</div>
-
-<div id="pnfpb-admin-right_sidebar" class="pnfpb_column_left_300 pnfpb-admin-right_sidebar" >
-	<h4><?php echo __("Mobile app integration help on github respository",PNFPB_TD);?></h4>
+	<h4><?php echo __("Rate This Plugin",'PNFPB_TD');?></h4>
+	<p><?php echo __("Please",'PNFPB_TD');?> <a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/reviews/#new-post"><?php echo __("give your rating",'PNFPB_TD');?></a><?php echo __(" and feedback.",'PNFPB_TD');?></p>
+	<h4><?php echo __("Contribute/Donate",'PNFPB_TD');?></h4>
+	<p><a href="https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/"><?php echo __("Donate/Contribute to this plugin",'PNFPB_TD');?></a></p>
+	<h4><?php echo __("Mobile app integration help on github respository",'PNFPB_TD');?></h4>
 	<ol>
-	<li><a href="https://github.com/muraliwebworld/android-app-to-integrate-push-notification-wordpress-plugin" target="_blank"><?php echo __("Procedure/Sample code to Integrate Android mobile app with this plugin using API",PNFPB_TD);?></a></li>
-	<li><a href="https://github.com/muraliwebworld/ios-swift-app-to-integrate-push-notification-wordpress-plugin" target="_blank"><?php echo __("Procedure/Sample code to Integrate IOS mobile app with this plugin using API",PNFPB_TD);?></a></li>
+	<li><a href="https://github.com/muraliwebworld/android-app-to-integrate-push-notification-wordpress-plugin" target="_blank"><?php echo __("Procedure/Sample code to Integrate Android mobile app with this plugin using API",'PNFPB_TD');?></a></li>
+	<li><a href="https://github.com/muraliwebworld/ios-swift-app-to-integrate-push-notification-wordpress-plugin" target="_blank"><?php echo __("Procedure/Sample code to Integrate IOS mobile app with this plugin using API",'PNFPB_TD');?></a></li>
 	</ol>
-</div>
-
-<div id="pnfpb-admin-right_sidebar" class="pnfpb_column_left_300 pnfpb-admin-right_sidebar" >
-	<h4><?php echo __("Demo site using WordPress Playground to test this plugin",PNFPB_TD);?></h4>
+	<h4><?php echo __("Demo site using WordPress Playground to test this plugin",'PNFPB_TD');?></h4>
 	<ol>
-	<li><a href="https://demo.pnfpb.com" target="_blank"><?php echo __("Test this PNFPB plugin here. It uses WordPress playground to create separate WordPress site for you to test this plugin",PNFPB_TD);?></a></li>
+	<li><a href="https://demo.pnfpb.com" target="_blank"><?php echo __("Test this PNFPB plugin here. It uses WordPress playground to create separate WordPress site for you to test this plugin",'PNFPB_TD');?></a></li>
 	</ol>
 </div>

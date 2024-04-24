@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.85
+Stable tag: 1.87
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -201,6 +201,14 @@ Front end users/customers can opt/remove for various push notifications listed a
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 1.87 version Apr 21 2024 =
+* Updated logic to have click url in one time custom push notification and for all push notifications using httpv1 Firebase api version under data array for webview.
+* Fixed problem on selecting page url from drop down list for one time push notification click url in admin settings one time push notification tab.
+* Regenerated pot file for text domain to have latest text strings.
+= 1.86 version Apr 17 2024 =
+* BuddyBoss users - Frontend push notification settings for various notifications are available under user profile - account - push notification subscription, users will be able to control notifications for Firebase/Onesignal push notifications.
+* Onesignal push notifications updates based on Frontend notifications settings. If Frontend settings are switched off then notification will be sent to all users for general BuddyPress activities/comments. For group activities,it will be sent only to group users based on frontend settings ON/OFF. Similarly other notifications will work according Front end settings enabled/disabled and based on user subscription settings.
+* Optimize SQL logic in function PNFPB_update_database to execute only for older version of this plugin version less than 1.65.
 = 1.85 version Apr 16 2024 =
 * New feature for Onesignal Push notification: Frontend push notification settings for onesignal push notification for BuddyPress frontend users. Frontend user will be able to subscribe/unsubscribe various BuddyPress related push notifications. Frontend push notification menu is available in BuddyPress user profile -> settings -> push notification subscription.
 * New feature for Onesignal Push notification: BuddyPress group push notifications with subscribe/unsubscribe group push notifications for every group are available for Onesignal push notifications.
@@ -253,19 +261,15 @@ Compatible with WordPress 6.4
 Bug fix: Resolved warning messages in sql query in one time push notifications list tab in admin settings related to orderby.
 = 1.74 version 11 11 2023 =
 Bug fix: Resolved problems related to webview mobile app notifications for ondemand/one time push notifications.
-= 1.73 version 02 Nov 2023 =
-New feature: New option in admin settings to send push notifications only for loggedin users for Firebase based notifications. If you enable this for httpv1 firebase notifications then all subscriptions needs to be subscribed again, for legacy firebase api, no need to resubscribe subscriptions.
-New feature: New option adminsettings for onesignal based notifications to send push notifications only for loggedin users. It will send notifications based on id for every subscribed users.
-Update: Shortcode button and frontend push notifications settings will appear based on admin settings to send push notifications only for loggedin users.
-Bug fix: Fixed problem related to post and custom post type notifications related to metabox checkbox in new post/post edit page to validate based on edit page or in front end to send notifications accordingly. For front end related post it will work based on admin post enabled settings and for admin new/edit post page, it will work based on metabox checkbox enabled/disabled.
-Bug fix: Fixed problem related to mycomments notification using Firebase httpv1 version.
-Bug fix: Fixed problem on private messages notification for webview using Firebase httpv1 version.
-Bug fix: Fixed problem on Firebase httpv1 notifications for webview.
 = For all older releases, details are available in below link =
 [Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
 
 
 == Upgrade Notice ==
+* Updated logic to have click url in one time custom push notification and for all push notifications using httpv1 Firebase api version.
+* Regenerated pot file for text domain to have latest text strings.
+* BuddyBoss users - Frontend push notification settings for various notifications are available under user profile - account - push notification subscription, users will be able to control notifications for Firebase/Onesignal push notifications.
+* Onesignal push notifications updates based on Frontend notifications settings. If Frontend settings are switched off then notification will be sent to all users for general BuddyPress activities/comments. For group activities,it will be sent only to group users based on frontend settings ON/OFF. Similarly other notifications will work according Front end settings enabled/disabled and based on user subscription settings.
 * New feature: Frontend push notification settings for onesignal push notification for BuddyPress frontend users. Frontend user will be able to subscribe/unsubscribe various BuddyPress related push notifications. Frontend push notification menu is available in BuddyPress user profile -> settings -> push notification subscription.
 * New feature: BuddyPress group push notifications with subscribe/unsubscribe group push notifications for every group are available for Onesignal push notifications.
 * Compatible with PHP 8.2 version.
