@@ -42,8 +42,14 @@ if ( !function_exists( 'PNFPB_icfm_icpush_add_rewrite_rules' )) {
 if ( !function_exists( 'PNFPB_icfm_icpush_generate_sw_pwajson' )) {
 	function PNFPB_icfm_icpush_generate_sw_pwajson( $query ) {
 		if ( ! property_exists( $query, 'query_vars' ) || ! is_array( $query->query_vars ) ) {
-		return;
+			return;
 		}
+
+		// skip if it's multi dimensional array.
+		if ( count( $query->query_vars ) !== count( $query->query_vars, COUNT_RECURSIVE ) ) {
+			return;
+		}
+
 		$query_vars_as_string = implode( ' ', $query->query_vars );
 		$sw_filename = 'pnfpb_icpush_pwa_sw.js';
 		$sw_filename_firebasesw = 'firebase-messaging-sw.js';
