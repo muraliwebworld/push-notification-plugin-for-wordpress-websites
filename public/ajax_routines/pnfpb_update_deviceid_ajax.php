@@ -69,7 +69,7 @@
  	$is_firebase_version_col = $wpdb->get_results(  "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `table_name` = '{$table}' AND `TABLE_SCHEMA` = '{$dbname}' AND `COLUMN_NAME` = 'firebase_version'"  );
 
 	if( empty($is_firebase_version_col) ):
-    	$add_status_column = "ALTER TABLE `{$table}` ADD `firebase_version` VARCHAR(100) DEFAULT 'L'; ";
+    	$add_firebase_version_column = "ALTER TABLE `{$table}` ADD `firebase_version` VARCHAR(100) DEFAULT 'L'; ";
    		$wpdb->query( $add_firebase_version_column );
 	endif;	
 	
