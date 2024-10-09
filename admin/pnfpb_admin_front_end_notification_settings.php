@@ -7,17 +7,17 @@
 ?>
 
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __("PNFPB - Frontend subscription settings",PNFPB_TD);?></h1>
-<div class="pnfpb_admin_top_menu">
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="tab"><?php echo __("Push Settings",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="tab "><?php echo __("PWA",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="tab "><?php echo __("One time push",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="tab"><?php echo __("Notifications",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="tab active"><?php echo __("Frontend settings",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="tab "><?php echo __("NGINX",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1" class="tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
+<div class="nav-tab-wrapper">
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="nav-tab tab"><?php echo __("Push Settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab tab "><?php echo __("PWA",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="nav-tab tab "><?php echo __("Send push notification",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="nav-tab tab"><?php echo __("Push Notifications list",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="nav-tab nav-tab-active tab active"><?php echo __("Frontend subscription settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="nav-tab tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="nav-tab tab "><?php echo __("Integrate Mobile app",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab tab "><?php echo __("NGINX",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1" class="nav-tab tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
 </div>
 <div class="pnfpb_column_1200">
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
@@ -69,6 +69,31 @@
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_frontend_settings_post_button_text"><?php echo __("Subscription text/label for Post",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_frontend_settings_post_text" name="pnfpb_ic_fcm_frontend_settings_post_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_frontend_settings_post_text' )) {echo get_option( 'pnfpb_ic_fcm_frontend_settings_post_text' );} else { echo __('Post',PNFPB_TD); } ?>" />
 				</td>
     		</tr>
+			<?php
+			
+				$args = array(
+					'public'   => true,
+					'_builtin' => false
+				); 
+			
+				$output = 'names'; // or objects
+				$operator = 'and'; // 'and' or 'or'
+			
+				$custposttypes = get_post_types( $args, $output, $operator );
+			
+				foreach ( $custposttypes as $post_type ) {
+					
+					if ($post_type !== 'buddypress' && $post_type !== 'post') {
+				?>		
+						<tr class="pnfpb_ic_push_settings_table_row">
+    						<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_frontend_settings_<?php echo $post_type; ?>_button_text"><?php echo __("Subscription text/label for ".$post_type,'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_frontend_settings_<?php echo $post_type; ?>_text" name="pnfpb_ic_fcm_frontend_settings_<?php echo $post_type; ?>_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_frontend_settings_'.$post_type.'_text' )) {echo get_option( 'pnfpb_ic_fcm_frontend_settings_'.$post_type.'_text' );} else { echo __(ucwords($post_type),'PNFPB_TD'); } ?>" />
+							</td>
+    					</tr>						
+				<?php		
+					}
+					
+				}
+			?>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_frontend_settings_activities_button_text"><?php echo __("Subscription text/label for Activities",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_frontend_settings_activities_text" name="pnfpb_ic_fcm_frontend_settings_activities_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_frontend_settings_activities_text' )) {echo get_option( 'pnfpb_ic_fcm_frontend_settings_activities_text' );} else { echo __('Activities',PNFPB_TD); } ?>" />
 				</td>

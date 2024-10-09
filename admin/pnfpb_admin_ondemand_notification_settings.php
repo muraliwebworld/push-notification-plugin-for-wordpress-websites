@@ -7,17 +7,17 @@
 ?>
 
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __("PNFPB - On demand/one time push notification",PNFPB_TD);?></h1>
-<div class="pnfpb_admin_top_menu">
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="tab"><?php echo __("Push Settings",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="tab "><?php echo __("PWA",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="tab active"><?php echo __("One time push",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="tab"><?php echo __("Notifications",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="tab"><?php echo __("Frontend settings",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="tab "><?php echo __("NGINX",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1" class="tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
+<div class="nav-tab-wrapper">
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="nav-tab tab"><?php echo __("Push Settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab tab "><?php echo __("PWA",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="nav-tab nav-tab-active tab active"><?php echo __("Send push notification",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="nav-tab tab"><?php echo __("Push Notifications list",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="nav-tab tab"><?php echo __("Frontend subscription settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="nav-tab tab "><?php echo __("Customize buttons",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="nav-tab tab "><?php echo __("Integrate Mobile app",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab tab "><?php echo __("NGINX",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1" class="nav-tab tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
 </div>
 <div class="pnfpb_column_1200">
 <h2 class="pnfpb_ic_push_settings_details"><?php echo __("To send on demand or one time push notification to all subscribers with image",PNFPB_TD);?></h2>
@@ -49,41 +49,53 @@
 			$apiaccesskey = get_option('pnfpb_ic_fcm_google_api');
 		
 			
-			if (($apiaccesskey != '' && $apiaccesskey != false)  || (get_option( 'pnfpb_onesignal_push' ) === '1')) {
+			if (($apiaccesskey != '' && $apiaccesskey != false)  || get_option('pnfpb_httpv1_push') === '1' || (get_option( 'pnfpb_onesignal_push' ) === '1') || (get_option( 'pnfpb_progressier_push' ) === '1') || (get_option( 'pnfpb_webtoapp_push' ) === '1')) {
 	
-			    $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+			    	$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 	
-			    $deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%'" );
+			   		$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%'" );
 				
-				$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%'" );
+					$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%'" );
 	
-			    $url = 'https://fcm.googleapis.com/fcm/send';
+			    	$url = 'https://fcm.googleapis.com/fcm/send';
 
-			    $regid = $deviceids;
+			    	$regid = $deviceids;
 	
-			    $activity_content_push = strip_tags(urldecode($_POST['pnfpb_ic_on_demand_push_content']));
+			    	$activity_content_push = strip_tags(urldecode($_POST['pnfpb_ic_on_demand_push_content']));
 				
-			    $imageurl = '';
-                if (isset($_POST['pnfpb_ic_on_demand_push_image_url'])) {
-                    $imageurl = $_POST['pnfpb_ic_on_demand_push_image_url'];
-                }
+			   	 	$imageurl = '';
+                	if (isset($_POST['pnfpb_ic_on_demand_push_image_url'])) {
+                    	$imageurl = $_POST['pnfpb_ic_on_demand_push_image_url'];
+               	 	}
 
-                $postlink = get_home_url();
-                if (isset($_POST['pnfpb_ic_on_demand_push_url_link'])) {
-                    $postlink = $_POST['pnfpb_ic_on_demand_push_url_link'];
-                }
+                	$postlink = get_home_url();
+                	if (isset($_POST['pnfpb_ic_on_demand_push_url_link'])) {
+                    	$postlink = $_POST['pnfpb_ic_on_demand_push_url_link'];
+                	}
 				
-				if (get_option('pnfpb_onesignal_push') === '1') {
+					if (get_option('pnfpb_webtoapp_push') === '1') {
+					
+						$response = $this->PNFPB_icfcm_webtoapp_send_push_notification(0,stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),$activity_content_push,$postlink,$imageurl);
+
+					}				
+				
+					if (get_option('pnfpb_progressier_push') === '1') {
 						
-					$response = $this->PNFPB_icfcm_onesignal_push_notification(0,stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),$activity_content_push,$postlink,$imageurl);
-							
-				} else {				
+						$response = $this->PNFPB_icfcm_progressier_send_push_notification(0,stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),$activity_content_push,$postlink,$imageurl);
+					
+					} else {
 				
-				if (count($regid) > 0) {
-					if (get_option('pnfpb_httpv1_push') === '1') {
-							$this->PNFPB_icfcm_httpv1_send_push_notification(0,
+						if (get_option('pnfpb_onesignal_push') === '1') {
+						
+							$response = $this->PNFPB_icfcm_onesignal_push_notification(0,stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),$activity_content_push,$postlink,$imageurl);
+							
+						} else {				
+				
+						if (count($regid) > 0) {
+							if (get_option('pnfpb_httpv1_push') === '1') {
+								$this->PNFPB_icfcm_httpv1_send_push_notification(0,
 																			stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),
-																			stripslashes(strip_tags($activity_content_push)),
+																			mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($activity_content_push))))),0,130, 'UTF-8'),
 																			$imageurl,
 																			$imageurl,
 																			$postlink,
@@ -91,13 +103,14 @@
 																			$regid,
 																			array(),
 																			0,
-																			0
+																			0,
+																			'ondemand'
 																			);
-					}
-					else {
-						$this->PNFPB_icfcm_legacy_send_push_notification(0,
+							}
+							else {
+								$this->PNFPB_icfcm_legacy_send_push_notification(0,
 																		 stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),
-																		 stripslashes(strip_tags($activity_content_push)),
+																		 mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($activity_content_push))))),0,130, 'UTF-8'),
 																		 $imageurl,
 																		 $imageurl,
 																		 $postlink,
@@ -107,15 +120,17 @@
 																		 0,
 																	     0																					 
 																		);
-					}
+							}
 
-				}
+						}
+						
+					}
 				
-				if (count($deviceidswebview) > 0) {
+					if (count($deviceidswebview) > 0) {
 					
 						$this->PNFPB_icfcm_legacy_send_push_notification(0,
 																		 stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),
-																		 stripslashes(strip_tags($activity_content_push)),
+																		 mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($activity_content_push))))),0,130, 'UTF-8'),
 																		 $imageurl,
 																		 $imageurl,
 																		 $postlink,
@@ -132,7 +147,7 @@
 				<?php
 
 
-				}
+					}
 				}
 				
 				$bpuserid = 0;
@@ -161,7 +176,7 @@
 					$data = array('userid' => $bpuserid,
 							  	  'action_scheduler_id' => NULL,
 								  'title' => stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),
-								  'content' => stripslashes(strip_tags($activity_content_push)),
+								  'content' => mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($activity_content_push))))),0,130, 'UTF-8'),
 								  'image_url' => $imageurl,
 								  'click_url' => $postlink,
 								  'scheduled_timestamp' => time(),
@@ -461,7 +476,7 @@
 						$data = array('userid' => get_current_user_id(),
 								  'action_scheduler_id' => $scheduled_day_push_notification,
 								  'title' => stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),
-								  'content' => stripslashes(strip_tags(urldecode($_POST['pnfpb_ic_on_demand_push_content']))),
+								  'content' => $pushcontent = mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($_POST['pnfpb_ic_on_demand_push_content']))))),0,130, 'UTF-8'),
 								  'image_url' => $_POST['pnfpb_ic_on_demand_push_image_url'],
 								  'click_url' => $_POST['pnfpb_ic_on_demand_push_url_link'],
 								  'scheduled_timestamp' => $selected_recurring_schedule_formatted_notification_db,
@@ -514,7 +529,7 @@
 						$data = array('userid' => get_current_user_id(),
 								  'action_scheduler_id' => $scheduled_day_push_notification,
 								  'title' => stripslashes(strip_tags($_POST['pnfpb_ic_on_demand_push_title'])),
-								  'content' => stripslashes(strip_tags(urldecode($_POST['pnfpb_ic_on_demand_push_content']))),
+								  'content' => mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($_POST['pnfpb_ic_on_demand_push_content']))))),0,130, 'UTF-8'),
 								  'image_url' => $_POST['pnfpb_ic_on_demand_push_image_url'],
 								  'click_url' => $_POST['pnfpb_ic_on_demand_push_url_link'],
 								  'scheduled_type' => 'single',

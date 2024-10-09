@@ -35,6 +35,54 @@ die;
 			delete_option('pnfpb_ic_fcm_comment_activity_title');
 			delete_option('pnfpb_ic_fcm_comment_activity_message');
 			delete_option("pnfpb_ic_fcm_upload_icon");
+			
+			delete_option("pnfpb_onesignal_push");
+			delete_option("pnfpb_ic_fcm_progressier_api_key");
+			delete_option("pnfpb_progressier_push");
+			delete_option("pnfpb_ic_fcm_webtoapp_api_key");
+			delete_option("pnfpb_webtoapp_push");
+			delete_option("pnfpb_ic_fcm_prompt_style");
+			delete_option("pnfpb_ic_fcm_prompt_on_off");
+			delete_option("pnfpb_ic_fcm_prompt_style3");
+			delete_option("pnfpb_bell_icon_subscription_option_update_text");
+			delete_option("pnfpb_bell_icon_subscription_option_update_text_color");
+			delete_option("pnfpb_bell_icon_subscription_option_update_background_color");
+			delete_option("pnfpb_bell_icon_subscription_option_update_text");
+			delete_option("pnfpb_bell_icon_subscription_option_list_background_color");
+			delete_option("pnfpb_bell_icon_subscription_option_list_text_color");
+			delete_option("pnfpb_bell_icon_subscription_option_list_checkbox_color");
+			delete_option("pnfpb_bell_icon_subscription_option_update_confirmation_message");
+			delete_option("pnfpb_bell_icon_subscription_option_all_text");
+			delete_option("pnfpb_bell_icon_subscription_option_post_text");
+
+
+			delete_option("pnfpb_bell_icon_subscription_option_activity_text");
+			delete_option("pnfpb_bell_icon_subscription_option_all_comments_text");
+			delete_option("pnfpb_bell_icon_subscription_option_my_comments_text");
+			delete_option("pnfpb_bell_icon_subscription_option_private_message_text");
+			delete_option("pnfpb_bell_icon_subscription_option_new_member_joined_text");
+			delete_option("pnfpb_bell_icon_subscription_option_friendship_request_text");
+			delete_option("pnfpb_bell_icon_subscription_option_friendship_accepted_text");
+			delete_option("pnfpb_bell_icon_subscription_option_avatar_change_text");
+			delete_option("pnfpb_bell_icon_subscription_option_cover_image_change_text");
+			delete_option("pnfpb_bell_icon_subscription_option_group_details_update_text");
+			delete_option("pnfpb_bell_icon_subscription_option_group_invite_text");
+			delete_option("pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon");
+			delete_option("pnfpb_ic_fcm_custom_prompt_animation");
+			delete_option("pnfpb_ic_fcm_custom_prompt_header_text");
+			delete_option("pnfpb_ic_fcm_custom_prompt_subscribed_text");
+			delete_option("pnfpb_custom_prompt_confirmation_message_on_off");
+			delete_option("pnfpb_ic_fcm_custom_prompt_show_again_days");
+			delete_option("pnfpb_ic_fcm_custom_prompt_allow_button_text_color");
+			delete_option("pnfpb_ic_fcm_push_custom_prompt_allow_button_background");
+			delete_option("pnfpb_ic_fcm_custom_prompt_allow_button_text");
+			delete_option("pnfpb_ic_fcm_custom_prompt_cancel_button_text_color");
+			delete_option("pnfpb_ic_fcm_push_custom_prompt_cancel_button_background");
+			delete_option("pnfpb_ic_fcm_custom_prompt_cancel_button_text");
+			delete_option("pnfpb_ic_fcm_custom_prompt_close_button_text_color");
+			delete_option("pnfpb_ic_fcm_push_custom_prompt_close_button_background");
+			delete_option("pnfpb_ic_fcm_custom_prompt_close_button_text");				
+			
 			delete_option("pnfpb_ic_fcm_push_prompt_enable");			
 			delete_option("pnfpb_ic_fcm_push_prompt_text");			
 			delete_option("pnfpb_ic_fcm_push_prompt_confirm_button");			
@@ -87,7 +135,23 @@ die;
 			delete_option("pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds");
 			delete_option("pnfpb_ic_fcm_buddypresscomments_schedule_enable");
 			delete_option("pnfpb_ic_fcm_buddypresscomments_schedule_background_enable");
-			delete_option("pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds");			
+			delete_option("pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds");
+
+
+			delete_option("pnfpb_ic_fcm_buddypress_followers_enable");
+			delete_option("pnfpb_ic_fcm_buddypresscomments_schedule_enable");
+			delete_option("pnfpb_ic_fcm_buddypress_comments_radio_enable");
+			delete_option("pnfpb_ic_fcm_buddypresscomments_schedule_background_enable");
+			delete_option("pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds");
+			delete_option("pnfpb_ic_fcm_popup_subscribe_button_icon");
+			delete_option("pnfpb_ic_fcm_popup_subscribe_button_text_color");
+			delete_option("pnfpb_ic_fcm_popup_subscribe_button_color");
+			delete_option("pnfpb_ic_fcm_popup_subscribe_button");
+			delete_option("pnfpb_ic_fcm_popup_unsubscribe_button");
+			delete_option("pnfpb_ic_fcm_popup_header_text");
+			delete_option("pnfpb_ic_fcm_popup_subscribe_message");
+			delete_option("pnfpb_ic_fcm_popup_unsubscribe_message");
+			delete_option("pnfpb_ic_fcm_popup_wait_message");				
 			
 			delete_option("pnfpb_ic_pwa_app_enable");
 			delete_option("pnfpb_ic_pwa_app_name");
@@ -97,6 +161,22 @@ die;
 			delete_option("pnfpb_ic_pwa_app_display");
 			delete_option("pnfpb_ic_fcm_pwa_upload_icon_132");
 			delete_option("pnfpb_ic_fcm_pwa_upload_icon_512");
+			
+			delete_option("pnfpb-pwa-ios-message");
+			delete_option("pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_screenshot_desktop_label");
+			delete_option("pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_screenshot_mobile_label");
+			delete_option("pnfpb_ic_fcm_pwa_upload_splashscreen_640_1136_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_splashscreen_750_1294_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_splashscreen_1242_2148_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_splashscreen_1125_2436_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_splashscreen_1536_2048_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_splashscreen_1668_2224_value");
+			delete_option("pnfpb_ic_fcm_pwa_upload_splashscreen_2048_2732_value");
+			delete_option("pnfpb_ic_thirdparty_pwa_app_enable");
+			delete_option("pnfpb_ic_pwa_thirdparty_app_id");
+			
 			delete_option("pnfpb_ic_pwa_app_offline_url1");
 			delete_option("pnfpb_ic_pwa_app_offline_url2");
 			delete_option("pnfpb_ic_pwa_app_offline_url3");
@@ -113,6 +193,15 @@ die;
 			delete_option("pnfpb_ic_pwa_prompt_install_text_color");
 			delete_option("pnfpb-pwa-dialog-app-installed_text");
 			delete_option("pnfpb-pwa-dialog-app-installed_description");
+			
+			delete_option("pnfpb_ic_fcm_pwa_prompt_confirm_button");
+			delete_option("pnfpb_ic_fcm_pwa_prompt_cancel_button");
+			delete_option("pnfpb_ic_fcm_pwa_prompt_button_background");
+			delete_option("pnfpb_ic_fcm_pwa_prompt_dialog_background");
+			delete_option("pnfpb_ic_fcm_pwa_prompt_text_color");
+			delete_option("pnfpb_ic_fcm_pwa_prompt_button_text_color");
+			delete_option("pnfpb_ic_fcm_pwa_prompt_text");
+			delete_option("pnfpb_ic_fcm_pwa_show_again_days");			
 			
 			delete_option("pnfpb_ic_nginx_static_files_enable");
 			

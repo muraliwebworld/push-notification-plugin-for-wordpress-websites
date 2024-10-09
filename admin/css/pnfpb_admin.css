@@ -160,7 +160,6 @@ input:checked + .pnfpb_slider:before {
 .pnfpb_card {
   padding: 10px;
   text-align: left;
-  background-color: #dcdcdeb5;
   display: flex;
   flex-flow: row wrap;
   align-items: stretch;
@@ -194,7 +193,7 @@ input:checked + .pnfpb_slider:before {
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: #fff;
+  background-color: #ccc;
   border-radius: 50%;
 }
 
@@ -273,7 +272,7 @@ input:checked + .pnfpb_slider:before {
     border-radius: 8px !important;
 }
 
-.pnfpb_ic_firebase_configuration_button, .pnfpb_ic_or_button, .pnfpb_ic_onesignal_configuration_button, .pnfpb_ic_firebase_configuration_help_button {
+.pnfpb_ic_firebase_configuration_button, .pnfpb_ic_or_button, .pnfpb_ic_onesignal_configuration_button, .pnfpb_ic_progressier_configuration_button, .pnfpb_ic_webtoapp_configuration_button, .pnfpb_ic_firebase_configuration_help_button {
 	background-color: #135e96 !important;
     border: none !important;
     color: white !important;
@@ -345,6 +344,14 @@ input:checked + .pnfpb_slider:before {
 }
 
 .pnfpb_ic_onesignal_configuration {
+	display: none;
+}
+
+.pnfpb_ic_progressier_configuration {
+	display: none;
+}
+
+.pnfpb_ic_webtoapp_configuration {
 	display: none;
 }
 
@@ -421,7 +428,7 @@ td.pnfpb_ic_push_settings_table_column {
 }
 
 .pnfpb-admin-right_sidebar {
-	background: #ffc; 
+	background: #f8f8d8; 
 	border: 1px solid #333; 
 	padding: 3px 15px
 }
@@ -557,7 +564,7 @@ td.pnfpb_ic_push_settings_table_column {
 }
 
 .pnfpb_admin_top_menu a.tab {
-    border-bottom: 2px solid #fff;
+    border-bottom: 2px solid #c3c4c7;
     box-shadow: none;
     color: #666;
     display: inline-block;
@@ -825,4 +832,29 @@ td.pnfpb_ic_push_settings_table_column {
 .pnfpb_ic_push_settings_custom_prompt_table_label_column {
     width: 100% !important;
     display: inline-block;
+}
+
+.pnfpb_navy_blue_background_color {
+	background-color: #135e96;
+}
+
+.pnfpb_white_text_color {
+	color: #ffffff;
+}
+
+.pnfpb_section_header_font_16px {
+	font-size: 16px;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.pnfpb_schedule_push_notification_post_editor {
+	margin-top: 5px;
+	padding: 5px;
+	border-bottom: 1px solid #c3c4c7;
+	border-top: 1px solid #c3c4c7;
+}
+
+.pnfpb_schedule_push_notification_post_editor_label {
+	font-weight: bold;
 }

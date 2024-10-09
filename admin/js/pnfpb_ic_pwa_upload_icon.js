@@ -13,6 +13,28 @@ $j(document).ready(function() {
     
 	var mediaUploader_132;
 	var mediaUploader_512;
+	var mediaUploader_desktop;
+	var mediaUploader_mobile;
+	var mediaUploader_splashscreen_640_1136;
+	var mediaUploader_splashscreen_750_1294;
+	var mediaUploader_splashscreen_1242_2148;
+	var mediaUploader_splashscreen_1125_2436;
+	var mediaUploader_splashscreen_1536_2048;
+	var mediaUploader_splashscreen_1668_2224;
+	var mediaUploader_splashscreen_2048_2732;
+	
+  	var pnfpb_hash = window.location.hash;
+	
+	if (pnfpb_hash && (pnfpb_hash === '#pnfpb-pwa-display' ||  pnfpb_hash === '#pnfpb-pwa-icons' ||   pnfpb_hash === '#pnfpb-pwa-screenshots' ||   pnfpb_hash === '#pnfpb-pwa-splashscreen-ios' ||   pnfpb_hash === '#pnfpb-pwa-cache' ||   pnfpb_hash === '#pnfpb-pwa-custom-prompt' ||   pnfpb_hash === '#pnfpb-pwa-protocol-handler' ||   pnfpb_hash === '#pnfpb-pwa-ios-devices' ||   pnfpb_hash === '#pnfpb-pwa-shortcode')) {
+		
+		$j('#pnfpb-pwa-tabs > a').removeClass('nav-tab-active');
+		$j('.pnfpb-pwa-settings-tab').removeClass('active');
+  		$j('.pnfpb-pwa-tabs > a[href="' + pnfpb_hash + '"]').addClass('nav-tab-active');
+		var pnfpb_selector_tabs = $j('.pnfpb-pwa-tabs > a[href="' + pnfpb_hash + '"]').attr('href');
+		$j(pnfpb_selector_tabs).addClass('active');		
+		
+	}
+
 	
 	$j('#pnfpb_ic_fcm_pwa_upload_button_132').on('click',function(e) {
 		e.preventDefault();
@@ -84,152 +106,340 @@ $j(document).ready(function() {
 		
 	});
 	
-/*	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
-
-		if ($j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked')) 
-		{
-			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
-			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
-			$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',true);
+	$j('#pnfpb_ic_fcm_pwa_upload_screenshot_desktop').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_desktop ){
+			mediaUploader_desktop.open();
+			return;
 		}
-		else 
-		{
-			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').hide();
-			$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').hide();
-			$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',false);
-		}
-	}
-	
-	if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"]').length) {
-
-		if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked')) 
-		{
-			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').show();
-			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').show();
-			$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',true);
-		}
-		else 
-		{
-			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').hide();
-			$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').hide();
-			$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',false);
-		}
-	}
-	
-	if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"]').length) {
-
-		if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked')) 
-		{
-			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').show();
-			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').show();
-			$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',true);
-		}
-		else 
-		{
-			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').hide();
-			$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').hide();
-			$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',false);
-		}
-	}	
-	
-	
-
-
-	if ($j('input[name="pnfpb_ic_fcm_post_timeschedule_enable"]').length) {
-
-
-		$j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').on('click',function() {
-			
-			if ($j('input[name="pnfpb_ic_fcm_post_schedule_enable"]').is(':checked'))
-			{
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').show();
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').show();
-				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',true);
 		
-			}
-			else 
-			{
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_block').hide();
-				$j('.pnfpb_ic_fcm_post_timeschedule_seconds_radio_block').hide();
-				$j('#pnfpb_ic_fcm_post_timeschedule_seconds').prop('required',false);
-			}			
-		});		
-	}
-
-	if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"]').length) {
-		
-		$j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').on('click',function() {
-			
-			if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked'))
-			{
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').show();
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').show();
-				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',true);
-		
-			}
-			else 
-			{
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').hide();
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').hide();
-				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',false);
-			}			
-		});		
-
-		$j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').on('click',function() {
-			
-			if ($j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypressactivities_schedule_enable"]').is(':checked'))
-			{
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').show();
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').show();
-				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',true);
-		
-			}
-			else 
-			{
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block').hide();
-				$j('.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_radio_block').hide();
-				$j('#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds').prop('required',false);
-			}			
-		});
-	}
-
-	if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"]').length) {
-
-		$j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').on('click',function() {
-			
-			if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked'))
-			{
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').show();
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').show();
-				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',true);
-		
-			}
-			else 
-			{
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').hide();
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').hide();
-				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',false);
-			}			
+		mediaUploader_desktop = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
 		});
 		
-		$j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').on('click',function() {
-			
-			if ($j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_background_enable"]').is(':checked') && $j('input[name="pnfpb_ic_fcm_buddypresscomments_schedule_enable"]').is(':checked'))
-			{
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').show();
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').show();
-				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',true);
-		
-			}
-			else 
-			{
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block').hide();
-				$j('.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block').hide();
-				$j('#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds').prop('required',false);
-			}			
+		mediaUploader_desktop.on('select', function(){
+			attachment = mediaUploader_desktop.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value_preview').css('background-image','url(' + attachment.url + ')');
 		});
-	}*/
+		
+		mediaUploader_desktop.open();
+		
+	});
 	
+	$j('#pnfpb_ic_fcm_pwa_upload_screenshot_mobile').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_mobile ){
+			mediaUploader_mobile.open();
+			return;
+		}
+		
+		mediaUploader_mobile = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_mobile.on('select', function(){
+			attachment = mediaUploader_mobile.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_mobile.open();
+		
+	});
+	
+	$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_640_1136').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_splashscreen_640_1136 ){
+			mediaUploader_splashscreen_640_1136.open();
+			return;
+		}
+		
+		mediaUploader_splashscreen_640_1136 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_splashscreen_640_1136.on('select', function(){
+			attachment = mediaUploader_splashscreen_640_1136.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_640_1136_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_640_1136_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_640_1136_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_splashscreen_640_1136.open();
+		
+	});	
+	
+	$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_750_1294').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_splashscreen_750_1294 ){
+			mediaUploader_splashscreen_750_1294.open();
+			return;
+		}
+		
+		mediaUploader_splashscreen_750_1294 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_splashscreen_750_1294.on('select', function(){
+			attachment = mediaUploader_splashscreen_750_1294.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_750_1294_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_750_1294_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_750_1294_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_splashscreen_750_1294.open();
+		
+	});	
+	
+	$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1242_2148').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_splashscreen_1242_2148 ){
+			mediaUploader_splashscreen_1242_2148.open();
+			return;
+		}
+		
+		mediaUploader_splashscreen_1242_2148 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_splashscreen_1242_2148.on('select', function(){
+			attachment = mediaUploader_splashscreen_1242_2148.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1242_2148_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1242_2148_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1242_2148_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_splashscreen_1242_2148.open();
+		
+	});	
+	
+	$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1125_2436').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_splashscreen_1125_2436 ){
+			mediaUploader_splashscreen_1125_2436.open();
+			return;
+		}
+		
+		mediaUploader_splashscreen_1125_2436 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_splashscreen_1125_2436.on('select', function(){
+			attachment = mediaUploader_splashscreen_1125_2436.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1125_2436_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1125_2436_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1125_2436_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_splashscreen_1125_2436.open();
+		
+	});	
+	
+	$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1536_2048').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_splashscreen_1536_2048 ){
+			mediaUploader_splashscreen_1536_2048.open();
+			return;
+		}
+		
+		mediaUploader_splashscreen_1536_2048 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_splashscreen_1536_2048.on('select', function(){
+			attachment = mediaUploader_splashscreen_1536_2048.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1536_2048_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1536_2048_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1536_2048_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_splashscreen_1536_2048.open();
+		
+	});	
+	
+	$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1668_2224').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_splashscreen_1668_2224 ){
+			mediaUploader_splashscreen_1668_2224.open();
+			return;
+		}
+		
+		mediaUploader_splashscreen_1668_2224 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_splashscreen_1668_2224.on('select', function(){
+			attachment = mediaUploader_splashscreen_1668_2224.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1668_2224_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1668_2224_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_1668_2224_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_splashscreen_1668_2224.open();
+		
+	});	
+	
+	$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_2048_2732').on('click',function(e) {
+		e.preventDefault();
+		if( mediaUploader_splashscreen_2048_2732 ){
+			mediaUploader_splashscreen_2048_2732.open();
+			return;
+		}
+		
+		mediaUploader_splashscreen_2048_2732 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture','PNFPB_TD'),
+			button: {
+				text: __('Select a Picture','PNFPB_TD')
+			},
+			multiple: false
+		});
+		
+		mediaUploader_splashscreen_2048_2732.on('select', function(){
+			attachment = mediaUploader_splashscreen_2048_2732.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_2048_2732_value_preview').text('');
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_2048_2732_value').val(attachment.url);
+			$j('#pnfpb_ic_fcm_pwa_upload_splashscreen_2048_2732_value_preview').css('background-image','url(' + attachment.url + ')');
+		});
+		
+		mediaUploader_splashscreen_2048_2732.open();
+		
+	});
+	
+    if (window.location.hash) {
+        var pnfpb_hash = window.location.hash;
+        $j('html, body').animate({
+            scrollTop :  $j(pnfpb_hash).offset().top
+        }, 500);
+    };
+	
+	
+    $j("#pnfpb-pwa-category-tabs > a").on('click touchstart', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+
+            if( $j(this).hasClass('nav-tab-active') ) return false;
+		
+            var pnfpb_selector_category_tabs = $j(this).attr('href');
+            window.history.pushState("", "", pnfpb_selector_category_tabs);
+
+            $j('#pnfpb-pwa-category-tabs > a').removeClass('nav-tab-active');
+            $j('.pnfpb-category-pwa-settings-tab').removeClass('active');
+
+            $j(this).addClass('nav-tab-active');
+            $j(pnfpb_selector_category_tabs).addClass('active');
+    });
+	
+    $j("#pnfpb-pwa-tabs > a").on('click touchstart', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+
+            if( $j(this).hasClass('nav-tab-active') ) return false;
+
+            var pnfpb_selector_tabs = $j(this).attr('href');
+            window.history.pushState("", "", pnfpb_selector_tabs);
+
+            $j('#pnfpb-pwa-tabs > a').removeClass('nav-tab-active');
+            $j('.pnfpb-pwa-settings-tab').removeClass('active');
+
+            $j(this).addClass('nav-tab-active');
+            $j(pnfpb_selector_tabs).addClass('active');
+    });	
+	
+	var pnfpb_protocol_handler_pwa_counter = 1;
+	
+	$j('.pnfpb_pwa_card_protocol_root').each(function () {
+		
+    	pnfpb_protocol_handler_pwa_counter++;
+		
+	});
+	
+	$j(".pnfpb_ic_push_add_protocol_button").on('click touchstart', function(event) {
+		
+            event.preventDefault();
+            event.stopPropagation();
+			
+			$j('.pnfpb_ic_pwa_protocol-handler-list').append('<div class="pnfpb_ic_pwa_protocol"><label class="pnfpb_ic_pwa_protocol-handler-element" for="pnfpb_ic_pwa_protocol-name"><b>'+__("Protocol handler ","PNFPB_TD")+'<span>'+pnfpb_protocol_handler_pwa_counter+'</span></b></label><div class="pnfpb_ic_push_remove_protocol_button_divider"><input type="button" name="pnfpb_ic_push_remove_protocol_button" id="pnfpb_ic_push_remove_protocol_button" class="button pnfpb_ic_push_remove_protocol_button" value="'+__("Delete","PNFPB_TD")+'"></div><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_root"><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_child"><label for="pnfpb_ic_pwa_protocol-name">'+__("Protocol","PNFPB_TD")+'</label><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_protocol_name" name="pnfpb_ic_pwa_protocol_name[]" placeholder="web+jnglstore" type="text" value="" /></div><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_child"><label for="pnfpb_ic_pwa_protocol-url">'+ __("Url","PNFPB_TD")+'</label><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_protocol_url" name="pnfpb_ic_pwa_protocol_url[]" placeholder="/shop?for=%s"  type="text" value="" /></div></div></div>');
+		
+			pnfpb_protocol_handler_pwa_counter++;
+		
+	});
+
+	$j(document).on('click touchstart', ".pnfpb_ic_push_remove_protocol_button" ,function(event) {
+		
+            event.preventDefault();
+            event.stopPropagation();
+
+			
+			$j(this).closest(".pnfpb_ic_pwa_protocol").remove();
+		
+			pnfpb_protocol_handler_pwa_counter = pnfpb_protocol_handler_pwa_counter-1;
+		
+			var pnfpb_pwa_protocol_element_counter = 1;
+		
+			$j('.pnfpb_ic_pwa_protocol-handler-element').each(function () {
+				
+    			$j(this).find('span').html(pnfpb_pwa_protocol_element_counter);
+				
+    			pnfpb_pwa_protocol_element_counter++;
+				
+			});
+		
+	
+	});
+
 	$j('.pnfpb_admin_notice > .notice-dismiss').on('click',function() {
 		
 		
@@ -495,9 +705,17 @@ $j(document).ready(function() {
 			
 			$j('.pnfpb_ic_firebase_configuration').hide();
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Show Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration').hide();
+			
+			$j('.pnfpb_ic_webtoapp_configuration').hide();
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
 			
 			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
 			
 		}
 		else
@@ -506,11 +724,94 @@ $j(document).ready(function() {
 			
 			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Show Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
 			
 		}	
 		
 	}
+
+	function toggle_progressier_configuration() {
+		
+		const { __ } = wp.i18n;
+		
+  		$j('.pnfpb_ic_progressier_configuration').toggle();
+		
+		if ($j('.pnfpb_ic_progressier_configuration').is(':visible')) {
+			
+			$j('.pnfpb_ic_firebase_configuration').hide();
+			
+			$j('.pnfpb_ic_onesignal_configuration').hide();
+			
+			$j('.pnfpb_ic_webtoapp_configuration').hide();
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_ic_firebase_configuration').show();
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			
+		}	
+		
+	}
+
+	function toggle_webtoapp_configuration() {
+		
+		const { __ } = wp.i18n;
+		
+  		$j('.pnfpb_ic_webtoapp_configuration').toggle();
+		
+		if ($j('.pnfpb_ic_webtoapp_configuration').is(':visible')) {
+			
+			$j('.pnfpb_ic_firebase_configuration').hide();
+			
+			$j('.pnfpb_ic_onesignal_configuration').hide();
+			
+			$j('.pnfpb_ic_progressier_configuration').hide();
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			
+		}
+		else
+		{
+			$j('.pnfpb_ic_firebase_configuration').show();
+			
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			
+		}	
+		
+	}
+
 
 	function toggle_firebase_configuration() {
 		
@@ -523,18 +824,30 @@ $j(document).ready(function() {
 			
 			$j('.pnfpb_ic_onesignal_configuration').hide();
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Show onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration').hide();
+			
+			$j('.pnfpb_ic_webtoapp_configuration').hide();
+			
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
 			
 			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
 			
 		}
 		else
 		{
 			$j('.pnfpb_ic_onesignal_configuration').show();
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Show Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
 		}	
 		
 	}

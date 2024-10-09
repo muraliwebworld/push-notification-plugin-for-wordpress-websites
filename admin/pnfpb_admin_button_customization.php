@@ -6,17 +6,17 @@
 ?>
 
 <h1 class="pnfpb_ic_push_settings_header"><?php echo __("PNFPB - Customize buttons",PNFPB_TD);?></h1>
-<div class="pnfpb_admin_top_menu">
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="tab"><?php echo __("Push Settings",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="tab "><?php echo __("PWA",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="tab "><?php echo __("One time push",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="tab"><?php echo __("Notifications",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="tab"><?php echo __("Frontend settings",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="tab active"><?php echo __("Customize buttons",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="tab "><?php echo __("Mobile app",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="tab "><?php echo __("NGINX",PNFPB_TD);?></a>
-	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1" class="tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
+<div class="nav-tab-wrapper">
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb-icfcm-slug" class="nav-tab tab"><?php echo __("Push Settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_device_tokens_list" class="nav-tab tab "><?php echo __("Device tokens",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_pwa_app_settings" class="nav-tab tab "><?php echo __("PWA",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfmtest_notification" class="nav-tab tab "><?php echo __("Send push notification",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc" class="nav-tab tab"><?php echo __("Push Notifications list",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_frontend_settings" class="nav-tab tab"><?php echo __("Frontend subscription settings",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_button_settings" class="nav-tab nav-tab-active tab active"><?php echo __("Customize buttons",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_integrate_app" class="nav-tab tab "><?php echo __("Integrate Mobile app",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_settings_for_ngnix_server" class="nav-tab tab "><?php echo __("NGINX",PNFPB_TD);?></a>
+	<a href="<?php echo admin_url();?>admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1" class="nav-tab tab "><?php echo __("Action Scheduler",PNFPB_TD);?></a>
 </div>
 <div class="pnfpb_column_1200">
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
@@ -159,8 +159,37 @@
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_text"><?php echo __("Subscribe all notifications option text in shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_all_dialog_text" name="pnfpb_ic_fcm_subscribe_all_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_all_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_all_dialog_text' );} else { echo __('All notifications',PNFPB_TD); } ?>" />
 				</td>
     		</tr>
+			<?php
+			
+				$args = array(
+					'public'   => true,
+					'_builtin' => false
+				); 
+			
+				$output = 'names'; // or objects
+				$operator = 'and'; // 'and' or 'or'
+			
+				$custposttypes = get_post_types( $args, $output, $operator );
+			
+				foreach ( $custposttypes as $post_type ) {
+					
+					if ($post_type !== 'buddypress') {
+				?>		
+						<tr class="pnfpb_ic_push_settings_table_row">
+    						<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_<?php echo $post_type; ?>_text"><?php echo __("Customize text for subscription ".$post_type,'PNFPB_TD');?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_<?php echo $post_type; ?>_dialog_text" name="pnfpb_ic_fcm_subscribe_<?php echo $post_type; ?>_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_'.$post_type.'_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_'.$post_type.'_dialog_text' );} else { echo __(ucwords($post_type),'PNFPB_TD'); } ?>" />
+							</td>
+    					</tr>						
+				<?php		
+					}
+					
+				}
+			?>
 			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_text"><?php echo __("Subscribe new post/BuddyPress activity notifications option text in shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_post_activity_dialog_text" name="pnfpb_ic_fcm_subscribe_post_activity_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_post_activity_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_post_activity_dialog_text' );} else { echo __('New post/activity',PNFPB_TD); } ?>" />
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_text"><?php echo __("New post notifications option text in shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_post_dialog_text" name="pnfpb_ic_fcm_subscribe_post_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_post_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_post_dialog_text' );} else { echo __('New post',PNFPB_TD); } ?>" />
+				</td>
+    		</tr>			
+			<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_subscribe_dialog_text"><?php echo __("New BuddyPress activity notifications option text in shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_post_activity_dialog_text" name="pnfpb_ic_fcm_subscribe_post_activity_dialog_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_subscribe_post_activity_dialog_text' )) {echo get_option( 'pnfpb_ic_fcm_subscribe_post_activity_dialog_text' );} else { echo __('New post/activity',PNFPB_TD); } ?>" />
 				</td>
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
@@ -207,7 +236,7 @@
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname"><label for="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm"><?php echo __("Site unsubscription dialog text after complete using shortcode",PNFPB_TD);?></label><br/><input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm" name="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_unsubscribe_dialog_text_confirm' )) {echo get_option( 'pnfpb_ic_fcm_unsubscribe_dialog_text_confirm' );} else { echo __('Subscription option updated',PNFPB_TD);} ?>" />
 				</td>
     		</tr>
-			<tr class="pnfpb_ic_push_settings_table_row"><td class="pnfpb_ic_push_settings_table_label_column column-columnname"><h3 class="pnfpb_ic_push_settings_header"><?php echo __("PWA Install shortcode button customization",PNFPB_TD);?></h3><h5 class="pnfpb_ic_push_settings_header"><?php echo __("[PNFPB_PWA_PROMPT]",PNFPB_TD);?></h5></td></tr>
+			<tr class="pnfpb_ic_push_settings_table_row"><td class="pnfpb_ic_push_settings_table_label_column column-columnname"><h3 class="pwa-install-shortcode-customize-section pnfpb_ic_push_settings_header"><a id="pwa-install-shortcode-customize-section" href="#pwa-install-shortcode-customize-section"><?php echo __("PWA Install shortcode button customization",PNFPB_TD);?></a></h3><h5 class="pnfpb_ic_push_settings_header"><?php echo __("[PNFPB_PWA_PROMPT]",PNFPB_TD);?></h5></td></tr>
    	 		<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 					<label for="pnfpb_ic_fcm_install_pwa_shortcode_button_color">
@@ -234,7 +263,25 @@
 					<br/>
 					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_pwa_prompt_install_button_color pnfpb_ic_push_pwa_color" id="pnfpb_ic_fcm_install_pwa_shortcode_button_text" name="pnfpb_ic_fcm_install_pwa_shortcode_button_text" type="text" value="<?php if (get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_text' )) {echo get_option( 'pnfpb_ic_fcm_install_pwa_shortcode_button_text' ); } else { echo 'Install PWA';}?>" />
 				</td>
-			</tr>			
+			</tr>
+   	 		<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<div class="pnfpb_row">
+  						<div class="pnfpb_column">
+    						<div class="pnfpb_card">				
+								<label for="pnfpb-pwa-shortcode-install-icon"><?php echo __("Show PWA icon instead of text in PWA install shortcode button",'PNFPB_TD');?></label>
+								<label class="pnfpb_switch">
+									<input  id="pnfpb-pwa-shortcode-install-icon" name="pnfpb-pwa-shortcode-install-icon" type="checkbox" value="1" <?php checked( '1', get_option( 'pnfpb-pwa-shortcode-install-icon' ) ); ?>  />	
+									<span class="pnfpb_slider round"></span>
+								</label>
+								<label for="pnfpb-pwa-shortcode-install-icon">
+									<?php echo __("If above option is enabled then PWA app icon 132px size which is uploaded in PWA -> ICON settings tab will be used as icon for PWA install widget. ",PNFPB_TD);?>
+								</label>								
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
 			<tr>
 				<td class="column-columnname"><div class="pnfpb_column_full"><?php submit_button(__('Save changes',PNFPB_TD),'pnfpb_ic_push_save_configuration_button'); ?></div></td>
     		</tr>

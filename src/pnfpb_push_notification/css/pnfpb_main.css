@@ -57,7 +57,15 @@
 
 
 .pnfpb-pwa-dialog-confirm {
+
     display:none;	
+    
+}
+
+.pnfpb-push-notification-blocked {
+
+  display:none;
+
 }
 
 .pnfpb-pwa-dialog-app-installed {
@@ -814,26 +822,33 @@ td.pnfpb_ic_push_settings_table_label_column {
     height: 300px !important;
 }
 
-.pnfpb-push-dialog-container {
+.pnfpb-pwa-dialog-container, .pnfpb-pwa-dialog-ios-container {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
+  right:0;
   display: none;
   z-index: 100000;
 }
 
+.pnfpb-pwa-dialog-ios-container {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
 @media only screen and (max-width: 370px) {
-	.pnfpb-push-dialog-container {
+	.pnfpb-pwa-dialog-container, .pnfpb-pwa-dialog-ios-container {
   		position: fixed;
   		bottom: 0;
   		left: 0;
+  		right:0;
   		display: none;
-		  width: 300px;
+		  max-width: 370px;
   		z-index: 100000;
 	}
 }
 
-.pnfpb-push-dialog-box {
+.pnfpb-push-dialog-box, .pnfpb-push-dialog-ios-box {
   display: flex;
   background: white;
   padding: 6px;
@@ -849,20 +864,20 @@ td.pnfpb_ic_push_settings_table_label_column {
 }
 
 @media only screen and (max-width: 370px) {
-  .pnfpb-push-dialog-box {
-	width: 300px;
+  .pnfpb-push-dialog-box, .pnfpb-push-dialog-ios-box {
+	max-width: 370px;
 	flex-wrap: wrap;
   }
 }
 
 @media only screen and (min-width: 370px) and (max-width: 425px) {
-  .pnfpb-push-dialog-box {
-	width: 300px;
+  .pnfpb-push-dialog-box, .pnfpb-push-dialog-ios-box {
+	max-width: 425px;
 	flex-wrap: wrap;
   }
 }
 
-.pnfpb-pwa-dialog-container {
+.pnfpb-pwa-dialog-container, .pnfpb-pwa-dialog-ios-container {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -872,18 +887,18 @@ td.pnfpb_ic_push_settings_table_label_column {
 }
 
 @media only screen and (max-width: 370px) {
-	.pnfpb-pwa-dialog-container {
+	.pnfpb-pwa-dialog-container, .pnfpb-pwa-dialog-ios-container {
   		position: fixed;
   		bottom: 0;
   		left: 0;
   		right:0;
   		display: none;
-		width: 300px;
+		  max-width: 370px;
   		z-index: 100000;
 	}
 }
 
-.pnfpb-pwa-dialog-box {
+.pnfpb-pwa-dialog-box, .pnfpb-push-dialog-ios-box {
   display: flex;
   background: white;
   padding: 6px;
@@ -898,16 +913,21 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 }
 
+.pnfpb-pwa-dialog-ios-buttons, .pnfpb-pwa-dialog-ios-title {
+	text-align: center;
+  display: flex;
+}
+
 @media only screen and (max-width: 370px) {
-  .pnfpb-pwa-dialog-box {
-	width: 300px;
+  .pnfpb-pwa-dialog-box, .pnfpb-push-dialog-ios-box {
+	max-width: 370px;
 	flex-wrap: wrap;
   }
 }
 
 @media only screen and (min-width: 370px) and (max-width: 425px) {
-  .pnfpb-pwa-dialog-box {
-	width: 300px;
+  .pnfpb-pwa-dialog-box, .pnfpb-push-dialog-ios-box {
+	max-width: 425px;
 	flex-wrap: wrap;
   }
 }
@@ -961,7 +981,7 @@ td.pnfpb_ic_push_settings_table_label_column {
   		bottom: unset;
   		right: unset;		
   		display: none;
-		width: 300px;
+		  max-width: 370px;
   		z-index: 999999991;
 	}
 }
@@ -974,7 +994,7 @@ td.pnfpb_ic_push_settings_table_label_column {
   		bottom: unset;
   		left: unset;		
   		display: none;
-		width: 300px;
+		  max-width: 370px;
   		z-index: 999999991;
 	}
 }
@@ -984,10 +1004,10 @@ td.pnfpb_ic_push_settings_table_label_column {
   		position: fixed;
   		bottom: 0;
   		left: 0;
-		top: unset;
-		right: unset;
+		  top: unset;
+		  right: unset;
   		display: none;
-		width: 300px;
+		  max-width: 370px;
   		z-index: 999999991;
 	}
 }
@@ -997,10 +1017,10 @@ td.pnfpb_ic_push_settings_table_label_column {
   		position: fixed;
   		bottom: 0;
   		right:0;
-		top: unset;
-		left: unset;
+		  top: unset;
+		  left: unset;
   		display: none;
-		width: 300px;
+		  max-width: 370px;
   		z-index: 999999991;
 	}
 }
@@ -1139,7 +1159,32 @@ td.pnfpb_ic_push_settings_table_label_column {
   color: #fff;
 }
 
-.pnfpb-push-subscribe-button-layout {
+.pnfpb-pwa-ios-message-container {
+  color: #090101;
+  width: 100%;
+  display:none;
+}
+
+.pnfpb-pwa-ios-message-layout  {
+    cursor: pointer;
+    position: fixed;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid rgba(11, 5, 5, 0.1);
+    width: 300px;
+  	transform: scale(1) translateZ(0);
+  	opacity: 1;	
+    transition: transform 175ms ease-in-out,opacity 175ms ease-in-out;
+    z-index: 999999999999;
+    bottom: 95px;
+    right: 0;
+    transform-origin: right bottom;
+    padding: 0.3em 0.8em 0.6em;
+    color: #333;
+    display:none;
+}
+
+.pnfpb-push-subscribe-button-layout  {
     cursor: pointer;
     position: fixed;
     background-color: #fff;
@@ -1158,7 +1203,7 @@ td.pnfpb_ic_push_settings_table_label_column {
     display:none;
 }
 
-.pnfpb-push-subscribe-button-layout-opened {
+.pnfpb-push-subscribe-button-layout-opened, .pnfpb-push-pwa-button-ios-layout-opened {
   transform: scale(1) translateZ(0);
   opacity: 1;
 }
@@ -1259,12 +1304,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-container-dialog {
   width: 500px;
-  -webkit-animation-name: slideDown;
+  -webkit-animation-name: pnfpbslideDown;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideDown;
+  animation-name: pnfpbslideDown;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1284,12 +1329,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 .pnfpb-popup-customprompt-container-dialog-slideDown {
   width: 500px;
   float: left;
-  -webkit-animation-name: slideDown;
+  -webkit-animation-name: pnfpbslideDown;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideDown;
+  animation-name: pnfpbslideDown;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1308,12 +1353,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-container-dialog-slideDownOut {
   width: 500px;
-  -webkit-animation-name: slideDownOut;
+  -webkit-animation-name: pnfpbslideDownOut;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideDownOut;
+  animation-name: pnfpbslideDownOut;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1332,12 +1377,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-container-dialog-slideUp {
   width: 500px;
-  -webkit-animation-name: slideUp;
+  -webkit-animation-name: pnfpbslideUp;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideUp;
+  animation-name: pnfpbslideUp;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1356,12 +1401,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-container-dialog-slideUpOut {
   width: 500px;
-  -webkit-animation-name: slideUpOut;
+  -webkit-animation-name: pnfpbslideUpOut;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideUpOut;
+  animation-name: pnfpbslideUpOut;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1498,12 +1543,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-vertical-container-dialog {
   width: 300px;
-  -webkit-animation-name: slideDown;
+  -webkit-animation-name: pnfpbslideDown;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideDown;
+  animation-name: pnfpbslideDown;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1522,12 +1567,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-vertical-container-dialog-slideDown {
   width: 300px;
-  -webkit-animation-name: slideDown;
+  -webkit-animation-name: pnfpbslideDown;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideDown;
+  animation-name: pnfpbslideDown;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1546,12 +1591,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-vertical-container-dialog-slideDownOut {
   width: 300px;
-  -webkit-animation-name: slideDownOut;
+  -webkit-animation-name: pnfpbslideDownOut;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideDownOut;
+  animation-name: pnfpbslideDownOut;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1570,12 +1615,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-vertical-container-dialog-slideUp {
   width: 300px;
-  -webkit-animation-name: slideUp;
+  -webkit-animation-name: pnfpbslideUp;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideUp;
+  animation-name: pnfpbslideUp;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1594,12 +1639,12 @@ td.pnfpb_ic_push_settings_table_label_column {
 
 .pnfpb-popup-customprompt-vertical-container-dialog-slideUpOut {
   width: 300px;
-  -webkit-animation-name: slideUpOut;
+  -webkit-animation-name: pnfpbslideUpOut;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: ease-out;
   -webkit-animation-duration: .4s;
   -webkit-animation-fill-mode: forwards;
-  animation-name: slideUpOut;
+  animation-name: pnfpbslideUpOut;
   animation-iteration-count: 1;
   animation-timing-function: ease-out;
   animation-duration: .4s;
@@ -1769,25 +1814,25 @@ td.pnfpb_ic_push_settings_table_label_column {
   100% { transform: rotate(360deg); }
 }
 
-@keyframes slideDown {
+@keyframes pnfpbslideDown {
   0% {
     transform: translateY(-150%); }
   100% {
     transform: translateY(0); } }
 
-@keyframes slideDownOut {
+@keyframes pnfpbslideDownOut {
   0% {
     transform: translateY(0%); }
   100% {
    transform: translateY(-150%); } }
     
-@keyframes slideUp {
+@keyframes pnfpbslideUp {
   0% {
     transform: translateY(150%); }
   100% {
     transform: translateY(0); } }
     
-@keyframes slideUpOut {
+@keyframes pnfpbslideUpOut {
   0% {
     transform: translateY(0%); }
   100% {
@@ -1807,28 +1852,28 @@ td.pnfpb_ic_push_settings_table_label_column {
 }
 
 .pnfpb_bell_icon_subscription_options_container, .pnfpb_bell_icon_prompt_subscription_options_container {
-	max-width: 330px;
+	  max-width: 330px;
     border: 1px solid rgba(0,0,0,.1);
     border-radius: 3px;
     background: none;
     overflow-y: auto;
-	min-height:40px;
-	max-height: 200px;
-	height:auto;
+	  min-height:40px;
+	  max-height: 200px;
+	  height:auto;
     margin: 0.5em 0;
 }
 
 .pnfpb_customprompt_subscription_options_container, .pnfpb_customprompt_vertical_subscription_options_container {
-	max-width: 330px;
+	  max-width: 330px;
     border: 1px solid rgba(0,0,0,.1);
     border-radius: 3px;
     background: none;
     overflow-y: auto;
-	max-height: 100px;
-	min-height:40px;
-	height:auto;
+	  max-height: 100px;
+	  min-height:40px;
+	  height:auto;
     margin: 0.5em 0;
-	scrollbar-width: thin;
+	  scrollbar-width: thin;
 }
 
 .pnfpb_bell_icon_subscription_container {
@@ -1840,24 +1885,64 @@ td.pnfpb_ic_push_settings_table_label_column {
     margin: 0.3em 0;
 }
 
-/*.pnfpb_bell_icon_subscription_checkbox_container {
-	display: flex;
-    flex-direction: row;
-    max-width: 330px;
-    border-bottom: 1px solid rgba(0,0,0,.1);
-    border-radius: 2px;
-    background: hsla(0,0%,98%,.5);
-    overflow: auto;
-    margin: 0.3em 0;
+.pnfpb-notice-dismiss:before {
+  background: 0 0;
+  color: #fafafa;
+  content: "\f153";
+  display: block;
+  font: normal 16px / 20px dashicons;
+  speak: never;
+  height: 20px;
+  text-align: center;
+  width: 20px;
+  -webkit-font-smoothing: antialiased;
+
 }
 
-.pnfpb_bell_icon_subscription_text_container {
-	display: flex;
-    flex-direction: row;
-    max-width: 330px;
-    border-bottom: 1px solid rgba(0,0,0,.1);
-    border-radius: 2px;
-    background: hsla(0,0%,98%,.5);
-    overflow: auto;
-    margin: 0.3em 0;
-}*/
+
+.pnfpb-notice-dismiss {
+  top: 0;
+  right: 1px;
+  border: none;
+  margin: 0;
+  padding: 9px;
+  background: 0 0;
+  color: #fafafa;
+  cursor: pointer;
+  background-color: #333333;
+}
+
+.pnfpb-apple-share-icon {
+
+  background:#fff;
+  margin:10px;
+  padding:10px;
+  width: 50px;
+  height:50px;
+}
+
+.pnfpb-notice.is-dismissible {
+  padding-right: 38px;
+  position: relative;
+}
+
+.pnfpb-screen-reader-text, .pnfpb-screen-reader-text span {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.pnfpb-notice p {
+  margin: .5em 0;
+  padding: 5px;
+  max-width: 550px;
+  margin: 0 auto;
+  text-align: left;
+}

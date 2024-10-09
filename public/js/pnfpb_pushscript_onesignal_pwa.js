@@ -12,15 +12,6 @@ if (pnfpb_onesignal_userid === '1') {
 	
 }
 
-OneSignal.push(function() {
-	
-  OneSignal.getExternalUserId().then(function(externalUserId){
-	  
-    //console.log("externalUserId: ", externalUserId);
-    
-  });
-	
-});
 
 
 var standalone = window.navigator.standalone,
@@ -87,7 +78,42 @@ $j(document).ready(function() {
 	{
 		
 		OneSignal.push(function() {
-  			OneSignal.setExternalUserId(pnfpb_onesignal_userid_os);
+			
+			//console.log(pnfpb_onesignal_userid_os);
+			//console.log(typeof OneSignal.login);
+			//console.log(typeof OneSignal.setExternalUserId);
+			
+			if (typeof OneSignal.login === "function" && pnfpb_onesignal_userid_os != '0') { 
+				
+  				OneSignal.login(pnfpb_onesignal_userid_os);
+				
+					var data = {
+						action: 'icpushcallback',
+						onesignal_externalid:pnfpb_onesignal_userid_os,
+						pushtype: 'onesignal_subscribed_users'
+					};
+							
+					$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
+						
+					});
+				
+			} else {
+				if (typeof OneSignal.setExternalUserId === "function"  && pnfpb_onesignal_userid_os != '0') {
+					
+					OneSignal.setExternalUserId(pnfpb_onesignal_userid_os);
+					
+					var data = {
+						action: 'icpushcallback',
+						onesignal_externalid:pnfpb_onesignal_userid_os,
+						pushtype: 'onesignal_subscribed_users'
+					};
+							
+					$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
+						
+					});	
+					
+				}
+			}
 		});
 		
 	}
@@ -859,9 +885,7 @@ $j(document).ready(function() {
 					})
 				})
 			})
-		//})
-		//}	
-	 //})	
+
     }	
 	
 	OneSignal.push(function() {

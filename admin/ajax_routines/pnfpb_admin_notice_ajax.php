@@ -1,4 +1,10 @@
 <?php
+
+/************************************************************************************
+ * To update Firebase service account credentials uploaded  
+ * via PNFPB plugin Admin settings to WordPress options table for Push notifications.
+ ************************************************************************************/
+
 	if (isset($_POST['calltype']) && $_POST['calltype'] === 'pnfpb_service_account_upload') {
 		// Check the nonce first
   		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'icpushadmincallback' ) ) {
