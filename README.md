@@ -1,4 +1,4 @@
-# Push Notification WordPress plugin for websites, Android/IOS mobile apps with Progressive Web App (PWA)<br/>
+# Push Notification WordPress plugin for websites, Android / IOS mobile apps with Progressive Web App (PWA)<br/>
 WordPress plugin to send push notifications using Firebase Cloud Messaging (FCM) to websites, Android / iOS mobile apps. It sends push notifications using Firebase Cloud Messaging (FCM) using legacy or latest version of httpv1 Firebase api or users can select Onesignal / Progressier / webtoapp as push notification providers. It has REST API facility to integrate with native/hybrid Android / iOS mobile apps for push notifications. It has facility to generate PWA - Progressive Web App. This plugin is able to send push notification to more than 200,000 subscribers unlimited push notifications using background action scheduler.<br/><br/>
 
 ## Download this plugin<br/>
