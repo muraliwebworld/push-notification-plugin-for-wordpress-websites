@@ -4,11 +4,11 @@ WordPress plugin to send push notifications using Firebase Cloud Messaging (FCM)
 ## Download this plugin<br/>
 https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/>
 
-# Features<br/>
+# Features
 
-## Push notifications providers<br/>
+## Push notifications providers
 
-### Plugin allows to choose different push notification providers<br/><br/>
+### Plugin allows to choose different push notification providers<br/>
 
 1. Firebase (Free push notifications for desktop, PWA and mobile apps)<br/>
 2. Onesignal (Free push notification for desktop, PWA and mobile apps)<br/>
