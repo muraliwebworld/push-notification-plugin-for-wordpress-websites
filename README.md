@@ -48,51 +48,46 @@ Enable/Disable custom prompt with icon to subscribe/unsubscribe push notificatio
 Choose Horizontal or Vertical custom prompt style and customize the text, color and button.<br/>
 Enable/Disable Bell prompt icon to subscribe/unsubscribe notifications. Front end users will be able to subscribe to particular category like post, activity, comments, friendship request/accept, other options while subscribing for first time or if user wants to update subscribe options from bell prompt at any time it is needed.<br/><br/>
 
-# Shortcodes<br/>
+## Shortcodes<br/>
 Use shortcode [member name] and [group name] in push notification title and custom content to display user name in title/content in push notifications, similarly for BuddyPress group activities [group name] place holder is available to display group name in title/content in push notifications.<br/>
 For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications<br/><br/>
 
-# Subscribe/Unsubscribe various push notifications in front end<br/>
+## Subscribe/Unsubscribe various push notifications in front end<br/>
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile – settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.<br/><br/>
 
-# Scheduling Push notification<br/>
+## Scheduling Push notification<br/>
 It allows Scheduled Push notifications to send push notifications hourly(every hour), twice daily(2 times per day), daily, weekly as per WordPress CRON. It also provides option to schedule push notification in background using action scheduler, this will be useful to send notification more than 100000 subscribers simultaneously in background mode.<br/>
 Push notification scheduling is available for On demand/One time, WordPress Post, BuddyPress activities, BuddyPress group activities and for BuddyPress comments.<br/><br/>
 
-# REST API<br/>
+## REST API<br/>
 REST API to connect mobile native/hybrid apps to send push notification from WordPress site to both mobile apps and WordPress sites.<br/>
 Using this REST API WordPress site gets Firebase Push Notification subscription token from Mobile app(Android/Ios).<br/>
 This allows to send push notifications to WordPress site users as well as to Native mobile app Android/ios users.<br/>
 REST API url is https://wp-json/PNFPBpush/v1/subscriptiontoken<br/><br/>
 
-# HOW TO USE PLUGIN API TO INTEGRATE MOBILE APP PUSH NOTIFICATION<br/>
+### HOW TO USE PLUGIN API TO INTEGRATE MOBILE APP PUSH NOTIFICATION<br/>
 Android app code to integrate with this plugin<br/>
 IOS app code to integrate with this plugin<br/><br/>
 
 Refer video tutorial under “How to use this plugin” section to configure Firebase options in plugin admin area.<br/>
 
-# PWA<br/>
+## PWA Progressive Web App<br/>
 This plugin has facility to generate Progressive Web App (PWA). It also supports Progressier PWA.<br/>
 Go to plugin settings page to enable/disable PWA app and to customize PWA app with app name, app icon, app theme color, background color for PWA and list of pages to be included in offline cache for web app offline mode.<br/><br/>
 
-# Extra settings for NGINX server<br/>
+## Extra settings for NGINX server<br/>
 If server is NGINX and not able to create dynamic service worker file https://pnfpb_icpush_pwa_sw.js & PWA manifest json file https://pnfpbmanifest.json then go to plugin settings->nginx tab, enable static file creation option, it will create required static service worker file, PWA manifest json files in root folder. This option is applicable only if hosting/server is based on NGINX and not creating dynamic service worker file, manifest json files. By default, this plugin creates dynamic service worker file and PWA manifest json file.<br/><br/>
 
 This plugin uses Firebase Cloud Messaging to send push notification using Firebase registration credentials which is free of cost.<br/><br/>
 
-# Plugin Demo site<br/>
+## Plugin Demo site<br/>
 https://www.muraliwebworld.com <br/><br/>
 
-# Video tutorial showing how to configure Firebase for this plugin<br /><br/>
+### Video tutorial showing how to configure Firebase for this plugin<br /><br/>
 	
 https://www.youtube.com/watch?v=02oymYLt3qo <br /><br/>
 	
-# PWA<br /><br/>
-This plugin has facility to generate Progressive Web App (PWA).<br/>
-Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android. Firefox for desktop will not support PWA. <br/>
-Go to plugin settings page to enable/disable PWA app and to customize PWA app with app name, app icon, app theme color, background color for PWA and list of pages to be included in offline cache for web app offline mode.<br/><br/>
-
-# Integrate Native mobile apps like Flutter mobile app with this WordPress plugin<br />
+### Integrate Native mobile apps like Flutter mobile app with this WordPress plugin<br />
 New API to send push notification subscription from Native mobile apps like Flutter mobile app to WordPress backend and to send push notifications from WordPress to Native mobile app using Firebase.<br/>
 1. Generate secret key in mobile app tab to communicate between mobile app(in Integrate app api tab plugin settings)<br/>
 2. REST api to send subscription token from Mobile Flutter app using WebView to this WordPress plugin to store it in WordPress db to send push notification whenever new activities/post are published.<br/><br/>
@@ -135,7 +130,7 @@ store token in global variable for other user<br/>
 Generate envrypted token as mentioned below using below coding (AES 256 cryptography encryption)<br/>
 Once plugin receives this token, it will unencrypt using the secret key generate and compare hash code to confirm it is sent from Flutter app<br/><br/>
 
-# Scheduling push notifications<br/>
+## Scheduling push notifications<br/>
 It allows to Schedule Push notifications to send as per below schedule using WordPress CRON scheduler 
 hourly(every hour)<br/>,twice daily(2 times per day)<br />, daily<br />, weekly<br />
 Firebase PUSH API is not compatible with Safari browsers and push notification using firebase push api will not work in Safari browsers. For Safari browsers,this plugin will display console log messages to indicate the browser is not supported for push api.<br/>
@@ -144,12 +139,11 @@ In addition to default subscription from browser, following shortcode can also b
 New Shortcode [subscribe_PNFPB_push_notification] to display Subscribe/Unsubscribe push notification toggle button.<br/>
 Using above shortcode, toggle button to subscribe/unsubscribe can be added to sidebar or any other locations according to your need.<br/>
 The shortcode [subscribe_PNFPB_push_notification] is optional, it is a additional facility to subscribe to push notification inaddition to default option from browser.<br/><br/>
-# Progressive Web App (PWA)<br/>
-This plugin generates PWA app based on settings in plugin admin area. Admin users will be able to enable/disable PWA app and will be customize PWA app with app name, app icon, app theme color, background color and list of pages to be included in offline cache for web app offline mode. If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed. Progressive Web Apps are supported by Chrome(Desktop,Mobile) browser, Edge browser, Firefox for android, Opera for android. Firefox for desktop will not support PWA.<br/><br/>
-# On demand or One time push notification to all subscribers <br/>
+
+## On demand or One time push notification to all subscribers <br/>
 Go to plugin admin area on demand push notification to send one time notification or to schedule multiple one time notifications to start at different date and time or schedule multiple campaigns to start at different date and time with image to all subscribers<br/><br/>
 
-# How to configure plugin<br/>
+## How to configure plugin<br/>
 https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/><br/>
 
 Following are steps to configure the plugin,<br/>
@@ -175,13 +169,13 @@ Following are steps to configure the plugin,<br/>
 8. To get Firebase server key, select project settings from Firebase account, go to cloud messaging tab, get server key fill below first field under firebase configuration<br/>
 9. For remaining fields, you need to get it from your Firebase web app. All fields are required to configure FireBase push notification.<br/>
 10. In the Your apps card, select the nickname of the Firebase web app for which you need a config object.<br/>
-11.Select Config from the Firebase SDK snippet pane and fill below fields<br/>
-After saving below fields, it will ask to allow notification for this website in browser default popup, click on allow notification to get notifications<br/>
+11. Select Config from the Firebase SDK snippet pane and fill below fields<br/>
+12. After saving below fields, it will ask to allow notification for this website in browser default popup, click on allow notification to get notifications<br/>
 After completing above steps, push notification will be displayed based on option selected for posts/buddypress while publishing posts or custom post types or during new BuddyPress activities or comments.<br/>
-New Shortcode [subscribe_PNFPB_push_notification] can also be used to display Subscribe/Unsubscribe push notification toggle button. It is a additional facility in addition to default option from browser to subscribe/unsubscribe push notifications.<br/><br/>
-# Progressive Web App (PWA) settings<br/>
-14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.<br/>
-# Screenshots
+13. New Shortcode [subscribe_PNFPB_push_notification] can also be used to display Subscribe/Unsubscribe push notification toggle button. It is a additional facility in addition to default option from browser to subscribe/unsubscribe push notifications.<br/><br/>
+14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.<br/><br/>
+
+## Screenshots
 ![screenshot-1push](https://user-images.githubusercontent.com/32461311/132991104-5a7cfbf4-19dd-4129-8d8a-279fb00876a0.png)
 ![screenshot-2](https://user-images.githubusercontent.com/32461311/133961443-aeb7765e-7ac5-4f08-943f-ab281cf3f25f.png)
 ![screenshot-7](https://user-images.githubusercontent.com/32461311/133961446-a4d6d0fd-3d34-4380-ac8f-44cbbc4d1f88.png)
