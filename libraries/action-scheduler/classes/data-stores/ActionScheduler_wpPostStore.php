@@ -8,7 +8,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 	const GROUP_TAXONOMY    = 'action-group';
 	const SCHEDULE_META_KEY = '_action_manager_schedule';
 	const DEPENDENCIES_MET  = 'as-post-store-dependencies-met';
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * Used to share information about the before_date property of claims internally.
 	 *
@@ -46,7 +46,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 			return $post_id;
 		} catch ( Exception $e ) {
 			/* translators: %s: action error message */
-			throw new RuntimeException( sprintf( __( 'Error saving action: %s', 'action-scheduler' ), $e->getMessage() ), 0 );
+			throw new RuntimeException( sprintf( __( 'Error saving action: %s', 'push-notification-for-post-and-buddypress' ), $e->getMessage() ), 0 );
 		}
 	}
 
@@ -98,7 +98,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		remove_filter( 'pre_wp_unique_post_slug', array( $this, 'set_unique_post_slug' ), 10 );
 
 		if ( is_wp_error( $post_id ) || empty( $post_id ) ) {
-			throw new RuntimeException( __( 'Unable to save action.', 'action-scheduler' ) );
+			throw new RuntimeException( __( 'Unable to save action.', 'push-notification-for-post-and-buddypress' ) );
 		}
 		return $post_id;
 	}
@@ -315,7 +315,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 	protected function get_query_actions_sql( array $query, $select_or_count = 'select' ) {
 
 		if ( ! in_array( $select_or_count, array( 'select', 'count' ), true ) ) {
-			throw new InvalidArgumentException( __( 'Invalid schedule. Cannot save action.', 'action-scheduler' ) );
+			throw new InvalidArgumentException( __( 'Invalid schedule. Cannot save action.', 'push-notification-for-post-and-buddypress' ) );
 		}
 
 		$query = wp_parse_args(
@@ -512,7 +512,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		$post = get_post( $action_id );
 		if ( empty( $post ) || ( self::POST_TYPE !== $post->post_type ) ) {
 			/* translators: %s is the action ID */
-			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) );
+			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'push-notification-for-post-and-buddypress' ), $action_id ) );
 		}
 		do_action( 'action_scheduler_canceled_action', $action_id );
 		add_filter( 'pre_wp_unique_post_slug', array( $this, 'set_unique_post_slug' ), 10, 5 );
@@ -531,7 +531,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		$post = get_post( $action_id );
 		if ( empty( $post ) || ( self::POST_TYPE !== $post->post_type ) ) {
 			/* translators: %s is the action ID */
-			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) );
+			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'push-notification-for-post-and-buddypress' ), $action_id ) );
 		}
 		do_action( 'action_scheduler_deleted_action', $action_id );
 
@@ -561,7 +561,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		$post = get_post( $action_id );
 		if ( empty( $post ) || ( self::POST_TYPE !== $post->post_type ) ) {
 			/* translators: %s is the action ID */
-			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) );
+			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'push-notification-for-post-and-buddypress' ), $action_id ) );
 		}
 		if ( 'publish' === $post->post_status ) {
 			return as_get_datetime_object( $post->post_modified_gmt );
@@ -693,7 +693,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		$rows_affected = $wpdb->query( $wpdb->prepare( "{$update} {$where} {$order}", $params ) ); // phpcs:ignore // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
 		if ( false === $rows_affected ) {
-			throw new RuntimeException( __( 'Unable to claim actions. Database error.', 'action-scheduler' ) );
+			throw new RuntimeException( __( 'Unable to claim actions. Database error.', 'push-notification-for-post-and-buddypress' ) );
 		}
 
 		return (int) $rows_affected;
@@ -714,7 +714,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		// Ensure the group exists before continuing.
 		if ( ! term_exists( $group, self::GROUP_TAXONOMY ) ) {
 			/* translators: %s is the group name */
-			throw new InvalidArgumentException( sprintf( __( 'The group "%s" does not exist.', 'action-scheduler' ), $group ) );
+			throw new InvalidArgumentException( sprintf( __( 'The group "%s" does not exist.', 'push-notification-for-post-and-buddypress' ), $group ) );
 		}
 
 		// Set up a query for post IDs to use later.
@@ -821,7 +821,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		);
 		if ( false === $result ) {
 			/* translators: %s: claim ID */
-			throw new RuntimeException( sprintf( __( 'Unable to unlock claim %s. Database error.', 'action-scheduler' ), $claim->get_id() ) );
+			throw new RuntimeException( sprintf( __( 'Unable to unlock claim %s. Database error.', 'push-notification-for-post-and-buddypress' ), $claim->get_id() ) );
 		}
 	}
 
@@ -849,7 +849,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		);
 		if ( false === $result ) {
 			/* translators: %s: action ID */
-			throw new RuntimeException( sprintf( __( 'Unable to unlock claim on action %s. Database error.', 'action-scheduler' ), $action_id ) );
+			throw new RuntimeException( sprintf( __( 'Unable to unlock claim on action %s. Database error.', 'push-notification-for-post-and-buddypress' ), $action_id ) );
 		}
 	}
 
@@ -875,7 +875,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		);
 		if ( false === $result ) {
 			/* translators: %s: action ID */
-			throw new RuntimeException( sprintf( __( 'Unable to mark failure on action %s. Database error.', 'action-scheduler' ), $action_id ) );
+			throw new RuntimeException( sprintf( __( 'Unable to mark failure on action %s. Database error.', 'push-notification-for-post-and-buddypress' ), $action_id ) );
 		}
 	}
 
@@ -901,7 +901,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		$status = $this->get_post_column( $action_id, 'post_status' );
 
 		if ( null === $status ) {
-			throw new InvalidArgumentException( __( 'Invalid action ID. No status found.', 'action-scheduler' ) );
+			throw new InvalidArgumentException( __( 'Invalid action ID. No status found.', 'push-notification-for-post-and-buddypress' ) );
 		}
 
 		return $this->get_action_status_by_post_status( $status );
@@ -971,7 +971,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 		$post = get_post( $action_id );
 		if ( empty( $post ) || ( self::POST_TYPE !== $post->post_type ) ) {
 			/* translators: %s is the action ID */
-			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) );
+			throw new InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'push-notification-for-post-and-buddypress' ), $action_id ) );
 		}
 		add_filter( 'wp_insert_post_data', array( $this, 'filter_insert_post_data' ), 10, 1 );
 		add_filter( 'pre_wp_unique_post_slug', array( $this, 'set_unique_post_slug' ), 10, 5 );
@@ -1052,7 +1052,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 			parent::validate_action( $action );
 		} catch ( Exception $e ) {
 			/* translators: %s is the error message */
-			$message = sprintf( __( '%s Support for strings longer than this will be removed in a future version.', 'action-scheduler' ), $e->getMessage() );
+			$message = sprintf( __( '%s Support for strings longer than this will be removed in a future version.', 'push-notification-for-post-and-buddypress' ), $e->getMessage() );
 			_doing_it_wrong( 'ActionScheduler_Action::$args', esc_html( $message ), '2.1.0' );
 		}
 	}

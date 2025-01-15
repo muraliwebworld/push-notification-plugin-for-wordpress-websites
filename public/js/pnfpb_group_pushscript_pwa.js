@@ -3,9 +3,9 @@
 // To send push notification only for members belonging to group
 // @since 1.8
 //
-import { initializeApp, getApp } from 'firebase/app';
-import { getToken, isSupported, getMessaging } from "firebase/messaging";
 import { __ } from '@wordpress/i18n';
+import { getApp, initializeApp } from 'firebase/app';
+import { getMessaging, getToken, isSupported } from "firebase/messaging";
 import $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 
@@ -160,7 +160,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                                    else
 			                                                    {
 			           
-			                                                        console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			                                                        console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 			                                                    }
 
 			                                            }
@@ -221,7 +221,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                                    else
 			                                                    {
 			           
-			                                                        console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			                                                        console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 			                                                    }
 
 			                                            }
@@ -286,7 +286,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                                 }
 			                                                 else
 			                                                 {
-			                                                    console.log(__("Already subscribed...device id already exists...not updated",'PNFPB_TD'));
+			                                                    console.log(__("Already subscribed...device id already exists...not updated","push-notification-for-post-and-buddypress"));
 			                                                 }
 
 			                                            }
@@ -294,11 +294,11 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                            {
 
                                                            
-                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification subscription failed..try again!!",'PNFPB_TD'));
+                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification subscription failed..try again!!","push-notification-for-post-and-buddypress"));
                                                             
                                                             $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 
-			                                                console.log(__("device update failed",'PNFPB_TD'));
+			                                                console.log(__("device update failed","push-notification-for-post-and-buddypress"));
 			                                            }
 							
 										        });
@@ -368,7 +368,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                                  else
 			                                                  {
 			           
-			                                                        console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			                                                        console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 			                                                    }
 
 			                                            }
@@ -376,11 +376,11 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                            {
 
                                                            
-                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+                                                            $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
                                                             
                                                             $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 
-			                                                console.log(__("device update failed",'PNFPB_TD'));
+			                                                console.log(__("device update failed","push-notification-for-post-and-buddypress"));
 			                                            }
 							
 										        });
@@ -415,7 +415,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
                   	else
                   	{
 							
-						$j(".pnfpb-group-unsubscribe-alert-msg").html(__("UnSubscribe/Subscribe failed..try again ..Please!!",'PNFPB_TD'));
+						$j(".pnfpb-group-unsubscribe-alert-msg").html(__("UnSubscribe/Subscribe failed..try again ..Please!!","push-notification-for-post-and-buddypress"));
 							
 						$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();                        
                   	}
@@ -429,7 +429,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			else
 			{
 				//if (pnfpb_pushtoken_fromflutter !== '') {
-					console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'));
+					console.log(__('This browser does not support PUSHAPI Firebase messaging!!!',"push-notification-for-post-and-buddypress"));
 					$j(document).on( "click",".subscribe-notification-group", function(e) {
 						e.preventDefault();
 						var groupId = $j(this).attr("data-group-id");

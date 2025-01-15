@@ -38,7 +38,7 @@ if ( !class_exists( 'PNFPB_ICFM_admin_bar_menu_class' ) ) {
         	$wp_admin_bar->add_menu(
             	[
                 	'id'    => 'pnfpb-ic-fcm-main-menu',
-                	'title' => esc_html__('PNFPB', 'PNFPB_TD' ) ,
+                	'title' => esc_html__('PNFPB', "push-notification-for-post-and-buddypress" ) ,
                 	'href'  => admin_url( 'admin.php?page=pnfpb-icfcm-slug' ),
             	]
         	);
@@ -57,7 +57,7 @@ if ( !class_exists( 'PNFPB_ICFM_admin_bar_menu_class' ) ) {
             	[
                 	'parent' => 'pnfpb-ic-fcm-main-menu',
                 	'id'     => 'pnfpb-ic-fcm-push-settings-menu',
-                	'title'  => esc_html__( 'Push Notification settings', 'PNFPB_TD' ) ,
+                	'title'  => esc_html__( 'Push Notification settings', "push-notification-for-post-and-buddypress" ) ,
                 	'href'   => admin_url( 'admin.php?page=pnfpb-icfcm-slug' ),
             	]
         	);
@@ -76,7 +76,7 @@ if ( !class_exists( 'PNFPB_ICFM_admin_bar_menu_class' ) ) {
             	[
                 	'parent' => 'pnfpb-ic-fcm-main-menu',
                 	'id'     => 'pnfpb-ic-fcm-send-push-menu',
-                	'title'  => esc_html__( 'Send push notification', 'PNFPB_TD' ) ,
+                	'title'  => esc_html__( 'Send push notification', "push-notification-for-post-and-buddypress" ) ,
                 	'href'   => admin_url( 'admin.php?page=pnfpb_icfmtest_notification' ),
             	]
         	);
@@ -95,7 +95,7 @@ if ( !class_exists( 'PNFPB_ICFM_admin_bar_menu_class' ) ) {
             	[
                 	'parent' => 'pnfpb-ic-fcm-main-menu',
                 	'id'     => 'pnfpb-ic-fcm-pwa-menu',
-                	'title'  => esc_html__( 'PWA', 'PNFPB_TD' ) ,
+                	'title'  => esc_html__( 'PWA', "push-notification-for-post-and-buddypress" ) ,
                 	'href'   => admin_url( 'admin.php?page=pnfpb_icfm_pwa_app_settings' ),
             	]
         	);

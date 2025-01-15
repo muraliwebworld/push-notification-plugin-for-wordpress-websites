@@ -1,0 +1,6 @@
+function executeWhenAppReady(functionToExecute){var observedElement=document.documentElement;var targetClass="webtoapp-ready";if(observedElement.classList.contains(targetClass)){functionToExecute();}else{var observer=new MutationObserver((mutations=>{for(var mutation of mutations){if(mutation.type==="attributes"&&mutation.attributeName==="class"&&mutation.target.classList.contains(targetClass)){functionToExecute();observer.disconnect();return;}}}));observer.observe(observedElement,{attributes:true});}}
+function getAppPlatform(){const formats=["webtoapp.design WebView (","App-WebView ("];for(const format of formats){if(navigator.userAgent.includes(format)){return navigator.userAgent.split(format)[1].split(")")[0];}}
+return null;}
+function isInCustomTab(){return new URL(window.location.href).searchParams.get("custom_tab_data")!==null;}
+function getCustomTabData(){return JSON.parse(new URL(window.location.href).searchParams.get("custom_tab_data"));}
+function closeCustomTab(custom_tab_return_data){window.location="http://localhost:1523/close?custom_tab_return_data="+encodeURIComponent(JSON.stringify(custom_tab_return_data));}

@@ -14,7 +14,7 @@ use Action_Scheduler\Migration\Controller;
  */
 class ActionScheduler_HybridStore extends Store {
 	const DEMARKATION_OPTION = 'action_scheduler_hybrid_store_demarkation';
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	private $primary_store;
 	private $secondary_store;
 	private $migration_runner;

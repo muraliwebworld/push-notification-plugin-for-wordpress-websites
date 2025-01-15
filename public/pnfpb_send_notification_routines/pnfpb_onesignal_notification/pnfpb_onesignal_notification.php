@@ -3,16 +3,26 @@
 		/** Onesignal push notification 
 		* 
 		* @since 1.65 version
-		*/			
+		*/	
+
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
+			
 			try {
 				$onesignal_post_url = 'https://onesignal.com/api/v1/notifications';
 
             	if (defined('ONESIGNAL_DEBUG') && defined('ONESIGNAL_LOCAL')) {
                  	$onesignal_post_url = 'https://localhost:3001/api/v1/notifications';
             	}
-						
-				$onesignal_wp_settings = OneSignal::get_onesignal_settings();
-
+				
+				$onesignalv3_settings = get_option('OneSignalWPSetting', array());
+				
+				if (  class_exists( 'OneSignal' )   && get_option('pnfpb_onesignal_push') === '1') {
+					$onesignal_wp_settings = OneSignal::get_onesignal_settings();
+				} else {
+					if ( !empty($onesignalv3_settings)  && get_option('pnfpb_onesignal_push') === '1') {
+						$onesignal_wp_settings = $onesignalv3_settings;
+					}
+				}
 						
 				$onesignal_auth_key = $onesignal_wp_settings['app_rest_api_key'];
 						
@@ -20,7 +30,7 @@
 				
 				$externalid = $this->PNFPB_icfcm_generate_random_uuid($pushtitle);
 				
-				$pushcontent = mb_substr(stripslashes(strip_tags(urldecode(trim($pushcontent)))),0,130, 'UTF-8');
+				$pushcontent = mb_substr(stripslashes(wp_strip_all_tags(urldecode(trim($pushcontent)))),0,130, 'UTF-8');
 				
 				$pushimageurl = str_replace( '&#038;', '&', $pushimageurl );				
 
@@ -36,7 +46,7 @@
                   		//'included_segments' => array('All'),
                   		'isAnyWeb' => true,
                   		'url' => $pushlink,
-                  		'contents' => array('en' => stripslashes_deep(wp_specialchars_decode(stripslashes(strip_tags(urldecode(trim($pushcontent))))))),
+                  		'contents' => array('en' => stripslashes_deep(wp_specialchars_decode(stripslashes(wp_strip_all_tags(urldecode(trim($pushcontent))))))),
 				  		//'include_external_user_ids' => $include_external_ids,
 						'include_aliases' => array("external_id" => $include_external_ids),
 						'target_channel' => 'push'
@@ -52,7 +62,7 @@
                   		'included_segments' => array('All'),
                   		'isAnyWeb' => true,
                   		'url' => $pushlink,
-                  		'contents' => array('en' => stripslashes_deep(wp_specialchars_decode(stripslashes(strip_tags(urldecode(trim($pushcontent))))))),
+                  		'contents' => array('en' => stripslashes_deep(wp_specialchars_decode(stripslashes(wp_strip_all_tags(urldecode(trim($pushcontent))))))),
             		);					
 					
 				}
@@ -73,7 +83,7 @@
 					$fields['adm_big_picture']  = $pushimageurl;
 					$fields['chrome_big_picture']  = $pushimageurl;
 					$fields['large_icon']  = $pushimageurl;
-					$fields['ios_attachments'] = json_encode(array("id1"=>$pushimageurl));
+					$fields['ios_attachments'] = wp_json_encode(array("id1"=>$pushimageurl));
 			
 				}
 				
@@ -87,7 +97,7 @@
                    'body' => wp_json_encode($fields),
                    'timeout' => 3,
             	);
-				
+
         		$response = wp_remote_post($onesignal_post_url, $request);
 
 				if (is_wp_error($response)) {

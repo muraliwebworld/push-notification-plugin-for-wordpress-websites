@@ -4,7 +4,7 @@
  * Class ActionScheduler_Compatibility
  */
 class ActionScheduler_Compatibility {
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * Converts a shorthand byte value to an integer byte value.
 	 *

@@ -292,12 +292,12 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	protected function validate_args( $args, $action_id ) {
 		// Ensure we have an array of args.
 		if ( ! is_array( $args ) ) {
-			throw ActionScheduler_InvalidActionException::from_decoding_args( $action_id );
+			throw ActionScheduler_InvalidActionException::from_decoding_args( esc_html($action_id) );
 		}
 
 		// Validate JSON decoding if possible.
 		if ( function_exists( 'json_last_error' ) && JSON_ERROR_NONE !== json_last_error() ) {
-			throw ActionScheduler_InvalidActionException::from_decoding_args( $action_id, $args );
+			throw ActionScheduler_InvalidActionException::from_decoding_args( esc_html($action_id), esc_html($args) );
 		}
 	}
 
@@ -311,7 +311,7 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	 */
 	protected function validate_schedule( $schedule, $action_id ) {
 		if ( empty( $schedule ) || ! is_a( $schedule, 'ActionScheduler_Schedule' ) ) {
-			throw ActionScheduler_InvalidActionException::from_schedule( $action_id, $schedule );
+			throw ActionScheduler_InvalidActionException::from_schedule( esc_html($action_id), esc_html($schedule) );
 		}
 	}
 
@@ -325,8 +325,9 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	 * @throws InvalidArgumentException When json encoded args is too long.
 	 */
 	protected function validate_action( ActionScheduler_Action $action ) {
-		if ( strlen( json_encode( $action->get_args() ) ) > static::$max_args_length ) {
-			throw new InvalidArgumentException( sprintf( __( 'ActionScheduler_Action::$args too long. To ensure the args column can be indexed, action args should not be more than %d characters when encoded as JSON.', 'action-scheduler' ), static::$max_args_length ) );
+		if ( strlen( wp_json_encode( $action->get_args() ) ) > static::$max_args_length ) {
+			/* translators: %d: number of characters in argument */
+			throw new InvalidArgumentException( sprintf( esc_html(__( 'ActionScheduler_Action::$args too long. To ensure the args column can be indexed, action args should not be more than %d characters when encoded as JSON.', 'push-notification-for-post-and-buddypress' )), esc_html(static::$max_args_length) ) );
 		}
 	}
 
@@ -402,11 +403,11 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	 */
 	public function get_status_labels() {
 		return array(
-			self::STATUS_COMPLETE => __( 'Complete', 'action-scheduler' ),
-			self::STATUS_PENDING  => __( 'Pending', 'action-scheduler' ),
-			self::STATUS_RUNNING  => __( 'In-progress', 'action-scheduler' ),
-			self::STATUS_FAILED   => __( 'Failed', 'action-scheduler' ),
-			self::STATUS_CANCELED => __( 'Canceled', 'action-scheduler' ),
+			self::STATUS_COMPLETE => __( 'Complete', 'push-notification-for-post-and-buddypress' ),
+			self::STATUS_PENDING  => __( 'Pending', 'push-notification-for-post-and-buddypress' ),
+			self::STATUS_RUNNING  => __( 'In-progress', 'push-notification-for-post-and-buddypress' ),
+			self::STATUS_FAILED   => __( 'Failed', 'push-notification-for-post-and-buddypress' ),
+			self::STATUS_CANCELED => __( 'Canceled', 'push-notification-for-post-and-buddypress' ),
 		);
 	}
 

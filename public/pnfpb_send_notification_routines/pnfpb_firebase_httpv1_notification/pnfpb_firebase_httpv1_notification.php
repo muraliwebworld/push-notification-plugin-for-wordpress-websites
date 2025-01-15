@@ -1,5 +1,7 @@
 <?php
 
+use WpOrg\Requests\Requests;
+
 		/** Firebase httpv1 api send push notification routine
 		* 
 		* @since 1.65 version
@@ -11,10 +13,10 @@
 		*/			
 			
 			global $wpdb;
-			
 	
 			$pnfpb_firebase_project = get_option( 'pnfpb_ic_fcm_projectid' );
-			
+
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 			
 			$url = "https://fcm.googleapis.com/v1/projects/{$pnfpb_firebase_project}/messages:send";
 			
@@ -27,12 +29,11 @@
 				);
 			}			
 
-			
-			if (($pushtype === 'privatemessages' || $pushtype === 'friendshiprequest' || $pushtype === 'friendshipaccepted' || $pushtype === 'mycomments') && count($target_device_ids) > 0 ) {
+			if (($pushtype === 'privatemessages' || $pushtype === 'friendshiprequest' ||  $pushtype === 'friendshipaccepted' || $pushtype === 'mycomments') && count($target_device_ids) > 0 ) {
 				
 					$table_name = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
 			
-					$deviceidswebviewcheck=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$receiverid}' ORDER BY id DESC LIMIT 1000"  );
+					$deviceidswebviewcheck=$wpdb->get_col($wpdb->prepare( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id NOT LIKE %s AND userid = %d ORDER BY id DESC LIMIT 1000",$table_name,'%webview%','%@N%',$receiverid ) );
 				
 					if (count($deviceidswebviewcheck) > 0) {
 					
@@ -40,8 +41,8 @@
 					
 					}
 			}
-			
-			$pushcontent = mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($pushcontent))))),0,130, 'UTF-8');
+
+			$pushcontent = mb_substr(stripslashes(wp_strip_all_tags(urldecode(trim(htmlspecialchars_decode($pushcontent))))),0,130, 'UTF-8');
 			
 			$pushcontent = preg_replace("/\r|\n/", " ",$pushcontent);
 
@@ -63,7 +64,7 @@
 				$renotify = true;
 				
 			}
-			
+
 			$pnfpb_tag = '';
 			
 			if (get_option('pnfpb_ic_fcm_replace_notifications') && get_option('pnfpb_ic_fcm_replace_notifications') === '1') {
@@ -73,11 +74,11 @@
 			}
 
 			$pushdataarray = array();
-					
+	
 			$androidarray = array(
 				"title" => trim($pushtitle),
   				"body" => $pushcontent,
-  				"click_action" => "FLUTTER_NOTIFICATION_CLICK",
+				"click_action" => "FLUTTER_NOTIFICATION_CLICK",
 				'image'		=> $pushimageurl,
 			);
 					
@@ -110,7 +111,7 @@
 				"notification" => array(
 					"title" => trim($pushtitle),
   					"body" => $pushcontent,
-  					"click_action" => $pushclickurl,
+  					"click_action" => 'OPEN_MAIN_ACTIVITY',
 					'image'		=> $pushimageurl,
 					'tag'		=> $pnfpb_tag
 				)
@@ -125,6 +126,8 @@
          					"body" => $pushcontent,
       					),
 						"badge" => 0,
+						"mutable-content" => 1,
+						"content-available" => 1,						
       				)
 				),
 				'fcm_options' => array (
@@ -134,7 +137,7 @@
 
 			$topic = 'pnfpbgeneral';
 
-
+			$pnfpb_send_notifications = array();
 
 			if ($pushtype === 'privatemessages' || $pushtype === 'friendshiprequest' || $pushtype === 'friendshipaccepted' || $pushtype === 'mycomments') {
 				
@@ -178,133 +181,230 @@
 	           			 'message' => $notification,
 						);
 						
-						$body = json_encode($fields);
+						$body = wp_json_encode($fields);
 						
-
-						$args = array(
-			   				'httpversion' => '1.0',
-							'blocking' => true,
-							'sslverify' => false,
-							'body' => $body,
-							'headers' => $headers
-						);
+						array_push($pnfpb_send_notifications,
+								array(
+									'url'  => $url,
+									'headers' => $headers,
+									'data' => $body,
+									'type' => Requests::POST,
+								)
+						);							
+						
 			
 						$table_name = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
 			
-						$apiresults = wp_remote_post($url, $args);
-		
 					}
+				}
+				
+				if (count($pnfpb_send_notifications) > 0) {
+					
+					$pnfpb_send_notifications_result = Requests::request_multiple( $pnfpb_send_notifications );
 				}
 			}
 			else 
 			{
 				
-					$client = new Google_Client();
+				if (get_option('pnfpb_ic_fcm_only_post_subscribers_enable') === '1' && $pushtype === 'reply') {
+
+						$pnfpb_send_notifications = array();
+					
+						$client = new Google_Client();
 			
-					// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-					// 
-					$client->useApplicationDefaultCredentials(); 
+						// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
+						// 
+						$client->useApplicationDefaultCredentials(); 
 							
-					// Alternatively, provide the JSON authentication file directly.
-					$configArray = json_decode(get_option('pnfpb_sa_json_data'),true);
-					$client->setAuthConfig($configArray);
+						// Alternatively, provide the JSON authentication file directly.
+						$configArray = json_decode(get_option('pnfpb_sa_json_data'),true);
+						$client->setAuthConfig($configArray);
 							
-					// Add the scope as a string (multiple scopes can be provided as an array)
-					$client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-					$client->refreshTokenWithAssertion();
-					$pnfpb_fbauth_token_array = $client->getAccessToken();
-					$pnfpb_fbauth_token = $pnfpb_fbauth_token_array['access_token'];				
+						// Add the scope as a string (multiple scopes can be provided as an array)
+						$client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+						$client->refreshTokenWithAssertion();
+						$pnfpb_fbauth_token_array = $client->getAccessToken();
+						$pnfpb_fbauth_token = $pnfpb_fbauth_token_array['access_token'];				
+
+						$urladd = 'https://iid.googleapis.com/iid/v1:batchAdd';
 					
-					$headers = array( 
-						'Authorization' => 'Bearer '.$pnfpb_fbauth_token, 
-						'Content-Type' => 'application/json'
-					);				
+            			$headers = array('Authorization' => 'Bearer ' . $pnfpb_fbauth_token, 'Content-Type' => 'application/json', 'access_token_auth' => 'true');
+
+						$pnfpb_topic_requests = array(
+							// Request 1
+							array(
+								'url'  => $urladd,
+								'headers' => $headers,
+								'data' => wp_json_encode(array( 
+									"to" => "/topics/pnfpbtopic", "registration_tokens" => $target_device_ids
+								)),
+								'type' => Requests::POST,
+							),
+						);
+
+						$pnfpb_topic_subscriptions_request = Requests::request_multiple( $pnfpb_topic_requests );
+					
+						$headers = array( 
+							'Authorization' => 'Bearer '.$pnfpb_fbauth_token, 
+							'Content-Type' => 'application/json'
+						);
+
+						$notification = array (
+							'topic' => "pnfpbtopic",
+							'notification' => $message,
+							'data'	=> $pushdataarray,
+							'webpush' => $webpushoptions,
+							'android' => $androidoptions,
+							'apns'	  => $iosoptions
+						);
 				
-				if ($pushtype !== 'ondemand') {
-					
-					$topic = 'pnfpbgeneral';
+						$fields = array( 
+	            			'message' => $notification,
+						);
+
+						/** Send notification to users subscribed to all notifications, BuddyPress group activities */
+
+						$body = wp_json_encode($fields);
 				
-					if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
+						array_push($pnfpb_send_notifications,
+								array(
+									'url'  => $url,
+									'headers' => $headers,
+									'data' => $body,
+									'type' => Requests::POST,
+								)
+						);
 					
-						$topic = "pnfpbgeneralloggedin";
+						$pnfpb_send_notifications_result = Requests::request_multiple( $pnfpb_send_notifications );
+					
+						$headers = array('Authorization' => 'Bearer ' . $pnfpb_fbauth_token, 'Content-Type' => 'application/json', 'access_token_auth' => 'true');
+					
+						$urlremove = 'https://iid.googleapis.com/iid/v1:batchRemove';
+					
+						$pnfpb_topic_requests = array(
+							// Request 1
+							array(
+								'url'  => $urlremove,
+								'headers' => $headers,
+								'data' => wp_json_encode(array( 
+									"to" => "/topics/pnfpbtopic", "registration_tokens" => $target_device_ids
+								)),
+								'type' => Requests::POST,
+							),
+						);
+
+					} else {
+				
+						$client = new Google_Client();
+			
+						// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
+						// 
+						$client->useApplicationDefaultCredentials(); 
+							
+						// Alternatively, provide the JSON authentication file directly.
+						$configArray = json_decode(get_option('pnfpb_sa_json_data'),true);
+						$client->setAuthConfig($configArray);
+							
+						// Add the scope as a string (multiple scopes can be provided as an array)
+						$client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+						$client->refreshTokenWithAssertion();
+						$pnfpb_fbauth_token_array = $client->getAccessToken();
+						$pnfpb_fbauth_token = $pnfpb_fbauth_token_array['access_token'];				
+
+						$headers = array( 
+							'Authorization' => 'Bearer '.$pnfpb_fbauth_token, 
+							'Content-Type' => 'application/json'
+						);
+				
+						if ($pushtype !== 'ondemand') {
+					
+							$topic = 'pnfpbgeneral';
+				
+							if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
+					
+								$topic = "pnfpbgeneralloggedin";
 						
-					} 
+							} 
+					
+							if ($grouppush === 'yes') {
 				
-					if ($grouppush === 'yes') {
-				
-						$group_name = 'pnfpbgroupid'.$groupid;
+								$group_name = 'pnfpbgroupid'.$groupid;
 
-						$topic = $group_name;
+								$topic = $group_name;
+							}
+				
+							$notification = array (
+								'topic' => $topic,
+								'notification' => $message,
+								'data'	=> $pushdataarray,
+								'webpush' => $webpushoptions,
+								'android' => $androidoptions,
+								'apns'	  => $iosoptions
+							);
+				
+							$fields = array( 
+	            				'message' => $notification,
+							);
+					
+				
+							/** Send notification to users subscribed to all notifications, BuddyPress group activities */
+
+							$body = wp_json_encode($fields);
+				
+				
+							array_push($pnfpb_send_notifications,
+								array(
+									'url'  => $url,
+									'headers' => $headers,
+									'data' => $body,
+									'type' => Requests::POST,
+								)
+							);
+			
+					
+						}
+				
+						/** Send notification only to particular users who are subscribed to like BuddyPress all activities, comments, 
+				 		* group invite, group update, new member joined, avatar change, cover image change
+				 		**/
+				
+						if ($pushtype !== '' && $pushtype !== 'groupactivity' && ((get_option('pnfpb_custom_prompt_options_on_off') !== '1' && get_option('pnfpb_bell_icon_prompt_options_on_off') !== '1' && get_option('pnfpb_ic_fcm_frontend_enable_subscription') !== '1' && get_option('pnfpb_shortcode_enable') !== 'yes' && $pushtype === 'ondemand') || (get_option('pnfpb_custom_prompt_options_on_off') === '1' || get_option('pnfpb_bell_icon_prompt_options_on_off') === '1' || get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1' || get_option('pnfpb_shortcode_enable') === 'yes'))) {
+
+							$topic = 'pnfpb'.$pushtype;
+					
+							$notification = array (
+								'topic' => $topic,
+								'notification' => $message,
+								'data'	=> $pushdataarray,
+								'webpush' => $webpushoptions,
+								'android' => $androidoptions,
+								'apns'	  => $iosoptions
+							);
+				
+							$fields = array( 
+	            				'message' => $notification,
+							);
+					
+
+							$body = wp_json_encode($fields);
+					
+							array_push($pnfpb_send_notifications,
+								array(
+									'url'  => $url,
+									'headers' => $headers,
+									'data' => $body,
+									'type' => Requests::POST,
+								)
+							);
+					
+						}
+				
+						if (count($pnfpb_send_notifications) > 0) {
+					
+							$pnfpb_send_notifications_result = Requests::request_multiple( $pnfpb_send_notifications );
+					
+						}
 					}
-				
-					$notification = array (
-						'topic' => $topic,
-						'notification' => $message,
-						'data'	=> $pushdataarray,
-						'webpush' => $webpushoptions,
-						'android' => $androidoptions,
-						'apns'	  => $iosoptions
-					);
-				
-					$fields = array( 
-	            		'message' => $notification,
-					);
-					
-				
-					/** Send notification to users subscribed to all notifications, BuddyPress group activities */
-
-					$body = json_encode($fields);
-				
-					$args = array(
-			    		'httpversion' => '1.0',
-						'blocking' => true,
-						'sslverify' => false,
-						'body' => $body,
-						'headers' => $headers
-					);
-			
-					$apiresults = wp_remote_post($url, $args);
-					
-				}
-				
-				/** Send notification only to particular users who are subscribed to like BuddyPress all activities, comments, 
-				 * group invite, group update, new member joined, avatar change, cover image change
-				 **/
-				
-				if ($pushtype !== '' && $pushtype !== 'groupactivity' && ((get_option('pnfpb_custom_prompt_options_on_off') !== '1' && get_option('pnfpb_bell_icon_prompt_options_on_off') !== '1' && get_option('pnfpb_ic_fcm_frontend_enable_subscription') !== '1' && get_option('pnfpb_shortcode_enable') !== 'yes' && $pushtype === 'ondemand') || (get_option('pnfpb_custom_prompt_options_on_off') === '1' || get_option('pnfpb_bell_icon_prompt_options_on_off') === '1' || get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1' || get_option('pnfpb_shortcode_enable') === 'yes'))) {
-					
-					$topic = 'pnfpb'.$pushtype;
-					
-					$notification = array (
-						'topic' => $topic,
-						'notification' => $message,
-						'data'	=> $pushdataarray,
-						'webpush' => $webpushoptions,
-						'android' => $androidoptions,
-						'apns'	  => $iosoptions
-					);
-				
-					$fields = array( 
-	            		'message' => $notification,
-					);
-					
-
-					$body = json_encode($fields);
-				
-					$args = array(
-			    		'httpversion' => '1.0',
-						'blocking' => true,
-						'sslverify' => false,
-						'body' => $body,
-						'headers' => $headers
-					);
-					
-					$apiresults = wp_remote_post($url, $args);
-					
-				}
-
-			
 			}
-
 
 ?>

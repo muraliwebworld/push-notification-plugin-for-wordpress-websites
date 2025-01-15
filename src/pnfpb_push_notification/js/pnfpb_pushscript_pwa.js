@@ -235,11 +235,17 @@ if (pnfpb_ios_browser && pnfpb_ajax_object_push.pwainstallpromptenabled === '1' 
 
 			const pnfpb_d = new Date();
 
-			const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+			let expires = "expires="
 
-			pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+			if (pnfpb_d.getTime) {
 
-			let expires = "expires="+ pnfpb_d.toUTCString();
+				const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+
+				pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+
+				expires = "expires="+ pnfpb_d.toUTCString();
+
+			}
 
 			document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";					
 
@@ -320,7 +326,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 			deferredPrompt.prompt();
 			deferredPrompt.userChoice.then((response) => {
 				if (response.outcome === 'accepted') {
-					console.log(__('User accepted PWA installation','PNFPB_TD'));
+					console.log(__('User accepted PWA installation','push-notification-for-post-and-buddypress'));
 					//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 2029 00:00:00 UTC; path=/;";	
 					if ($j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").length) {
 						$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").hide();
@@ -329,11 +335,14 @@ window.addEventListener('beforeinstallprompt', (e) => {
 					deferredPrompt = null;
 				}
 				   else {
-					   console.log(__('User did not accept PWA installation. No thanks, I am good!','PNFPB_TD'));
+					   console.log(__('User did not accept PWA installation. No thanks, I am good!','push-notification-for-post-and-buddypress'));
 					const pnfpb_d = new Date();
-					const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-					pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-					let expires = "expires="+ pnfpb_d.toUTCString();
+					let expires = "expires="
+					if (pnfpb_d.getTime) {
+						const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+						pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+						expires = "expires="+ pnfpb_d.toUTCString();
+					}
 					document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";						
 					deferredPrompt = null;
 					location.reload();
@@ -407,19 +416,22 @@ window.addEventListener('beforeinstallprompt', (e) => {
 					deferredPrompt.prompt();
 					deferredPrompt.userChoice.then((response) => {
 						if (response.outcome === 'accepted') {
-							console.log(__('User accepted PWA installation','PNFPB_TD'));
+							console.log(__('User accepted PWA installation','push-notification-for-post-and-buddypress'));
 							//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 							$j(".pnfpb_pwa_shortcode_box").hide();
 							deferredPrompt = null;								
 						}
 						else {
 							if (response.outcome === 'dismissed') {
-								console.log(__('User did not accept PWA installation.No thanks, I am good!','PNFPB_TD'));
+								console.log(__('User did not accept PWA installation.No thanks, I am good!','push-notification-for-post-and-buddypress'));
 								const pnfpb_d = new Date();
-								const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-								  pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-								  let expires = "expires="+ pnfpb_d.toUTCString();
-								  document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
+								let expires = "expires=";
+								if (pnfpb_d.getTime) {
+									const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+								  	pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+								  	expires = "expires="+ pnfpb_d.toUTCString();
+								}
+								document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 								deferredPrompt = null;
 								location.reload();
 							}
@@ -431,9 +443,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
 		$j('#pnfpb-pwa-dialog-cancel').on( "click", function() {
 			$j('.pnfpb-pwa-dialog-container').hide();
 			const pnfpb_d = new Date();
-			const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-			  pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-			  let expires = "expires="+ pnfpb_d.toUTCString();
+			let expires = "expires=";
+			if (pnfpb_d.getTime) {			
+				const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+			  	pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+			  	expires = "expires="+ pnfpb_d.toUTCString();
+			}
 			document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 				
 		});
@@ -446,19 +461,22 @@ window.addEventListener('beforeinstallprompt', (e) => {
 						deferredPrompt.prompt();
 						deferredPrompt.userChoice.then((response) => {
 							if (response.outcome === 'accepted') {
-								console.log(__('User accepted PWA installation','PNFPB_TD'));
+								console.log(__('User accepted PWA installation','push-notification-for-post-and-buddypress'));
 								//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 								$j(".pnfpb_pwa_shortcode_box").hide();
 								deferredPrompt = null;								
 							}
 							else {
 								if (response.outcome === 'dismissed') {
-									console.log(__('User did not accept PWA installation.No thanks, I am good!','PNFPB_TD'));
+									console.log(__('User did not accept PWA installation.No thanks, I am good!','push-notification-for-post-and-buddypress'));
 									const pnfpb_d = new Date();
-									const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-									  pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-									  let expires = "expires="+ pnfpb_d.toUTCString();
-									  document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
+									let expires = "expires=";
+									if (pnfpb_d.getTime) {
+										const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+									  	pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+									  	expires = "expires="+ pnfpb_d.toUTCString();
+									}
+									document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 									deferredPrompt = null;
 									location.reload();
 								}
@@ -470,9 +488,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
 			$j('#pnfpb-pwa-dialog-cancel').on( "click", function() {
 				$j('.pnfpb-pwa-dialog-container').hide();
 				const pnfpb_d = new Date();
-				const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-				  pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-				  let expires = "expires="+ pnfpb_d.toUTCString();
+				let expires = "expires=";
+				if (pnfpb_d.getTime) {
+					const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+				 	pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+				  	expires = "expires="+ pnfpb_d.toUTCString();
+				}
 				document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 					
 			});			
@@ -485,18 +506,21 @@ window.addEventListener('beforeinstallprompt', (e) => {
 						deferredPrompt.prompt();
 						deferredPrompt.userChoice.then((response) => {
 							if (response.outcome === 'accepted') {
-								console.log(__('User accepted PWA installation','PNFPB_TD'));
+								console.log(__('User accepted PWA installation','push-notification-for-post-and-buddypress'));
 								//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 								$j(".pnfpb_pwa_shortcode_box").hide();
 								deferredPrompt = null;								
 							}
 							else {
 								if (response.outcome === 'dismissed') {
-									console.log(__('User did not accept PWA installation.No thanks, I am good!','PNFPB_TD'));
+									console.log(__('User did not accept PWA installation.No thanks, I am good!','push-notification-for-post-and-buddypress'));
 									const pnfpb_d = new Date();
-									const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-									  pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-									  let expires = "expires="+ pnfpb_d.toUTCString();
+									let expires = "expires=";
+									if (pnfpb_d.getTime) {									
+										const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+									  	pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+									  	expires = "expires="+ pnfpb_d.toUTCString();
+									}
 									  document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 									deferredPrompt = null;
 									location.reload();
@@ -509,9 +533,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
 				$j('#pnfpb-pwa-dialog-cancel').on( "click", function() {
 					$j('.pnfpb-pwa-dialog-container').hide();
 					const pnfpb_d = new Date();
-					const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-					pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-				 	 let expires = "expires="+ pnfpb_d.toUTCString();
+					let expires = "expires=";
+					if (pnfpb_d.getTime) {						
+						const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+						pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+				 	 	expires = "expires="+ pnfpb_d.toUTCString();
+					}
 					document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 					
 				});
@@ -524,21 +551,24 @@ window.addEventListener('beforeinstallprompt', (e) => {
 							deferredPrompt.prompt();
 							deferredPrompt.userChoice.then((response) => {
 								if (response.outcome === 'accepted') {
-									console.log(__('User accepted PWA installation','PNFPB_TD'));
+									console.log(__('User accepted PWA installation','push-notification-for-post-and-buddypress'));
 									//document.cookie = "PNFPB_pwa_prompt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 									$j(".pnfpb_pwa_shortcode_box").hide();
 									deferredPrompt = null;								
 								}
 								else {
 									if (response.outcome === 'dismissed') {
-										console.log(__('User did not accept PWA installation.No thanks, I am good!','PNFPB_TD'));
+										console.log(__('User did not accept PWA installation.No thanks, I am good!','push-notification-for-post-and-buddypress'));
 										const pnfpb_d = new Date();
-										const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-										pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-										  let expires = "expires="+ pnfpb_d.toUTCString();
-										  document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
-											deferredPrompt = null;
-											location.reload();
+										let expires = "expires=";
+										if (pnfpb_d.getTime) {												
+											const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+											pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+										  	expires = "expires="+ pnfpb_d.toUTCString();
+										}
+										document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
+										deferredPrompt = null;
+										location.reload();
 									}
 								}
 							})
@@ -548,10 +578,13 @@ window.addEventListener('beforeinstallprompt', (e) => {
 					$j('#pnfpb-pwa-dialog-cancel').on( "click", function() {
 						$j('.pnfpb-pwa-dialog-container').hide();
 						const pnfpb_d = new Date();
-						const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
-						pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
-						  let expires = "expires="+ pnfpb_d.toUTCString();
-							document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
+						let expires = "expires=";
+						if (pnfpb_d.getTime) {							
+							const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+							pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+						  	expires = "expires="+ pnfpb_d.toUTCString();
+						}
+						document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 						
 					});
 
@@ -695,15 +728,15 @@ var deviceid = '';
 var homeurl = pnfpb_ajax_object_push.homeurl;
 	
 if (pnfpb_ajax_object_push.pwainstallbuttontext === '') {
-	pnfpb_ajax_object_push.pwainstallbuttontext = __('Install PWA app','PNFPB_TD');
+	pnfpb_ajax_object_push.pwainstallbuttontext = __('Install PWA app','push-notification-for-post-and-buddypress');
 }
 
 if (pnfpb_ajax_object_push.pwainstallheadertext === '') {
-	pnfpb_ajax_object_push.pwainstallheadertext = __('Install our PWA app with offline functionality','PNFPB_TD');
+	pnfpb_ajax_object_push.pwainstallheadertext = __('Install our PWA app with offline functionality','push-notification-for-post-and-buddypress');
 }
 
 if (pnfpb_ajax_object_push.pwainstalltext === '') {
-	pnfpb_ajax_object_push.pwainstalltext = __('Install PWA','PNFPB_TD');
+	pnfpb_ajax_object_push.pwainstalltext = __('Install PWA','push-notification-for-post-and-buddypress');
 }
 
 if (pnfpb_ajax_object_push.pwainstallbuttoncolor === '') {
@@ -759,13 +792,13 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              console.log(__('New content is available; please refresh.','PNFPB_TD'));
+              console.log(__('New content is available; please refresh.','push-notification-for-post-and-buddypress'));
              
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
-              console.log(__('Content is cached for offline use','PNFPB_TD'));
+              console.log(__('Content is cached for offline use','push-notification-for-post-and-buddypress'));
             }
           }
         }
@@ -776,6 +809,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	{
 	
 		if ('serviceWorker' in navigator && hasFirebaseMessagingSupport) {
+
 			navigator.serviceWorker.register(homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:homeurl+'/'}).then(async function(registration) {
     			registration.update();	
      			// If updatefound is fired, it means that there's
@@ -790,13 +824,13 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
               					// the fresh content will have been added to the cache.
               					// It's the perfect time to display a "New content is
               					// available; please refresh." message in your web app.
-              					console.log(__('New content is available; please refresh.','PNFPB_TD'));
+              					console.log(__('New content is available; please refresh.','push-notification-for-post-and-buddypress'));
              
             				} else {
               					// At this point, everything has been precached.
               					// It's the perfect time to display a
               					// "Content is cached for offline use." message.
-              					console.log(__('Content is cached for offline use','PNFPB_TD'));
+              					console.log(__('Content is cached for offline use','push-notification-for-post-and-buddypress'));
             				}
      
           				}
@@ -888,9 +922,9 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 								// [END_EXCLUDE]
 							}).catch((err) => {
 
-								console.log(__('Unable to retrieve refreshed token ','PNFPB_TD'), err);
+								console.log(__('Unable to retrieve refreshed token ','push-notification-for-post-and-buddypress'), err);
 
-								//showToken(__('Unable to retrieve refreshed token ','PNFPB_TD'), err);
+								//showToken(__('Unable to retrieve refreshed token ','push-notification-for-post-and-buddypress'), err);
 								// alert('Unable to retrieve refreshed token from cloud messaging service '+err);
 							});
 								//});
@@ -906,7 +940,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 						{
 							if( $j(".pnfpb_subscribe_button").length && !pnfpb_webview)
 							{
-								console.log(__("Browser notification permission not granted or blocked!!!",'PNFPB_TD'));
+								console.log(__("Browser notification permission not granted or blocked!!!",'push-notification-for-post-and-buddypress'));
 
 								frontend_subscription_menu('');
 				
@@ -944,7 +978,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 								//console.log(notificationclickurl);
 				
 								if (!("Notification" in window)) {
-									console.log(__("This browser does not support system notifications",'PNFPB_TD'));
+									console.log(__("This browser does not support system notifications",'push-notification-for-post-and-buddypress'));
 								}
 								// Let's check whether notification permissions have already been granted
 								else
@@ -986,13 +1020,13 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 													navigator.serviceWorker.register(homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:homeurl+'/'}).then(function(registration) {
 														registration.showNotification(notificationTitle, notificationOptions);
 													}).catch(function(err) {
-														console.log(__("Service Worker Failed to Register foreground notification",'PNFPB_TD'), err);
+														console.log(__("Service Worker Failed to Register foreground notification",'push-notification-for-post-and-buddypress'), err);
 													})
 								
 												}
 												else
 												{
-													console.log(__('service workers not supported in this browser !!!','PNFPB_TD'), err);
+													console.log(__('service workers not supported in this browser !!!','push-notification-for-post-and-buddypress'), err);
 												//}
 							
 											//} catch (err1) {
@@ -1007,7 +1041,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 						}
 						else
 						{
-							//console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','PNFPB_TD'));
+							//console.log(__('This browser does not support PUSHAPI Firebase messaging!!!','push-notification-for-post-and-buddypress'));
 							frontend_subscription_menu('');
 						}*/						
 						
@@ -1030,7 +1064,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 					if( $j(".pnfpb_push_notification_frontend_settings_submit").length && !pnfpb_webview)
 					{
 						frontend_subscription_menu('');
-						console.log(__("Browser notification permission not granted or blocked!!!",'PNFPB_TD'));
+						console.log(__("Browser notification permission not granted or blocked!!!",'push-notification-for-post-and-buddypress'));
 		
 					}					
 
@@ -1130,21 +1164,24 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 					const pnfpb_custom_prompt_currentDate = new Date();
 
-					pnfpb_custom_prompt_currentDate.setTime(pnfpb_custom_prompt_currentDate.getTime());
+					if (pnfpb_custom_prompt_currentDate.getTime) {
 
-					let pnfpb_custom_prompt_cookieDate = c.substring(name.length, c.length).getTime();
+						pnfpb_custom_prompt_currentDate.setTime(pnfpb_custom_prompt_currentDate.getTime());
+
+						let pnfpb_custom_prompt_cookieDate = c.substring(name.length, c.length).getTime();
 		
-					if (pnfpb_custom_prompt_cookieDate > pnfpb_custom_prompt_currentDate.getTime()) {
+						if (pnfpb_custom_prompt_cookieDate > pnfpb_custom_prompt_currentDate.getTime()) {
 		
-						PNFPB_custom_prompt_display = 'OFF';
+							PNFPB_custom_prompt_display = 'OFF';
 		
 		
-						if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1' || $j('.pnfpb-pwa-dialog-container').length) {
+							if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1' || $j('.pnfpb-pwa-dialog-container').length) {
 		
-							$j('.pnfpb-pwa-dialog-container').hide();
+								$j('.pnfpb-pwa-dialog-container').hide();
 		
-						}				
+							}				
 		
+						}
 					}			
 				}
 			}
@@ -1371,9 +1408,13 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 						$j('.pnfpb-popup-customprompt-transistion-cancel-button').off().on( "click", async (event) => {
 
 							const pnfpb_d = new Date();
-							const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
-							pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
-							let expires = "expires="+ pnfpb_d.toUTCString();
+							let expires = "expires=";
+							if (pnfpb_d.getTime) {
+								const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+								pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
+								expires = "expires="+ pnfpb_d.toUTCString();
+							}
+							
 							document.cookie = "PNFPB_custom_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 
 							if (pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_animation === 'slideDown') {
@@ -1643,11 +1684,17 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 								const pnfpb_d = new Date();
 
-								const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+								let expires = "expires=";
 
-								pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
+								if (pnfpb_d.getTime) {
 
-								let expires = "expires="+ pnfpb_d.toUTCString();
+									const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+
+									pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
+
+									expires = "expires="+ pnfpb_d.toUTCString();
+
+								}
 
 								document.cookie = "PNFPB_custom_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 								
@@ -1794,21 +1841,24 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 					const pnfpb_custom_prompt_currentDate = new Date();
 
-					pnfpb_custom_prompt_currentDate.setTime(pnfpb_custom_prompt_currentDate.getTime());
+					if (pnfpb_custom_prompt_currentDate.getTime) {
 
-					let pnfpb_custom_prompt_cookieDate = c.substring(name.length, c.length).getTime();
+						pnfpb_custom_prompt_currentDate.setTime(pnfpb_custom_prompt_currentDate.getTime());
+
+						let pnfpb_custom_prompt_cookieDate = c.substring(name.length, c.length).getTime();
 		
-					if (pnfpb_custom_prompt_cookieDate > pnfpb_custom_prompt_currentDate.getTime()) {
+						if (pnfpb_custom_prompt_cookieDate > pnfpb_custom_prompt_currentDate.getTime()) {
 		
-						PNFPB_custom_prompt_display = 'OFF';
+							PNFPB_custom_prompt_display = 'OFF';
 		
 		
-						if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1' || $j('.pnfpb-pwa-dialog-container').length) {
+							if (pnfpb_ajax_object_push.pwainstallpromptenabled === '1' || $j('.pnfpb-pwa-dialog-container').length) {
 		
-							$j('.pnfpb-pwa-dialog-container').hide();
+								$j('.pnfpb-pwa-dialog-container').hide();
 		
-						}				
+							}				
 		
+						}
 					}			
 				}
 			}
@@ -2039,11 +2089,17 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 							const pnfpb_d = new Date();
 
-							const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+							let expires = "expires=";
 
-							pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
+							if (pnfpb_d.getTime) {
 
-							let expires = "expires="+ pnfpb_d.toUTCString();
+								const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+
+								pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
+
+								expires = "expires="+ pnfpb_d.toUTCString();
+
+							}
 
 							document.cookie = "PNFPB_custom_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 							
@@ -2319,11 +2375,17 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 								const pnfpb_d = new Date();
 
-								const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+								let expires = "expires=";
 
-								pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
+								if (pnfpb_d.getTime) {
 
-								let expires = "expires="+ pnfpb_d.toUTCString();
+									const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+
+									pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*1000));
+
+									expires = "expires="+ pnfpb_d.toUTCString();
+
+								}
 
 								document.cookie = "PNFPB_custom_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 								
@@ -2389,7 +2451,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 		$j('.pnfpb-push-subscribe-icon').show();
 
-		var pnfpb_popup_subscribe_text = __("You are subscribed to push notification",'PNFPB_TD');
+		var pnfpb_popup_subscribe_text = __("You are subscribed to push notification",'push-notification-for-post-and-buddypress');
 
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_message != '') {
 
@@ -2397,7 +2459,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 		}
 
-		var pnfpb_popup_unsubscribe_text = __("Push notification not subscribed",'PNFPB_TD');
+		var pnfpb_popup_unsubscribe_text = __("Push notification not subscribed",'push-notification-for-post-and-buddypress');
 
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_message != '') {
 
@@ -2405,7 +2467,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 			
 		}
 
-		var pnfpb_popup_wait_message = __("Please wait...processing",'PNFPB_TD');
+		var pnfpb_popup_wait_message = __("Please wait...processing",'push-notification-for-post-and-buddypress');
 
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_wait_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_wait_message != '') {
 
@@ -2413,7 +2475,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 			
 		}
 		
-		var pnfpb_popup_subscribe_button = __("Subscribe",'PNFPB_TD');
+		var pnfpb_popup_subscribe_button = __("Subscribe",'push-notification-for-post-and-buddypress');
 
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_button && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_button != '') {
 
@@ -2421,7 +2483,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 			
 		}
 
-		var pnfpb_popup_unsubscribe_button = __("Unsubscribe",'PNFPB_TD');
+		var pnfpb_popup_unsubscribe_button = __("Unsubscribe",'push-notification-for-post-and-buddypress');
 
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_button && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_button != '') {
 
@@ -2429,7 +2491,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 			
 		}
 		
-		var pnfpb_push_subscribe_options_button = __("Update",'PNFPB_TD');
+		var pnfpb_push_subscribe_options_button = __("Update",'push-notification-for-post-and-buddypress');
 
 		if (pnfpb_ajax_object_push.pnfpb_push_subscribe_options_button && pnfpb_ajax_object_push.pnfpb_push_subscribe_options_button != '') {
 
@@ -2452,7 +2514,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 		$j('.pnfpb-push-subscribe-icon').on( "mouseenter", function(event) {
 
-			$j('.pnfpb-push-status-text').text(__('Verifying subscription status...','PNFPB_TD'));
+			$j('.pnfpb-push-status-text').text(__('Verifying subscription status...','push-notification-for-post-and-buddypress'));
 
 			navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
 
@@ -2516,7 +2578,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 			}
 
-			$j('.pnfpb-push-subscribe-button').text(__('Please wait...verifying status','PNFPB_TD'));
+			$j('.pnfpb-push-subscribe-button').text(__('Please wait...verifying status','push-notification-for-post-and-buddypress'));
 	
 			registration.pushManager.getSubscription().then(async function (subscription) {
 
@@ -2793,7 +2855,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	
 									$j('.pnfpb_bell_icon_subscription_options_container').show();		
 	
-									$j('.pnfpb-push-status-text').text(__('Subscription options updated','PNFPB_TD'));
+									$j('.pnfpb-push-status-text').text(__('Subscription options updated','push-notification-for-post-and-buddypress'));
 	
 									$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
 	
@@ -2886,11 +2948,11 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 											
 												if (responseobject.subscriptionstatus === 'deleted') {
 											
-													console.log(__('Push subscription token deleted successfully','PNFPB_TD'));
+													console.log(__('Push subscription token deleted successfully','push-notification-for-post-and-buddypress'));
 											
 												}
 												else {
-													console.log(__('Push subscription token deletion failed in database','PNFPB_TD'));
+													console.log(__('Push subscription token deletion failed in database','push-notification-for-post-and-buddypress'));
 												}
 
 												$j('.pnfpb-push-subscribe-button').text(pnfpb_popup_subscribe_button);
@@ -2924,14 +2986,14 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 										pnfpb_bell_prompt_processing = '';
 
-										console.log(__("Unsubscribe token failed",'PNFPB_TD'));
+										console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
 
 									});
 								}).catch((e) => {
 
 									pnfpb_bell_prompt_processing = '';
 
-									console.log(__("Unsubscribe token failed",'PNFPB_TD'));
+									console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
 
 								});
 							})
@@ -2940,7 +3002,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 						pnfpb_bell_prompt_processing = '';
 
-						console.log(__("Unsubscribe subscription failed",'PNFPB_TD'));
+						console.log(__("Unsubscribe subscription failed",'push-notification-for-post-and-buddypress'));
 
 					});
 				});							
@@ -2967,7 +3029,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 						$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
 
-						var pnfpb_ic_fcm_custom_prompt_subscribe_text = __("We would like to show you notifications for the latest news and updates",'PNFPB_TD');
+						var pnfpb_ic_fcm_custom_prompt_subscribe_text = __("We would like to show you notifications for the latest news and updates",'push-notification-for-post-and-buddypress');
 	
 						if (pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text && pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text != '') {
 					
@@ -3724,7 +3786,7 @@ async function shortcode_subscription_menu(refreshedToken) {
 					}
 					else
 					{
-						console.log(__("Notification from permission not granted or blocked!!!",'PNFPB_TD'));
+						console.log(__("Notification from permission not granted or blocked!!!",'push-notification-for-post-and-buddypress'));
 	 
 						if (!pnfpb_webview) {
 							shortcode_subscription_options('');
@@ -3734,7 +3796,7 @@ async function shortcode_subscription_menu(refreshedToken) {
 							
 					}						
 				}).catch( async (err)  => {
-					console.log(__('Unable to retrieve refreshed token ','PNFPB_TD'), err);
+					console.log(__('Unable to retrieve refreshed token ','push-notification-for-post-and-buddypress'), err);
 					if (!pnfpb_webview) {
 						navigator.serviceWorker.ready.then(function (registration) {
 							$j(".pnfpb_subscribe_button").on( "click", async function(event) {
@@ -3788,7 +3850,7 @@ async function shortcode_subscription_menu(refreshedToken) {
 		else {
 			console.log('Service worker not present');
 		}
-		console.log(__("Notification from permission not granted or blocked!!!",'PNFPB_TD'));
+		console.log(__("Notification from permission not granted or blocked!!!",'push-notification-for-post-and-buddypress'));
 	  }
 	} 
 }
@@ -3971,7 +4033,7 @@ function shortcode_subscription_options(refreshedToken) {
 			subscribeuseravatarshortcode = '0';
 		}
 	
-		if ($j('#pnfpb_ic_subscribe_cover_image_shortcode_enable').is(":checked"))
+		if ($j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').is(":checked"))
 		{
 			subscribecoverimageshortcode = '1';
 			subscribeallshortcode = '0'; 
@@ -4018,7 +4080,7 @@ function shortcode_subscription_options(refreshedToken) {
 	
 		if ($j('#pnfpb_ic_subscribe_my_post_shortcode_enable').is(":checked") && pnfpb_ajax_object_push.isloggedin === 1)
 		{
-			$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Subscribe notifications on comments from my Posts/my BuddyPress activities",'PNFPB_TD'));
+			$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Subscribe notifications on comments from my Posts/my BuddyPress activities",'push-notification-for-post-and-buddypress'));
 			$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);								
 		  	subscribemypostshortcode = '1';
 		}
@@ -4026,12 +4088,12 @@ function shortcode_subscription_options(refreshedToken) {
 		{
 			subscribemypostshortcode = '0';
 			if (pnfpb_ajax_object_push.isloggedin != 1) {
-				$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Login required to subscribe notifications on comments from my Posts/my BuddyPress activities",'PNFPB_TD'));
+				$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Login required to subscribe notifications on comments from my Posts/my BuddyPress activities",'push-notification-for-post-and-buddypress'));
 				$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',true);
 			}
 			else 
 			{
-				$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Subscribe notifications on comments from my Posts/my BuddyPress activities",'PNFPB_TD'));
+				$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Subscribe notifications on comments from my Posts/my BuddyPress activities",'push-notification-for-post-and-buddypress'));
 				$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);										
 			}
 		}
@@ -4045,7 +4107,7 @@ function shortcode_subscription_options(refreshedToken) {
 			unsubscribeallshortcode = '0';
 		}
 	
-		if ($j("#pnfpb_ic_subscribe_private_message_shortcode_enable").on('click',function() {
+		$j("#pnfpb_ic_subscribe_private_message_shortcode_enable").on('click',function() {
 		
 			if ($j('#pnfpb_ic_subscribe_private_message_shortcode_enable').is(":checked"))
 			{
@@ -4061,7 +4123,7 @@ function shortcode_subscription_options(refreshedToken) {
 			{
 				subscribeprivatemessagesshortcode = '0';
 			}								
-		}));
+		});
 	
 
 	
@@ -4108,9 +4170,8 @@ function shortcode_subscription_options(refreshedToken) {
 
 			for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
 
-				if ($j(this).is(":checked"))
+				if ($j('.pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').is(":checked"))
 				{
-
 					pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '1';
 					subscribeallshortcode = '0'; 
 					unsubscribeallshortcode = '0';
@@ -4120,14 +4181,19 @@ function shortcode_subscription_options(refreshedToken) {
 				{
 					pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '0';
 				}
+			}
+
+
+			for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+							
 				
-				if ($j('#pnfpb_ic_subscribe'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').on('click',function() {
+				if ($j('.pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').off().on('click',function(event) {
 		
-					if ($j(this).is(":checked"))
+					if ($j('.pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').is(":checked"))
 					{
 						pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '1';
 						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';	
+						unsubscribeallshortcode = '0';
 					
 						$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
 						$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);									
@@ -4135,7 +4201,8 @@ function shortcode_subscription_options(refreshedToken) {
 					else 
 					{
 						pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '0';
-					}								
+					}
+							
 				}));				
 
 			}
@@ -4384,11 +4451,7 @@ function shortcode_subscription_options(refreshedToken) {
 				unsubscribeallshortcode = '0';
 			}								
 		}));
-		
 
-		
-			
-	
 	
 		var pnfpb_subscribe_button_text = pnfpb_ajax_object_push.save_button_text;
 		var pnfpb_cancel_button_text = pnfpb_ajax_object_push.cancel_button_text;
@@ -4436,12 +4499,13 @@ function shortcode_subscription_options(refreshedToken) {
 					$j( "#pnfpb-unsubscribe-dialog" ).dialog({ closeText:'', buttons: []});
 
 					subscriptionoptions = subscribeallshortcode + subscribepostactivitiesshortcode + subscribeallcommentsshortcode + subscribemypostshortcode + subscribeprivatemessagesshortcode + subscribenewmembershortcode + subscribefriendshiprequestshortcode + subscribefriendshipacceptshortcode + unsubscribeallshortcode + subscribeuseravatarshortcode + subscribecoverimageshortcode + subscribeactivitiesshortcode + subscribegroupinviteshortcode + subscribegroupdetailsshortcode;
-					
-					if (pnfpb_custom_post_types.length > 0) {
+
+					if (pnfpb_custom_post_types.length > 0 && subscribeallshortcode !== '1') {
 
 						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
 			
 							subscriptionoptions  = subscriptionoptions + pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element];
+
 							
 						}
 			
@@ -4487,7 +4551,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', false);
+										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
 
@@ -4497,7 +4561,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
 									}
 	
-									if (subscriptionoptionsarray[1] === '1'  && subscriptionoptionsarray[10] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[1] === '1')
 									{
 										$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4508,7 +4572,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
 									}
 
-									if (subscriptionoptionsarray[11] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[11] === '1' )
 									{
 										$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4519,7 +4583,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', false);
 									}									
 	
-									if (subscriptionoptionsarray[2] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[2] === '1')
 									{
 										$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4530,7 +4594,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
 									}
 	
-									if (subscriptionoptionsarray[3] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[3] === '1')
 									{
 										  $j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4541,7 +4605,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
 									}
 									
-									if (subscriptionoptionsarray[4] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[4] === '1')
 									{
 										$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4552,7 +4616,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
 									}
 									
-									if (subscriptionoptionsarray[5] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[5] === '1' )
 									{
 										$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4563,7 +4627,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
 									}
 									
-									if (subscriptionoptionsarray[6] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[6] === '1')
 									{
 										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4574,7 +4638,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
 									}
 									
-									if (subscriptionoptionsarray[7] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[10] !== '1')
+									if (subscriptionoptionsarray[7] === '1')
 									{
 										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4585,7 +4649,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
 									}
 									
-									if (subscriptionoptionsarray[8] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[9] === '1' )
 									{
 										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4596,18 +4660,18 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
 									}
 									
-									if (subscriptionoptionsarray[9] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[10] === '1')
 									{
-										$j('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', true);
+										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
 										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
 									}
 									else 
 									{
-										$j('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', false);
+										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
 									}															
 
-									if (subscriptionoptionsarray[10] === '1'  && subscriptionoptionsarray[0] !== '1')
+									if (subscriptionoptionsarray[8] === '1' )
 									{
 										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);
@@ -4620,7 +4684,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', false);
+										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
 										$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
 
@@ -4630,7 +4694,7 @@ function shortcode_subscription_options(refreshedToken) {
 										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
 									}
 
-									if (subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+									if (subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1' )
 									{
 										$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', true);
 										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
@@ -4664,7 +4728,6 @@ function shortcode_subscription_options(refreshedToken) {
 											{
 												$j('#pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').prop('checked', true);
 
-												$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
 												$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);		
 											}
 											else 
@@ -4744,7 +4807,7 @@ function shortcode_subscription_options(refreshedToken) {
 															}			       			                                                
 
 
-															$j(".pnfpb-unsubscribe-alert-msg").html(__("cloud messaging push notification - device update failed",'PNFPB_TD'));
+															$j(".pnfpb-unsubscribe-alert-msg").html(__("cloud messaging push notification - device update failed",'push-notification-for-post-and-buddypress'));
 													
 															$j( "#pnfpb-unsubscribe-dialog" ).dialog(
 																{ 
@@ -4839,7 +4902,7 @@ function shortcode_subscription_options(refreshedToken) {
 											}
 
 
-											console.log(__("Already subscribed...device id already exists...not updated",'PNFPB_TD'));
+											console.log(__("Already subscribed...device id already exists...not updated",'push-notification-for-post-and-buddypress'));
 										}
 
 								}
@@ -4871,13 +4934,13 @@ function shortcode_subscription_options(refreshedToken) {
 										}
 									);
 
-									console.log(__("device update failed",'PNFPB_TD'));
+									console.log(__("device update failed",'push-notification-for-post-and-buddypress'));
 								}
 	
 						});
 	
 					} else {
-						console.log(__('No refreshed token from Firebase','PNFPB_TD'));
+						console.log(__('No refreshed token from Firebase','push-notification-for-post-and-buddypress'));
 					}									
 
 				},
@@ -4917,20 +4980,22 @@ async function frontend_subscription_menu(refreshedToken) {
 
 		
 		    		$j(".pnfpb_push_notification_frontend_settings_submit").on( "click", function(event) {
+
+						event.preventDefault();
 				
 						frontend_subscriptionoptions = '';
 
+						$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').show();
+
+						$j('.pnfpb_frontend_subscriptions_options_menu_all').hide();						
+
 						pnfpb_front_end_settings = ['0','0','0','0','0','0','0','0','0','0','0','0','0','0'];
-				
-						event.preventDefault();
 				
 						$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 						$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('error');
 						$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('info');
-						$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Processing...','PNFPB_TD'));
+						$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Processing...','push-notification-for-post-and-buddypress'));
 						$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');										
-		        
-
 			
 						if ($j('#pnfpb_ic_fcm_front_group_invite_enable').is(":checked"))
 						{
@@ -4974,8 +5039,17 @@ async function frontend_subscription_menu(refreshedToken) {
 										}
 										else 
 										{
+											if ((pnfpb_front_end_settings_push_notify_types[pnfpb_notify_type_element] === 'bcomment' || pnfpb_front_end_settings_push_notify_types[pnfpb_notify_type_element] === 'mybcomment') && (subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[3] === '1')) {
+
+												pnfpb_front_end_settings[pnfpb_notify_type_element] = '1';
+
+											} else {
+
+												pnfpb_front_end_settings[pnfpb_notify_type_element] = '0';
+
+											}											
 	
-											pnfpb_front_end_settings[pnfpb_notify_type_element] = '0';
+											
 	
 										}
 
@@ -4984,6 +5058,8 @@ async function frontend_subscription_menu(refreshedToken) {
 							}
 	
 						}
+
+						var pnfpb_custom_post_types_subscriptions = [];
 						
 						if (pnfpb_custom_post_types.length > 0) {
 
@@ -4992,7 +5068,7 @@ async function frontend_subscription_menu(refreshedToken) {
 								if ($j('.pnfpb_ic_fcm_front_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').is(":checked"))
 								{
 	
-									pnfpb_custom_post_types[pnfpb_post_type_element] = '1';
+									pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element] = '1';
 				
 									pnfpb_front_end_settings[0] = '0';
 
@@ -5001,7 +5077,7 @@ async function frontend_subscription_menu(refreshedToken) {
 								}
 								else 
 								{
-									pnfpb_custom_post_types[pnfpb_post_type_element] = '0';
+									pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element] = '0';
 								}								
 
 							}
@@ -5020,11 +5096,11 @@ async function frontend_subscription_menu(refreshedToken) {
 
 						}
 
-						if (pnfpb_custom_post_types.length > 0) {
+						if (pnfpb_custom_post_types_subscriptions.length > 0) {
 
-							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types_subscriptions.length; pnfpb_post_type_element++) {
 
-								frontend_subscriptionoptions  = frontend_subscriptionoptions + pnfpb_custom_post_types[pnfpb_post_type_element];
+								frontend_subscriptionoptions  = frontend_subscriptionoptions + pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element];
 								
 							}
 
@@ -5068,7 +5144,7 @@ async function frontend_subscription_menu(refreshedToken) {
 											$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('info');
 											$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('success');
 											$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
-											$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved','PNFPB_TD'));
+											$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved','push-notification-for-post-and-buddypress'));
 						
 								
 											if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
@@ -5108,9 +5184,15 @@ async function frontend_subscription_menu(refreshedToken) {
 															}
 															else 
 															{
-																$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
-	
-																//pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
+																if ((pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'bcomment' || pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'mybcomment') && (subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[3] === '1')) {
+
+																	$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
+		
+																} else {
+		
+																	$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
+		
+																}
 															}
 														
 														} 
@@ -5146,14 +5228,21 @@ async function frontend_subscription_menu(refreshedToken) {
 	
 												}											
 	
+												$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
 
+												$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 
 										}
 										else 
 										{
+
+											$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+
+											$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
+
 											$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 											$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-											$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings','PNFPB_TD'));
+											$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings','push-notification-for-post-and-buddypress'));
 											$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
 										}
 
@@ -5161,43 +5250,55 @@ async function frontend_subscription_menu(refreshedToken) {
 								}
 								else 
 								{
+									$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+									$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 									$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 									$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('error');
 									$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('info');
-									$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Processing...','PNFPB_TD'));
+									$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings','push-notification-for-post-and-buddypress'));
 									$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');														
 								}
 				  			})
 						}
 						else 
 						{
+							$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+							$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 							$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 							$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('info');
 							$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-							$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Notification permission not granted by user. Error in saving notification settings','PNFPB_TD'));
+							$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Notification permission not granted by user. Error in saving notification settings','push-notification-for-post-and-buddypress'));
 							$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');	
 						}
 					})
 				} else {
+					$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+
+					$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
+
 					$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 					$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-					$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','PNFPB_TD'));
+					$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','push-notification-for-post-and-buddypress'));
 					$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');			
 				}
 				})
     			.catch((err) => {
 					console.error(`Error during getSubscription(): ${err}`);
-				  $j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
-				  $j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-				  $j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','PNFPB_TD'));
-				  $j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');					
+					$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+					$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
+				  	$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
+				 	 $j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
+				  	$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','push-notification-for-post-and-buddypress'));
+				  	$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');					
 			  });					
 			})
 			.catch((err) => {
 				console.error('Error during getSubscription(): ${err}');
+				$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+				$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 			  	$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 			  	$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-			  	$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','PNFPB_TD'));
+			  	$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','push-notification-for-post-and-buddypress'));
 			  	$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');					
 		  	});				
 		} 
@@ -5206,9 +5307,11 @@ async function frontend_subscription_menu(refreshedToken) {
 			if (!pnfpb_webview) 
 			{
 				console.error('Error during getSubscription()');
+				$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+				$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 				$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 				$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-				$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','PNFPB_TD'));
+				$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Please subscribe to push notification to use this menu','push-notification-for-post-and-buddypress'));
 				$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
 
 			}
@@ -5224,13 +5327,13 @@ async function frontend_subscription_menu(refreshedToken) {
   // - subscribe/unsubscribe the token from topics
 function sendTokenToServer(currentToken) {
     if (!isTokenSentToServer()) {
-      console.log(__('Sending token to server...','PNFPB_TD'));
+      console.log(__('Sending token to server...','push-notification-for-post-and-buddypress'));
       // TODO(developer): Send the current token to your server.
       setTokenSentToServer(true);
 	  return '';
     } else {
       console.log(__('Token already sent to server so won\'t send it again ' +
-          'unless it changes','PNFPB_TD'));
+          'unless it changes','push-notification-for-post-and-buddypress'));
 	  return '';
     }
 
@@ -5278,7 +5381,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			// …
 		  }
 		});
-	  } else if (Notification.permission === "denied") {
+	  } else if (Notification.permission === "denied" && pnfpb_ajax_object_push.pnfpb_push_prompt === '1') {
 
 		var pnfpb_screenWidth, pnfpb_screenHeight, pnfpb_dialogWidth, pnfpb_dialogHeight, pnfpb_isDesktop;    
 		pnfpb_screenWidth = window.screen.width;
@@ -5326,7 +5429,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
   	async function granted_permission_process(registration,pnfpb_permission,shortcode_field,subscription_options,permission_granted_check) {
 
 
-		var pnfpb_popup_subscribe_text = __("You are subscribed to push notification",'PNFPB_TD');
+		var pnfpb_popup_subscribe_text = __("You are subscribed to push notification",'push-notification-for-post-and-buddypress');
 
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_message != '') {
 	
@@ -5334,7 +5437,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 	
 		}
 	
-		var pnfpb_popup_unsubscribe_text = __("Push notification not subscribed",'PNFPB_TD');
+		var pnfpb_popup_unsubscribe_text = __("Push notification not subscribed",'push-notification-for-post-and-buddypress');
 	
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_message != '') {
 	
@@ -5342,7 +5445,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			
 		}
 	
-		var pnfpb_popup_wait_message = __("Please wait...processing",'PNFPB_TD');
+		var pnfpb_popup_wait_message = __("Please wait...processing",'push-notification-for-post-and-buddypress');
 	
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_wait_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_wait_message != '') {
 	
@@ -5350,7 +5453,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			
 		}
 	
-		var pnfpb_ic_fcm_custom_prompt_subscribe_text = __("We would like to show you notifications for the latest news and updates",'PNFPB_TD');
+		var pnfpb_ic_fcm_custom_prompt_subscribe_text = __("We would like to show you notifications for the latest news and updates",'push-notification-for-post-and-buddypress');
 	
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text && pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text != '') {
 	
@@ -5358,7 +5461,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			
 		}
 	
-		var pnfpb_ic_fcm_custom_prompt_subscribed_text = __("You are subscribed to push notifications",'PNFPB_TD');
+		var pnfpb_ic_fcm_custom_prompt_subscribed_text = __("You are subscribed to push notifications",'push-notification-for-post-and-buddypress');
 	
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribed_text && pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribed_text != '') {
 	
@@ -5366,7 +5469,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			
 		}	
 		
-		var pnfpb_popup_subscribe_button = __("Subscribe",'PNFPB_TD');
+		var pnfpb_popup_subscribe_button = __("Subscribe",'push-notification-for-post-and-buddypress');
 	
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_button && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_button != '') {
 	
@@ -5374,7 +5477,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			
 		}
 	
-		var pnfpb_popup_unsubscribe_button = __("Unsubscribe",'PNFPB_TD');
+		var pnfpb_popup_unsubscribe_button = __("Unsubscribe",'push-notification-for-post-and-buddypress');
 	
 		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_button && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_button != '') {
 	
@@ -5714,14 +5817,21 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 																	{
 																		
 																		$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
-			
-																		//pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_post_type_element] = '1';
+
 																	}
 																	else 
 																	{
-																		$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
-			
-																		//pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
+
+																		if ((pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'bcomment' || pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'mybcomment') && (subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[3] === '1')) {
+
+																			$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
+				
+																		} else {
+				
+																			$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
+				
+																		}
+
 																	}
 																
 																} 
@@ -5814,6 +5924,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 																}
 																else 
 																{
+																	
 																	$j('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable').prop('checked', false);
 		
 																	pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
@@ -5963,7 +6074,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 									}
 						   
-									console.log(__("Already subscribed...device id already exists...not updated",'PNFPB_TD'));
+									console.log(__("Already subscribed...device id already exists...not updated",'push-notification-for-post-and-buddypress'));
 								}
 	
 						   }	
@@ -5980,14 +6091,14 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 								}
 	
-							   console.log(__("device update failed",'PNFPB_TD'));
+							   console.log(__("device update failed",'push-notification-for-post-and-buddypress'));
 						   }			
 				});
 	
 	
 			  } else {
 					// Show permission request.
-					console.log(__('No Instance ID token available. Request permission to generate one.','PNFPB_TD'));
+					console.log(__('No Instance ID token available. Request permission to generate one.','push-notification-for-post-and-buddypress'));
 					// Show permission UI.
 					setTokenSentToServer(false);
 
@@ -6008,7 +6119,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 		
 		
 			}).catch((err) => {
-			  		console.log(__('An error occurred while retrieving token. ','PNFPB_TD'), err);
+			  		console.log(__('An error occurred while retrieving token. ','push-notification-for-post-and-buddypress'), err);
 
 				  	setTokenSentToServer(false);
 
@@ -6038,7 +6149,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 				$j('.pnfpb-popup-customprompt-vertical-container').hide();
 
-				console.log(__('An error occurred while subscribing push notification in browser ','PNFPB_TD'));
+				console.log(__('An error occurred while subscribing push notification in browser ','push-notification-for-post-and-buddypress'));
 
 				if( $j(".pnfpb-push-subscribe-button").length )
 					{									
@@ -6051,7 +6162,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 	
 			}).catch((err) => {
 
-				console.log(__('An error occurred in getting subscription ','PNFPB_TD'), err);
+				console.log(__('An error occurred in getting subscription ','push-notification-for-post-and-buddypress'), err);
 
 				setTokenSentToServer(false);
 
@@ -6073,7 +6184,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 			}).catch((err) => {
 
-				console.log(__('An error occurred in getting registration','PNFPB_TD'), err);
+				console.log(__('An error occurred in getting registration','push-notification-for-post-and-buddypress'), err);
 
 				setTokenSentToServer(false);
 
@@ -6093,12 +6204,24 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 			})
 		  } else {
-				console.log(__('Unable to get permission to notify.','PNFPB_TD'));
+				console.log(__('Unable to get permission to notify.','push-notification-for-post-and-buddypress'));
+
 				$j('.pnfpb-push-dialog-container').hide();
+
 				const pnfpb_d = new Date();
-				const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
-			  	pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*58000));
-			  	let expires = "expires="+ pnfpb_d.toUTCString();
+
+				let expires = "expires="
+
+				if (pnfpb_d.getTime) {
+
+					const pnfpb_custom_prompt_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_custom_prompt_show_again_days);
+
+			  		pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_custom_prompt_show_again_days*24*60*60*58000));
+
+			  		expires = "expires="+ pnfpb_d.toUTCString();
+
+				}
+
 			  	document.cookie = "PNFPB_push_notification_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";
 			  
 			  	pnfpb_bell_prompt_processing = '';
@@ -6151,14 +6274,16 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 					if (hasFirebaseMessagingSupport && Notification.permission === 'granted') {
 
-						
 						getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then((currentToken) => {
 
 							// Subscribe the devices corresponding to the registration tokens to the
 							// topic.
-
 							
 							if (currentToken) {
+
+								$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').show();
+
+								$j('.pnfpb_frontend_subscriptions_options_menu_all').hide();
 
 							   
 								deviceid = currentToken;
@@ -6175,7 +6300,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 					    		};
 								
 								$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
-							
+
 										var responseobject = JSON.parse(response);	
 
 										subscriptionoptions = responseobject.subscriptionoptions;
@@ -6198,7 +6323,6 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 														
 										if (subscriptionoptionsarray.length >= 4)
 										{
-						
 										
 											if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
 											{
@@ -6231,13 +6355,21 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 															
 															$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
 
-															//pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_post_type_element] = '1';
 														}
 														else 
 														{
-															$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
 
-															//pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
+
+															if ((pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'bcomment') && (subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[3] === '1')) {
+
+																$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
+	
+															} else {
+	
+																$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
+	
+															}
+
 														}
 													
 													} 
@@ -6256,28 +6388,28 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 													{
 														$j('.pnfpb_ic_fcm_front_subscription_'+pnfpb_custom_post_types[pnfpb_frontend_post_type_element]+'_enable').prop('checked', true);
 
-														//pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
 													}
 													else 
 													{
 														$j('.pnfpb_ic_fcm_front_subscription_'+pnfpb_custom_post_types[pnfpb_frontend_post_type_element]+'_enable').prop('checked', false);
 
-														//pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
 													}
 														
 													subscription_options_element++;
 
 												}
 
-										
-
 											}											
 
 										}
 
+										$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+
+										$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
+
 										if( $j(".pnfpb_subscribe_button").length) {
 
-											if (subscriptionoptionsarray[0] === '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[0] === '1')
 											{
   												$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
 											}
@@ -6286,7 +6418,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[1] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[1] === '1' )
 											{
   												$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
 											}
@@ -6295,7 +6427,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
 											}
 
-											if (subscriptionoptionsarray[11] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[11] === '1'  )
 											{
 												$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', true);
 											}
@@ -6304,7 +6436,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', false);
 											}											
 							
-											if (subscriptionoptionsarray[2] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[2] === '1' )
 											{
   												$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
 											}
@@ -6313,7 +6445,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[3] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[3] === '1')
 											{
   												$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
 											}
@@ -6322,7 +6454,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[4] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[4] === '1' )
 											{
   												$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', true);
 											}
@@ -6331,7 +6463,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[5] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[5] === '1' )
 											{
   												$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', true);
 											}
@@ -6340,7 +6472,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[6] === '1'  && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[6] === '1' )
 											{
   												$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', true);
 											}
@@ -6349,7 +6481,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[7] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[7] === '1')
 											{
   												$j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', true);
 											}
@@ -6358,7 +6490,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[10] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[9] === '1' )
 											{
   												$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', true);
 											}
@@ -6367,7 +6499,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
 											}
 							
-											if (subscriptionoptionsarray[9] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[10] === '1')
 											{
   												$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', true);
 											}
@@ -6376,7 +6508,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
 											}							
 
-											if (subscriptionoptionsarray[8] === '1' && subscriptionoptionsarray[0] !== '1')
+											if (subscriptionoptionsarray[8] === '1')
 											{
   												$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', true);
 											}
@@ -6385,7 +6517,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 												$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
 											}
 
-											if (subscriptionoptionsarray[12] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+											if (subscriptionoptionsarray[12] === '1' )
 												{
 													  $j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', true);
 												}
@@ -6394,7 +6526,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 													$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
 												}
 								
-												if (subscriptionoptionsarray[13] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
+												if (subscriptionoptionsarray[13] === '1')
 												{
 													  $j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', true);
 												}
@@ -6414,7 +6546,6 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 													{
 														$j('#pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').prop('checked', true);
 		
-														$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
 														$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);		
 													}
 													else 
@@ -6633,7 +6764,6 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 															$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable').prop('checked', true);
 
 															pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '1';
-
 												
 														}
 														else 
@@ -6715,7 +6845,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 					}
 					else 
 					{
-						
+
 						var isadminpage = 'no';
 						
 						if (window.location.href.match('wp-admin') !== null) {
@@ -6751,6 +6881,10 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 					    };
 								
 						$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+
+							$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+
+							$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 
 	
 							var responseobject = JSON.parse(response);	
@@ -6790,7 +6924,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 									$j('#pnfpb_ic_fcm_front_bcomment_enable').prop('checked', false);
 								}
 								
-								if (subscriptionoptionsarray[3] === '1' || subscriptionoptionsarray[0] === '1')
+								if (subscriptionoptionsarray[3] === '1' || subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[0] === '1')
 								{
   									$j('#pnfpb_ic_fcm_front_mybcomment_enable').prop('checked', true);
 								}
@@ -7006,6 +7140,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 					}
 			})
 		}
+
         
     }
 

@@ -1778,8 +1778,7 @@ td.pnfpb_ic_push_settings_table_label_column {
   display: none;
 }
 
-
-.pnfpb_custom_prompt_loader {
+.pnfpb_custom_prompt_loader, .pnfpb_custom_prompt_loader_frontend {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
   border-top: 16px solid #3498db;
@@ -1791,9 +1790,13 @@ td.pnfpb_ic_push_settings_table_label_column {
   margin: 0 auto;
 }
 
-.pnfpb_bell_icon_custom_prompt_loader {
+.pnfpb_frontend_subscriptions_options_menu_all {
+  display: none;
+}
+
+.pnfpb_bell_icon_custom_prompt_loader, .pnfpb_bell_icon_custom_prompt_loader_frontend, .pnfpb_bell_icon_custom_prompt_loader_webview {
   border: 16px solid #f3f3f3;
-  border-radius: 50%;
+  border-radius: 50% !important;
   border-top: 16px solid #3498db;
   width: 50px;
   height: 50px;
@@ -1801,6 +1804,10 @@ td.pnfpb_ic_push_settings_table_label_column {
   animation: pnfpb_custom_prompt_spin 2s linear infinite;
   display: none;
   margin: 0 auto;
+}
+
+.pnfpb_bell_icon_custom_prompt_loader_frontend {
+  display: block;
 }
 
 /* Safari */

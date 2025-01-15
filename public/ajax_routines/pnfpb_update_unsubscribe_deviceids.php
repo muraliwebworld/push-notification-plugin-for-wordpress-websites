@@ -13,7 +13,7 @@
 	
     $bpdeviceid = sanitize_text_field($_POST['device_id']);
     
-    
+    // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	
 	/** securing data from Firebase who subscribed push notification  **/
 	
@@ -27,7 +27,7 @@
 		
 		$newbpdeviceid = $bpdeviceid.'@N';
 		
-		$deviceid_update_status = $wpdb->query("UPDATE {$table} SET device_id = '{$newbpdeviceid}' WHERE device_id = '{$bpdeviceid}'") ;
+		$deviceid_update_status = $wpdb->query($wpdb->prepare("UPDATE %i SET device_id = %s WHERE device_id = %s",$table,$newbpdeviceid,$bpdeviceid)) ;
 		
 		if($deviceid_update_status > 0) {
 		    

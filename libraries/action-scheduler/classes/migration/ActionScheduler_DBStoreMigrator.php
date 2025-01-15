@@ -8,7 +8,7 @@
  * @since 3.0.0
  */
 class ActionScheduler_DBStoreMigrator extends ActionScheduler_DBStore {
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * Save an action with optional last attempt date.
 	 *
@@ -41,7 +41,7 @@ class ActionScheduler_DBStoreMigrator extends ActionScheduler_DBStore {
 
 			return $action_id;
 		} catch ( \Exception $e ) {
-			throw new \RuntimeException( sprintf( __( 'Error saving action: %s', 'action-scheduler' ), $e->getMessage() ), 0 );
+			throw new \RuntimeException( sprintf( __( 'Error saving action: %s', 'push-notification-for-post-and-buddypress' ), $e->getMessage() ), 0 );
 		}
 	}
 }

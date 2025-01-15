@@ -131,7 +131,7 @@ function as_unschedule_action( $hook, $args = array(), $group = '' ) {
 				$action_id,
 				sprintf(
 					/* translators: %s is the name of the hook to be cancelled. */
-					__( 'Caught exception while cancelling action: %s', 'action-scheduler' ),
+					__( 'Caught exception while cancelling action: %s', 'push-notification-for-post-and-buddypress' ),
 					esc_attr( $hook )
 				)
 			);

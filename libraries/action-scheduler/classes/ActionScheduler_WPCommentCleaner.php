@@ -6,7 +6,7 @@
  * @since 3.0.0
  */
 class ActionScheduler_WPCommentCleaner {
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * Post migration hook used to cleanup the WP comment table.
 	 *
@@ -100,12 +100,12 @@ class ActionScheduler_WPCommentCleaner {
 
 		if ( $next_scheduled_cleanup_hook ) {
 			/* translators: %s: date interval */
-			$next_cleanup_message = sprintf( __( 'This data will be deleted in %s.', 'action-scheduler' ), human_time_diff( gmdate( 'U' ), $next_scheduled_cleanup_hook ) );
+			$next_cleanup_message = sprintf( __( 'This data will be deleted in %s.', 'push-notification-for-post-and-buddypress' ), human_time_diff( gmdate( 'U' ), $next_scheduled_cleanup_hook ) );
 		}
 
 		$notice = sprintf(
 			/* translators: 1: next cleanup message 2: github issue URL */
-			__( 'Action Scheduler has migrated data to custom tables; however, orphaned log entries exist in the WordPress Comments table. %1$s <a href="%2$s">Learn more &raquo;</a>', 'action-scheduler' ),
+			__( 'Action Scheduler has migrated data to custom tables; however, orphaned log entries exist in the WordPress Comments table. %1$s <a href="%2$s">Learn more &raquo;</a>', 'push-notification-for-post-and-buddypress' ),
 			$next_cleanup_message,
 			'https://github.com/woocommerce/action-scheduler/issues/368'
 		);

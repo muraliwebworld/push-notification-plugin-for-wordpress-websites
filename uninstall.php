@@ -277,9 +277,10 @@ die;
 				delete_option("pnfpb_ic_fcm_".$post_type."_title");
 			}
 
-// delete database table
-global $wpdb;
-$table_name = $table_name = $wpdb->prefix . 'pnfpb_ic_subscribed_deviceids_web';
-$wpdb->query("DROP TABLE IF EXISTS {$table_name}");
+			// delete database table
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
+			global $wpdb;
+			$table_name = $table_name = $wpdb->prefix . 'pnfpb_ic_subscribed_deviceids_web';
+			$wpdb->query($wpdb->query("DROP TABLE IF EXISTS %i",$table_name));
 
 ?>

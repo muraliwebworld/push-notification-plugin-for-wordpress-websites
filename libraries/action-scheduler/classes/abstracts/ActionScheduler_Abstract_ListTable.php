@@ -3,7 +3,7 @@
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
-
+// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 /**
  * Action Scheduler Abstract List Table class
  *
@@ -520,7 +520,7 @@ abstract class ActionScheduler_Abstract_ListTable extends WP_List_Table {
 			echo '</select>';
 		}
 
-		submit_button( esc_html__( 'Filter', 'action-scheduler' ), '', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
+		submit_button( esc_html__( 'Filter', 'push-notification-for-post-and-buddypress' ), '', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
 		echo '</div>';
 	}
 
@@ -647,7 +647,7 @@ abstract class ActionScheduler_Abstract_ListTable extends WP_List_Table {
 		echo '<h1 class="wp-heading-inline">' . esc_attr( $this->table_header ) . '</h1>';
 		if ( $this->get_request_search_query() ) {
 			/* translators: %s: search query */
-			echo '<span class="subtitle">' . esc_attr( sprintf( __( 'Search results for "%s"', 'action-scheduler' ), $this->get_request_search_query() ) ) . '</span>';
+			echo '<span class="subtitle">' . esc_attr( sprintf( __( 'Search results for "%s"', 'push-notification-for-post-and-buddypress' ), $this->get_request_search_query() ) ) . '</span>';
 		}
 		echo '<hr class="wp-header-end">';
 	}
@@ -752,7 +752,7 @@ abstract class ActionScheduler_Abstract_ListTable extends WP_List_Table {
 	 * Get the text to display in the search box on the list table.
 	 */
 	protected function get_search_box_placeholder() {
-		return esc_html__( 'Search', 'action-scheduler' );
+		return esc_html__( 'Search', 'push-notification-for-post-and-buddypress' );
 	}
 
 	/**

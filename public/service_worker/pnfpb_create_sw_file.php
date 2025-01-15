@@ -18,6 +18,8 @@ if ( !function_exists( 'PNFPB_icfm_icpush_add_rewrite_rules' ) && !function_exis
 	
 }
 
+// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
+
 // Rewrite rules to create service worker, fire base service worker and manifest dynamically
 if ( !function_exists( 'PNFPB_icfm_icpush_add_rewrite_rules' )) {
 	
@@ -41,18 +43,16 @@ if ( !function_exists( 'PNFPB_icfm_icpush_add_rewrite_rules' )) {
 // Create service worker, firebase service worker and manifest dynamically
 if ( !function_exists( 'PNFPB_icfm_icpush_generate_sw_pwajson' )) {
 	function PNFPB_icfm_icpush_generate_sw_pwajson( $query ) {
-
+		
 		if ( ! property_exists( $query, 'query_vars' ) || ! is_array( $query->query_vars ) ) {
-
 			return;
-			
 		}
-
+		
 		// skip if it's multi dimensional array.
 		if ( count( $query->query_vars ) !== count( $query->query_vars, COUNT_RECURSIVE ) ) {
 			return;
-		}
-
+		}		
+		
 		$query_vars_as_string = implode( ' ', $query->query_vars );
 		$sw_filename = 'pnfpb_icpush_pwa_sw.js';
 		$sw_filename_firebasesw = 'firebase-messaging-sw.js';
@@ -62,7 +62,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_generate_sw_pwajson' )) {
 					if (trim($query_vars_as_string) === 'pnfpbmanifest.json' && get_option('pnfpb_ic_pwa_app_enable') === '1') {
 						header( 'Content-Type: application/json' );
 						$pwa_manifest_contents = PNFPB_ic_generate_pwa_manifest_json();
- 						echo $pwa_manifest_contents;
+ 						echo wp_strip_all_tags($pwa_manifest_contents);
 						exit();
 					}
 			    	else 
@@ -75,7 +75,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_generate_sw_pwajson' )) {
 				if (get_option("pnfpb_onesignal_push") !== '1') {
 					header( 'Content-Type: text/javascript' );
 					$firebase_sw_contents =  PNFPB_icfm_icpush_firebasesw_template();
-					echo $firebase_sw_contents;				
+					echo wp_strip_all_tags($firebase_sw_contents);				
 					exit();
 				}
 			}
@@ -84,8 +84,9 @@ if ( !function_exists( 'PNFPB_icfm_icpush_generate_sw_pwajson' )) {
 		{
 			if (get_option("pnfpb_onesignal_push") !== '1') {
 				header( 'Content-Type: text/javascript' );
+				PNFPB_icfm_icpush_sw_template();
 				$sw_contents = PNFPB_icfm_icpush_sw_template();
-				echo $sw_contents;
+				echo wp_strip_all_tags($sw_contents);
 				exit();
 			}
 		}
@@ -104,15 +105,15 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 		'use strict';
 
-		var pnfpb_progressier_app_enabled = '<?php echo get_option( 'pnfpb_ic_thirdparty_pwa_app_enable'); ?>';
+		var pnfpb_progressier_app_enabled = '<?php echo esc_js(get_option( 'pnfpb_ic_thirdparty_pwa_app_enable')); ?>';
 
-		var pnfpb_hide_foreground_notification = '<?php echo get_option( 'pnfpb_ic_fcm_turnoff_foreground_messages'); ?>';
+		var pnfpb_hide_foreground_notification = '<?php echo esc_js(get_option( 'pnfpb_ic_fcm_turnoff_foreground_messages')); ?>';
 
 		var pnfpb_progressier_app_id = '<?php
 		
 				if (get_option('pnfpb_ic_thirdparty_pwa_app_enable') === '1' && get_option( 'pnfpb_ic_disable_serviceworker_pwa_pushnotification' ) != '1' && get_option( 'pnfpb_ic_pwa_thirdparty_app_id' ) && get_option( 'pnfpb_ic_pwa_thirdparty_app_id' ) != '') {
 
-					echo get_option( 'pnfpb_ic_pwa_thirdparty_app_id');
+					echo esc_js(get_option( 'pnfpb_ic_pwa_thirdparty_app_id'));
 			
 				} else {
 			
@@ -129,14 +130,14 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 		}
 
-		var isPWAenabled = '<?php echo get_option('pnfpb_ic_pwa_app_enable'); ?>';
-		var isExcludeallurlsincache = '<?php echo get_option('pnfpb_ic_pwa_app_excludeallurls','no'); ?>';
+		var isPWAenabled = '<?php echo esc_js(get_option('pnfpb_ic_pwa_app_enable')); ?>';
+		var isExcludeallurlsincache = '<?php echo esc_js(get_option('pnfpb_ic_pwa_app_excludeallurls','no')); ?>';
 
 
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v1.93.11',
+  			cache_version: 'pnfpb_v2.01.11',
   			offline_assets: []
 		};
 
@@ -150,31 +151,31 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 			//Install stage sets up the index page (home page) in the cahche and opens a new cache
 
-			var cacheurl3 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url3') ?>';
-			var cacheurl4 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url4') ?>';
-			var cacheurl5 = '<?php echo get_option('pnfpb_ic_pwa_app_offline_url5') ?>';
+			var cacheurl3 = '<?php echo esc_url(get_option('pnfpb_ic_pwa_app_offline_url3')); ?>';
+			var cacheurl4 = '<?php echo esc_url(get_option('pnfpb_ic_pwa_app_offline_url4')); ?>';
+			var cacheurl5 = '<?php echo esc_url(get_option('pnfpb_ic_pwa_app_offline_url5'));?>';
 
 			if (isExcludeallurlsincache !== '1' && isExcludeallurlsincache !== 'no') {
 
-				SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url1');} else {echo get_home_url();}?>");
+				SW.offline_assets.push("<?php if (get_option('pnfpb_ic_pwa_app_offline_url1') && get_option('pnfpb_ic_pwa_app_offline_url1') !== '') {echo esc_url(get_option( 'pnfpb_ic_pwa_app_offline_url1'));} else {echo esc_url(get_home_url());}?>");
 
-				if (cacheurl3 !== '' && cacheurl3 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl3 !== cacheurl5){
+				if (cacheurl3 !== '' && cacheurl3 !== '<?php echo esc_url(get_option('pnfpb_ic_pwa_app_offline_url1')); ?>' && cacheurl3 !== cacheurl4  && cacheurl3 !== cacheurl5){
 					SW.offline_assets.push(cacheurl3);
 				}
-				if (cacheurl4 !== '' && cacheurl4 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl3 !== cacheurl4  && cacheurl4 !== cacheurl5){
+				if (cacheurl4 !== '' && cacheurl4 !== '<?php echo esc_url(get_option('pnfpb_ic_pwa_app_offline_url1')); ?>' && cacheurl3 !== cacheurl4  && cacheurl4 !== cacheurl5){
 					SW.offline_assets.push(cacheurl4);
 				}
-				if (cacheurl5 !== '' && cacheurl5 !== '<?php echo get_option('pnfpb_ic_pwa_app_offline_url1') ?>' && cacheurl5 !== cacheurl3  && cacheurl4 !== cacheurl5){
+				if (cacheurl5 !== '' && cacheurl5 !== '<?php echo esc_url(get_option('pnfpb_ic_pwa_app_offline_url1')); ?>' && cacheurl5 !== cacheurl3  && cacheurl4 !== cacheurl5){
 					SW.offline_assets.push(cacheurl5);
 				}
 			}
 
-			const offlinePage = "<?php if (get_option('pnfpb_ic_pwa_app_offline_url2') && get_option('pnfpb_ic_pwa_app_offline_url2') !== '') {echo get_option( 'pnfpb_ic_pwa_app_offline_url2');} else {echo get_home_url();} ?>";
+			const offlinePage = "<?php if (get_option('pnfpb_ic_pwa_app_offline_url2') && get_option('pnfpb_ic_pwa_app_offline_url2') !== '') {echo esc_url(get_option( 'pnfpb_ic_pwa_app_offline_url2'));} else {echo esc_url(get_home_url());} ?>";
 
 			var pnfpbwpSysurls = ['gstatic.com','/wp-admin/','/wp-json/','/s.w.org/','/wp-content/','/wp-login.php','/wp-includes/','/preview=true/','ps.w.org'];
 
 		
-			var pnfpbexcludeurls = "<?php echo get_option('pnfpb_ic_pwa_app_excludeurls'); ?>";
+			var pnfpbexcludeurls = "<?php echo esc_url(get_option('pnfpb_ic_pwa_app_excludeurls')); ?>";
 
 			var pnfpbexcludeurlsarray = pnfpbexcludeurls.split(",");
 
@@ -535,7 +536,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
     		} else {
 				if (event.action === "custom_url") {
 
-					var pnfpb_custom_click_action_url = '<?php echo get_option('pnfpb_ic_custom_click_action_url') ?>';
+					var pnfpb_custom_click_action_url = '<?php echo esc_url(get_option('pnfpb_ic_custom_click_action_url')); ?>';
 
 					event.notification.close();
   					// This looks to see if the current is already open and
@@ -577,8 +578,11 @@ if ( !function_exists( 'PNFPB_icfm_icpush_sw_template' )) {
 
 		<?php 
 			$sw_contents = ob_get_contents();
+			//ob_get_contents();
 		
 			ob_get_clean();
+		
+			//exit();
 		
 			return $sw_contents;
 
@@ -598,7 +602,7 @@ if ( !function_exists( 'PNFPB_icfm_icpush_firebasesw_template' )) {
 
 
 
-var firebase_sw = '<?php echo PNFPB_PLUGIN_DIR_PATH."build/service_worker/index.js"; ?>';
+var firebase_sw = '<?php echo esc_js(PNFPB_PLUGIN_DIR_PATH."build/service_worker/index.js"); ?>';
 
 
 importScripts(firebase_sw);
@@ -623,7 +627,7 @@ if (!function_exists('PNFPB_ic_genenrate_pwa_mainfest_json')) {
 		
 						if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value' )) {
 							
-							$mobile_screenshot_url = get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value' );
+							$mobile_screenshot_url = esc_url(get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value' ));
 							
 							$pnfpb_pwa_mobile_screenshot_getimagesize = getimagesize($mobile_screenshot_url);
 							
@@ -631,7 +635,7 @@ if (!function_exists('PNFPB_ic_genenrate_pwa_mainfest_json')) {
 		
 						if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value' )) {
 							
-							$desktop_screenshot_url =  get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value' );
+							$desktop_screenshot_url =  esc_url(get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value' ));
 							
 							$pnfpb_pwa_desktop_screenshot_getimagesize = getimagesize($desktop_screenshot_url);
 							
@@ -720,18 +724,18 @@ if (!function_exists('PNFPB_ic_genenrate_pwa_mainfest_json')) {
 	
 						ob_start();  ?>
 						{
-						"id": "<?php echo get_home_url(); ?>/",
-  						"name": "<?php if (get_option( 'pnfpb_ic_pwa_app_name' )) {echo get_option( 'pnfpb_ic_pwa_app_name' );} else { echo substr(get_bloginfo( 'name' ),0,50);} ?>",
-  						"short_name": "<?php if (get_option( 'pnfpb_ic_pwa_app_shortname' )) {echo get_option( 'pnfpb_ic_pwa_app_shortname' );} else { echo substr(get_bloginfo( 'name' ),0,25);} ?>",
-  						"start_url": "<?php echo get_home_url(); ?>/",
+						"id": "<?php echo esc_js(get_home_url()); ?>/",
+  						"name": "<?php if (get_option( 'pnfpb_ic_pwa_app_name' )) {echo esc_js(get_option( 'pnfpb_ic_pwa_app_name') );} else { echo esc_js(substr(get_bloginfo( 'name' ),0,50));} ?>",
+  						"short_name": "<?php if (get_option( 'pnfpb_ic_pwa_app_shortname' )) {echo esc_js(get_option( 'pnfpb_ic_pwa_app_shortname') );} else { echo esc_js(substr(get_bloginfo( 'name' ),0,25));} ?>",
+  						"start_url": "<?php echo esc_url(get_home_url()); ?>/",
   						"icons": [
 							{
-								"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_icon_132' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_icon_132' );} else { echo plugin_dir_url( __DIR__ ).'img/icon_132.png';} ?>",
+								"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_icon_132' )) {echo esc_js(get_option( 'pnfpb_ic_fcm_pwa_upload_icon_132' ));} else { echo esc_js(plugin_dir_url( __DIR__ ).'img/icon_132.png');} ?>",
 								"sizes": "132x132",
 								"type": "image/png"
 							},
 							{
-								"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_icon_512' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_icon_512' );} else { echo plugin_dir_url( __DIR__ ).'img/icon.png';} ?>",
+								"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_icon_512' )) {echo esc_js(get_option( 'pnfpb_ic_fcm_pwa_upload_icon_512' ));} else { echo esc_js(plugin_dir_url( __DIR__ ).'img/icon.png');} ?>",
 								"sizes": "512x512",
 								"type": "image/png"
 							}
@@ -741,31 +745,31 @@ if (!function_exists('PNFPB_ic_genenrate_pwa_mainfest_json')) {
 						?>
 						"screenshots" : [
   							{
-   							 	"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value' );} else { echo plugin_dir_url( __DIR__ ).'img/pnfpb-pwa-screenshot.png';} ?>",
-   		 					 	"sizes": "<?php echo $pnfpb_pwa_desktop_screenshot_width.'x'.$pnfpb_pwa_desktop_screenshot_height ?>",
+   							 	"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value' )) {echo esc_js(get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value' ));} else { echo esc_js(plugin_dir_url( __DIR__ ).'img/pnfpb-pwa-screenshot.png');} ?>",
+   		 					 	"sizes": "<?php echo esc_js($pnfpb_pwa_desktop_screenshot_width).'x'.esc_js($pnfpb_pwa_desktop_screenshot_height); ?>",
     							 "type": "image/webp",
     							 "form_factor": "wide",
-    						 	"label": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_label' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_label' );} else { echo 'Homescreen of Awesome App';} ?>"
+    						 	"label": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_label' )) {echo esc_js(get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_desktop_label') );} else { echo 'Homescreen of Awesome App';} ?>"
   							},
   							{
-    							"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value' );} else { echo plugin_dir_url( __DIR__ ).'img/pnfpb-pwa-screenshot.png';} ?>",
-    							"sizes": "<?php echo $pnfpb_pwa_mobile_screenshot_width.'x'.$pnfpb_pwa_mobile_screenshot_height ?>",
+    							"src": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value' )) {echo esc_js(get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value' ));} else { echo esc_js(plugin_dir_url( __DIR__ ).'img/pnfpb-pwa-screenshot.png');} ?>",
+    							"sizes": "<?php echo esc_js($pnfpb_pwa_mobile_screenshot_width).'x'.esc_js($pnfpb_pwa_mobile_screenshot_height); ?>",
     							"type": "image/webp",
     							"form_factor": "narrow",
-    							"label": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_label' )) {echo get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_label' );} else { echo 'List of Awesome Resources available in Awesome App';} ?>"
+    							"label": "<?php if (get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_label' )) {echo esc_js(get_option( 'pnfpb_ic_fcm_pwa_upload_screenshot_mobile_label') );} else { echo 'List of Awesome Resources available in Awesome App';} ?>"
   							}
 						],
 						<?php
 							}
 							if (count($pnfpb_ic_pwa_protocol_array) > 0) {
 						?>
-						"protocol_handlers": <?php echo json_encode($pnfpb_ic_pwa_protocol_array); ?>,
+						"protocol_handlers": <?php echo esc_js(wp_json_encode($pnfpb_ic_pwa_protocol_array)); ?>,
 						<?php
 							}
 						?>
-  						"theme_color": "<?php if (get_option( 'pnfpb_ic_pwa_theme_color' )){echo get_option( 'pnfpb_ic_pwa_theme_color' );} else { echo '#000000';} ?>",
-  						"background_color": "<?php if (get_option( 'pnfpb_ic_pwa_app_backgroundcolor' )){echo get_option( 'pnfpb_ic_pwa_app_backgroundcolor' );} else { echo '#ffffff';} ?>",
-  						"display": "<?php if (get_option( 'pnfpb_ic_pwa_app_display' )) {echo get_option( 'pnfpb_ic_pwa_app_display' );} else { echo 'standalone';} ?>"
+  						"theme_color": "<?php if (get_option( 'pnfpb_ic_pwa_theme_color' )){echo esc_js(get_option( 'pnfpb_ic_pwa_theme_color' ));} else { echo '#000000';} ?>",
+  						"background_color": "<?php if (get_option( 'pnfpb_ic_pwa_app_backgroundcolor' )){echo esc_js(get_option( 'pnfpb_ic_pwa_app_backgroundcolor' ));} else { echo '#ffffff';} ?>",
+  						"display": "<?php if (get_option( 'pnfpb_ic_pwa_app_display' )) {echo esc_js(get_option( 'pnfpb_ic_pwa_app_display' ));} else { echo 'standalone';} ?>"
 						}
 					<?php 
 						$pwa_manifest_contents = ob_get_contents();

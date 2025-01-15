@@ -27,7 +27,7 @@ class ActionScheduler_WPCLI_Scheduler_command extends WP_CLI_Command {
 				WP_CLI::success(
 					sprintf(
 						/* translators: %s refers to the schema name*/
-						__( 'Registered schema for %s', 'action-scheduler' ),
+						__( 'Registered schema for %s', 'push-notification-for-post-and-buddypress' ),
 						$classname
 					)
 				);
@@ -127,7 +127,7 @@ class ActionScheduler_WPCLI_Scheduler_command extends WP_CLI_Command {
 		WP_CLI::log(
 			sprintf(
 				/* translators: %d refers to how many scheduled taks were found to run */
-				_n( 'Found %d scheduled task', 'Found %d scheduled tasks', $total, 'action-scheduler' ),
+				_n( 'Found %d scheduled task', 'Found %d scheduled tasks', $total, 'push-notification-for-post-and-buddypress' ),
 				number_format_i18n( $total )
 			)
 		);
@@ -144,7 +144,7 @@ class ActionScheduler_WPCLI_Scheduler_command extends WP_CLI_Command {
 		WP_CLI::log(
 			sprintf(
 				/* translators: %d refers to the total number of batches executed */
-				_n( '%d batch executed.', '%d batches executed.', $batches_completed, 'action-scheduler' ),
+				_n( '%d batch executed.', '%d batches executed.', $batches_completed, 'push-notification-for-post-and-buddypress' ),
 				number_format_i18n( $batches_completed )
 			)
 		);
@@ -163,7 +163,7 @@ class ActionScheduler_WPCLI_Scheduler_command extends WP_CLI_Command {
 		WP_CLI::error(
 			sprintf(
 				/* translators: %s refers to the exception error message */
-				__( 'There was an error running the action scheduler: %s', 'action-scheduler' ),
+				__( 'There was an error running the action scheduler: %s', 'push-notification-for-post-and-buddypress' ),
 				$e->getMessage()
 			)
 		);
@@ -180,7 +180,7 @@ class ActionScheduler_WPCLI_Scheduler_command extends WP_CLI_Command {
 		WP_CLI::success(
 			sprintf(
 				/* translators: %d refers to the total number of taskes completed */
-				_n( '%d scheduled task completed.', '%d scheduled tasks completed.', $actions_completed, 'action-scheduler' ),
+				_n( '%d scheduled task completed.', '%d scheduled tasks completed.', $actions_completed, 'push-notification-for-post-and-buddypress' ),
 				number_format_i18n( $actions_completed )
 			)
 		);

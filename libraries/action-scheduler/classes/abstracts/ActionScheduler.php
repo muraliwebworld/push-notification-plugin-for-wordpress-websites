@@ -192,8 +192,9 @@ abstract class ActionScheduler {
 	 */
 	public static function is_initialized( $function_name = null ) {
 		if ( ! self::$data_store_initialized && ! empty( $function_name ) ) {
-			$message = sprintf( __( '%s() was called before the Action Scheduler data store was initialized', 'action-scheduler' ), esc_attr( $function_name ) );
-			error_log( $message, E_WARNING );
+			/* translators: %s: search term */
+			$message = sprintf( __( '%s() was called before the Action Scheduler data store was initialized', 'push-notification-for-post-and-buddypress' ), esc_attr( $function_name ) );
+			//error_log( $message, E_WARNING );
 		}
 
 		return self::$data_store_initialized;
@@ -276,11 +277,11 @@ abstract class ActionScheduler {
 	}
 
 	final public function __clone() {
-		trigger_error("Singleton. No cloning allowed!", E_USER_ERROR);
+		//trigger_error("Singleton. No cloning allowed!", E_USER_ERROR);
 	}
 
 	final public function __wakeup() {
-		trigger_error("Singleton. No serialization allowed!", E_USER_ERROR);
+		//trigger_error("Singleton. No serialization allowed!", E_USER_ERROR);
 	}
 
 	final private function __construct() {}

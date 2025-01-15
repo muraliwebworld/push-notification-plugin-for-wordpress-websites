@@ -91,7 +91,7 @@ final class Utils
             return $json;
         }
 
-        $json = json_encode($data, $encodeFlags);
+        $json = wp_json_encode($data, $encodeFlags);
         if (false === $json) {
             $json = self::handleJsonError(json_last_error(), $data);
         }
@@ -131,7 +131,7 @@ final class Utils
             $encodeFlags = self::DEFAULT_JSON_FLAGS;
         }
 
-        $json = json_encode($data, $encodeFlags);
+        $json = wp_json_encode($data, $encodeFlags);
 
         if ($json === false) {
             self::throwEncodeError(json_last_error(), $data);

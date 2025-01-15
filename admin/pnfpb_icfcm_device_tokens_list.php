@@ -3,6 +3,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
+// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
+
 if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	
 	class PNFPB_ICFM_Device_tokens_List extends WP_List_Table {
@@ -13,13 +15,12 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	public function __construct() {
 
 		parent::__construct( [
-			'singular' => __( 'Devicetoken', 'PNFPB_TD' ), //singular name of the listed records
-			'plural'   => __( 'Devicetokens', 'PNFPB_TD' ), //plural name of the listed records
+			'singular' => __( 'Devicetoken', "push-notification-for-post-and-buddypress" ), //singular name of the listed records
+			'plural'   => __( 'Devicetokens', "push-notification-for-post-and-buddypress" ), //plural name of the listed records
 			'ajax'     => false //does this table support ajax?
 		] );
 
 	}
-
 
 	/**
 	 * Retrieve Device tokens data from the database
@@ -34,11 +35,13 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 		global $wpdb;
 
 		if ( !empty($search) && is_numeric($search) ) {
+			
 			$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_subscribed_deviceids_web WHERE userid = {$search} OR device_id LIKE '%{$search}%' OR subscription_option LIKE '%{$search}%'";
 		}
 		else 
 		{
 			if ( !empty($search) && !is_numeric($search) ) {
+				
 				$sql = "SELECT * FROM {$wpdb->prefix}pnfpb_ic_subscribed_deviceids_web WHERE device_id LIKE '%{$search}%' OR subscription_option LIKE '%{$search}%'";				
 			}
 			else 
@@ -95,7 +98,7 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 
 	/** Text displayed when no device token data is available */
 	public function no_items() {
-		_e( 'No registered device tokens avaliable.', 'PNFPB_TD' );
+		esc_html_e( 'No registered device tokens avaliable.', "push-notification-for-post-and-buddypress" );
 	}
 
 
@@ -162,10 +165,10 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	function get_columns() {
 		$columns = [
 			'cb'      => '<input type="checkbox" />',
-			'id'    => __( 'Id', 'PNFPB_TD' ),
-			'device_id' => __( 'Device token', 'PNFPB_TD' ),
-			'userid'    => __( 'Userid', 'PNFPB_TD' ),
-			'subscription_option' => __('Shortcode Subscription','PNFPB_TD')
+			'id'    => __( 'Id', "push-notification-for-post-and-buddypress" ),
+			'device_id' => __( 'Device token', "push-notification-for-post-and-buddypress" ),
+			'userid'    => __( 'Userid', "push-notification-for-post-and-buddypress" ),
+			'subscription_option' => __('Shortcode Subscription',"push-notification-for-post-and-buddypress")
 		];
 
 		return $columns;
@@ -194,6 +197,9 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	 * @return array
 	 */
 	public function get_bulk_actions() {
+		
+		$delete_nonce = wp_create_nonce( 'pnfpb_delete_devicetoken' );
+		
 		$actions = [
 			'bulk-delete' => 'Delete'
 		];
@@ -206,12 +212,15 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 	 * Handles data query and filter, sorting, and pagination.
 	 */
 	public function prepare_items($search='') {
-		
         //data
-        if ( isset($_REQUEST['s']) ) {
-            $this->table_data = $this->get_table_data($_REQUEST['s']);
+       	if ( isset($_REQUEST['s']) ) {
+					
+            $this->table_data = $this->get_table_data(sanitize_text_field(wp_unslash($_REQUEST['s'])));
+
         } else {
+				
             $this->table_data = $this->get_table_data($search);
+				
         }		
 
 		$this->_column_headers = $this->get_column_info();
@@ -224,37 +233,47 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 		$total_items  = self::record_count();
 
 		if ( isset($_REQUEST['s']) ) {
-			$this->items = self::get_devicetokens( $per_page, $current_page, $_REQUEST['s'] );
-			$total_items_search = self::get_devicetokens( 0, $current_page, $_REQUEST['s'] );
+			
+			$this->items = self::get_devicetokens( $per_page, $current_page, sanitize_text_field(wp_unslash($_REQUEST['s'])) );
+			$total_items_search = self::get_devicetokens( 0, $current_page, sanitize_text_field(wp_unslash($_REQUEST['s'])) );
 			$this->set_pagination_args( [
 				'total_items' => count($total_items_search), //WE have to calculate the total number of items
 				'per_page'    => $per_page //WE have to determine how many items to show on a page
-			] );			
+			] );
+			
 		}
 		else 
 		{
 			$this->items = self::get_devicetokens( $per_page, $current_page, '' );
 			$this->set_pagination_args( [
-				'total_items' => $total_items, //WE have to calculate the total number of items
-				'per_page'    => $per_page //WE have to determine how many items to show on a page
+					'total_items' => $total_items, //WE have to calculate the total number of items
+					'per_page'    => $per_page //WE have to determine how many items to show on a page
 			] );			
 		}
-		
-		
 	}
 		
 	public function pnfpb_url_scheme_start() {
+		
     	add_filter( 'set_url_scheme', [$this, 'pnfpb_url_scheme'], 10, 3 );
+		
 	}
 		
 	public function pnfpb_url_scheme_stop() {
+		
     	remove_filter( 'set_url_scheme', [$this, 'pnfpb_url_scheme'], 10 );
+		
 	}
 		
 	public function pnfpb_url_scheme( string $url, string $scheme, $orig_scheme ) {
+		
     	if ( ! empty( $url ) && mb_strpos( $url, '?page=pnfpb_icfm_device_tokens_list' ) !== false && isset( $_REQUEST['s'] ) ) {
+			$search_nonce = wp_create_nonce( 'pnfpb_search_device_tokens_list_pushnotification' );
         	$url = add_query_arg( 's', urlencode( $_REQUEST['s'] ), $url );
+			$url = add_query_arg( '_wpnonce', urlencode(  $search_nonce ), $url );
+			
     	}
+
+		
     	return( $url );
 	}	
 		
@@ -265,18 +284,20 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 		if ( 'delete' === $this->current_action() ) {
 
 			// In our file that handles the request, verify the nonce.
-			$nonce = esc_attr( $_REQUEST['_wpnonce'] );
+			$nonce = esc_attr( sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])) );
 
 			if ( ! wp_verify_nonce( $nonce, 'pnfpb_delete_devicetoken' ) ) {
 				die( 'wnonce failure' );
 			}
 			else {
-				self::delete_devicetoken( absint( $_GET['devicetoken'] ) );
 
-		                // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
-		                // add_query_arg() return the current url
-		               //wp_redirect( esc_url_raw(add_query_arg()) );
-					   //exit;
+				$devicetokenid = sanitize_text_field(wp_unslash($_GET['devicetoken']));
+
+				$devicetokenid = esc_html($devicetokenid);
+
+				self::delete_devicetoken( absint( $devicetokenid ) );
+
+
 			}
 
 		}
@@ -294,10 +315,7 @@ if ( !class_exists( 'PNFPB_ICFM_Device_tokens_List' ) ) {
 
 			}
 
-			// esc_url_raw() is used to prevent converting ampersand in url to "#038;"
-		        // add_query_arg() return the current url
-		        //wp_redirect( esc_url_raw(add_query_arg()) );
-			//exit;
+
 		}
 	}
 

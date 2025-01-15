@@ -23,6 +23,8 @@
 			$deviceids = array();
 			
 			$blog_title = get_bloginfo( 'name' );
+
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 			
 			if (get_option('pnfpb_ic_fcm_bactivity_enable')) {
 				$bactivity = get_option('pnfpb_ic_fcm_bactivity_enable');
@@ -41,7 +43,10 @@
 			global $wpdb;
         	
 			if ((($content && (false === as_has_scheduled_action( 'PNFPB_cron_buddypressactivities_hook' )))
-				 || ($content===null && (as_has_scheduled_action( 'PNFPB_cron_buddypressactivities_hook' )))) && (($bactivity == 1 &&  get_option('pnfpb_ic_fcm_buddypress_enable') == 1 && ($apiaccesskey != '' && $apiaccesskey != false)) || ($bactivity == 1 && get_option('pnfpb_ic_fcm_buddypress_enable') == 1 && (get_option( 'pnfpb_onesignal_push' ) === '1' || get_option('pnfpb_httpv1_push') === '1' || get_option('pnfpb_progressier_push') === '1' || get_option('pnfpb_webtoapp_push') === '1')))) {
+				 || ($content===null && (as_has_scheduled_action( 'PNFPB_cron_buddypressactivities_hook' )))) 
+				&& (($bactivity == 1 &&  get_option('pnfpb_ic_fcm_buddypress_enable') == 1 && ($apiaccesskey != '' && $apiaccesskey != false)) || 
+				($bactivity == 1 && get_option('pnfpb_ic_fcm_buddypress_enable') == 1 && (get_option( 'pnfpb_onesignal_push' ) === '1' || 
+				get_option('pnfpb_httpv1_push') === '1' || get_option('pnfpb_progressier_push') === '1' || get_option('pnfpb_webtoapp_push') === '1')))) {
 				
 				preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($content), $imgresult);
 				
@@ -75,54 +80,6 @@
 				
 				$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 				
-				if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-					
-					if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-						$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );						
-					} else {
-						$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );
-					}
-					
-				}
-				else				
-				{
-					
-					if (get_option('pnfpb_shortcode_enable') === 'yes') {
-						
-						if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-							$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );							
-						} else {
-							$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );
-						}
-					
-					}
-					else 
-					{
-						if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-							$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1)  FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );							
-						} else {
-							$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1)  FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%'" );
-						}
-					}
-				}
-				
-				if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-					if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-						$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );						
-					} else {
-						$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );
-					}
-					
-				}
-				else {
-					if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-						$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%'" );						
-					} else {
-						$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%'" );
-					}
-				}
-				
-			
 				if ($content) {
 					
 					$localactivitycontent = $content;
@@ -134,7 +91,7 @@
 					
 					foreach ( $cron_get_scheduled_activities['activities'] as $activity ) {
 							
-						$localactivitycontent = substr(stripslashes(strip_tags(urldecode($activity->content))),0,80);
+						$localactivitycontent = substr(stripslashes(wp_strip_all_tags(urldecode($activity->content))),0,80);
 							
 						$activitylink = bp_activity_get_permalink( $activity->id, $activity );
 								
@@ -145,7 +102,7 @@
 				
 				$group_name = bp_get_group_name( groups_get_group( $group_id));
 				
-				$grouptitle = '[member name]'.__(' posted activity in group ','PNFPB_TD').$group_name;
+				$grouptitle = '[member name]'.esc_html( __(' posted activity in group ',"push-notification-for-post-and-buddypress")).$group_name;
 				
 				$sender_name = '';
 			
@@ -178,7 +135,7 @@
     
 					$bpfbimagestaglength = ($bpfbimagesend+17) - $bpfbimagesstart;
     
-					$localactivitycontent = strip_tags(urldecode(substr_replace($content,"",$bpfbimagesstart,$bpfbimagestaglength)));
+					$localactivitycontent = wp_strip_all_tags(urldecode(substr_replace($content,"",$bpfbimagesstart,$bpfbimagestaglength)));
 
 				}
 				
@@ -208,18 +165,34 @@
 				
 				if (get_option('pnfpb_progressier_push') === '1') {
 					
-					$target_userid_array_values=$wpdb->get_col( "SELECT device_id FROM {$table_name} WHERE device_id LIKE '%progressier%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000" );					
-						
-					$response = $this->PNFPB_icfcm_progressier_send_push_notification(0,$group_title,$localactivitycontent,$grouplink,$imageurl,0,'',$target_userid_array_values);
+					$target_userid_array_values=$wpdb->get_col($wpdb->prepare( "SELECT device_id FROM %i WHERE device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",$table_name,'%progressier%' ));
 					
+					if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+					
+						$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_progressier_schedule_push_notification_hook', array(0, $group_title, $localactivitycontent, $grouplink, $imageurl, 0, '', $target_userid_array_values));
+						
+					} else {
+						
+						$response = $this->PNFPB_icfcm_progressier_send_push_notification(0,$group_title,$localactivitycontent,$grouplink,$imageurl,0,'',$target_userid_array_values);
+						
+					}
+						
 				}
 				
 				if (get_option('pnfpb_webtoapp_push') === '1') {
 					
-					$target_userid_array_values=$wpdb->get_col( "SELECT device_id FROM {$table_name} WHERE (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000" );					
-						
-					$response = $this->PNFPB_icfcm_webtoapp_send_push_notification(0,$group_title,$localactivitycontent,$grouplink,$imageurl,0,'',$target_userid_array_values);
+					$target_userid_array_values=$wpdb->get_col($wpdb->prepare( "SELECT device_id FROM %i WHERE (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",$table_name) );
 					
+					if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+					
+							$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_webtoapp_schedule_push_notification_hook', array(0, $group_title, $localactivitycontent, $grouplink, $imageurl, $target_userid_array_values, '', ''));
+						
+					} else {
+						
+						$response = $this->PNFPB_icfcm_webtoapp_send_push_notification(0, $group_title, $localactivitycontent, $grouplink, $imageurl, $target_userid_array_values, '', '');
+						
+					}
+						
 				}				
 
 				if (get_option('pnfpb_onesignal_push') === '1' && get_option('pnfpb_progressier_push') !== '1' ) {
@@ -228,44 +201,77 @@
 					
 					$target_userid_array = array();
 					
-					if (($pos = strpos($localactivitycontent, "@")) !== FALSE) {
+						if (($pos = strpos($localactivitycontent, "@")) !== FALSE) {
 						
-    					$str = stripslashes($localactivitycontent);
+    						$str = stripslashes($localactivitycontent);
+							
+							$target_username_array = explode('@',$str);
 
-    					$DOM = new DOMDocument;
-    					$DOM->loadHTML($str);
-
-    					$items = $DOM->getElementsByTagName('span');
-    					$span_list = '';
-    					for($i = 0; $i < $items->length; $i++) {
-        					$item = $items->item($i);
-
-        					if($item->getAttribute('class') == 'atwho-inserted'){
-            					$span_list = $item->nodeValue;
-								
-								$target_username_array = explode('@',$span_list);
-								if (count($target_username_array) > 1) {
+							if (count($target_username_array) > 1) {
 						
-									$target_userid = bp_activity_get_userid_from_mentionname( $target_username_array[1] );
+								$target_userid_array = explode( ' ',$target_username_array[1] );
+									
+								if (count($target_userid_array) > 0) {
+										
+									$target_userid = intval(bp_activity_get_userid_from_mentionname($target_userid_array[0]));
 									array_push($target_userid_array,"$target_userid");
-								}								
-        					}
-    					}
-			
+										
+								}
+									
+							}
+							
+							if ($target_userid === 0 && function_exists( 'is_plugin_active' ) && is_plugin_active( $buddyboss_platform_plugin_file )) {
+								
+    							$str = stripslashes($localactivitycontent);
+
+    							$DOM = new DOMDocument;
+    							$DOM->loadHTML($str);
+
+    							$items = $DOM->getElementsByTagName('span');
+    							$span_list = '';
+								
+    							for($i = 0; $i < $items->length; $i++) {
+									
+        							$item = $items->item($i);
+
+        							if($item->getAttribute('class') == 'atwho-inserted'){
+										
+            							$span_list = $item->nodeValue;
+								
+										$target_username_array = explode('@',$span_list);
+										
+										if (count($target_username_array) > 1) {
 						
-					}
+											$target_userid = bp_activity_get_userid_from_mentionname( $target_username_array[1] );
+											array_push($target_userid_array,"$target_userid");
+											
+										}								
+        							}
+								}
+							}	
+						}					
 					
-					if (((get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') || get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') && (($pos = strpos($localactivitycontent, "@")) === FALSE)
-) {
-						$target_userid_array_values=$wpdb->get_col( "SELECT userid FROM {$table_name} WHERE device_id LIKE '%onesignal%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000" );
+					if (((get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') 
+					|| get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') 
+					&& (($pos = strpos($localactivitycontent, "@")) === FALSE)) {
+
+						$target_userid_array_values=$wpdb->get_col($wpdb->prepare( "SELECT userid FROM %i WHERE device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",$table_name,'%onesignal%' ) );
 						
 						$target_userid_array = array_map(function ($value) {
     						return $value == 1 ? '1pnfpbadm' : $value;
 						}, $target_userid_array_values);						
 					}
 					
-					$response = $this->PNFPB_icfcm_onesignal_push_notification($activity_id,$grouptitle,$localactivitycontent,$grouplink,$imageurl,$target_userid_array);
+					if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+					
+						$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_onesignal_schedule_push_notification_hook', array($activity_id, $grouptitle, $localactivitycontent, $grouplink, $imageurl, $target_userid_array));
 						
+					} else {
+						
+						$response = $this->PNFPB_icfcm_onesignal_push_notification($activity_id,$grouptitle,$localactivitycontent,$grouplink,$imageurl,$target_userid_array);
+						
+					}
+
 			
 				} else {
 					
@@ -277,21 +283,50 @@
 					
 						if (($pos = strpos($localactivitycontent, "@")) !== FALSE) {
 						
-    							$str = stripslashes($localactivitycontent);
+    						$str = stripslashes($localactivitycontent);
 							
-								$target_username_array = explode('@',$str);
+							$target_username_array = explode('@',$str);
 
-								if (count($target_username_array) > 1) {
+							if (count($target_username_array) > 1) {
 						
-									$target_userid_array = explode( ' ',$target_username_array[1] );
+								$target_userid_array = explode( ' ',$target_username_array[1] );
 									
-									if (count($target_userid_array) > 0) {
+								if (count($target_userid_array) > 0) {
 										
-										$target_userid = intval(bp_activity_get_userid_from_mentionname($target_userid_array[0]));
+									$target_userid = intval(bp_activity_get_userid_from_mentionname($target_userid_array[0]));
 										
-									}
-									
 								}
+									
+							}
+							
+							if ($target_userid === 0 && function_exists( 'is_plugin_active' ) && is_plugin_active( $buddyboss_platform_plugin_file )) {
+								
+    							$str = stripslashes($localactivitycontent);
+
+    							$DOM = new DOMDocument;
+    							$DOM->loadHTML($str);
+
+    							$items = $DOM->getElementsByTagName('span');
+    							$span_list = '';
+								
+    							for($i = 0; $i < $items->length; $i++) {
+									
+        							$item = $items->item($i);
+
+        							if($item->getAttribute('class') == 'atwho-inserted'){
+										
+            							$span_list = $item->nodeValue;
+								
+										$target_username_array = explode('@',$span_list);
+										
+										if (count($target_username_array) > 1) {
+						
+											$target_userid = bp_activity_get_userid_from_mentionname( $target_username_array[1] );
+											
+										}								
+        							}
+								}
+							}
 								$pushtype = 'privatemessages';
 							
 								$url = 'https://fcm.googleapis.com/fcm/send';
@@ -318,17 +353,33 @@
 							
 								if (get_option('pnfpb_httpv1_push') === '1'&& $target_userid > 0) {
 									
-									$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%!!%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");							
+									$deviceids=$wpdb->get_col($wpdb->prepare( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id NOT LIKE %s AND device_id NOT LIKE  %s AND userid = %d",$table_name,'%!!%','%@N%',$target_userid));
 
 									$regid = $deviceids;
 									
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");							
+									$deviceidswebview=$wpdb->get_col($wpdb->prepare( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id NOT LIKE %s AND userid = %d",$table_name,'%webview%','%@N%',$target_userid));
 
-									$regidwebview = $deviceidswebview;										
+									$regidwebview = $deviceidswebview;
 									
-									$this->PNFPB_icfcm_httpv1_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
+									if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+									
+										$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_httpv1_schedule_push_notification_hook', array(0,
+																			stripslashes(wp_strip_all_tags($grouptitle)),
+																			stripslashes(wp_strip_all_tags($localactivitycontent)),
+																			$iconurl,
+																			$imageurl,
+																			$grouplink,
+																			array('click_url' => $grouplink),
+																			$regid,
+																			$regidwebview,
+																			$user_id,
+																			$target_userid,
+																			$pushtype));
+									} else {
+										
+										$this->PNFPB_icfcm_httpv1_send_push_notification(0,
+																			stripslashes(wp_strip_all_tags($grouptitle)),
+																			stripslashes(wp_strip_all_tags($localactivitycontent)),
 																			$iconurl,
 																			$imageurl,
 																			$grouplink,
@@ -339,163 +390,15 @@
 																			$target_userid,
 																			$pushtype
 																			);
+										
+									}
+
 									
 								}
-								else {
-									
-									if ($target_userid > 0) {
-										
-										$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%!!%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");							
-
-										$regid = $deviceids;										
-										
-										$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			$grouplink,
-																			array(),
-																			$regid,
-																			array(),
-																			$user_id,
-																			$target_userid,
-																			$pushtype
-																			);
-										
-										$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");							
-
-										$regid = $deviceids;										
-										
-										$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			'',
-																			array('click_url' => $grouplink),
-																			array(),
-																			$regid,
-																			$user_id,
-																			$target_userid,
-																			$pushtype
-																			);
-										
-									}
-							}
 							
-						} else {
-
-							if (get_option('pnfpb_httpv1_push') !== '1') {
-				
-								for ($dcount=0; $dcount<=count($deviceids_count); $dcount+=1000) {
-				
-									if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-										if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-											$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-										} else {
-											$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-										}
+						} 
 					
-									}
-									else				
-									{
-										if (get_option('pnfpb_shortcode_enable') === 'yes') {
-											if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );											
-											} else {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND  device_id NOT LIKE '%!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-											}
-					
-										}						
-										else {
-											if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1)  FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' LIMIT {$dcount}, 1000" );											
-											} else {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1)  FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!%' LIMIT {$dcount}, 1000" );
-											}
-							
-										}
-									}
-								
-									if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-										if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-											$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );										
-										} else {
-											$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-										}
-						
-									}
-									else {
-										if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-											$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%'  LIMIT {$dcount}, 1000" );										
-										} else {
-											$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%'  LIMIT {$dcount}, 1000" );
-										}
-									}								
-				
-
-									$url = 'https://fcm.googleapis.com/fcm/send';
-
-									$regid = $deviceids;
-    
-									$iconurl = get_option ('pnfpb_ic_fcm_upload_icon');
-									
-									if ($user_id !== null) {
-							
-										$iconurl =	bp_core_fetch_avatar ( 
-    										array(  'item_id'   => $user_id,       // output user id of post author
-            									'type'      => 'full',
-            									'html'      => FALSE        // FALSE = return url, TRUE (default) = return url wrapped with html
-							  
-   												) 
-											);
-							
-										if (!$iconurl || $iconurl !== '' || $iconurl === null  ) {
-					
-											$iconurl = get_option ('pnfpb_ic_fcm_upload_icon');
-					
-										}
-									}									
-								
-									if (function_exists('bp_follow_get_followers') && ((get_option( 'pnfpb_ic_fcm_buddypress_followers_enable') && get_option( 	'pnfpb_ic_fcm_buddypress_followers_enable')  === '1'))) {
-										
-										$bp_follow_get_followers_array = bp_follow_get_followers($user_id);
-									
-										$bp_follow_get_followers_implarray = implode(",",$bp_follow_get_followers_array);
-										
-										$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!webview%' AND device_id NOT LIKE '%!!%' AND userid IN ($bp_follow_get_followers_implarray) AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-									
-										$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id LIKE '%!!webview%' AND userid IN ($bp_follow_get_followers_implarray) AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );									
-										
-									}								
-				
-    
-									if (count($regid) > 0) {
-									// prepare the message
-						 
-										$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			$grouplink,
-																			array(),
-																			$regid,
-																			array(),
-																			$user_id,
-																			0,
-																			'',
-																			'no',
-																			$group_id																				 
-																			);
-								do_action('PNFPB_connect_to_external_api_for_group');
-								}
-							}
-						}
-					}
-					
-					if (get_option('pnfpb_httpv1_push') === '1') {
+						if (get_option('pnfpb_httpv1_push') === '1') {
 						
 									$dcount = 0;
 
@@ -524,11 +427,29 @@
 								
 									$regid = array();
 									$deviceidswebview = array();
-				
-    
-									$this->PNFPB_icfcm_httpv1_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
+						
+									if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+						
+										$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_httpv1_schedule_push_notification_hook', array(0,
+																			stripslashes(wp_strip_all_tags($grouptitle)),
+																			stripslashes(wp_strip_all_tags($localactivitycontent)),
+																			$iconurl,
+																			$imageurl,
+																			$grouplink,
+																			array('click_url' => $grouplink),
+																			$regid,
+																			$deviceidswebview,
+																			$user_id,
+																			0,
+																			'activity',
+																			'no',
+																			$group_id));
+										
+									} else {
+										
+										$this->PNFPB_icfcm_httpv1_send_push_notification(0,
+																			stripslashes(wp_strip_all_tags($grouptitle)),
+																			stripslashes(wp_strip_all_tags($localactivitycontent)),
 																			$iconurl,
 																			$imageurl,
 																			$grouplink,
@@ -541,77 +462,19 @@
 																			'no',
 																			$group_id
 																			);
-								
+										
+									}
+						
 
 								do_action('PNFPB_connect_to_external_api_for_group');
 
-					}
-				
-					$webview = false;
-				
-					if (count($deviceids_webview_count) > 0) {
-							$webview = true;
-					}
-					
-					if (get_option('pnfpb_httpv1_push') !== '1' && get_option('pnfpb_onesignal_push') !== '1' && get_option('pnfpb_progressier_push') !== '1'  && get_option('pnfpb_webtoapp_push') !== '1') {
-				
-						for ($dcount=0; $dcount<=count($deviceids_webview_count); $dcount+=1000) {
-					
-							if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-									if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%@N%' AND  	device_id  LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );								
-								} else {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-								}
-						
-							}
-							else {
-							
-								if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%'  LIMIT {$dcount}, 1000" );								
-								} else {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND  device_id  LIKE '%!!webview%'  LIMIT {$dcount}, 1000" );
-								}
-							}
-						
-							if (function_exists('bp_follow_get_followers') && ((get_option( 'pnfpb_ic_fcm_buddypress_followers_enable') && get_option( 'pnfpb_ic_fcm_buddypress_followers_enable')  === '1'))) {
-										
-								$bp_follow_get_followers_array = bp_follow_get_followers($user_id);
-									
-								$bp_follow_get_followers_implarray = implode(",",$bp_follow_get_followers_array);
-										
-									
-								$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id LIKE '%!!webview%' AND userid IN ($bp_follow_get_followers_implarray) AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );									
-										
-							}						
-				
-							if (count($deviceidswebview) > 0) {
-								// prepare the message
-								$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			"",
-																			array('click_url' => $grouplink),
-																			array(),
-																			$deviceidswebview,
-																			$user_id,
-																			0,
-																			'',
-																			'no',
-																			$group_id																			 
-																			);
-								do_action('PNFPB_connect_to_external_api_for_group_webview');
-								}
-							}
 						}
+					
 					}
 				}
 			}
 			else
 			{
-				
 				if ((($content && (false === as_has_scheduled_action( 'PNFPB_cron_buddypressgroupactivities_hook' ))) || ($content===null && (as_has_scheduled_action( 'PNFPB_cron_buddypressgroupactivities_hook' )))) && ($bactivity == 1 && get_option('pnfpb_ic_fcm_buddypress_enable') == 2 && get_option('pnfpb_progressier_push') !== '1' && ($apiaccesskey != '' && $apiaccesskey != false) || ($bactivity == 1 && get_option('pnfpb_ic_fcm_buddypress_enable') == 2 && get_option('pnfpb_progressier_push') !== '1' && (get_option( 'pnfpb_onesignal_push' ) === '1' || get_option('pnfpb_httpv1_push') === '1' || get_option('pnfpb_webtoapp_push') === '1')))) {
 					
 					preg_match_all('/(alt|title|src)=("[^"]*")/i',stripslashes($content), $imgresult);
@@ -650,55 +513,6 @@
 					}
 	
 					$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
-					
-					if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-						if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-							$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );							
-						} else {
-							$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );
-						}
-						
-					}
-					else				
-					{
-
-						if (get_option('pnfpb_shortcode_enable') === 'yes') {
-							if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-								$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );								
-							} else {
-								$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL)" );
-							}
-						
-						}
-						else 
-						{
-							if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-								$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%'" );								
-							} else {
-								$deviceids_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%'" );
-							}
-							
-						}
-					}
-					
-					$webview = false;
-					
-					if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-						if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-							$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid >0 AND device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1 OR subscription_option = '' OR subscription_option IS NULL) = '1')" );							
-						} else {
-							$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1 OR subscription_option = '' OR subscription_option IS NULL) = '1')" );
-						}
-						
-					}
-					else {
-						if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-							$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%'" );							
-						} else {
-							$deviceids_webview_count=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%'" );
-						}
-					}
-	
 	
 					if ($content) {
 					
@@ -711,7 +525,7 @@
 					
 						foreach ( $cron_get_scheduled_activities['activities'] as $activity ) {
 							
-							$localactivitycontent = substr(stripslashes(strip_tags(urldecode($activity->content))),0,80);
+							$localactivitycontent = substr(stripslashes(wp_strip_all_tags(urldecode($activity->content))),0,80);
 							
 							$activitylink = bp_activity_get_permalink( $activity->id, $activity );
 								
@@ -722,7 +536,7 @@
 				
 					$group_name = bp_get_group_name( groups_get_group( $bpgroupid));
 				
-					$grouptitle = '[member name]'.__(' posted activity in group ','PNFPB_TD').$group_name;
+					$grouptitle = '[member name]'.esc_html( __(' posted activity in group ',"push-notification-for-post-and-buddypress")).$group_name;
 				
 					$sender_name = '';
 			
@@ -784,17 +598,33 @@
 					
 					if (get_option('pnfpb_progressier_push') === '1') {
 					
-						$target_userid_array_values=$wpdb->get_col( "SELECT DISTINCT(device_id) FROM {$table_name} WHERE device_id LIKE '%progressier%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000" );				
+						$target_userid_array_values=$wpdb->get_col( "SELECT DISTINCT(device_id) FROM %i WHERE device_id LIKE %s AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",$table_name,'%progressier%','%!!'.$bpgroupid.'!!%' );
+
+						if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
 						
-						$response = $this->PNFPB_icfcm_progressier_send_push_notification(0,$group_title,$localactivitycontent,$grouplink,$imageurl,0,'',$target_userid_array_values);
+							$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_progressier_schedule_push_notification_hook', array(0, $group_title, $localactivitycontent, $grouplink, $imageurl, 0, '', $target_userid_array_values));
+							
+						} else {
+							
+							$response = $this->PNFPB_icfcm_progressier_send_push_notification(0, $group_title, $localactivitycontent, $grouplink, $imageurl, 0, '', $target_userid_array_values);
+							
+						}
 					
 					}
 					
 					if (get_option('pnfpb_webtoapp_push') === '1') {
 					
-						$target_userid_array_values=$wpdb->get_col( "SELECT DISTINCT(device_id) FROM {$table_name} WHERE (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000" );				
+						$target_userid_array_values=$wpdb->get_col( "SELECT DISTINCT(device_id) FROM %i WHERE (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",$table_name );
 						
-						$response = $this->PNFPB_icfcm_webtoapp_send_push_notification(0,$group_title,$localactivitycontent,$grouplink,$imageurl,0,'',$target_userid_array_values);
+						if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+						
+							$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_webtoapp_schedule_push_notification_hook', array(0, $group_title, $localactivitycontent, $grouplink, $imageurl, $target_userid_array_values, '', ''));
+							
+						} else {
+							
+							$response = $this->PNFPB_icfcm_webtoapp_send_push_notification(0, $group_title, $localactivitycontent, $grouplink, $imageurl, $target_userid_array_values, '', '');
+							
+						}
 					
 					}					
 					
@@ -809,39 +639,55 @@
 						if (($pos = strpos($localactivitycontent, "@")) !== FALSE) {
 						
     						$str = stripslashes($localactivitycontent);
-
-    						$DOM = new DOMDocument;
 							
-    						$DOM->loadHTML($str);
+							$target_username_array = explode('@',$str);
 
-    						$items = $DOM->getElementsByTagName('span');
-							
-    						$span_list = '';
-							
-    						for($i = 0; $i < $items->length; $i++) {
-								
-        						$item = $items->item($i);
-
-        						if($item->getAttribute('class') == 'atwho-inserted'){
-									
-            						$span_list = $item->nodeValue;
-								
-									$target_username_array = explode('@',$span_list);
-									
-									if (count($target_username_array) > 1) {
+							if (count($target_username_array) > 1) {
 						
-										$target_userid = bp_activity_get_userid_from_mentionname( $target_username_array[1] );
+								$target_userid_array = explode( ' ',$target_username_array[1] );
+									
+								if (count($target_userid_array) > 0) {
 										
-										array_push($target_userid_array,"$target_userid");
-									}								
-        						}
-    						}
-			
+									$target_userid = intval(bp_activity_get_userid_from_mentionname($target_userid_array[0]));
+									array_push($target_userid_array,"$target_userid");
+										
+								}
+									
+							}
+							
+							if ($target_userid === 0 && function_exists( 'is_plugin_active' ) && is_plugin_active( $buddyboss_platform_plugin_file )) {
+								
+    							$str = stripslashes($localactivitycontent);
+
+    							$DOM = new DOMDocument;
+    							$DOM->loadHTML($str);
+
+    							$items = $DOM->getElementsByTagName('span');
+    							$span_list = '';
+								
+    							for($i = 0; $i < $items->length; $i++) {
+									
+        							$item = $items->item($i);
+
+        							if($item->getAttribute('class') == 'atwho-inserted'){
+										
+            							$span_list = $item->nodeValue;
+								
+										$target_username_array = explode('@',$span_list);
+										
+										if (count($target_username_array) > 1) {
+						
+											$target_userid = bp_activity_get_userid_from_mentionname( $target_username_array[1] );
+											array_push($target_userid_array,"$target_userid");
+											
+										}								
+        							}
+								}
+							}
 						
 						}
 						else 
 						{
-							
 						
 							$target_userid_array = array();
 							
@@ -866,7 +712,7 @@
 								
 							} else {
 							
-								$target_userid_array_values=$wpdb->get_col( "SELECT DISTINCT(userid) FROM {$table_name} WHERE device_id LIKE '%onesignal%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000" );
+								$target_userid_array_values=$wpdb->get_col($wpdb->prepare( "SELECT DISTINCT(userid) FROM %i WHERE device_id LIKE %s AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",$table_name,'%onesignal%','%!!'.$bpgroupid.'!!%' ));
 								
 							}
 							
@@ -877,9 +723,17 @@
 						}
 						
 						if (count($target_userid_array) > 0) {
-						
-							$response = $this->PNFPB_icfcm_onesignal_push_notification($group_id,$grouptitle,$localactivitycontent,$grouplink,$imageurl,$target_userid_array);
 							
+							if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+							
+								$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_onesignal_schedule_push_notification_hook', array($group_id, $grouptitle, $localactivitycontent, $grouplink, $imageurl, $target_userid_array));
+								
+							} else {
+								
+								$response = $this->PNFPB_icfcm_onesignal_push_notification($group_id,$grouptitle,$localactivitycontent,$grouplink,$imageurl,$target_userid_array);
+								
+							}
+						
 						}
 							
 					} else {
@@ -904,6 +758,35 @@
 										
 									}
 									
+								}
+							
+								if ($target_userid === 0 && function_exists( 'is_plugin_active' ) && is_plugin_active( $buddyboss_platform_plugin_file )) {
+								
+    								$str = stripslashes($localactivitycontent);
+
+    								$DOM = new DOMDocument;
+    								$DOM->loadHTML($str);
+
+    								$items = $DOM->getElementsByTagName('span');
+    								$span_list = '';
+								
+    								for($i = 0; $i < $items->length; $i++) {
+									
+        								$item = $items->item($i);
+
+        								if($item->getAttribute('class') == 'atwho-inserted'){
+										
+            								$span_list = $item->nodeValue;
+								
+											$target_username_array = explode('@',$span_list);
+										
+											if (count($target_username_array) > 1) {
+						
+												$target_userid = bp_activity_get_userid_from_mentionname( $target_username_array[1] );
+											
+											}									
+        								}
+									}
 								}
 							
 								$pushtype = 'privatemessages';
@@ -933,18 +816,35 @@
 							
 								if (get_option('pnfpb_httpv1_push') === '1'&& $target_userid > 0) {
 									
-									$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!{$bpgroupid}!!%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");
+									$deviceids=$wpdb->get_col($wpdb->prepare( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id NOT LIKE %s AND userid = %d",$table_name,'%webview%','%!!'.$bpgroupid.'!!%','%@N%',$target_userid));
 										
 
 									$regid = $deviceids;
 									
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");
+									$deviceidswebview=$wpdb->get_col($wpdb->prepare( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id LIKE %s AND device_id NOT LIKE %s AND userid = %d",$table_name,'%webview%','%!!'.$bpgroupid.'!!%','%@N%',$target_userid));
 
-									$regidwebview = $deviceidswebview;									
+									$regidwebview = $deviceidswebview;
 									
-									$this->PNFPB_icfcm_httpv1_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
+									if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
+									
+										$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_httpv1_schedule_push_notification_hook', array(0,
+																			stripslashes(wp_strip_all_tags($grouptitle)),
+																			stripslashes(wp_strip_all_tags($localactivitycontent)),
+																			$iconurl,
+																			$imageurl,
+																			$grouplink,
+																			array('click_url' => $grouplink),
+																			$regid,
+																			$regidwebview,
+																			$user_id,
+																			$target_userid,
+																			$pushtype));
+										
+									} else {
+										
+										$this->PNFPB_icfcm_httpv1_send_push_notification(0,
+																			stripslashes(wp_strip_all_tags($grouptitle)),
+																			stripslashes(wp_strip_all_tags($localactivitycontent)),
 																			$iconurl,
 																			$imageurl,
 																			$grouplink,
@@ -955,168 +855,14 @@
 																			$target_userid,
 																			$pushtype
 																			);
-								
+										
+									}
+
 								}
-								else {
-									
-									if ($target_userid > 0) {
-										
-									$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");
-										
-
-										$regid = $deviceids;										
-										
-										$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			$grouplink,
-																			array(),
-																			$regid,
-																			array(),
-																			$user_id,
-																			$target_userid,
-																			$pushtype
-																			);
-										
-										$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND device_id NOT LIKE '%@N%' AND userid = '{$target_userid}'");
-										
-
-										$regid = $deviceids;										
-										
-										$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			$grouplink,
-																			array('click_url' => $grouplink),
-																			array(),
-																			$regid,
-																			$user_id,
-																			$target_userid,
-																			$pushtype
-																			);										
-									}
+							
 							}
-							
-						} else {
-
-							if (get_option('pnfpb_httpv1_push') !== '1') {
-					
-								for ($dcount=0; $dcount<=count($deviceids_count); $dcount+=1000) {					
-					
-									if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-									
-										if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-											$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );										
-										} else {
-											$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-										}
 						
-									}
-									else				
-									{
-										if (get_option('pnfpb_shortcode_enable') === 'yes') {
-											if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );											
-											} else {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-											}
-						
-										}							
-										else 
-										{
-											if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' LIMIT {$dcount}, 100" );											
-											} else {
-												$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' LIMIT {$dcount}, 100" );
-											}
-								
-										}
-									}
-								
-									if (function_exists('bp_follow_get_followers') && ((get_option( 'pnfpb_ic_fcm_buddypress_followers_enable') && get_option( 'pnfpb_ic_fcm_buddypress_followers_enable')  === '1'))) {
-										
-										$bp_follow_get_followers_array = bp_follow_get_followers($user_id);
-									
-										$bp_follow_get_followers_implarray = implode(",",$bp_follow_get_followers_array);
-										
-										$deviceids=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id NOT LIKE '%!!webview%' AND device_id NOT LIKE '%!!%' AND userid IN ($bp_follow_get_followers_implarray) AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-									
-										$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id LIKE '%!!webview%' AND userid IN ($bp_follow_get_followers_implarray) AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );									
-										
-									}								
-					
-
-									$url = 'https://fcm.googleapis.com/fcm/send';
-
-									$regid = $deviceids;
-    
-									$iconurl = get_option ('pnfpb_ic_fcm_upload_icon');
-									
-									if ($user_id !== null) {
-							
-										$iconurl =	bp_core_fetch_avatar ( 
-    										array(  'item_id'   => $user_id,       // output user id of post author
-            									'type'      => 'full',
-            									'html'      => FALSE        // FALSE = return url, TRUE (default) = return url wrapped with html
-							  
-   												) 
-											);
-							
-										if (!$iconurl || $iconurl !== '' || $iconurl === null  ) {
-					
-											$iconurl = get_option ('pnfpb_ic_fcm_upload_icon');
-					
-										}
-									}									
-					
-									if (count($regid) > 0) {
-										// prepare the message
-										if (get_option('pnfpb_httpv1_push') === '1') {
-											$this->PNFPB_icfcm_httpv1_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			$grouplink,
-																			array('click_url' => $grouplink),
-																			$regid,
-																			array(),
-																			$user_id,
-																			0,
-																			'',
-																			'yes',
-																			$group_id																					 
-																			);	
-										}
-										else {
-											$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			$grouplink,
-																			array(),
-																			$regid,
-																			array(),
-																			$user_id,
-																			0,
-																			'',
-																			'yes',
-																			$group_id																			
-																			);
-										}
-								
-										do_action('PNFPB_connect_to_external_api_for_group');
-									}
-								}
-							}
-						}
-						
-						if (get_option('pnfpb_httpv1_push') === '1') {
+							if (get_option('pnfpb_httpv1_push') === '1') {
 
 									$dcount = 0;
 
@@ -1141,12 +887,29 @@
 											$iconurl = get_option ('pnfpb_ic_fcm_upload_icon');
 					
 										}
-									}							
+									}
+							
+									if (get_option('pnfpb_ic_fcm_activity_schedule_now_enable') && get_option('pnfpb_ic_fcm_activity_schedule_now_enable') === '1') {
 					
-
-									$this->PNFPB_icfcm_httpv1_send_push_notification(0,
-																		stripslashes(strip_tags($grouptitle)),
-																		stripslashes(strip_tags($localactivitycontent)),
+										$action_scheduler_status = as_schedule_single_action( time(), 'PNFPB_httpv1_schedule_push_notification_hook', array(0,
+																		stripslashes(wp_strip_all_tags($grouptitle)),
+																		stripslashes(wp_strip_all_tags($localactivitycontent)),
+																		$iconurl,
+																		$imageurl,
+																		$grouplink,
+																		array('click_url' => $grouplink),
+																		array(),
+																		array(),
+																		$user_id,
+																		0,
+																		'groupactivity',
+																		'yes',
+																		$group_id));
+									} else {
+										
+										$this->PNFPB_icfcm_httpv1_send_push_notification(0,
+																		stripslashes(wp_strip_all_tags($grouptitle)),
+																		stripslashes(wp_strip_all_tags($localactivitycontent)),
 																		$iconurl,
 																		$imageurl,
 																		$grouplink,
@@ -1158,65 +921,14 @@
 																		'groupactivity',
 																		'yes',
 																		$group_id																					 
-																		);	
+																		);
+										
+									}
 								
 									do_action('PNFPB_connect_to_external_api_for_group');
 
-					}
+							}
 						
-					if (get_option('pnfpb_httpv1_push') !== '1' && get_option('pnfpb_onesignal_push') !== '1' && get_option('pnfpb_progressier_push') !== '1'  && get_option('pnfpb_webtoapp_push') !== '1') {	
-					
-						for ($dcount=0; $dcount<=count($deviceids_webview_count); $dcount+=1000) {	
-					
-							$webview = false;
-						
-							if (get_option('pnfpb_ic_fcm_frontend_enable_subscription') === '1') {
-								if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );									
-								} else {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );
-								}
-							}
-							else 
-							{
-								if (get_option('pnfpb_ic_fcm_loggedin_notify') && get_option('pnfpb_ic_fcm_loggedin_notify') === '1') {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE userid > 0 AND device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' LIMIT {$dcount}, 1000" );
-								} else {
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%!!webview%' AND device_id LIKE '%!!{$bpgroupid}!!%' LIMIT {$dcount}, 1000" );
-								}
-							}
-							
-								if (function_exists('bp_follow_get_followers') && ((get_option( 'pnfpb_ic_fcm_buddypress_followers_enable') && get_option( 'pnfpb_ic_fcm_buddypress_followers_enable')  === '1'))) {
-										
-									$bp_follow_get_followers_array = bp_follow_get_followers($user_id);
-									
-									$bp_follow_get_followers_implarray = implode(",",$bp_follow_get_followers_array);
-										
-									$deviceidswebview=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id NOT LIKE '%@N%' AND device_id LIKE '%!!webview%' AND userid IN ($bp_follow_get_followers_implarray) AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,2,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT {$dcount}, 1000" );									
-										
-								}							
-				
-									if (count($deviceidswebview) > 0) {
-										// prepare the message
-										$this->PNFPB_icfcm_legacy_send_push_notification(0,
-																			stripslashes(strip_tags($grouptitle)),
-																			stripslashes(strip_tags($localactivitycontent)),
-																			$iconurl,
-																			$imageurl,
-																			"",
-																			array('click_url' => $grouplink),
-																			array(),
-																			$deviceidswebview,
-																			$user_id,
-																			0,
-																			'',
-																			'yes',
-																			$group_id																			 
-																			);
-										do_action('PNFPB_connect_to_external_api_for_group_webview');
-									}
-								}
-							}
 						}
 					}	
 				}
@@ -1224,5 +936,4 @@
 					update_option('pnfpb_ic_fcm_new_buddypressgroup_id', $group_id);
 				}
 			}
-
 ?>

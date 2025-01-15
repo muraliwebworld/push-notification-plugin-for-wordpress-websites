@@ -45,7 +45,7 @@ class CronExpression_FieldFactory
                     break;
                 default:
                     throw new InvalidArgumentException(
-                        $position . ' is not a valid position'
+                        esc_html($position) . ' is not a valid position'
                     );
             }
         }

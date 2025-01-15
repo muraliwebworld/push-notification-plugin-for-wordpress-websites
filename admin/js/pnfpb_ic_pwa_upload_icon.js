@@ -44,9 +44,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_132 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -79,9 +79,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_512 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -114,9 +114,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_desktop = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -142,9 +142,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_mobile = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -170,9 +170,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_splashscreen_640_1136 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -198,9 +198,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_splashscreen_750_1294 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -226,9 +226,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_splashscreen_1242_2148 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -254,9 +254,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_splashscreen_1125_2436 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -282,9 +282,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_splashscreen_1536_2048 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -310,9 +310,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_splashscreen_1668_2224 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -338,9 +338,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploader_splashscreen_2048_2732 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -411,7 +411,7 @@ $j(document).ready(function() {
             event.preventDefault();
             event.stopPropagation();
 			
-			$j('.pnfpb_ic_pwa_protocol-handler-list').append('<div class="pnfpb_ic_pwa_protocol"><label class="pnfpb_ic_pwa_protocol-handler-element" for="pnfpb_ic_pwa_protocol-name"><b>'+__("Protocol handler ","PNFPB_TD")+'<span>'+pnfpb_protocol_handler_pwa_counter+'</span></b></label><div class="pnfpb_ic_push_remove_protocol_button_divider"><input type="button" name="pnfpb_ic_push_remove_protocol_button" id="pnfpb_ic_push_remove_protocol_button" class="button pnfpb_ic_push_remove_protocol_button" value="'+__("Delete","PNFPB_TD")+'"></div><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_root"><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_child"><label for="pnfpb_ic_pwa_protocol-name">'+__("Protocol","PNFPB_TD")+'</label><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_protocol_name" name="pnfpb_ic_pwa_protocol_name[]" placeholder="web+jnglstore" type="text" value="" /></div><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_child"><label for="pnfpb_ic_pwa_protocol-url">'+ __("Url","PNFPB_TD")+'</label><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_protocol_url" name="pnfpb_ic_pwa_protocol_url[]" placeholder="/shop?for=%s"  type="text" value="" /></div></div></div>');
+			$j('.pnfpb_ic_pwa_protocol-handler-list').append('<div class="pnfpb_ic_pwa_protocol"><label class="pnfpb_ic_pwa_protocol-handler-element" for="pnfpb_ic_pwa_protocol-name"><b>'+__("Protocol handler ","push-notification-for-post-and-buddypress")+'<span>'+pnfpb_protocol_handler_pwa_counter+'</span></b></label><div class="pnfpb_ic_push_remove_protocol_button_divider"><input type="button" name="pnfpb_ic_push_remove_protocol_button" id="pnfpb_ic_push_remove_protocol_button" class="button pnfpb_ic_push_remove_protocol_button" value="'+__("Delete","push-notification-for-post-and-buddypress")+'"></div><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_root"><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_child"><label for="pnfpb_ic_pwa_protocol-name">'+__("Protocol","push-notification-for-post-and-buddypress")+'</label><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_protocol_name" name="pnfpb_ic_pwa_protocol_name[]" placeholder="web+jnglstore" type="text" value="" /></div><div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_child"><label for="pnfpb_ic_pwa_protocol-url">'+ __("Url","push-notification-for-post-and-buddypress")+'</label><input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_protocol_url" name="pnfpb_ic_pwa_protocol_url[]" placeholder="/shop?for=%s"  type="text" value="" /></div></div></div>');
 		
 			pnfpb_protocol_handler_pwa_counter++;
 		
@@ -467,12 +467,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_post_type_content_form').is(':visible')) {
 			
-			$j('.pnfpb_post_type_content_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_post_type_content_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_post_type_content_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_post_type_content_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}		
 	}
 
@@ -485,12 +485,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_activity_content_form').is(':visible')) {
 			
-			$j('.pnfpb_activity_form_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_activity_form_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_activity_form_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_activity_form_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}		
 	}
 
@@ -502,12 +502,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_comments_content_form').is(':visible')) {
 			
-			$j('.pnfpb_comments_content_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_comments_content_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_comments_content_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_comments_content_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}		
 	}
 
@@ -519,12 +519,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_private_message_form').is(':visible')) {
 			
-			$j('.pnfpb_private_message_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_private_message_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_private_message_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_private_message_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -537,12 +537,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_new_member_form').is(':visible')) {
 			
-			$j('.pnfpb_new_member_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_new_member_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_new_member_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_new_member_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -555,12 +555,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_friendship_request_form').is(':visible')) {
 			
-			$j('.pnfpb_friendship_request_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_friendship_request_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_friendship_request_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_friendship_request_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -574,12 +574,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_friendship_accept_form').is(':visible')) {
 			
-			$j('.pnfpb_friendship_accept_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_friendship_accept_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_friendship_accept_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_friendship_accept_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -593,12 +593,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_avatar_change_form').is(':visible')) {
 			
-			$j('.pnfpb_avatar_change_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_avatar_change_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_avatar_change_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_avatar_change_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -611,12 +611,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_cover_image_change_form').is(':visible')) {
 			
-			$j('.pnfpb_cover_image_change_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_cover_image_change_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_cover_image_change_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_cover_image_change_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -630,12 +630,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_group_invitation_form').is(':visible')) {
 			
-			$j('.pnfpb_group_invitation_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_group_invitation_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_group_invitation_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_group_invitation_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -649,12 +649,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_group_details_updated_form').is(':visible')) {
 			
-			$j('.pnfpb_group_details_updated_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_group_details_updated_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_group_details_updated_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_group_details_updated_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -667,12 +667,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_new_user_registration_form').is(':visible')) {
 			
-			$j('.pnfpb_new_user_registration_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_new_user_registration_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_new_user_registration_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_new_user_registration_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -685,12 +685,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_contact_form7_form').is(':visible')) {
 			
-			$j('.pnfpb_contact_form7_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_contact_form7_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_contact_form7_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_contact_form7_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}
@@ -709,26 +709,26 @@ $j(document).ready(function() {
 			
 			$j('.pnfpb_ic_webtoapp_configuration').hide();
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
 			$j('.pnfpb_ic_firebase_configuration').show();
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 			
 		}	
 		
@@ -748,26 +748,26 @@ $j(document).ready(function() {
 			
 			$j('.pnfpb_ic_webtoapp_configuration').hide();
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
 			$j('.pnfpb_ic_firebase_configuration').show();
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 			
 		}	
 		
@@ -787,26 +787,26 @@ $j(document).ready(function() {
 			
 			$j('.pnfpb_ic_progressier_configuration').hide();
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
 			$j('.pnfpb_ic_firebase_configuration').show();
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 			
 		}	
 		
@@ -828,26 +828,26 @@ $j(document).ready(function() {
 			
 			$j('.pnfpb_ic_webtoapp_configuration').hide();
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
 			$j('.pnfpb_ic_onesignal_configuration').show();
 			
-			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_onesignal_configuration_button').text(__('Onesignal configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_button').text(__('Firebase configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_progressier_configuration_button').text(__('Progressier configuration',"push-notification-for-post-and-buddypress"));
 			
-			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp configuration','PNFPB_TD'));
+			$j('.pnfpb_ic_webtoapp_configuration_button').text(__('Webtoapp.design configuration',"push-notification-for-post-and-buddypress"));
 		}	
 		
 	}
@@ -860,12 +860,12 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_firebase_configuration_help').is(':hidden')) {
 			
-			$j('.pnfpb_ic_firebase_configuration_help_button').html(__('Tutorial on Firebase','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_help_button').html(__('Tutorial on Firebase',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_ic_firebase_configuration_help_button').html(__('Hide Firebase Tutorial','PNFPB_TD'));
+			$j('.pnfpb_ic_firebase_configuration_help_button').html(__('Hide Firebase Tutorial',"push-notification-for-post-and-buddypress"));
 		}	
 		
 	}
@@ -878,11 +878,11 @@ $j(document).ready(function() {
 		
 		if ($j('.pnfpb_ic_push_prompt_form').is(':visible')) {
 			
-			$j('.pnfpb_custom_push_prompt_button').text(__('Hide form','PNFPB_TD'));
+			$j('.pnfpb_custom_push_prompt_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
 			
 		}
 		else
 		{
-			$j('.pnfpb_custom_push_prompt_button').text(__('Customize','PNFPB_TD'));
+			$j('.pnfpb_custom_push_prompt_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}		
 	}

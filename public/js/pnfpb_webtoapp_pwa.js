@@ -139,7 +139,7 @@ $j(document).ready( async function() {
 			       		else
 			       		{
 			           
-			         		console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			         		console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 					   
 			        	}
 
@@ -209,7 +209,7 @@ $j(document).ready( async function() {
 			          	else
 			          	{
 			           
-			              console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			              console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 			           }
 
 			     	}
@@ -371,17 +371,17 @@ $j(document).ready( async function() {
 			                        	}
 			                        	else
 			                        	{
-			                             	console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			                             	console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 			                         	}
 
 			                       	}
 			                       	else
 			                       	{           
-                                        $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+                                        $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
                                                             
                                          $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 
-			                             console.log(__("device update failed",'PNFPB_TD'));
+			                             console.log(__("device update failed","push-notification-for-post-and-buddypress"));
 			                         }
 							
 								});
@@ -564,7 +564,7 @@ $j(document).ready( async function() {
 						$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 						$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('error');
 						$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('info');
-						$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Processing...','PNFPB_TD'));
+						$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Processing...',"push-notification-for-post-and-buddypress"));
 						$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');										
 			
 
@@ -725,7 +725,7 @@ $j(document).ready( async function() {
 								$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('info');
 								$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('success');
 								$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
-								$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved','PNFPB_TD'));
+								$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved',"push-notification-for-post-and-buddypress"));
 								
 								await setNotificationTopicSubscriptionStatus(true, "pnfpbondemand");
 								
@@ -820,7 +820,7 @@ $j(document).ready( async function() {
 							{
 								$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 								$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-								$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings','PNFPB_TD'));
+								$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings',"push-notification-for-post-and-buddypress"));
 								$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
 							}
 						})

@@ -4,8 +4,8 @@
 // @since 1.0.0
 //
 
-import { initializeApp, getApp } from 'firebase/app';
-import { getToken, isSupported, getMessaging } from "firebase/messaging";
+import { getApp, initializeApp } from 'firebase/app';
+import { getMessaging, getToken, isSupported } from "firebase/messaging";
 
 import { __ } from '@wordpress/i18n';
 
@@ -149,7 +149,7 @@ navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_p
                                                             }			       			                                                
 											            
 
-												            $j(".pnfpb-unsubscribe-alert-msg").html(__("UnSubscribe failed..try again..Please!!",'PNFPB_TD'));
+												            $j(".pnfpb-unsubscribe-alert-msg").html(__("UnSubscribe failed..try again..Please!!",'push-notification-for-post-and-buddypress'));
 							
 												            $j( "#pnfpb-unsubscribe-dialog" ).dialog();
 							
@@ -188,7 +188,7 @@ navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_p
                         }			       			                                                
                         
 						
-						$j(".pnfpb-unsubscribe-alert-msg").html(__("UnSubscribe failed..try again or Subscribe again..Please!!",'PNFPB_TD'));
+						$j(".pnfpb-unsubscribe-alert-msg").html(__("UnSubscribe failed..try again or Subscribe again..Please!!",'push-notification-for-post-and-buddypress'));
 							
 						$j( "#pnfpb-unsubscribe-dialog" ).dialog();                        
                   }

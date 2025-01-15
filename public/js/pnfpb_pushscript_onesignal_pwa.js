@@ -13,7 +13,6 @@ if (pnfpb_onesignal_userid === '1') {
 }
 
 
-
 var standalone = window.navigator.standalone,
   userAgent = window.navigator.userAgent.toLowerCase(),
   safari = /safari/.test(userAgent),
@@ -40,15 +39,13 @@ if (ios) {
   }
 };
 
-//console.log(pnfpb_webview);
-
 var $j = jQuery.noConflict();
 
 $j(document).ready(function() {
 	
 	var pnfpbonesignalid = parseInt(pnfpb_onesignal_userid)
 	
- 	if (pnfpb_webview) {
+	if (pnfpb_webview) {
 		
 		const { setExternalUserId } = WTN.OneSignal;
 
@@ -76,16 +73,13 @@ $j(document).ready(function() {
 	}
 	else 
 	{
-		
-		OneSignal.push(function() {
+		if (typeof OneSignal !== "undefined" && typeof OneSignalDeferred === "undefined") {
 			
-			//console.log(pnfpb_onesignal_userid_os);
-			//console.log(typeof OneSignal.login);
-			//console.log(typeof OneSignal.setExternalUserId);
+			OneSignal.push(function() {
 			
-			if (typeof OneSignal.login === "function" && pnfpb_onesignal_userid_os != '0') { 
+				if (typeof OneSignal.login === "function" && pnfpb_onesignal_userid_os != '0') { 
 				
-  				OneSignal.login(pnfpb_onesignal_userid_os);
+  					OneSignal.login(pnfpb_onesignal_userid_os);
 				
 					var data = {
 						action: 'icpushcallback',
@@ -97,25 +91,35 @@ $j(document).ready(function() {
 						
 					});
 				
-			} else {
-				if (typeof OneSignal.setExternalUserId === "function"  && pnfpb_onesignal_userid_os != '0') {
+				} else {
+					if (typeof OneSignal.setExternalUserId === "function"  && pnfpb_onesignal_userid_os != '0') {
 					
-					OneSignal.setExternalUserId(pnfpb_onesignal_userid_os);
+						OneSignal.setExternalUserId(pnfpb_onesignal_userid_os);
 					
-					var data = {
-						action: 'icpushcallback',
-						onesignal_externalid:pnfpb_onesignal_userid_os,
-						pushtype: 'onesignal_subscribed_users'
-					};
+						var data = {
+							action: 'icpushcallback',
+							onesignal_externalid:pnfpb_onesignal_userid_os,
+							pushtype: 'onesignal_subscribed_users'
+						};
 							
-					$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
+						$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
 						
-					});	
+						});	
 					
+					}
 				}
+			});
+			
+		} else {
+			
+			if (typeof OneSignalDeferred !== "undefined" && typeof OneSignalDeferred.push === "function" && pnfpb_onesignal_userid_os != '0') {
+				
+				OneSignalDeferred.push(function(OneSignal) {
+  					OneSignal.User.PushSubscription.addEventListener("change", pnfpb_pushSubscriptionChangeListener);
+				});				
+
 			}
-		});
-		
+		}
 	}
 	
 	var currentToken = 'onesignal@N';
@@ -173,7 +177,7 @@ $j(document).ready(function() {
 			       else
 			       {
 			           
-			         console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			         console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 					   
 			        }
 
@@ -243,7 +247,7 @@ $j(document).ready(function() {
 			          else
 			          {
 			           
-			              console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			              console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 			           }
 
 			     }
@@ -403,17 +407,17 @@ $j(document).ready(function() {
 			                        }
 			                        else
 			                        {
-			                             console.log(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+			                             console.log(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
 			                         }
 
 			                       }
 			                       else
 			                       {           
-                                        $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification unsubscription failed..try again!!",'PNFPB_TD'));
+                                        $j(".pnfpb-group-unsubscribe-alert-msg").html(__("Push notification unsubscription failed..try again!!","push-notification-for-post-and-buddypress"));
                                                             
                                          $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 
-			                             console.log(__("device update failed",'PNFPB_TD'));
+			                             console.log(__("device update failed","push-notification-for-post-and-buddypress"));
 			                         }
 							
 							});
@@ -460,7 +464,7 @@ $j(document).ready(function() {
 		$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
 					
 					var response = JSON.parse(responseajax);
-												
+					console.log(responseajax);						
 					var subscriptionoptions = response.subscriptionoptions;
 			
 					if (subscriptionoptions === null) {
@@ -596,7 +600,7 @@ $j(document).ready(function() {
 					$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 					$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('error');
 					$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('info');
-					$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Processing...','PNFPB_TD'));
+					$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Processing...',"push-notification-for-post-and-buddypress"));
 					$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');										
 			
 
@@ -754,7 +758,7 @@ $j(document).ready(function() {
 							$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('info');
 							$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('success');
 							$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
-							$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved','PNFPB_TD'));
+							$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved',"push-notification-for-post-and-buddypress"));
 					
 							if (subscriptionoptionsarray[1] === '1')
 							{
@@ -879,7 +883,7 @@ $j(document).ready(function() {
 						{
 							$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
 							$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-							$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings','PNFPB_TD'));
+							$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings',"push-notification-for-post-and-buddypress"));
 							$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
 						}
 					})
@@ -887,22 +891,36 @@ $j(document).ready(function() {
 			})
 
     }	
-	
-	OneSignal.push(function() {
-  		OneSignal.getExternalUserId().then(function(externalUserId){
-			//console.log(externalUserId);
-			if (pnfpb_onesignal_userid) {
-				var data = {
-					action: 'icpushcallback',
-					onesignal_externalid:pnfpbonesignalid,
-					pushtype: 'onesignal_subscribed_users'
-				};
+
+	if (pnfpb_onesignal_userid) {
+		var data = {
+			action: 'icpushcallback',
+			onesignal_externalid:pnfpbonesignalid,
+			pushtype: 'onesignal_subscribed_users'
+		};
 								
-				$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
+		$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
 
 		
-				})
-			}					
-  		})
-	})
+		})
+	}
+	
+	async function pnfpb_pushSubscriptionChangeListener(event) {
+  		if (event.current.token) {
+    		console.log(`The push subscription has received a token!`);
+    		//this is a good place to call OneSignal.login and pass in your user ID
+   			await OneSignal.login(pnfpb_onesignal_userid_os);
+					
+			var data = {
+				action: 'icpushcallback',
+				onesignal_externalid:pnfpb_onesignal_userid_os,
+				pushtype: 'onesignal_subscribed_users'
+			};
+							
+			$j.post(pnfpb_ajax_object_onesignal_push.ajax_url, data, function(responseajax) {
+						
+			});	    		
+  		}
+	}
+
 })

@@ -12,7 +12,7 @@ class ActionScheduler_StoreSchema extends ActionScheduler_Abstract_Schema {
 	const CLAIMS_TABLE  = 'actionscheduler_claims';
 	const GROUPS_TABLE  = 'actionscheduler_groups';
 	const DEFAULT_DATE  = '0000-00-00 00:00:00';
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * @var int Increment this value to trigger a schema update.
 	 */

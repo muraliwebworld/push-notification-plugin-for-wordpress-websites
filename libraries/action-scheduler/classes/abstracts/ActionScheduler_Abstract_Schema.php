@@ -11,7 +11,7 @@
  * Utility class for creating/updating custom tables
  */
 abstract class ActionScheduler_Abstract_Schema {
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * @var int Increment this value in derived class to trigger a schema update.
 	 */

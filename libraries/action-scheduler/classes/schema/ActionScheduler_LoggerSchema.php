@@ -9,7 +9,7 @@
  */
 class ActionScheduler_LoggerSchema extends ActionScheduler_Abstract_Schema {
 	const LOG_TABLE = 'actionscheduler_logs';
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * @var int Increment this value to trigger a schema update.
 	 */

@@ -270,7 +270,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
         $script[] = static::call('log', static::quote('%c%s'), static::quote('font-weight: bold'), static::quote($title));
         foreach ($dict as $key => $value) {
-            $value = json_encode($value);
+            $value = wp_json_encode($value);
             if (empty($value)) {
                 $value = static::quote('');
             }

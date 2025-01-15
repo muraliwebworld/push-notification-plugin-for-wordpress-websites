@@ -34,8 +34,8 @@ class ActionScheduler_Action {
 			throw new Exception(
 				sprintf(
 					/* translators: 1: action hook. */
-					__( 'Scheduled action for %1$s will not be executed as no callbacks are registered.', 'action-scheduler' ),
-					$hook
+					esc_html( __( 'Scheduled action for %1$s will not be executed as no callbacks are registered.', 'push-notification-for-post-and-buddypress' )),
+					esc_html($hook)
 				)
 			);
 		}

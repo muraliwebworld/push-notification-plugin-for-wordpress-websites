@@ -6,6 +6,8 @@
 		*/
 			
 			global $wpdb;
+
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 			
 			$apiaccesskey = get_option('pnfpb_ic_fcm_google_api');
 			
@@ -32,7 +34,7 @@
 				
 				$table_name = $wpdb->prefix.'pnfpb_ic_subscribed_deviceids_web';
 				
-				$deviceidswebviewcheck=$wpdb->get_col( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM {$table_name} WHERE device_id LIKE '%webview%' AND device_id NOT LIKE '%@N%' AND userid = '{$receiverid}' ORDER BY id DESC LIMIT 1000"  );
+				$deviceidswebviewcheck=$wpdb->get_col($wpdb->prepare( "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id NOT LIKE %s AND userid = %d ORDER BY id DESC LIMIT 1000",$table_name,'%webview%','%@N%',$receiverid  ));
 				
 				if (count($deviceidswebviewcheck) > 0) {
 					
@@ -48,7 +50,7 @@
 				// prepare the message
 				$message = array( 
 					'title'     => trim($pushtitle),
-					'body'      => mb_substr(stripslashes(strip_tags(urldecode(trim($pushcontent)))),0,130, 'UTF-8'),
+					'body'      => mb_substr(stripslashes(wp_strip_all_tags(urldecode(trim($pushcontent)))),0,130, 'UTF-8'),
 					'icon'		=> $pushicon,
 					'image'		=> $pushimageurl,
 					'click_action'  => $pushclickurl,
@@ -76,7 +78,7 @@
 				);
     
 				
-				$body = json_encode($fields);
+				$body = wp_json_encode($fields);
 			
 				$args = array(
 			    	'httpversion' => '1.0',
@@ -101,7 +103,7 @@
 						foreach ($bodyresults['results'] as $idx=>$result){
 							if (array_key_exists('error',$result)) {
 								if (($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') && strpos($target_device_ids[$idx], '!!') === false) {
-									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id = '{$target_device_ids[$idx]}'") ;
+									$deviceid_delete_status = $wpdb->query($wpdb->prepare("DELETE from %i WHERE device_id = %s",$table_name,$target_device_ids[$idx])) ;
 								}
 							}
 						}
@@ -111,7 +113,7 @@
 				if (is_wp_error($apiresults)) {
 					$status = $apiresults->get_error_code(); 				// custom code for WP_ERROR
             		$error_message = $apiresults->get_error_message();
-            		error_log('There was a '.$status.' error in push notification: '.$error_message);
+            		//error_log('There was a '.$status.' error in push notification: '.$error_message);
 				}
 			}
 			
@@ -123,7 +125,7 @@
 
 				$message = array( 
 					'title'     => trim($pushtitle),
-					'body'      => mb_substr(stripslashes(strip_tags(urldecode(trim($pushcontent)))),0,130, 'UTF-8'),
+					'body'      => mb_substr(stripslashes(wp_strip_all_tags(urldecode(trim($pushcontent)))),0,130, 'UTF-8'),
 					'icon'		=> $pushicon,
 					'image'		=> $pushimageurl,
 					'tag'		=> 'PNFPB_webpush'
@@ -148,7 +150,7 @@
 					'Content-Type' => 'application/json'
 				);
 				
-				$body = json_encode($fields);
+				$body = wp_json_encode($fields);
 
 				$args = array(
 			        'httpversion' => '1.0',
@@ -172,7 +174,7 @@
 						foreach ($bodyresults['results'] as $idx=>$result){
 							if (array_key_exists('error',$result)) {
 								if ($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration') {
-									$deviceid_delete_status = $wpdb->query("DELETE from {$table_name} WHERE device_id LIKE '%{$deviceidswebview[$idx]}%'") ;
+									$deviceid_delete_status = $wpdb->query($wpdb->prepare("DELETE from %i WHERE device_id LIKE %s",$table_name,'%'.$deviceidswebview[$idx].'%')) ;
 								}
 							}
 						}
@@ -182,7 +184,7 @@
 				if (is_wp_error($apiresults)) {
 				    $status = $apiresults->get_error_code();
                     $error_message = $apiresults->get_error_message();
-                    error_log('There was a '.$status.' error in push notification: '.$error_message);
+                    //error_log('There was a '.$status.' error in push notification: '.$error_message);
 				}
 			}
 ?>

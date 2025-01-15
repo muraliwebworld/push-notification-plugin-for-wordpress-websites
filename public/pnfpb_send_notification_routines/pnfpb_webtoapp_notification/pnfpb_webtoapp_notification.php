@@ -7,12 +7,14 @@
 		 */
 
 			global $wpdb;
+
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 			
 			$apiaccesskey = get_option('pnfpb_ic_fcm_webtoapp_api_key');
 			
 			$url = 'https://webtoapp.design/api/global_push_notifications?key='.$apiaccesskey;
 			
-			$pushcontent = mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($pushcontent))))),0,130, 'UTF-8');
+			$pushcontent = mb_substr(stripslashes(wp_strip_all_tags(urldecode(trim(htmlspecialchars_decode($pushcontent))))),0,130, 'UTF-8');
 			
 			$pushcontent = preg_replace("/\r|\n/", " ",$pushcontent);
 

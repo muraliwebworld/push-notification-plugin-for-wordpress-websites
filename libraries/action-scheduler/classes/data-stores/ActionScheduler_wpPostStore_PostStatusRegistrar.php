@@ -33,9 +33,9 @@ class ActionScheduler_wpPostStore_PostStatusRegistrar {
 	 */
 	protected function post_status_failed_labels() {
 		$labels = array(
-			'label'       => _x( 'Failed', 'post', 'action-scheduler' ),
+			'label'       => _x( 'Failed', 'post', 'push-notification-for-post-and-buddypress' ),
 			/* translators: %s: count */
-			'label_count' => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'action-scheduler' ),
+			'label_count' => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'push-notification-for-post-and-buddypress' ),
 		);
 
 		return apply_filters( 'action_scheduler_post_status_failed_labels', $labels );
@@ -48,9 +48,9 @@ class ActionScheduler_wpPostStore_PostStatusRegistrar {
 	 */
 	protected function post_status_running_labels() {
 		$labels = array(
-			'label'       => _x( 'In-Progress', 'post', 'action-scheduler' ),
+			'label'       => _x( 'In-Progress', 'post', 'push-notification-for-post-and-buddypress' ),
 			/* translators: %s: count */
-			'label_count' => _n_noop( 'In-Progress <span class="count">(%s)</span>', 'In-Progress <span class="count">(%s)</span>', 'action-scheduler' ),
+			'label_count' => _n_noop( 'In-Progress <span class="count">(%s)</span>', 'In-Progress <span class="count">(%s)</span>', 'push-notification-for-post-and-buddypress' ),
 		);
 
 		return apply_filters( 'action_scheduler_post_status_running_labels', $labels );

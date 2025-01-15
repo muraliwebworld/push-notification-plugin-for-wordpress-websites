@@ -43,9 +43,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploadericon_for_group_subscribe = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -71,9 +71,9 @@ $j(document).ready(function() {
 		}
 		
 		mediaUploadericon_for_group_unsubscribe = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -99,9 +99,9 @@ $j(document).ready(function() {
 		}
 		
 		pushprompt_subscribe_icon_mediaUploader_512 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});
@@ -136,9 +136,9 @@ $j(document).ready(function() {
 		}
 		
 		pnfpb_custom_prompt_subscribe_icon_mediaUploader_512 = wp.media.frames.file_frame = wp.media({
-			title: __('Select a Picture','PNFPB_TD'),
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
 			button: {
-				text: __('Select a Picture','PNFPB_TD')
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
 			},
 			multiple: false
 		});

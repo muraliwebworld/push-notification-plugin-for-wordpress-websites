@@ -139,7 +139,7 @@ class Migration_Command extends WP_CLI_Command {
 			WP_CLI::debug( sprintf( 'Migrated source action with ID %d to new store with ID %d', $source_id, $destination_id ) );
 		}, 10, 2 );
 		add_action( 'action_scheduler/migration_batch_starting', function ( $batch ) {
-			WP_CLI::debug( 'Beginning migration of batch: ' . print_r( $batch, true ) );
+			WP_CLI::debug( sprintf('Beginning migration of batch: ' ) );
 		}, 10, 1 );
 		add_action( 'action_scheduler/migration_batch_complete', function ( $batch ) {
 			WP_CLI::log( sprintf( 'Completed migration of %d actions', count( $batch ) ) );

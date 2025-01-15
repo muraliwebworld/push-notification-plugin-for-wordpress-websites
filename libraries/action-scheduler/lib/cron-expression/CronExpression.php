@@ -97,7 +97,7 @@ class CronExpression
         $this->cronParts = preg_split('/\s/', $value, -1, PREG_SPLIT_NO_EMPTY);
         if (count($this->cronParts) < 5) {
             throw new InvalidArgumentException(
-                $value . ' is not a valid CRON expression'
+                esc_html($value) . ' is not a valid CRON expression'
             );
         }
 
@@ -121,7 +121,7 @@ class CronExpression
     {
         if (!$this->fieldFactory->getField($position)->validate($value)) {
             throw new InvalidArgumentException(
-                'Invalid CRON field value ' . $value . ' as position ' . $position
+                'Invalid CRON field value ' . esc_html($value) . ' as position ' . esc_html($position)
             );
         }
 
@@ -231,7 +231,7 @@ class CronExpression
     public function isDue($currentTime = 'now')
     {
         if ('now' === $currentTime) {
-            $currentDate = date('Y-m-d H:i');
+            $currentDate = gmdate('Y-m-d H:i');
             $currentTime = strtotime($currentDate);
         } elseif ($currentTime instanceof DateTime) {
             $currentDate = $currentTime->format('Y-m-d H:i');

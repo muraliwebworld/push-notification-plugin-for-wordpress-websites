@@ -1,9 +1,18 @@
 <?php
 
 			global $wpdb;
+
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 			
 			if  ( 'publish' !== $new_status ) {
 				return;
+			}
+
+
+			if ( $old_status === 'publish' && $new_status === 'publish' && get_option('pnfpb_ic_fcm_disable_post_update_enable') === '1' && ( !isset($_POST['pnfpb_push_notification_send_checkbox']) && !isset( $_POST['pnfpb_push_notification_schedule_checkbox'] ))) {
+				
+				return;
+				
 			}
 
             if( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
@@ -15,33 +24,33 @@
 			}
 			
 			$screen = get_current_screen();	
-			
-			
-			if ( isset( $_POST['pnfpb_push_notification_send_checkbox'] ) && $post->ID ) {
 				
-				update_post_meta( $post->ID, 'pnfpb_push_notification_send_checkbox', $_POST['pnfpb_push_notification_send_checkbox'] );
-				
-			}
-			else {
-				
-				update_post_meta( $post->ID, 'pnfpb_push_notification_send_checkbox', '' );
-			}
+			update_post_meta( $post->ID, 'pnfpb_push_notification_send_checkbox', '' );
 
-			
+	
 			if ( isset( $_POST['pnfpb_push_notification_schedule_checkbox'] ) && $_POST['pnfpb_push_notification_schedule_checkbox'] === '1' && isset( $_POST['pnfpb_ic_fcm_token_ondemand_datepicker_post'] ) && $_POST['pnfpb_ic_fcm_token_ondemand_datepicker_post'] !== '' && $post->ID ) {
 				
+				$pnfpb_push_notification_schedule_checkbox = sanitize_text_field(wp_unslash($_POST['pnfpb_push_notification_schedule_checkbox']));
+
+				$pnfpb_ic_fcm_token_ondemand_datepicker_post = sanitize_text_field(wp_unslash($_POST['pnfpb_ic_fcm_token_ondemand_datepicker_post']));
+
+				$pnfpb_ic_fcm_token_ondemand_timerpicker_post = '';
+
+				if (isset($_POST['pnfpb_ic_fcm_token_ondemand_timepicker_post'])) {
+
+					$pnfpb_ic_fcm_token_ondemand_timerpicker_post = sanitize_text_field(wp_unslash($_POST['pnfpb_ic_fcm_token_ondemand_timepicker_post']));
+				}
 				
 				update_post_meta( $post->ID, 'pnfpb_push_notification_schedule_checkbox', $_POST['pnfpb_push_notification_schedule_checkbox'] );
-				
 			
-				$selected_day_push_notification = $_POST['pnfpb_ic_fcm_token_ondemand_datepicker_post'].' '.$_POST['pnfpb_ic_fcm_token_ondemand_timepicker_post'];
+				$selected_day_push_notification = $pnfpb_ic_fcm_token_ondemand_datepicker_post.' '.$pnfpb_ic_fcm_token_ondemand_timerpicker_post;
 				
 				if ($_POST['pnfpb_ic_fcm_token_ondemand_timepicker_post'] === '') {
 					
-					$selected_day_push_notification = $_POST['pnfpb_ic_fcm_token_ondemand_datepicker_post'].'00:00';
+					$selected_day_push_notification = $pnfpb_ic_fcm_token_ondemand_datepicker_post.'00:00';
 				}
 				
-				if ($_POST['pnfpb_ic_fcm_token_ondemand_datepicker_post'] === '' && $_POST['pnfpb_ic_fcm_token_ondemand_timepicker_post'] === '') {
+				if ($pnfpb_ic_fcm_token_ondemand_datepicker_post === '' && $pnfpb_ic_fcm_token_ondemand_timerpicker_post === '') {
 					
 					$pnfpb_selected_datetime = new DateTime('now', new DateTimeZone(wp_timezone_string()));
 					
@@ -55,9 +64,19 @@
 				$scheduled_day_push_notification = strtotime($pnfpb_selected_datetime->format("Y-m-d H:i:s"));
 				
 				if (isset($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post']) && ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] != "" || $_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] != '')) {
-					
-					//$pnfpb_selected_datetime->setTimestamp($scheduled_day_push_notification);
-										
+
+					$pnfpb_ic_fcm_token_ondemand_repeat_month_post = sanitize_text_field(wp_unslash($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post']));
+
+					$pnfpb_ic_fcm_token_ondemand_repeat_day_post = sanitize_text_field(wp_unslash($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post']));
+
+					$pnfpb_ic_fcm_token_ondemand_repeat_day_number_post = '';
+
+					if (isset($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_number_post'])) {
+
+						$pnfpb_ic_fcm_token_ondemand_repeat_day_number_post = sanitize_text_field(wp_unslash($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_number_post']));
+
+					}
+
 					$selected_recurring_schedule_formatted = $pnfpb_selected_datetime->format('Y-m-d H:i:s'); 
 					
 					$selected_recurring_schedule_split_array = explode(' ',$selected_recurring_schedule_formatted);
@@ -75,8 +94,10 @@
 						$selected_recurring_date_day = $selected_recurring_date_array[2];
 					}
 					
-					if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_number_post'] !== '') {
-						$selected_recurring_date_day = $_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_number_post'];
+					if ($pnfpb_ic_fcm_token_ondemand_repeat_day_number_post !== '') {
+
+						$selected_recurring_date_day = $pnfpb_ic_fcm_token_ondemand_repeat_day_number_post;
+
 					}
 					else {
 						$selected_recurring_date_day = '*';
@@ -95,187 +116,186 @@
 						$selected_recurring_minute = $selected_recurring_time_array[1];
 					}					
 					
-					$selected_recurring_cycle_status = __('Recurring ', 'PNFPB_TD');;					
+					$selected_recurring_cycle_status = esc_html( __('Recurring ', "push-notification-for-post-and-buddypress"));					
 					$selected_recurring_month_status = '';
 					$selected_recurring_day_status = '';
 					
-					if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '') {
+					if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '') {
 						
 						$selected_recurring_month = '*';
-						$selected_recurring_month_status .= __('Every month ', 'PNFPB_TD');
+						$selected_recurring_month_status .= esc_html( __('Every month ', "push-notification-for-post-and-buddypress"));
 							
 					} else {
 					
-						$selected_recurring_month = $_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'];
+						$selected_recurring_month = $pnfpb_ic_fcm_token_ondemand_repeat_month_post;
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '*') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '*') {
 							
 							
-							$selected_recurring_month_status .= __('Every Month ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every Month ', "push-notification-for-post-and-buddypress"));
 							
 						}						
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '1') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '1') {
 							
 							$selected_recurring_month = '1';
 							
-							$selected_recurring_month_status .= __('Every January ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every January ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '2') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '2') {
 							
 							$selected_recurring_month = '2';
 							
-							$selected_recurring_month_status .= __('Every February ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every February ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '3') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '3') {
 							
 							$selected_recurring_month = '3';
 							
-							$selected_recurring_month_status .= __('Every March ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every March ', "push-notification-for-post-and-buddypress"));
 							
 						}
 
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '4') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '4') {
 							
 							$selected_recurring_month = '4';
 							
-							$selected_recurring_month_status .= __('Every April ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every April ', "push-notification-for-post-and-buddypress"));
 							
 						}
 
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '5') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '5') {
 							
 							$selected_recurring_month = '5';
 							
-							$selected_recurring_month_status .= __('Every May ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every May ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '6') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '6') {
 							
 							$selected_recurring_month = '6';
 							
-							$selected_recurring_month_status .= __('Every June ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every June ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '7') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '7') {
 							
 							$selected_recurring_month = '7';
 							
-							$selected_recurring_month_status .= __('Every July ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every July ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '8') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '8') {
 							
 							$selected_recurring_month = '8';
 							
-							$selected_recurring_month_status .= __('Every August ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every August ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '9') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '9') {
 							
 							$selected_recurring_month = '9';
 							
-							$selected_recurring_month_status .= __('Every September ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every September ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '10') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '10') {
 							
 							$selected_recurring_month = '10';
 							
-							$selected_recurring_month_status .= __('Every October ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every October ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '11') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '11') {
 							
 							$selected_recurring_month = '11';
 							
-							$selected_recurring_month_status .= __('Every November ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every November ', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'] === '12') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_month_post === '12') {
 							
 							$selected_recurring_month = '12';
 							
-							$selected_recurring_month_status .= __('Every December ', 'PNFPB_TD');
+							$selected_recurring_month_status .= esc_html( __('Every December ', "push-notification-for-post-and-buddypress"));
 							
 						}						
-						
 					
 					}
 					
-					if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '') {
+					if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '') {
 						
 						$selected_recurring_day = '*';
-						$selected_recurring_day_status .= __(' (any day)', 'PNFPB_TD');
+						$selected_recurring_day_status .= esc_html( __(' (any day)', "push-notification-for-post-and-buddypress"));
 							
 					} else {
 					
-						$selected_recurring_day = $_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'];
+						$selected_recurring_day = $pnfpb_ic_fcm_token_ondemand_repeat_day_post;
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '0') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '0') {
 							
 							$selected_recurring_day = '0';
 							
-							$selected_recurring_day_status .= __(' (on Sunday)', 'PNFPB_TD');
+							$selected_recurring_day_status .= esc_html( __(' (on Sunday)', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '1') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '1') {
 							
 							$selected_recurring_day = '1';
 							
-							$selected_recurring_day_status .= __(' (on Monday)', 'PNFPB_TD');
+							$selected_recurring_day_status .= esc_html( __(' (on Monday)', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '2') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '2') {
 							
 							$selected_recurring_day = '2';
 							
-							$selected_recurring_day_status .= __(' (on Tuesday)', 'PNFPB_TD');
+							$selected_recurring_day_status .= esc_html( __(' (on Tuesday)', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '3') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '3') {
 							
 							$selected_recurring_day = '3';
 							
-							$selected_recurring_day_status .= __(' (on Wednesday)', 'PNFPB_TD');
+							$selected_recurring_day_status .= esc_html( __(' (on Wednesday)', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '4') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '4') {
 							
 							$selected_recurring_day = '4';
 							
-							$selected_recurring_day_status .= __(' (on Thursday)', 'PNFPB_TD');
+							$selected_recurring_day_status .= esc_html( __(' (on Thursday)', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '5') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '5') {
 							
 							$selected_recurring_day = '5';
 							
-							$selected_recurring_day_status .= __(' (on Friday)', 'PNFPB_TD');
+							$selected_recurring_day_status .= esc_html( __(' (on Friday)', "push-notification-for-post-and-buddypress"));
 							
 						}
 						
-						if ($_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'] === '6') {
+						if ($pnfpb_ic_fcm_token_ondemand_repeat_day_post === '6') {
 							
 							$selected_recurring_day = '6';
 							
-							$selected_recurring_day_status .= __(' (on Saturday)', 'PNFPB_TD');
+							$selected_recurring_day_status .= esc_html( __(' (on Saturday)', "push-notification-for-post-and-buddypress"));
 							
 						}					
 					
@@ -336,15 +356,15 @@
 					
 					$data = array('userid' => get_current_user_id(),
 								  'action_scheduler_id' => $scheduled_day_push_notification,
-								  'title' => stripslashes(strip_tags($post->post_title)),
-								  'content' => mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($post->post_content))))),0,130, 'UTF-8'),
+								  'title' => stripslashes(wp_strip_all_tags($post->post_title)),
+								  'content' => mb_substr(stripslashes(wp_strip_all_tags(urldecode(trim(htmlspecialchars_decode($post->post_content))))),0,130, 'UTF-8'),
 								  'image_url' => $imageurl,
 								  'click_url' => get_permalink($post->ID),
 								  'scheduled_timestamp' => $selected_recurring_schedule_formatted_notification_db,
 								  'scheduled_type' => 'recurring',
-								  'recurring_day_number' => $_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_number_post'],
-								  'recurring_month_number'=> $_POST['pnfpb_ic_fcm_token_ondemand_repeat_month_post'],
-								  'recurring_day_name'=> $_POST['pnfpb_ic_fcm_token_ondemand_repeat_day_post'],
+								  'recurring_day_number' => $pnfpb_ic_fcm_token_ondemand_repeat_day_number_post,
+								  'recurring_month_number'=> $pnfpb_ic_fcm_token_ondemand_repeat_month_post,
+								  'recurring_day_name'=> $pnfpb_ic_fcm_token_ondemand_repeat_day_post,
 							  	  'status'	=> $selected_recurring_cycle_status.' '.$selected_recurring_month_status.' '.$selected_recurring_day_status
 								 );
 					
@@ -362,16 +382,16 @@
 					
 					if ($action_scheduler_status) {
 					
-						$pnfpb_admin_message = __('Push notification scheduled for this post. ','PNFPB_TD').'<a href="'.admin_url().'admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc">'.__('Refer notification list tab on id ','PNFPB_TD').$insertid.'</a>.'.__('<br/>Scheduled timestamp reference number is ','PNFPB_TD').$scheduled_day_push_notification.' .'.__('Action scheduler task id is ','PNFPB_TD').$action_scheduler_status;
+						$pnfpb_admin_message = esc_html( __('Push notification scheduled for this post. ',"push-notification-for-post-and-buddypress")).'<a href="'.admin_url().'admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc">'.esc_html( __('Refer notification list tab on id ',"push-notification-for-post-and-buddypress")).$insertid.'</a>.'.esc_html( __('<br/>Scheduled timestamp reference number is ',"push-notification-for-post-and-buddypress")).$scheduled_day_push_notification.' .'.esc_html( __('Action scheduler task id is ',"push-notification-for-post-and-buddypress")).$action_scheduler_status;
 					
 					} 
 					else {
 						
-						$pnfpb_admin_message = __('Error in  scheduling push notification for this post, Please try again ','PNFPB_TD');
+						$pnfpb_admin_message = esc_html( __('Error in  scheduling push notification for this post, Please try again ',"push-notification-for-post-and-buddypress"));
 					}
 					update_post_meta($post->ID,'pnfpb_post_schedule',$pnfpb_admin_message);
-				}
-				else {
+
+				} else {
 					
 					$table = $wpdb->prefix.'pnfpb_ic_schedule_push_notifications';
 					
@@ -425,13 +445,13 @@
 					
 					$data = array('userid' => get_current_user_id(),
 								  'action_scheduler_id' => $scheduled_day_push_notification,
-								  'title' => stripslashes(strip_tags($post->post_title)),
-								  'content' => mb_substr(stripslashes(strip_tags(urldecode(trim(htmlspecialchars_decode($post->post_content))))),0,130, 'UTF-8'),
+								  'title' => stripslashes(wp_strip_all_tags($post->post_title)),
+								  'content' => mb_substr(stripslashes(wp_strip_all_tags(urldecode(trim(htmlspecialchars_decode($post->post_content))))),0,130, 'UTF-8'),
 								  'image_url' => $imageurl,
 								  'click_url' => get_permalink($post->ID),
 								  'scheduled_type' => 'single',
 								  'scheduled_timestamp' => $selected_recurring_schedule_formatted_notification_db,
-							  	  'status'	=> __('Onetime scheduled', 'PNFPB_TD')
+							  	  'status'	=> __('Onetime scheduled', "push-notification-for-post-and-buddypress")
 								 );
 					
 					$insertstatus = $wpdb->insert($table,$data);
@@ -449,13 +469,13 @@
 			
 					if ($action_scheduler_status) {
 					
-						$pnfpb_admin_message = __('Push notification scheduled successfully.','PNFPB_TD').'<a href="'.admin_url().'admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc">'.__('Refer notification list tab on id ','PNFPB_TD').$insertid.'</a>.'.__('Scheduled timestamp reference number is ','PNFPB_TD').$scheduled_day_push_notification.' .'.__('Action scheduler task id is ','PNFPB_TD').$action_scheduler_status;
+						$pnfpb_admin_message = esc_html( __('Push notification scheduled successfully.',"push-notification-for-post-and-buddypress")).'<a href="'.admin_url().'admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc">'.esc_html( __('Refer notification list tab on id ',"push-notification-for-post-and-buddypress")).$insertid.'</a>.'.esc_html( __('Scheduled timestamp reference number is ',"push-notification-for-post-and-buddypress")).$scheduled_day_push_notification.' .'.esc_html( __('Action scheduler task id is ',"push-notification-for-post-and-buddypress")).$action_scheduler_status;
 						
 				
 					}
 					else {
 						
-						$pnfpb_admin_message = __('Error in  scheduling push notification for this post, Please try again ','PNFPB_TD');
+						$pnfpb_admin_message = esc_html( __('Error in  scheduling push notification for this post, Please try again ',"push-notification-for-post-and-buddypress"));
 
 						
 					}
@@ -463,9 +483,7 @@
 					update_post_meta($post->ID,'pnfpb_post_schedule',$pnfpb_admin_message);
 					
 				}
-
-
-				
+			
 			} else {
 				
 					update_post_meta( $post->ID, 'pnfpb_push_notification_schedule_checkbox', '' );
@@ -489,8 +507,8 @@
 				
 						$post_meta_box_push_notification = get_post_meta( $post->ID, 'pnfpb_push_notification_send_checkbox', true);
 
-						if ((isset($screen) && $screen->base == "post" && isset( $_POST['pnfpb_push_notification_send_checkbox'] ) && $_POST['pnfpb_push_notification_send_checkbox'] === '1') || (isset($screen) && $screen->base == "post" && $post_meta_box_push_notification === '1') || ((!isset($screen) || !isset($screen->base)) && get_option('pnfpb_ic_fcm_'.$post_type.'_enable'))) {
-					
+						if ((isset($screen) && $screen->base == "post" && isset( $_POST['pnfpb_push_notification_send_checkbox'] ) && sanitize_text_field(wp_unslash($_POST['pnfpb_push_notification_send_checkbox'] === '1'))) || (isset($screen) && $screen->base == "post" && $post_meta_box_push_notification === '1') || ((!isset($screen) || !isset($screen->base)) && get_option('pnfpb_ic_fcm_'.$post_type.'_enable'))) {		
+							
 							$postlink = get_permalink($post->ID);
 
 							//new post/page
@@ -499,11 +517,26 @@
 								if ($post->post_status == 'publish') {
 							
 									if (isset($_POST['pnfpb_push_notification_send_checkbox'])) {
-										update_post_meta( $post->ID, 'pnfpb_push_notification_send_checkbox', $_POST['pnfpb_push_notification_send_checkbox'] );
+										update_post_meta( $post->ID, 'pnfpb_push_notification_send_checkbox', '' );
 									}
 						
                        	 			if ((isset($screen) && $screen->base == "post" && isset( $_POST['pnfpb_push_notification_send_checkbox'] ) && $_POST['pnfpb_push_notification_send_checkbox'] === '1') || (isset($screen) && $screen->base == "post" && $post_meta_box_push_notification === '1') || ((!isset($screen) || !isset($screen->base)) && get_option('pnfpb_ic_fcm_'.$post_type.'_enable'))) {
 								
+										if ($post_type === 'reply' && function_exists('bbp_get_reply_url')) {
+											
+											$postlink = bbp_get_reply_url($post->ID);
+										}
+										
+										if ($post_type === 'topic' && function_exists('bbp_get_topic_permalink')) {
+											
+											$postlink = bbp_get_topic_permalink( $post->ID );
+										}
+										
+										if ($post_type === 'forum' && function_exists('bbp_get_forum_permalink')) {
+											
+											$postlink = bbp_get_forum_permalink( $post->ID );
+										}
+										
 										$this->PNFPB_icforum_push_notifications_post_web($post->post_title,$post->post_content,$postlink,$post->ID,$post);
 								
                         			}

@@ -6,7 +6,7 @@
 class ActionScheduler_wpCommentLogger extends ActionScheduler_Logger {
 	const AGENT = 'ActionScheduler';
 	const TYPE = 'action_log';
-
+	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	/**
 	 * @param string $action_id
 	 * @param string $message

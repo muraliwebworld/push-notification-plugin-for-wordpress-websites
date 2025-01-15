@@ -93,7 +93,7 @@ abstract class ActionScheduler_Abstract_QueueRunner extends ActionScheduler_Abst
 		) {
 			ActionScheduler_Logger::instance()->log(
 				$action_id,
-				__( 'This action appears to be consistently failing. A new instance will not be scheduled.', 'action-scheduler' )
+				__( 'This action appears to be consistently failing. A new instance will not be scheduled.', 'push-notification-for-post-and-buddypress' )
 			);
 
 			return;

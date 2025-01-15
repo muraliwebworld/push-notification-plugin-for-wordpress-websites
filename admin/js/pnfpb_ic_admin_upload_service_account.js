@@ -27,8 +27,13 @@ $j(function() {
             data: form_data,
             success: function (response) {
               	console.log(response);
-				$j('.pnfpb_icfcm_service_account_upload_message').css('color','red');
-				$j('.pnfpb_icfcm_service_account_upload_message').html('<b>Service account file uploaded successfully.</b>');
+				if (response !== 'failed' && response !== 'Security validation failed.' && response !== 'wp_filesystem upload failed') {
+					$j('.pnfpb_icfcm_service_account_upload_message').css('color','red');
+					$j('.pnfpb_icfcm_service_account_upload_message').html('<b>Service account file uploaded successfully.</b>');
+				} else {
+					$j('.pnfpb_icfcm_service_account_upload_message').css('color','red');
+					$j('.pnfpb_icfcm_service_account_upload_message').html(response);					
+				}
             }
         });
 		
