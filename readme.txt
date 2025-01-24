@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 6.2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.07
+Stable tag: 2.09
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -202,6 +202,12 @@ After completing above steps, push notification will be displayed based on optio
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 2.09 version 26 January 2025 =
+* PHP Code aligned and re-formatted
+= 2.08 version 24 January 2025 =
+* PHP Code aligned and re-formatted
+* Security fix
+* Changed language translation text domain matching with plugin slug push-notification-for-post-and-buddypress as per coding standards.
 = 2.07 version 10 January 2025 =
 * Security fix
 = 2.06 version 4 January 2025 =
@@ -236,15 +242,9 @@ After completing above steps, push notification will be displayed based on optio
 * If post notification is already scheduled, it will display status message in post editor screen indicating it is already scheduled. Users must enable schedule if it needs to be re-scheduled.
 * Resolved problem to include featured image of post in scheduling post push notification.
 * All post push notifications will be saved under admin notifications tab to resend or re-schedule notifications again.
-* Resolved duplicate notification for one time push notifications from admin page.
-* Plugin Admin left sidebar menus are updated to sync with menu names in plugin admin settings page.
-* Plugin admin menu for one time push notification is renamed as send push notification.
-* Added new webtoapp option in plugin admin settings to send push notifications to mobile apps using webtoapp provider.
-* Added new data field  "click_action": "FLUTTER_NOTIFICATION_CLICK" for Flutter mobile app users. click_action url shall be used from push notifications in flutter mobile app to navigate to particular page after clicking on notifications in mobile.
 [Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
 
 
 == Upgrade Notice ==
-* Security fix
-* Update & Bug fixes for Onesignal push notifications - Updated and fixed problems as per latest version of Onesignal SDK v16.
+* Security fix and code re-aligned, changed textdomain to push-notification-for-post-and-buddypress as per coding standards.
 [Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
