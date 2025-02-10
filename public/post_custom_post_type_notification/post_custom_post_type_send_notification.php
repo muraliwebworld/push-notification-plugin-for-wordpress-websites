@@ -75,6 +75,7 @@ if (has_post_thumbnail($postid)) {
     }
 }
 
+
 $bb_target_userid_array = [];
 
 $buddyboss_pnfpb = false;
@@ -336,48 +337,18 @@ if (
             ) {
                 $bb_target_userid_array = [];
 
-                $forum_id = null;
+				$subscribed_topicid = wp_get_post_parent_id(intval($postid));
 
-                $post_id = intval($postid);
+				if (!$subscribed_topicid) {
+						
+					$bb_target_userid_array = [];
+						
+				} else {
+						
+					$bb_target_userid_array = bbp_get_topic_subscribers($subscribed_topicid);
+				}
 
-                if ("reply" === $pnfbp_post_type) {
-                    $topic_id = $post->post_parent;
-                    $forum_id = bbp_get_topic_forum_id($topic_id);
-                } else {
-                    if ("topic" === $pnfbp_post_type) {
-                        $topic_id = $post->post_parent;
-                        $forum_id = bbp_get_topic_forum_id($topic_id);
-                    }
-                }
-
-                $group_ids = get_post_meta($forum_id, "_bbp_group_ids", true);
-
-                // Make sure result is an array.
-                if (!is_array($group_ids)) {
-                    $group_ids = (array) $group_ids;
-                }
-
-                // Trim out any empty array items.
-                $group_ids = array_filter($group_ids);
-
-                for ($ig = 0; $ig < count($group_ids); $ig++) {
-                    $bbp_bp_group_id = $group_ids[$ig];
-
-                    for ($i = 0; $i < count($target_group_userid_array); $i++) {
-                        if (
-                            bb_is_member_subscribed_group(
-                                $bbp_bp_group_id,
-                                $target_group_userid_array[$i]
-                            )
-                        ) {
-                            array_push(
-                                $bb_target_userid_array,
-                                $target_group_userid_array[$i]
-                            );
-                        }
-                    }
-
-                    if (count($bb_target_userid_array) > 0) {
+                if (count($bb_target_userid_array) > 0) {
                         if (
                             get_option(
                                 "pnfpb_ic_fcm_post_schedule_now_enable"
@@ -409,7 +380,6 @@ if (
                             );
                         }
                     }
-                }
             } else {
                 if (count($target_userid_array) > 0) {
                     if (
@@ -445,7 +415,7 @@ if (
             $target_group_userid_array = $wpdb->get_col(
                 $wpdb->prepare(
                     "SELECT userid FROM %i WHERE device_id NOT LIKE %s LIMIT 1000",
-                    $table_name . "%onesignal%"
+                    $table_name,"%onesignal%"
                 )
             );
 
@@ -475,64 +445,26 @@ if (
                     $buddyboss_pnfpb = true;
 
                     $bb_target_userid_array = [];
-
-                    $forum_id = null;
-
-                    $post_id = intval($postid);
-
-                    if ("reply" === $pnfbp_post_type) {
-                        $topic_id = $post->post_parent;
-                        $forum_id = bbp_get_topic_forum_id($topic_id);
-                    } else {
-                        if ("topic" === $pnfbp_post_type) {
-                            $topic_id = $post->post_parent;
-                            $forum_id = bbp_get_topic_forum_id($topic_id);
-                        }
-                    }
-
-                    $group_ids = get_post_meta(
-                        $forum_id,
-                        "_bbp_group_ids",
-                        true
-                    );
-
-                    // Make sure result is an array.
-                    if (!is_array($group_ids)) {
-                        $group_ids = (array) $group_ids;
-                    }
-
-                    // Trim out any empty array items.
-                    $group_ids = array_filter($group_ids);
-
-                    for ($ig = 0; $ig < count($group_ids); $ig++) {
-                        $bbp_bp_group_id = $group_ids[$ig];
-
-                        for (
-                            $i = 0;
-                            $i < count($target_group_userid_array);
-                            $i++
-                        ) {
-                            if (
-                                bb_is_member_subscribed_group(
-                                    $bbp_bp_group_id,
-                                    $target_group_userid_array[$i]
-                                )
-                            ) {
-                                array_push(
-                                    $bb_target_userid_array,
-                                    $target_group_userid_array[$i]
-                                );
-                            }
-                        }
-                    }
-                }
+					
+					$subscribed_topicid = wp_get_post_parent_id(intval($postid));
+					
+					if (!$subscribed_topicid) {
+						
+						$bb_target_userid_array = [];
+						
+					} else {
+						
+						$bb_target_userid_array = bbp_get_topic_subscribers($subscribed_topicid);
+					}
+					
+                 }
 
                 if (
                     get_option("pnfpb_shortcode_enable") === "yes" ||
                     get_option("pnfpb_ic_fcm_frontend_enable_subscription") ===
                         "1"
                 ) {
-                    if (count($bb_target_userid_array) > 0) {
+                    if (count($bb_target_userid_array) > 0 && $buddyboss_pnfpb) {
                         $bb_target_userid_implArray = implode(
                             ",",
                             $bb_target_userid_array
@@ -566,19 +498,20 @@ if (
                             );
                         } else {
                             if (
+								!$buddyboss_pnfpb &&
                                 function_exists("bbp_get_subscribers") &&
                                 get_option(
                                     "pnfpb_ic_fcm_only_post_subscribers_enable"
                                 ) === "1" &&
                                 $pnfbp_post_type === "reply"
                             ) {
-                                $subscribed_topicid = bbp_get_reply_topic_id(
-                                    intval($postid)
-                                );
-
-                                $subscribed_user_ids = bbp_get_subscribers(
-                                    $subscribed_topicid
-                                );
+                                $subscribed_topicid = wp_get_post_parent_id(intval($postid));
+								
+								if (!$subscribed_topicid) {
+									$subscribed_user_ids = [];
+								} else {
+									$subscribed_user_ids = bbp_get_subscribers($subscribed_topicid);
+								}								
 
                                 if (count($subscribed_user_ids) > 0) {
                                     $subscribed_user_ids_implArray = implode(
@@ -604,7 +537,7 @@ if (
                         get_option("pnfpb_ic_fcm_loggedin_notify") &&
                         get_option("pnfpb_ic_fcm_loggedin_notify") === "1"
                     ) {
-                        if (count($bb_target_userid_array) > 0) {
+                        if (count($bb_target_userid_array) > 0 && $buddyboss_pnfpb) {
                             $bb_target_userid_implArray = implode(
                                 ",",
                                 $bb_target_userid_array
@@ -638,19 +571,21 @@ if (
                                 );
                             } else {
                                 if (
+									!$buddyboss_pnfpb &&
                                     function_exists("bbp_get_subscribers") &&
                                     get_option(
                                         "pnfpb_ic_fcm_only_post_subscribers_enable"
                                     ) === "1" &&
                                     $pnfbp_post_type === "reply"
                                 ) {
-                                    $subscribed_topicid = bbp_get_reply_topic_id(
-                                        intval($postid)
-                                    );
-
-                                    $subscribed_user_ids = bbp_get_subscribers(
-                                        $subscribed_topicid
-                                    );
+                                    
+									$subscribed_topicid = wp_get_post_parent_id(intval($postid));
+									
+									if (!$subscribed_topicid) {
+										$subscribed_user_ids = [];
+									} else {
+										$subscribed_user_ids = bbp_get_subscribers($subscribed_topicid);
+									}	
 
                                     if (count($subscribed_user_ids) > 0) {
                                         $subscribed_user_ids_implArray = implode(
@@ -672,7 +607,7 @@ if (
                             }
                         }
                     } else {
-                        if (count($bb_target_userid_array) > 0) {
+                        if (count($bb_target_userid_array) > 0 && $buddyboss_pnfpb) {
                             $bb_target_userid_implArray = implode(
                                 ",",
                                 $bb_target_userid_array
@@ -706,19 +641,24 @@ if (
                                 );
                             } else {
                                 if (
+									!$buddyboss_pnfpb &&
                                     function_exists("bbp_get_subscribers") &&
                                     get_option(
                                         "pnfpb_ic_fcm_only_post_subscribers_enable"
                                     ) === "1" &&
                                     $pnfbp_post_type === "reply"
                                 ) {
-                                    $subscribed_topicid = bbp_get_reply_topic_id(
-                                        intval($postid)
-                                    );
+                                  //  $subscribed_topicid = bbp_get_reply_topic_id(
+                                  //      intval($postid)
+                                  //  );
 
-                                    $subscribed_user_ids = bbp_get_subscribers(
-                                        $subscribed_topicid
-                                    );
+									$subscribed_topicid = wp_get_post_parent_id(intval($postid));
+									
+									if (!$subscribed_topicid) {
+										$subscribed_user_ids = [];
+									} else {
+										$subscribed_user_ids = bbp_get_subscribers($subscribed_topicid);
+									}
 
                                     if (count($subscribed_user_ids) > 0) {
                                         $subscribed_user_ids_implArray = implode(
@@ -746,7 +686,7 @@ if (
                     get_option("pnfpb_ic_fcm_loggedin_notify") &&
                     get_option("pnfpb_ic_fcm_loggedin_notify") === "1"
                 ) {
-                    if (count($bb_target_userid_array) > 0) {
+                    if (count($bb_target_userid_array) > 0 && $buddyboss_pnfpb) {
                         $bb_target_userid_implArray = implode(
                             ",",
                             $bb_target_userid_array
@@ -778,19 +718,20 @@ if (
                             );
                         } else {
                             if (
+								!$buddyboss_pnfpb &&
                                 function_exists("bbp_get_subscribers") &&
                                 get_option(
                                     "pnfpb_ic_fcm_only_post_subscribers_enable"
                                 ) === "1" &&
                                 $pnfbp_post_type === "reply"
                             ) {
-                                $subscribed_topicid = bbp_get_reply_topic_id(
-                                    intval($postid)
-                                );
-
-                                $subscribed_user_ids = bbp_get_subscribers(
-                                    $subscribed_topicid
-                                );
+								$subscribed_topicid = wp_get_post_parent_id(intval($postid));
+									
+								if (!$subscribed_topicid) {
+									$subscribed_user_ids = [];
+								} else {
+									$subscribed_user_ids = bbp_get_subscribers($subscribed_topicid);
+								}
 
                                 if (count($subscribed_user_ids) > 0) {
                                     $subscribed_user_ids_implArray = implode(
@@ -812,7 +753,7 @@ if (
                         }
                     }
                 } else {
-                    if (count($bb_target_userid_array) > 0) {
+                    if (count($bb_target_userid_array) > 0 && $buddyboss_pnfpb) {
                         $bb_target_userid_implArray = implode(
                             ",",
                             $bb_target_userid_array
@@ -844,18 +785,20 @@ if (
                             );
                         } else {
                             if (
+								!$buddyboss_pnfpb &&
                                 function_exists("bbp_get_subscribers") &&
                                 get_option(
                                     "pnfpb_ic_fcm_only_post_subscribers_enable"
                                 ) === "1" &&
                                 $pnfbp_post_type === "reply"
                             ) {
-                                $subscribed_topicid = bbp_get_reply_topic_id(
-                                    intval($postid)
-                                );
-                                $subscribed_user_ids = bbp_get_subscribers(
-                                    intval($subscribed_topicid)
-                                );
+								$subscribed_topicid = wp_get_post_parent_id(intval($postid));
+									
+								if (!$subscribed_topicid) {
+									$subscribed_user_ids = [];
+								} else {
+									$subscribed_user_ids = bbp_get_subscribers($subscribed_topicid);
+								}
 
                                 if (count($subscribed_user_ids) > 0) {
                                     $subscribed_user_ids_implArray = implode(
@@ -880,7 +823,14 @@ if (
             }
 
             if (get_option("pnfpb_httpv1_push") === "1") {
+
                 $url = "https://fcm.googleapis.com/fcm/send";
+				
+				if ($imageurl !== '') {
+					
+					$iconurl = $imageurl;
+	
+				}				
 
                 $regid = $deviceids;
                 $ownerid = 0;

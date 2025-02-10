@@ -283,7 +283,7 @@ foreach ($custposttypes as $post_type) {
 // delete database table
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 global $wpdb;
-$table_name = $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
-$wpdb->query($wpdb->query("DROP TABLE IF EXISTS %i", $table_name));
+$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+$wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $table_name));
 
 ?>

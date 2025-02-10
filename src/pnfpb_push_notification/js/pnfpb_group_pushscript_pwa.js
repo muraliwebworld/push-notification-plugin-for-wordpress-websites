@@ -64,8 +64,6 @@ function createFirebaseApp(config) {
 
 $j(function() {
 	
-//const { __ } = wp.i18n;
-
 var data = {
 	action: 'icpushcallback',
 	device_id:'',
@@ -74,8 +72,6 @@ var data = {
 };
 		
 $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
-		
-	//console.log(responseajax);
 		
 	var firebasecredentialsobject = JSON.parse(responseajax);
 		
@@ -102,11 +98,15 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 		if (hasFirebaseMessagingSupport_group) {
 			navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:pnfpb_ajax_object_push.homeurl+'/'}).then(function(registration) {				
 				var groupId =  '0';
-				//const messaging = firebase.messaging();
 				navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
 					serviceWorkerRegistration.pushManager.getSubscription().then(async function (subscription) {
-            		//if (Notification.permission === 'granted') {
 					if (subscription) {
+
+						$j(".subscribegroupbutton").removeClass( "subscribe-init-display-off" );
+						$j(".unsubscribegroupbutton").removeClass( "subscribe-init-display-off" );
+						$j(".subscribe-notification-group").removeClass( "subscribe-init-display-off" );
+						$j(".unsubscribe-notification-group").removeClass( "subscribe-init-display-off" );							
+
                         getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then((currentToken) => {
 							if (currentToken) {
 								var deviceid = currentToken;
@@ -414,9 +414,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
                   	}
                   	else
                   	{
-							
 						$j(".pnfpb-group-unsubscribe-alert-msg").html(__("UnSubscribe/Subscribe failed..try again ..Please!!",'push-notification-for-post-and-buddypress'));
-							
 						$j( "#pnfpb-group-unsubscribe-dialog" ).dialog();                        
                   	}
 				})

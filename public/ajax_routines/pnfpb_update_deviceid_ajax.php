@@ -98,9 +98,6 @@ if (isset($_POST['pnfpbshortcodeactive'])) {
     }
     $pnfpbshortcodeactive = sanitize_text_field($_POST['pnfpbshortcodeactive']);
     $pnfpbshortcodeactive = esc_html($pnfpbshortcodeactive);
-    if ($isadminpage === 'no') {
-        update_option('pnfpb_shortcode_enable', $pnfpbshortcodeactive);
-    }
 }
 $pnfpb_endpoint = null;
 $pnfpb_options = null;
@@ -378,6 +375,9 @@ if ($bpdeviceid != '' && $pushtype == 'normal') {
         $insertstatus = $wpdb->insert($table, $data);
         if (!$insertstatus || $insertstatus != 0) {
             $my_id = $wpdb->insert_id;
+			if ($isadminpage === 'no' && ($pnfpbshortcodeactive === 'yes' || $pnfpbshortcodeactive === 'no')) {
+        		update_option('pnfpb_shortcode_enable', $pnfpbshortcodeactive);
+    		}
             echo wp_json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
         } else {
             echo wp_json_encode(array('subscriptionstatus' => 'fail', 'subscriptionoptions' => $bpsubscribeoptions));
@@ -564,6 +564,9 @@ if ($bpdeviceid != '' && $pushtype == 'normal') {
                     $insertstatus = $wpdb->insert($table, $data);
                     if (!$insertstatus || $insertstatus != 0) {
                         $my_id = $wpdb->insert_id;
+						if ($isadminpage === 'no' && ($pnfpbshortcodeactive === 'yes' || $pnfpbshortcodeactive === 'no')) {
+        					update_option('pnfpb_shortcode_enable', $pnfpbshortcodeactive);
+    					}						
                         echo wp_json_encode(array('subscriptionstatus' => 'subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
                     } else {
                         echo wp_json_encode(array('subscriptionstatus' => 'not-subscribed', 'subscriptionoptions' => $bpsubscribeoptions));
@@ -736,6 +739,9 @@ if ($bpdeviceid != '' && $pushtype == 'normal') {
                             $table = $wpdb->prefix . 'pnfpb_ic_subscribed_deviceids_web';
                             $deviceid_update_status = $wpdb->query($wpdb->prepare("DELETE from %i WHERE device_id LIKE %s", $table,'%' . $wpdb->esc_like($bpdeviceid) . '%'));
                             if ($deviceid_update_status > 0) {
+								if ($isadminpage === 'no' && ($pnfpbshortcodeactive === 'yes' || $pnfpbshortcodeactive === 'no')) {
+        							update_option('pnfpb_shortcode_enable', $pnfpbshortcodeactive);
+    							}								
                                 echo wp_json_encode(array('subscriptionstatus' => 'deleted', 'deviceidupdatestauts' => $deviceid_update_status, 'deviceid' => $bpdeviceid));
                             } else {
                                 echo wp_json_encode(array('subscriptionstatus' => 'failed in deleting push token', 'deviceidupdatestauts' => $deviceid_update_status, 'deviceid' => $bpdeviceid));

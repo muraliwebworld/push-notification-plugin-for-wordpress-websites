@@ -6,7 +6,7 @@ Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-
 Requires at least: 6.2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.09
+Stable tag: 2.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,11 +180,15 @@ After completing above steps, push notification will be displayed based on optio
 
 12. Shortcode [PNFPB_PWA_PROMPT] to create button to install PWA. If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience. 
 
-== Frequently Asked Questions ==
+== Frequently Asked Questions (FAQ) ==
 
 = Do you have any questions? =
 
 [Submit or contact us with your question here](https://www.muraliwebworld.com/groups/wordpress-plugins-by-muralidharan-indiacitys-com-technologies/forum/topic/push-notification-for-post-and-buddypress/) (or) [Please contact us here with your query.](https://indiacitys.com/#contact) (or) Submit your question in plugin forum
+
+How can I report security bugs?
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/wordpress/plugin/push-notification-for-post-and-buddypress/vdp)
 
 == Screenshots ==
 
@@ -202,6 +206,16 @@ After completing above steps, push notification will be displayed based on optio
 12.Special settings for NGINX based server
 
 == Changelog ==
+= 2.11 version 8 February 2025 =
+* Update (for web push): Show or hide group subscription buttons depending on push notification subscription.
+* bug fix.
+* Updated readme.txt file related to security.
+= 2.10 version 4 February 2025 =
+* Security fix for PNFPB shortcode active or not active update in options.
+* Bug fix : Group activity subscribe and unsubscribe button
+* Bug fix : Push notifications only for subscribed forum topic users
+* Update  : Addition line field added for Push notification Subscribe - custom prompt text
+* Update  : Users will now be able to subscribe for notification using Frontend subscription settings page (in web browser push notifications).
 = 2.09 version 26 January 2025 =
 * PHP Code aligned and re-formatted
 = 2.08 version 24 January 2025 =
@@ -229,22 +243,10 @@ After completing above steps, push notification will be displayed based on optio
 * PNFPB REST API Android app changes - Added default click action "OPEN_MAIN_ACTIVITY" in push notification parameter for android app. Android app manifest xml needs to contain separate intent filter with name "OPEN_MAIN_ACTIVITY" for default intent under Mainactivity class along with intent filter for launcher.
 * PNFPB REST API Android/ios app changes - PNFPB mobile app REST API supports AES/GCM/NoPadding  aes-256-gcm decryption. From mobile app, if subscrition tokens are encrypted using AES/GCM/NoPadding using secretkey then PNFPB plugin mobile app REST API routine will able to decrypt data sent from mobile app using aes-256-gcm OPEN SSL decryption php routine.
 * PNFPB Private message push notification is now compatible with Better-messages chat link for background push notifications. If push notification link for better messages is clicked in mobile app, it will be redirected to Better-messages plugin chat link page in webview app.
-= 2.02 version October 23 2024 =
-* Bug fix to get userid in IOS app for push notification tokens using PNFPB REST API to send one to one notifications like friendship request/accept and private messages in ios app.
-* Added content-available = 1 for ios push notification background mode for push notification tokens subscribed using PNFPB REST API.
-= 2.01 version October 13 2024 =
-* Added new admin option to send push (immediate/non-scheduled) notifications in asynchornous background mode. Enable this option for more number of subscribers or notifications.
-* Resolved problem related to PWA.
-* In POST editor, Push notification Post update checkbox and schedule checkbox will automatically be disabled after sending push notification in classic post editor. For block post editor, when you reopen the post in block editor push notification checkbox will be disabled after notification sent for first time. If it needs to resend, checkboxes needs to be manually re-enabled.
-* Resolved errors related to browser incognito mode
-= 2.00 version October 08 2024 =
-* Plugin now supports webtoapp push notification provider for mobile apps inaddition Firebase/Onesignal/Progressier.
-* If post notification is already scheduled, it will display status message in post editor screen indicating it is already scheduled. Users must enable schedule if it needs to be re-scheduled.
-* Resolved problem to include featured image of post in scheduling post push notification.
-* All post push notifications will be saved under admin notifications tab to resend or re-schedule notifications again.
 [Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
 
 
 == Upgrade Notice ==
-* Security fix and code re-aligned, changed textdomain to push-notification-for-post-and-buddypress as per coding standards.
-[Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
+* Update (for web push): Show or hide group subscription buttons depending on push notification subscription.
+* bug fix.
+* Updated readme.txt file related to security.

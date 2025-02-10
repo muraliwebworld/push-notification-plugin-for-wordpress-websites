@@ -304,7 +304,7 @@
 													   pnfpb_ic_push_settings_table_label_custom_prompt_column">		
 												<p><?php echo esc_html(
                 										__(
-                    										"Header text in custom prompt",
+                    										"Header text in custom prompt (line 1)",
                     										"push-notification-for-post-and-buddypress"
                 										)
             										); ?>
@@ -328,6 +328,30 @@
 												?></textarea>
 											</td>
 										</tr>
+										<tr class="pnfpb_ic_push_settings_table_row">
+        									<td class="pnfpb_ic_push_settings_table_label_column column-columnname 
+													   pnfpb_ic_push_settings_table_label_custom_prompt_column">		
+												<p><?php echo esc_html(
+                										__(
+                    										"Header text in custom prompt (line 2)",
+                    										"push-notification-for-post-and-buddypress"
+                										)
+            										); ?>
+												</p>
+												<textarea  
+														  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														  id="pnfpb_ic_fcm_custom_prompt_header_text_line_2" 
+														  name="pnfpb_ic_fcm_custom_prompt_header_text_line_2" 
+													><?php if (
+                										get_option("pnfpb_ic_fcm_custom_prompt_header_text_line_2")
+            										) {
+                										echo esc_textarea(get_option("pnfpb_ic_fcm_custom_prompt_header_text_line_2"));
+            										} else {
+                										echo "";
+            										} 
+												?></textarea>
+											</td>
+										</tr>										
 										<tr class="pnfpb_ic_push_settings_table_row">
         									<td class="pnfpb_ic_push_settings_table_label_column column-columnname 
 													   pnfpb_ic_push_settings_table_label_custom_prompt_column">		

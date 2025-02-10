@@ -132,6 +132,10 @@
 	display:none !important;
 }
 
+.subscribe-init-display-off {
+	display:none !important;
+}
+
 .ui-dialog[aria-describedby~=pnfpb_group_users_unsubscribe_dialog_confirm] {
 	width: 100% !important;
 	max-width: 350px !important;
@@ -1791,7 +1795,7 @@ td.pnfpb_ic_push_settings_table_label_column {
 }
 
 .pnfpb_frontend_subscriptions_options_menu_all {
-  display: none;
+  display: block;
 }
 
 .pnfpb_bell_icon_custom_prompt_loader, .pnfpb_bell_icon_custom_prompt_loader_frontend, .pnfpb_bell_icon_custom_prompt_loader_webview {
@@ -1807,7 +1811,7 @@ td.pnfpb_ic_push_settings_table_label_column {
 }
 
 .pnfpb_bell_icon_custom_prompt_loader_frontend {
-  display: block;
+  display: none;
 }
 
 /* Safari */
