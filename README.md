@@ -11,9 +11,10 @@ https://wordpress.org/plugins/push-notification-for-post-and-buddypress/<br/>
 ### Plugin allows to choose different push notification providers<br/>
 
 1. Firebase (Free push notifications for desktop, PWA and mobile apps)<br/>
-2. Onesignal (Free push notification for desktop, PWA and mobile apps)<br/>
-3. Progressier (Push notifications for PWA)<br/>
-4. webtoapp (Push notifications for Mobile apps)<br/>
+2. web-push (self-hosted)
+3. Onesignal (Free push notification for desktop, PWA and mobile apps)<br/>
+4. Progressier (Push notifications for PWA)<br/>
+5. webtoapp (Push notifications for Mobile apps)<br/>
 (Plugin allows to send push notifications to both Firebase/Onesignal and webtoapp users simultaneously)<br/>
 
 ### Plugin sends Push notifications for following,<br/>
@@ -49,8 +50,9 @@ Choose Horizontal or Vertical custom prompt style and customize the text, color 
 Enable/Disable Bell prompt icon to subscribe/unsubscribe notifications. Front end users will be able to subscribe to particular category like post, activity, comments, friendship request/accept, other options while subscribing for first time or if user wants to update subscribe options from bell prompt at any time it is needed.<br/>
 
 ## Shortcodes<br/>
+For front end users bell-icon Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications<br/>
+PWA - Progressive Web App install shortcode [PNFPB_PWA_PROMPT] <br/>
 Use shortcode [member name] and [group name] in push notification title and custom content to display user name in title/content in push notifications, similarly for BuddyPress group activities [group name] place holder is available to display group name in title/content in push notifications.<br/>
-For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications<br/>
 
 ## Subscribe/Unsubscribe various push notifications in front end<br/>
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile – settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.<br/>
