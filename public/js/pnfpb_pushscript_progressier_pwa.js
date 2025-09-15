@@ -12,6 +12,7 @@ $j(document).ready(function() {
 		var data = {
 			action: 'icpushcallback',
 			progressier_external_id:pnfpb_progressier_userid,
+			nonce: pnfpb_ajax_object_progressier_push.nonce,
 			pushtype: 'progressier_subscribed_users'
 		};
 								
@@ -77,6 +78,7 @@ $j(document).ready(function() {
 				action: 'icpushcallback',
 				device_id:deviceid,
 				bpgroup_id:leave_group_id,
+				nonce: pnfpb_ajax_object_progressier_push.nonce,				
 				pushtype: 'unsubscribe-group-button'
 			};
 								
@@ -148,6 +150,7 @@ $j(document).ready(function() {
 				action: 'icpushcallback',
 				device_id:deviceid,
 				bpgroup_id:leave_group_id,
+				nonce: pnfpb_ajax_object_progressier_push.nonce,				
 				pushtype: 'unsubscribe-group-button'
 			};
 								
@@ -226,6 +229,7 @@ $j(document).ready(function() {
 							action: 'icpushcallback',
 							device_id:deviceid,
 							bpgroup_id:groupId,
+							nonce: pnfpb_ajax_object_progressier_push.nonce,							
 							pushtype: 'subscribe-group-button'
 						};
 								
@@ -303,6 +307,7 @@ $j(document).ready(function() {
 								action: 'icpushcallback',
 								device_id:deviceid,
 								bpgroup_id:groupId,
+								nonce: pnfpb_ajax_object_progressier_push.nonce,								
 								pushtype: 'unsubscribe-group-button'
 							};
 								
@@ -375,6 +380,7 @@ $j(document).ready(function() {
 		var data = {
 			action: 'icpushcallback',
 			progressier_get_subscriptionoptions_id:pnfpbprogressierid,
+			nonce: pnfpb_ajax_object_progressier_push.nonce,
 			pushtype: 'progressier_get_frontend_subscriptions'
 		};
 							
@@ -654,6 +660,7 @@ $j(document).ready(function() {
 					var data = {
 						action: 'icpushcallback',
 						progressier_subscriptionoptions:subscriptionoptions,
+						nonce: pnfpb_ajax_object_progressier_push.nonce,
 						pushtype: 'progressier_frontend_subscriptions'
 					};
 							

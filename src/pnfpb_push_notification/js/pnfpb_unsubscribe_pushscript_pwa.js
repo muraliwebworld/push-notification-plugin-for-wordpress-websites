@@ -40,6 +40,7 @@ $j(function() {
 		action: 'icpushcallback',
 		device_id:'',
 		subscriptionoptions:'',
+		nonce: pnfpb_ajax_object_push.nonce,
 		pushtype: 'icfirebasecred'
 	};
 			
@@ -114,6 +115,7 @@ navigator.serviceWorker.register(pnfpb_ajax_object_push.homeurl+'/pnfpb_icpush_p
 							
 										        var data = {
 											        action: 'unsubscribepush',
+													nonce: pnfpb_ajax_object_push.nonce,
 											        device_id:deviceid
 										        };
 								

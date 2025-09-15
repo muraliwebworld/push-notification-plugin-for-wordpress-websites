@@ -54,7 +54,7 @@ class CronExpression
      *
      * @return CronExpression
      */
-    public static function factory($expression, CronExpression_FieldFactory $fieldFactory = null)
+    public static function factory($expression, ?CronExpression_FieldFactory $fieldFactory = null)
     {
         $mappings = array(
             '@yearly' => '0 0 1 1 *',
@@ -97,7 +97,7 @@ class CronExpression
         $this->cronParts = preg_split('/\s/', $value, -1, PREG_SPLIT_NO_EMPTY);
         if (count($this->cronParts) < 5) {
             throw new InvalidArgumentException(
-                esc_html($value) . ' is not a valid CRON expression'
+                esc_html($value . ' is not a valid CRON expression')
             );
         }
 
@@ -121,7 +121,7 @@ class CronExpression
     {
         if (!$this->fieldFactory->getField($position)->validate($value)) {
             throw new InvalidArgumentException(
-                'Invalid CRON field value ' . esc_html($value) . ' as position ' . esc_html($position)
+                esc_html('Invalid CRON field value ' . esc_html($value) . ' as position ' . esc_html($position))
             );
         }
 

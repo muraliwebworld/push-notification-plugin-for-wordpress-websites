@@ -1,86 +1,40 @@
 	<h1 class="pnfpb_ic_push_settings_header"><?php echo esc_html(
      __(
-         "PNFPB - Push notifications list",
+         "PNFPB - Push Notification reports",
          "push-notification-for-post-and-buddypress"
      )
  ); ?></h1>
+<?php
+	$pnfpb_tab_pushlist_active = "nav-tab-active";
+	require_once( plugin_dir_path( __FILE__ ) . 'push_admin_menu_list.php' );
+?>
+<div id="pnfpb-notifications-list" class="pnfpb_ic_push_settings_table pnfpb_notifications_list">
+	<h2>
+		<?php echo esc_html(
+	__(
+		"Push notifications list and delivery statistics",
+		"push-notification-for-post-and-buddypress"
+	)
+); ?>
+	</h2>
+</div>
 
 <div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb-icfcm-slug"); ?>" 
-	   class="nav-tab tab">
-		<?php echo esc_html(
-    		__("Push Settings", "push-notification-for-post-and-buddypress")
-		); ?>
+	<a class="nav-tab" href="<?php echo esc_url(
+	admin_url()."admin.php?page=pnfpb_icfm_delivery_notifications_list&orderby=id&order=desc"); ?>">
+		<?php echo esc_html(__("Delivery and read report", "push-notification-for-post-and-buddypress")); ?>
+	</a>		
+	<a class="nav-tab" href="<?php echo esc_url(
+	admin_url()."admin.php?page=pnfpb_icfm_browser_delivery_notifications_list&orderby=id&order=desc"); ?>">
+		<?php echo esc_html(__("Delivery report with browser details", "push-notification-for-post-and-buddypress")); ?>
 	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_device_tokens_list"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Device tokens", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_pwa_app_settings"); ?>" 
-		class="nav-tab tab">
-			<?php echo esc_html(
-    			__("PWA", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfmtest_notification"); ?>"
-	   	class="nav-tab tab">
-			<?php echo esc_html(
-    			__("Send push notification", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc"); ?>"
-	   class=" nav-tab tab active nav-tab-active">
-			<?php echo esc_html(
-    			__("Push Notifications list", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_frontend_settings"); ?>"
-	   class="nav-tab tab">
-			<?php echo esc_html(
-    			__(
-        			"Frontend subscription settings",
-        			"push-notification-for-post-and-buddypress"
-    			)
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_button_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Customize buttons", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_integrate_app"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Integrate Mobile app", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb_icfm_settings_for_ngnix_server"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("NGINX", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Action Scheduler", "push-notification-for-post-and-buddypress")
-			); ?>
+	<a id="pnfpb-Notificationdefault" class="nav-tab nav-tab-active" href="<?php echo esc_url(
+	admin_url()."admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc"); ?>">
+		<?php echo esc_html(__("Notifications sent from admin", "push-notification-for-post-and-buddypress")); ?>
 	</a>
 </div>
 
+<div id="pnfpb-adminNotificationlist" class="pnfpb_notification_list_tabcontent pnfpb_ic_push_settings_table">
 	<div class="pnfpb_column_1200">
 		<div class="wrap">
 			<div class="pnfpb_row">
@@ -253,30 +207,16 @@
 						<div class="meta-box-sortables ui-sortable">
 							<form method="post">
 								<?php
-        $nonce = "";
-
-        if (isset($_REQUEST["_wpnonce"])) {
-            $nonce = esc_attr(
-                sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"]))
-            );
-        }
-
-        if (isset($_REQUEST["s"])) {
-            $this->pushnotifications_obj->prepare_items(
-                sanitize_text_field(wp_unslash($_REQUEST["s"]))
-            );
-        } else {
-            $this->pushnotifications_obj->prepare_items();
-        }
-
-        $this->pushnotifications_obj->pnfpb_url_scheme_start();
-        $this->pushnotifications_obj->search_box(
-            "Search",
-            "pnfpb_push_notifications_search"
-        );
-        $this->pushnotifications_obj->display();
-        $this->pushnotifications_obj->pnfpb_url_scheme_stop();
-        ?>
+            					$this->pushnotifications_obj->prepare_items();
+        						$this->pushnotifications_obj->pnfpb_url_scheme_start();
+        						$this->pushnotifications_obj->search_box(
+            						"Search",
+            						"pnfpb_push_notifications_search"
+        						);
+        						$this->pushnotifications_obj->display();
+								wp_nonce_field( 'pnfpb_onetime_notifications_list', '_wpnonce' );
+        						$this->pushnotifications_obj->pnfpb_url_scheme_stop();
+        						?>
 							</form>
 						</div>
 					</div>
@@ -285,3 +225,4 @@
 			</div>
 		</div>
 	</div>
+</div>

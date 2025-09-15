@@ -76,7 +76,6 @@ class ActionScheduler_wcSystemStatus {
 
 		$action = $this->store->query_actions(
 			array(
-				'claimed'  => false,
 				'status'   => $status,
 				'per_page' => 1,
 				'order'    => $order,
@@ -108,22 +107,22 @@ class ActionScheduler_wcSystemStatus {
 		<table class="wc_status_table widefat" cellspacing="0">
 			<thead>
 				<tr>
-					<th colspan="5" data-export-label="Action Scheduler"><h2><?php esc_html( 'Action Scheduler', 'push-notification-for-post-and-buddypress' ); ?><?php echo esc_html( wc_help_tip( __( 'This section shows details of Action Scheduler.', 'push-notification-for-post-and-buddypress' ) )); ?></h2></th>
+					<th colspan="5" data-export-label="Action Scheduler"><h2><?php esc_html_e( 'Action Scheduler', 'push-notification-for-post-and-buddypress' ); ?><?php echo esc_html(wc_help_tip( __( 'This section shows details of Action Scheduler.', 'push-notification-for-post-and-buddypress' )) ); ?></h2></th>
 				</tr>
 				<tr>
-					<td colspan="2" data-export-label="Version"><?php esc_html( 'Version:', 'push-notification-for-post-and-buddypress' ); ?></td>
+					<td colspan="2" data-export-label="Version"><?php esc_html_e( 'Version:', 'push-notification-for-post-and-buddypress' ); ?></td>
 					<td colspan="3"><?php echo esc_html( $as_version ); ?></td>
 				</tr>
 				<tr>
-					<td colspan="2" data-export-label="Data store"><?php esc_html( 'Data store:', 'push-notification-for-post-and-buddypress' ); ?></td>
+					<td colspan="2" data-export-label="Data store"><?php esc_html_e( 'Data store:', 'push-notification-for-post-and-buddypress' ); ?></td>
 					<td colspan="3"><?php echo esc_html( $as_datastore ); ?></td>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html( 'Action Status', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Action Status', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
 					<td class="help">&nbsp;</td>
-					<td><strong><?php esc_html( 'Count', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
-					<td><strong><?php esc_html( 'Oldest Scheduled Date', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
-					<td><strong><?php esc_html( 'Newest Scheduled Date', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Count', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Oldest Scheduled Date', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Newest Scheduled Date', 'push-notification-for-post-and-buddypress' ); ?></strong></td>
 				</tr>
 			</thead>
 			<tbody>

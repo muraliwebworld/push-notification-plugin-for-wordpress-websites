@@ -11,83 +11,10 @@
         "push-notification-for-post-and-buddypress"
     )
 ); ?></h1>
-
-<div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb-icfcm-slug"); ?>" 
-	   class="nav-tab tab">
-		<?php echo esc_html(
-    		__("Push Settings", "push-notification-for-post-and-buddypress")
-		); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_device_tokens_list"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Device tokens", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_pwa_app_settings"); ?>" 
-		class="nav-tab tab  active nav-tab-active">
-			<?php echo esc_html(
-    			__("PWA", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfmtest_notification"); ?>"
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Send push notification", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc"); ?>"
-	   class=" nav-tab tab">
-			<?php echo esc_html(
-    			__("Push Notifications list", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_frontend_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__(
-        			"Frontend subscription settings",
-        			"push-notification-for-post-and-buddypress"
-    			)
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_button_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Customize buttons", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_integrate_app"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Integrate Mobile app", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb_icfm_settings_for_ngnix_server"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("NGINX", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Action Scheduler", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-</div>
-
+<?php
+	$pnfpb_tab_pwa_active = "nav-tab-active";
+	require_once( plugin_dir_path( __FILE__ ) . 'push_admin_menu_list.php' );
+?>
 <?php
 
 	$allowed_html = [
@@ -170,7 +97,7 @@
 								<b>
 								<?php echo esc_html(
                								__(
-                   								"App name, display & color, icons and screenshots are required for PWA",
+                   								"Name, Shortname, Start url, display & color, icons and screenshots are required for PWA",
                    								"push-notification-for-post-and-buddypress"
                								)
            								); ?>
@@ -220,12 +147,12 @@
 		<div class="nav-tab-wrapper pnfpb-pwa-tabs" id="pnfpb-pwa-tabs">
         	<a class="nav-tab nav-tab-active" id="pnfpb-pwa-name-tab" href="#pnfpb-pwa-name">
 				<?php echo esc_html(
-             		__("App Name", "push-notification-for-post-and-buddypress")
+             		__("App basics", "push-notification-for-post-and-buddypress")
          		); ?>
 			</a>
         	<a class="nav-tab" id="pnfpb-pwa-display-tab" href="#pnfpb-pwa-display">
 				<?php echo esc_html(
-             		__("Display & Color", "push-notification-for-post-and-buddypress")
+             		__("Display", "push-notification-for-post-and-buddypress")
          		); ?>
 			</a>
        	 	<a class="nav-tab" id="pnfpb-pwa-icon-tab" href="#pnfpb-pwa-icons">
@@ -240,7 +167,12 @@
 			</a>
 			<a class="nav-tab" id="pnfpb-pwa-splashscreen-ios-tab" href="#pnfpb-pwa-splashscreen-ios">
 				<?php echo esc_html(
-       				__("Splashscreen for ios", "push-notification-for-post-and-buddypress")
+       				__("ios Splashscreen", "push-notification-for-post-and-buddypress")
+   				); ?>
+			</a>
+			<a class="nav-tab" id="pnfpb-pwa-shortcuts-tab" href="#pnfpb-pwa-shortcuts">
+				<?php echo esc_html(
+       				__("Shortcuts", "push-notification-for-post-and-buddypress")
    				); ?>
 			</a>			
         	<a class="nav-tab" id="pnfpb-pwa-offline-cache-tab" href="#pnfpb-pwa-cache">
@@ -255,7 +187,7 @@
 			</a>
 			<a class="nav-tab" id="pnfpb-pwa-protocol-handler-tab" href="#pnfpb-pwa-protocol-handler">
 				<?php echo esc_html(
-       				__("Protocol Handler", "push-notification-for-post-and-buddypress")
+       				__("Protocol", "push-notification-for-post-and-buddypress")
    				); ?>
 			</a>
 			<a class="nav-tab" id="pnfpb-pwa-ios-devices-tab" href="#pnfpb-pwa-ios-devices">
@@ -274,7 +206,7 @@
 				<label for="pnfpb_ic_pwa_app_name">
 					<?php echo esc_html(
          				__(
-             				"PWA name (max 50 characters)",
+             				"PWA name (required) (max 50 characters)",
              				"push-notification-for-post-and-buddypress"
          				)
      				); ?>
@@ -295,7 +227,7 @@
 				<label for="pnfpb_ic_pwa_app_shortname">
 					<?php echo esc_html(
          				__(
-             				"PWA short name (max 25 characters)",
+             				"PWA short name (required) (max 25 characters)",
              				"push-notification-for-post-and-buddypress"
          				)
      				); ?>
@@ -312,12 +244,195 @@
     							} ?>" required="required" 
 				/>					
 			</div>
+       		<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+				<label for="pnfpb_ic_pwa_app_shortname">
+					<?php echo esc_html(
+         				__(
+             				"PWA start url (required)",
+             				"push-notification-for-post-and-buddypress"
+         				)
+     				); ?>
+				</label>
+				<br/>
+				<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_starturl" 
+					   name="pnfpb_ic_pwa_app_starturl" type="text"  
+					   value="<?php if (
+        							get_option("pnfpb_ic_pwa_app_starturl")
+    							) {
+        							echo esc_url(get_option("pnfpb_ic_pwa_app_starturl"));
+    							} else {
+        							echo esc_url(get_home_url())."/";
+    							} ?>" required="required" 
+				/>
+				<br/>
+				<p>
+					<?php echo esc_html(
+         				__("The start_url manifest member is used to specify the URL that should be opened when a user launches your web application, such as when tapping the application's icon on their device's home screen or in an application list.", "push-notification-for-post-and-buddypress"
+         				)
+     				); ?>
+				</p>				
+			</div>			
+       		<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+				<label for="pnfpb_ic_pwa_app_description">
+					<?php echo esc_html(
+         				__(
+             				"PWA description (optional) (Description about your app)",
+             				"push-notification-for-post-and-buddypress"
+         				)
+     				); ?>
+				</label>
+				<br/>
+				<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_description" 
+					   name="pnfpb_ic_pwa_app_description" type="text" maxlength="25" 
+					   value="<?php if (
+        							get_option("pnfpb_ic_pwa_app_description")
+    							) {
+        							echo esc_attr(get_option("pnfpb_ic_pwa_app_description"));
+    							} else {
+        							echo esc_attr("");
+    							} ?>"
+				/>					
+			</div>			
+     		<div class="pnfpb_ic_push_settings_table_row">				
+        		<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_orientation">
+						<?php echo esc_html(
+          					__("PWA Orientation (optional) (device screen orientation)", "push-notification-for-post-and-buddypress")
+      					); ?>
+					</label>
+					<br/>
+					<select name="pnfpb_ic_pwa_app_orientation" id="pnfpb_ic_pwa_app_orientation" required="required">
+						<option value="any" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "any"
+      						) {
+          						echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_attr(
+    							__("any", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>
+						<option value="natural" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "natural"
+      						) {
+         					 	echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_html(
+    							__("natural", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>
+						<option value="portrait" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "portrait"
+      						) {
+         					 	echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_html(
+    							__("portrait", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>
+						<option value="portrait-primary" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "portrait-primary"
+      						) {
+         					 	echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_html(
+    							__("portrait-primary", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>
+						<option value="portrait-secondary" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "portrait-secondary"
+      						) {
+         					 	echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_html(
+    							__("portrait-secondary", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>
+						<option value="landscape" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "landscape"
+      						) {
+         					 	echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_html(
+    							__("landscape", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>
+						<option value="landscape-primary" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "landscape-primary"
+      						) {
+         					 	echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_html(
+    							__("landscape-primary", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>
+						<option value="landscape-secondary" <?php if (
+          						get_option("pnfpb_ic_pwa_app_orientation") === "landscape-secondary"
+      						) {
+         					 	echo esc_attr("selected");
+      						} else {
+          						echo esc_attr("");
+      						} ?>
+						><?php echo esc_html(
+    							__("landscape-secondary", "push-notification-for-post-and-buddypress")
+							); ?>
+						</option>							
+					</select>		
+				</div>
+			</div>
+        	<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+				<label for="pnfpb_ic_pwa_app_scope">
+					<?php echo esc_html(
+         				__(
+             				"PWA scope url (optional) (url for scope)",
+             				"push-notification-for-post-and-buddypress"
+         				)
+     				); ?>
+				</label>
+				<br/>
+				<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_scope" 
+					   name="pnfpb_ic_pwa_app_scope" type="text"  
+					   value="<?php if (
+        							get_option("pnfpb_ic_pwa_app_scope")
+    							) {
+        							echo esc_url(get_option("pnfpb_ic_pwa_app_scope"));
+    							} else {
+        							echo esc_url("");
+    							} ?>" 
+				/>
+				<br />
+					<?php echo esc_html(
+         				__("The scope manifest member is used to specify the top-level URL path that contains your web application's pages and subdirectories. When users install and use your web app, pages within scope provide an app-like interface. When users navigate to pages outside the app's scope, they still experience the app-like interface, but browsers display UI elements like the URL bar to indicate the change in context.", "push-notification-for-post-and-buddypress"
+         				)
+     				); ?>
+				<br/>
+			</div>			
 		</div>
     	<div id="pnfpb-pwa-display" class="pnfpb-pwa-settings-tab">
         	<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
 				<label for="pnfpb_ic_pwa_theme_color">
 					<?php echo esc_html(
-         				__("PWA theme color*", "push-notification-for-post-and-buddypress")
+         				__("PWA theme-color and display is used to default color & display mode for your progressive web application", "push-notification-for-post-and-buddypress")
+     				); ?>
+				</label>
+			</div>
+        	<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+				<label for="pnfpb_ic_pwa_theme_color">
+					<?php echo esc_html(
+         				__("PWA theme color (required)", "push-notification-for-post-and-buddypress")
      				); ?>
 				</label>
 				<br/>
@@ -336,7 +451,7 @@
 				<label for="pnfpb_ic_pwa_app_backgroundcolor">
 					<?php echo esc_html(
          				__(
-             				"PWA background color*",
+             				"PWA background color (required)",
              				"push-notification-for-post-and-buddypress"
          				)
      				); ?>
@@ -357,7 +472,7 @@
         		<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
 					<label for="pnfpb_ic_pwa_app_display">
 						<?php echo esc_html(
-          					__("PWA display format*", "push-notification-for-post-and-buddypress")
+          					__("PWA display format (required)", "push-notification-for-post-and-buddypress")
       					); ?>
 					</label>
 					<br/>
@@ -400,6 +515,13 @@
 			</div>
 		</div>
 		<div id="pnfpb-pwa-icons" class="pnfpb-pwa-settings-tab">
+        	<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+				<label for="pnfpb_ic_pwa_theme_color">
+					<?php echo esc_html(
+         				__("PWA icons used to specify one or more image files that define the icons for your progressive web application", "push-notification-for-post-and-buddypress")
+     				); ?>
+				</label>
+			</div>		
 			<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
 				<?php echo esc_html(
         			__(
@@ -416,7 +538,7 @@
 								<label for="pnfpb_ic_fcm_pwa_upload_icon_132">
 									<?php echo esc_html(
              								__(
-                 									"PWA Icon-1* ( 132x132 px)",
+                 									"PWA Icon-1 ( 132x132 px) (required)",
                  							"push-notification-for-post-and-buddypress"
              								)
          								); ?>
@@ -475,7 +597,7 @@
 								<label for="pnfpb_ic_fcm_pwa_upload_icon_512">
 									<?php echo esc_html(
              							__(
-                 							" PWA Icon-2* ( 512x512 px)",
+                 							" PWA Icon-2 ( 512x512 px) (required)",
                  							"push-notification-for-post-and-buddypress"
              							)
          							); ?>
@@ -549,7 +671,7 @@
 								<label for="pnfpb_ic_fcm_pwa_upload_screenshot_desktop">
 									<?php echo esc_html(
              							__(
-                 							"PWA Desktop Screenshot*( 1280x780 px)",
+                 							"PWA Desktop Screenshot ( 1280x780 px) (required)",
                  							"push-notification-for-post-and-buddypress"
              							)
          							); ?>
@@ -1176,7 +1298,661 @@
 					</table>
 				</div>				
 			</div>
-		</div>		
+		</div>
+		<div id="pnfpb-pwa-shortcuts" class="pnfpb-pwa-settings-tab">
+			<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+				<?php echo esc_html(
+        			__(
+            			"Shortcuts used to specify links to key tasks or pages within your web application. Browsers can use this information to create a context menu, which is typically displayed when a user interacts with progressive web app's icon.",
+            			"push-notification-for-post-and-buddypress"
+       			 	)
+    			); ?>
+			</div>
+			<?php
+				
+				$pnfpb_ic_pwa_shortcut_name_array = [];
+				$pnfpb_ic_pwa_shortcut_shortname_array = [];
+				$pnfpb_ic_pwa_shortcut_starturl_array = [];
+				$pnfpb_ic_pwa_shortcut_description_array = [];
+				$pnfpb_ic_pwa_shortcut_upload_icon_132_array = [];
+				$pnfpb_ic_pwa_shortcut_upload_icon_512_array = [];
+					
+				if (get_option("pnfpb_ic_pwa_app_shortcut_name")) {
+					$pnfpb_ic_pwa_shortcut_name_array = get_option(
+						"pnfpb_ic_pwa_app_shortcut_name"
+					);
+
+					if (!is_array($pnfpb_ic_pwa_shortcut_name_array)) {
+						$pnfpb_ic_pwa_shortcut_name_array = [" "];
+					}
+				} else {
+					$pnfpb_ic_pwa_shortcut_name_array = [" "];
+				}
+			
+				if (get_option("pnfpb_ic_pwa_app_shortcut_shortname")) {
+					$pnfpb_ic_pwa_shortcut_shortname_array = get_option(
+						"pnfpb_ic_pwa_app_shortcut_shortname"
+					);
+
+					if (!is_array($pnfpb_ic_pwa_shortcut_shortname_array)) {
+					$pnfpb_ic_pwa_shortcut_shortname_array = [" "];
+					}
+				} else {
+					$pnfpb_ic_pwa_shortcut_shortname_array = [" "];
+				}
+			
+				if (get_option("pnfpb_ic_pwa_app_shortcut_starturl")) {
+					$pnfpb_ic_pwa_shortcut_starturl_array = get_option(
+						"pnfpb_ic_pwa_app_shortcut_starturl"
+					);
+
+					if (!is_array($pnfpb_ic_pwa_shortcut_starturl_array)) {
+					$pnfpb_ic_pwa_shortcut_starturl_array = [" "];
+					}
+				} else {
+					$pnfpb_ic_pwa_shortcut_starturl_array = [" "];
+				}
+
+				if (get_option("pnfpb_ic_pwa_app_shortcut_description")) {
+					$pnfpb_ic_pwa_shortcut_description_array = get_option(
+						"pnfpb_ic_pwa_app_shortcut_description"
+					);
+
+					if (!is_array($pnfpb_ic_pwa_shortcut_description_array)) {
+					$pnfpb_ic_pwa_shortcut_description_array = [" "];
+					}
+				} else {
+					$pnfpb_ic_pwa_shortcut_description_array = [" "];
+				}
+
+				if (get_option("pnfpb_ic_fcm_pwa_shortcut_upload_icon_132")) {
+					$pnfpb_ic_pwa_shortcut_upload_icon_132_array = get_option(
+						"pnfpb_ic_fcm_pwa_shortcut_upload_icon_132"
+					);
+
+					if (!is_array($pnfpb_ic_pwa_shortcut_upload_icon_132_array)) {
+					$pnfpb_ic_pwa_shortcut_upload_icon_132_array = [" "];
+					}
+				} else {
+					$pnfpb_ic_pwa_shortcut_upload_icon_132_array = [" "];
+				}
+			
+				if (get_option("pnfpb_ic_fcm_pwa_shortcut_upload_icon_512")) {
+					$pnfpb_ic_pwa_shortcut_upload_icon_512_array = get_option(
+						"pnfpb_ic_fcm_pwa_shortcut_upload_icon_512"
+					);
+
+					if (!is_array($pnfpb_ic_pwa_shortcut_upload_icon_512_array)) {
+					$pnfpb_ic_pwa_shortcut_upload_icon_512_array = [" "];
+					}
+				} else {
+					$pnfpb_ic_pwa_shortcut_upload_icon_512_array = [" "];
+				}
+			
+	
+				$pnfpb_pwa_shortcut_count = 0;
+				$pnfpb_pwa_shortcut_shortname_count = 0;
+				$pnfpb_pwa_shortcut_starturl_count = 0;
+				$pnfpb_pwa_shortcut_description_count = 0;
+				$pnfpb_pwa_shortcut_icon132_count = 0;
+				$pnfpb_pwa_shortcut_icon512_count = 0;
+			
+				$pnfpb_ic_pwa_app_shortcut1_name = '';
+				$pnfpb_ic_pwa_app_shortcut2_name = '';
+				
+				$pnfpb_ic_pwa_app_shortcut1_shortname = '';
+				$pnfpb_ic_pwa_app_shortcut2_shortname = '';
+					
+				$pnfpb_ic_pwa_app_shortcut1_starturl = '';
+				$pnfpb_ic_pwa_app_shortcut2_starturl = '';
+					
+				$pnfpb_ic_pwa_app_shortcut1_description = '';
+				$pnfpb_ic_pwa_app_shortcut2_description = '';
+					
+				$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132 = '';
+				$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132 = '';
+			
+				$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512 = '';
+				$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512 = '';
+
+				foreach (
+					$pnfpb_ic_pwa_shortcut_name_array
+					as $pnfpb_ic_pwa_shortcut_name_element
+				) {
+					if ($pnfpb_pwa_shortcut_count === 0 && $pnfpb_ic_pwa_shortcut_name_element !== '') {
+						$pnfpb_ic_pwa_app_shortcut1_name = $pnfpb_ic_pwa_shortcut_name_element;
+					} else {
+						if ($pnfpb_ic_pwa_shortcut_name_element !== '') {
+							$pnfpb_ic_pwa_app_shortcut2_name = $pnfpb_ic_pwa_shortcut_name_element;
+						}
+					}
+					if ($pnfpb_pwa_shortcut_count > 1) {
+						break;
+					}
+					$pnfpb_pwa_shortcut_count++;
+				}
+
+				foreach (
+					$pnfpb_ic_pwa_shortcut_shortname_array
+					as $pnfpb_ic_pwa_shortcut_shortname_element
+				) {
+					if ($pnfpb_pwa_shortcut_shortname_count === 0 && $pnfpb_ic_pwa_shortcut_shortname_element !== '') {
+						$pnfpb_ic_pwa_app_shortcut1_shortname = $pnfpb_ic_pwa_shortcut_shortname_element;
+					} else {
+						if ($pnfpb_ic_pwa_shortcut_shortname_element !== '') {
+							$pnfpb_ic_pwa_app_shortcut2_shortname = $pnfpb_ic_pwa_shortcut_shortname_element;
+						}
+					}
+					if ($pnfpb_pwa_shortcut_shortname_count > 1) {
+						break;
+					}
+					$pnfpb_pwa_shortcut_shortname_count++;
+				}
+			
+				foreach (
+					$pnfpb_ic_pwa_shortcut_starturl_array
+					as $pnfpb_ic_pwa_shortcut_starturl_element
+				) {
+					if ($pnfpb_pwa_shortcut_starturl_count === 0 && $pnfpb_ic_pwa_shortcut_starturl_element !== '') {
+						$pnfpb_ic_pwa_app_shortcut1_starturl = $pnfpb_ic_pwa_shortcut_starturl_element;
+					} else {
+						if ($pnfpb_ic_pwa_shortcut_starturl_element !== '') {
+							$pnfpb_ic_pwa_app_shortcut2_starturl = $pnfpb_ic_pwa_shortcut_starturl_element;
+						}
+					}
+					if ($pnfpb_pwa_shortcut_starturl_count > 1) {
+						break;
+					}
+					$pnfpb_pwa_shortcut_starturl_count++;
+				}
+			
+				foreach (
+					$pnfpb_ic_pwa_shortcut_description_array
+					as $pnfpb_ic_pwa_shortcut_description_element
+				) {
+					if ($pnfpb_pwa_shortcut_description_count === 0 && $pnfpb_ic_pwa_shortcut_description_element !== '') {
+						$pnfpb_ic_pwa_app_shortcut1_description = $pnfpb_ic_pwa_shortcut_description_element;
+					} else {
+						if ($pnfpb_ic_pwa_shortcut_name_element !== '') {
+							$pnfpb_ic_pwa_app_shortcut2_description = $pnfpb_ic_pwa_shortcut_description_element;
+						}
+					}
+					if ($pnfpb_pwa_shortcut_description_count > 1) {
+						break;
+					}
+					$pnfpb_pwa_shortcut_description_count++;
+				}
+			
+				foreach (
+					$pnfpb_ic_pwa_shortcut_upload_icon_132_array
+					as $pnfpb_ic_pwa_shortcut_upload_icon_132_element
+				) {
+					if ($pnfpb_pwa_shortcut_icon132_count === 0 && $pnfpb_ic_pwa_shortcut_upload_icon_132_element !== '') {
+						$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132 = $pnfpb_ic_pwa_shortcut_upload_icon_132_element;
+					} else {
+						if ($pnfpb_ic_pwa_shortcut_upload_icon_132_element !== '') {
+							$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132 = $pnfpb_ic_pwa_shortcut_upload_icon_132_element;
+						}
+					}
+					if ($pnfpb_pwa_shortcut_icon132_count > 1) {
+						break;
+					}
+					$pnfpb_pwa_shortcut_icon132_count++;
+				}
+			
+				foreach (
+					$pnfpb_ic_pwa_shortcut_upload_icon_512_array
+					as $pnfpb_ic_pwa_shortcut_upload_icon_512_element
+				) {
+					if ($pnfpb_pwa_shortcut_icon512_count === 0 && $pnfpb_ic_pwa_shortcut_upload_icon_512_element !== '') {
+						$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512 = $pnfpb_ic_pwa_shortcut_upload_icon_512_element;
+					} else {
+						if ($pnfpb_ic_pwa_shortcut_upload_icon_512_element !== '') {
+							$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512 = $pnfpb_ic_pwa_shortcut_upload_icon_512_element;
+						}
+					}
+					if ($pnfpb_pwa_shortcut_icon512_count > 1) {
+						break;
+					}
+					$pnfpb_pwa_shortcut_icon512_count++;
+				}			
+				
+			?>
+			<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_root">
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<b>				
+						<?php echo esc_html(
+							__(
+								"Settings for Shortcut 1",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</b>
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_shortcut_name">
+						<?php echo esc_html(
+							__(
+								"PWA Shortcut name (required) (max 50 characters)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut_name" 
+						   name="pnfpb_ic_pwa_app_shortcut_name[]" type="text" maxlength="50" 
+						   value="<?php if (
+									$pnfpb_ic_pwa_app_shortcut1_name !== ''
+								 ) {
+									echo esc_attr($pnfpb_ic_pwa_app_shortcut1_name);
+								} else {
+									echo "";
+								} ?>"  
+					/>					
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_shortcut1_shortname">
+						<?php echo esc_html(
+							__(
+								"PWA Shortcut short name (required) (max 25 characters)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut1_shortname" 
+						   name="pnfpb_ic_pwa_app_shortcut_shortname[]" type="text" maxlength="25" 
+						   value="<?php if (
+										$pnfpb_ic_pwa_app_shortcut1_shortname !== ''
+									) {
+										echo esc_attr($pnfpb_ic_pwa_app_shortcut1_shortname);
+									} else {
+										echo esc_attr("");
+									} ?>" 
+					/>					
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_shortcut1_starturl">
+						<?php echo esc_html(
+							__(
+								"PWA Shortcut start url (required)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut1_starturl" 
+						   name="pnfpb_ic_pwa_app_shortcut_starturl[]" type="text"  
+						   value="<?php if (
+										$pnfpb_ic_pwa_app_shortcut1_starturl !== ''
+									) {
+										echo esc_url($pnfpb_ic_pwa_app_shortcut1_starturl);
+									} else {
+										echo esc_url("");
+									} ?>"  
+					/>
+					<br/>
+					<p>
+						<?php echo esc_html(
+							__("The start_url manifest member is used to specify the URL that should be opened when a user launches shortcuts from PWA, such as when tapping the application's icon on their device's home screen or in an application list.", "push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</p>				
+				</div>			
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_shortcut1_description">
+						<?php echo esc_html(
+							__(
+								"PWA description (optional) (Description about your shortcut of app)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut1_description" 
+						   name="pnfpb_ic_pwa_app_shortcut_description[]" type="text" maxlength="25" 
+						   value="<?php if (
+										$pnfpb_ic_pwa_app_shortcut1_description !== ''
+									) {
+										echo esc_attr($pnfpb_ic_pwa_app_shortcut1_description);
+									} else {
+										echo esc_attr("");
+									} ?>"
+					/>					
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<?php echo esc_html(
+						__(
+							"PWA shortcut icon (icon1 - 132x132px and icon2 - 512x512px)",
+							"push-notification-for-post-and-buddypress"
+						)
+					); ?>
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<div class="">
+						<table>
+							<tr>
+								<td class="column-columnname">
+									<label for="pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132">
+										<?php echo esc_html(
+												__(
+														"PWA Shortcut Icon-1 ( 132x132 px) (optional)",
+												"push-notification-for-post-and-buddypress"
+												)
+											); ?>
+									</label>
+								</td>
+							</tr>
+							<tr>
+								<td class="column-columnname">
+									<input type="button" value="<?php echo esc_html(
+							   __(
+								   "Add PWA Shortcut Icon",
+								   "push-notification-for-post-and-buddypress"
+							   )
+						   ); ?>" id="pnfpb_ic_fcm_pwa_shortcut1_upload_button_132" class="pnfpb_ic_push_pwa_settings_shortcut1_upload_icon" />
+									<input type="hidden" id="pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132" name="pnfpb_ic_fcm_pwa_shortcut_upload_icon_132[]" value="<?php if (
+							   $pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132 !== ''
+						   ) {
+							   echo esc_attr(
+								   $pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132
+							   );
+						   } else {
+							   echo esc_attr("");
+						   } ?>" />
+								</td>
+							</tr>
+							<tr>							
+								<td class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+									<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+										<div id="pnfpb_ic_fcm_pwa_shortcut1_upload_preview_132" style="background-image: url(<?php if (
+								   $pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132 !== ''
+							   ) {
+								   echo esc_attr(
+										$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132
+								   );
+							   } else {
+								   echo esc_attr("");
+							   } ?>);width:100px; height:100px;overflow:hidden;border-radius:0%;background-position:center center;background-repeat:no-repeat;background-size:cover;">
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="">
+						<table>
+							<tr>
+								<td class="column-columnname">
+									<label for="pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512">
+										<?php echo esc_html(
+											__(
+												" PWA Shortcut Icon-2 ( 512x512 px) (optional)",
+												"push-notification-for-post-and-buddypress"
+											)
+										); ?>
+									</label>
+								</td>
+							</tr>
+							<tr>
+								<td class="column-columnname">												
+									<input type="button" value="<?php echo esc_html(
+											__(
+												"Add PWA Shortcut Icon",
+												"push-notification-for-post-and-buddypress"
+											)
+										); ?>" 
+									id="pnfpb_ic_fcm_pwa_shortcut1_upload_button_512" class="pnfpb_ic_push_pwa_settings_shortcut1_upload_icon" />
+									<input type="hidden" id="pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512" 
+										   name="pnfpb_ic_fcm_pwa_shortcut_upload_icon_512[]" 
+										   value="<?php if (
+													$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512 !== ''
+												) {
+													echo esc_attr(
+														$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512
+													);
+												} else {
+													echo esc_attr("");
+												} ?>" 
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+									<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+										<div id="pnfpb_ic_fcm_pwa_shortcut1_upload_preview_512" style="background-image: url(<?php if (
+												$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512 !== ''
+											) {
+												echo esc_attr(
+													$pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512
+												);
+											} else {
+												echo esc_attr("");
+											} ?>);width:100px; height:100px;overflow:hidden;border-radius:0%;background-position:center center;background-repeat:no-repeat;background-size:cover;">
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>				
+			</div>
+			<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname pnfpb_pwa_card_protocol_root">
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<b>
+					<?php echo esc_html(
+						__(
+							"Settings for Shortcut 2",
+							"push-notification-for-post-and-buddypress"
+						)
+					); ?>
+					</b>
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_shortcut2_name">
+						<?php echo esc_html(
+							__(
+								"PWA Shortcut name (required) (max 50 characters)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut2_name" 
+						   name="pnfpb_ic_pwa_app_shortcut_name[]" type="text" maxlength="50" 
+						   value="<?php if (
+									$pnfpb_ic_pwa_app_shortcut2_name !== ''
+								 ) {
+									echo esc_attr($pnfpb_ic_pwa_app_shortcut2_name);
+								} else {
+									echo "";
+								} ?>"  
+					/>					
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_shortcut2_shortname">
+						<?php echo esc_html(
+							__(
+								"PWA Shortcut short name (required) (max 25 characters)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut2_shortname" 
+						   name="pnfpb_ic_pwa_app_shortcut_shortname[]" type="text" maxlength="25" 
+						   value="<?php if (
+										$pnfpb_ic_pwa_app_shortcut2_shortname !== ''
+									) {
+										echo esc_attr($pnfpb_ic_pwa_app_shortcut2_shortname);
+									} else {
+										echo esc_attr("");
+									} ?>"
+					/>					
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_shortcut2_starturl">
+						<?php echo esc_html(
+							__(
+								"PWA Shortcut start url (required)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut2_starturl" 
+						   name="pnfpb_ic_pwa_app_shortcut_starturl[]" type="text"  
+						   value="<?php if (
+										$pnfpb_ic_pwa_app_shortcut2_starturl !== ''
+									) {
+										echo esc_url($pnfpb_ic_pwa_app_shortcut2_starturl);
+									} else {
+										echo esc_url("");
+									} ?>"
+					/>
+					<br/>
+					<p>
+						<?php echo esc_html(
+							__("The start_url manifest member is used to specify the URL that should be opened when a user launches shortcuts from PWA, such as when tapping the application's icon on their device's home screen or in an application list.", "push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</p>				
+				</div>			
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<label for="pnfpb_ic_pwa_app_shortcut2_description">
+						<?php echo esc_html(
+							__(
+								"PWA description (optional) (Description about shortcut of app)",
+								"push-notification-for-post-and-buddypress"
+							)
+						); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field" id="pnfpb_ic_pwa_app_shortcut2_description" 
+						   name="pnfpb_ic_pwa_app_shortcut_description[]" type="text" maxlength="25" 
+						   value="<?php if (
+										$pnfpb_ic_pwa_app_shortcut2_description !== ''
+									) {
+										echo esc_attr($pnfpb_ic_pwa_app_shortcut2_description);
+									} else {
+										echo esc_attr("");
+									} ?>"
+					/>					
+				</div>
+				<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+					<div>
+						<table>
+							<tr>
+								<td class="column-columnname">
+									<label for="pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132">
+										<?php echo esc_html(
+												__(
+														"PWA Shortcut Icon-1 ( 132x132 px) (optional)",
+												"push-notification-for-post-and-buddypress"
+												)
+											); ?>
+									</label>
+								</td>
+							</tr>
+							<tr>
+								<td class="column-columnname">
+									<input type="button" value="<?php echo esc_html(
+							   __(
+								   "Add PWA Shortcut Icon",
+								   "push-notification-for-post-and-buddypress"
+							   )
+						   ); ?>" id="pnfpb_ic_fcm_pwa_shortcut2_upload_button_132" class="pnfpb_ic_push_pwa_settings_shortcut2_upload_icon" />
+									<input type="hidden" id="pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132" name="pnfpb_ic_fcm_pwa_shortcut_upload_icon_132[]" value="<?php if (
+							   $pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132 !== ''
+						   ) {
+							   echo esc_attr(
+								   $pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132
+							   );
+						   } else {
+							   echo esc_attr("");
+						   } ?>" />
+								</td>
+							</tr>
+							<tr>							
+								<td class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+									<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+										<div id="pnfpb_ic_fcm_pwa_shortcut2_upload_preview_132" style="background-image: url(<?php if (
+								   $pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132 !== ''
+							   ) {
+								   echo esc_attr(
+										$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132
+								   );
+							   } else {
+								   echo esc_attr("");
+							   } ?>);width:100px; height:100px;overflow:hidden;border-radius:0%;background-position:center center;background-repeat:no-repeat;background-size:cover;">
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="">
+						<table>
+							<tr>
+								<td class="column-columnname">
+									<label for="pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512">
+										<?php echo esc_html(
+											__(
+												" PWA Shortcut Icon-2 ( 512x512 px) (optional)",
+												"push-notification-for-post-and-buddypress"
+											)
+										); ?>
+									</label>
+								</td>
+							</tr>
+							<tr>
+								<td class="column-columnname">												
+									<input type="button" value="<?php echo esc_html(
+											__(
+												"Add PWA Shortcut Icon",
+												"push-notification-for-post-and-buddypress"
+											)
+										); ?>" 
+									id="pnfpb_ic_fcm_pwa_shortcut2_upload_button_512" class="pnfpb_ic_push_pwa_settings_shortcut2_upload_icon" />
+									<input type="hidden" id="pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512" 
+										   name="pnfpb_ic_fcm_pwa_shortcut_upload_icon_512[]" 
+										   value="<?php if (
+													$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512 !== ''
+												) {
+													echo esc_attr(
+														$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512
+													);
+												} else {
+													echo esc_attr(
+														""
+													);
+												} ?>" 
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
+									<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+										<div id="pnfpb_ic_fcm_pwa_shortcut2_upload_preview_512" style="background-image: url(<?php if (
+											$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512 !== ''
+											) {
+												echo esc_attr(
+													$pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512
+												);
+											} else {
+												echo esc_attr(
+													""
+												);
+											} ?>);width:100px; height:100px;overflow:hidden;border-radius:0%;background-position:center center;background-repeat:no-repeat;background-size:cover;">
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>					
+			</div>			
+		</div>
 		<div id="pnfpb-pwa-cache" class="pnfpb-pwa-settings-tab">
 			<div class="pnfpb_ic_push_pwa_settings_table_value_column column-columnname">
 				<?php echo "<b>" .
@@ -1217,7 +1993,7 @@
          					foreach ($pages as $page) {
              					echo wp_kses('<option value="' .
                  					esc_attr(get_page_link($page->ID)) .
-                 					'" '.selected(esc_attr(get_page_link($page->ID)),get_option("pnfpb_ic_pwa_app_offline_url1")) .
+                 					'" '.selected(esc_attr(get_page_link($page->ID)),get_option("pnfpb_ic_pwa_app_offline_url1"),false) .
                  					'>' .
                  					esc_html($page->post_title) .
                  				'</option>',$allowed_html);
@@ -1244,15 +2020,15 @@
      					if ($pages = get_pages()) {
          					echo wp_kses('<option value="' .
              					esc_attr(get_home_url().'"' .$homeurlselected) .
-             					'">' .
+             					'>' .
              					esc_html(
                  					__("Home page", "push-notification-for-post-and-buddypress")
              					) .
-             				'</option>"',$allowed_html);
+             				'</option>',$allowed_html);
          					foreach ($pages as $page) {
              					echo wp_kses('<option value="' .
                  					esc_attr(get_page_link($page->ID)) .
-                 					'" '. selected(esc_attr(get_page_link($page->ID)),esc_attr(get_option("pnfpb_ic_pwa_app_offline_url2"))) .
+                 					'" '. selected(esc_attr(get_page_link($page->ID)),esc_attr(get_option("pnfpb_ic_pwa_app_offline_url2")),false) .
                  					'>' .
                  					esc_html($page->post_title) .
                  				'</option>',$allowed_html);
@@ -1290,7 +2066,7 @@
                  					'" ' .
                  					selected(
                      					esc_attr(get_page_link($page->ID)),
-                     					get_option("pnfpb_ic_pwa_app_offline_url3")
+                     					get_option("pnfpb_ic_pwa_app_offline_url3"),false
                  					) .
                  					'>' .
                  					esc_html($page->post_title) .
@@ -1318,7 +2094,7 @@
                  				'" ' .
                  				selected(
                      				esc_attr(get_page_link($page->ID)),
-                     				esc_attr(get_option("pnfpb_ic_pwa_app_offline_url4"))
+                     				esc_attr(get_option("pnfpb_ic_pwa_app_offline_url4")),false
                  				) .
                  				'>' .
                  				esc_html($page->post_title) .
@@ -1346,7 +2122,7 @@
                  					'" ' .
                  					selected(
                      					esc_attr(get_page_link($page->ID)),
-                     					esc_attr(get_option("pnfpb_ic_pwa_app_offline_url5"))
+                     					esc_attr(get_option("pnfpb_ic_pwa_app_offline_url5")),false
                  					) .
                  				'>' .
                  					esc_html($page->post_title) .
@@ -1942,7 +2718,49 @@
             			)
         			); ?>
 			</li>					
-			</ul>
+			</ul>				
+			<div>				
+				<label for="pnfpb_ic_ios_pwa_prompt_disable"><?php echo esc_html(
+	__(
+		"Disable ios PWA prompt (it will remove ios PWA install prompt)",
+		"push-notification-for-post-and-buddypress"
+	)
+); ?>
+				</label>
+				<label class="pnfpb_switch">
+					<input  id="pnfpb_ic_ios_pwa_prompt_disable" name="pnfpb_ic_ios_pwa_prompt_disable" 
+						   type="checkbox" value="1" <?php checked(
+	"1",
+	esc_attr(get_option("pnfpb_ic_ios_pwa_prompt_disable"))
+); ?>  
+						   />	
+					<span class="pnfpb_slider round"></span>
+				</label>
+			</div>
+			<br/>
+			<div>
+				<label class="pnfpb_ic_push_pwa_custom_prompt_divider">
+					<?php echo esc_html(
+	__(
+		"If cancelled, show ios PWA custom prompt after number of days",
+		"push-notification-for-post-and-buddypress"
+	)
+); ?>
+				</label>
+				<label>
+					<input  class="pnfpb_ic_fcm_pwa_show_again_days" 
+						   id="pnfpb_ic_ios_pwa_prompt_reappear" name="pnfpb_ic_ios_pwa_prompt_reappear" 
+						   type="number" value="<?php if (
+	get_option("pnfpb_ic_ios_pwa_prompt_reappear")
+) {
+	echo esc_html(get_option("pnfpb_ic_ios_pwa_prompt_reappear"));
+} else {
+	echo "7";
+} ?>"
+						   />
+				</label>
+			</div>
+			<br/>
 			<div>
 				<label for="pnfpb-pwa-ios-message">
 					<?php echo esc_html(
@@ -1968,6 +2786,52 @@
     				} ?>
 				</textarea>						
 			</div>
+			<div>
+				<label>
+					<?php echo esc_html(
+        				__(
+            				"PWA for ios device install prompt dialog box background color",
+            				"push-notification-for-post-and-buddypress"
+        				)
+    				); ?>
+				</label>
+				<br/>
+				<input class="pnfpb_ic_push_settings_table_value_column_input_field 
+							  pnfpb_ic_fcm_pwa_prompt_dialog_background pnfpb_ic_push_pwa_custom_prompt_divider" 
+					   id="pnfpb_ic_fcm_pwa_ios_prompt_dialog_background" name="pnfpb_ic_fcm_pwa_ios_prompt_dialog_background" 
+					   type="color" value="<?php if (
+        						get_option("pnfpb_ic_fcm_pwa_ios_prompt_dialog_background")
+    						) {
+        						echo esc_html(get_option("pnfpb_ic_fcm_pwa_ios_prompt_dialog_background"));
+    						} else {
+        						echo "#000000";
+    						} ?>" required="required" 
+				/>					
+				<br/>
+				<br/>
+				<label>
+					<?php echo esc_html(
+        				__(
+            				"PWA for ios device install prompt dialog Text color",
+            				"push-notification-for-post-and-buddypress"
+        				)
+    				); ?>
+				</label>
+				<br/>
+				<input class="pnfpb_ic_push_settings_table_value_column_input_field 
+							  pnfpb_ic_fcm_pwa_prompt_text_color pnfpb_ic_push_pwa_custom_prompt_divider" 
+					   id="pnfpb_ic_fcm_pwa_ios_prompt_text_color" name="pnfpb_ic_fcm_pwa_ios_prompt_text_color" 
+					   type="color" value="<?php if (
+        								get_option("pnfpb_ic_fcm_pwa_ios_prompt_text_color")
+    								) {
+        								echo esc_html(get_option("pnfpb_ic_fcm_pwa_ios_prompt_text_color"));
+    								} else {
+        								echo "#ffffff";
+    								} ?>" required="required" 
+				/>
+				<br/>
+				<br/>
+			</div>				
 			<ul>
 				<li>
 					<a href="<?php echo esc_url(admin_url()."admin.php?page=pnfpb_icfm_button_settings#pwa-install-shortcode-customize-section"); ?>">

@@ -13,6 +13,10 @@ $j(document).ready(function() {
     
 	var mediaUploader_132;
 	var mediaUploader_512;
+	var shortcut1_mediaUploader_132;
+	var shortcut1_mediaUploader_512;
+	var shortcut2_mediaUploader_132;
+	var shortcut2_mediaUploader_512;	
 	var mediaUploader_desktop;
 	var mediaUploader_mobile;
 	var mediaUploader_splashscreen_640_1136;
@@ -105,6 +109,146 @@ $j(document).ready(function() {
 		mediaUploader_512.open();
 		
 	});
+	
+	$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_button_132').on('click',function(e) {
+		e.preventDefault();
+		if( shortcut1_mediaUploader_132 ){
+			shortcut1_mediaUploader_132.open();
+			return;
+		}
+		
+		shortcut1_mediaUploader_132 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
+			button: {
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
+			},
+			multiple: false
+		});
+		
+		shortcut1_mediaUploader_132.on('select', function(){
+			attachment = shortcut1_mediaUploader_132.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			if (imagewidth === 132 && imageheight === 132){
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_132').text('');
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_icon_132').val(attachment.url);
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_132').css('background-image','url(' + attachment.url + ')');
+			}
+			else
+			{
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_132').css('background-image','none');
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_132').text('Image size must be 132x132 pixels');
+			}
+		});
+		
+		shortcut1_mediaUploader_132.open();
+		
+	});
+	
+	$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_button_512').on('click',function(e) {
+		e.preventDefault();
+		if( shortcut1_mediaUploader_512 ){
+			shortcut1_mediaUploader_512.open();
+			return;
+		}
+		
+		shortcut1_mediaUploader_512 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
+			button: {
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
+			},
+			multiple: false
+		});
+		
+		shortcut1_mediaUploader_512.on('select', function(){
+			attachment = shortcut1_mediaUploader_512.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			if (imagewidth === 512 && imageheight === 512){
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_512').text('');
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_icon_512').val(attachment.url);
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_512').css('background-image','url(' + attachment.url + ')');
+			}
+			else
+			{
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_512').css('background-image','none');
+				$j('#pnfpb_ic_fcm_pwa_shortcut1_upload_preview_512').text('Image size must be 512x512 pixels');	
+			}
+		});
+		
+		shortcut1_mediaUploader_512.open();
+		
+	});
+	
+	$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_button_132').on('click',function(e) {
+		e.preventDefault();
+		if( shortcut2_mediaUploader_132 ){
+			shortcut2_mediaUploader_132.open();
+			return;
+		}
+		
+		shortcut2_mediaUploader_132 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
+			button: {
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
+			},
+			multiple: false
+		});
+		
+		shortcut2_mediaUploader_132.on('select', function(){
+			attachment = shortcut2_mediaUploader_132.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			if (imagewidth === 132 && imageheight === 132){
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_132').text('');
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_icon_132').val(attachment.url);
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_132').css('background-image','url(' + attachment.url + ')');
+			}
+			else
+			{
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_132').css('background-image','none');
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_132').text('Image size must be 132x132 pixels');
+			}
+		});
+		
+		shortcut2_mediaUploader_132.open();
+		
+	});
+	
+	$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_button_512').on('click',function(e) {
+		e.preventDefault();
+		if( shortcut2_mediaUploader_512 ){
+			shortcut2_mediaUploader_512.open();
+			return;
+		}
+		
+		shortcut2_mediaUploader_512 = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
+			button: {
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
+			},
+			multiple: false
+		});
+		
+		shortcut2_mediaUploader_512.on('select', function(){
+			attachment = shortcut2_mediaUploader_512.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			if (imagewidth === 512 && imageheight === 512){
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_512').text('');
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_icon_512').val(attachment.url);
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_512').css('background-image','url(' + attachment.url + ')');
+			}
+			else
+			{
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_512').css('background-image','none');
+				$j('#pnfpb_ic_fcm_pwa_shortcut2_upload_preview_512').text('Image size must be 512x512 pixels');	
+			}
+		});
+		
+		shortcut2_mediaUploader_512.open();
+		
+	});	
 	
 	$j('#pnfpb_ic_fcm_pwa_upload_screenshot_desktop').on('click',function(e) {
 		e.preventDefault();
@@ -691,6 +835,24 @@ $j(document).ready(function() {
 		else
 		{
 			$j('.pnfpb_contact_form7_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
+		}
+		
+	}
+
+	function toggle_mark_favourite_form() {
+		
+		const { __ } = wp.i18n;
+	
+  		$j('.pnfpb_ic_mark_favourite_form').toggle();
+		
+		if ($j('.pnfpb_ic_mark_favourite_form').is(':visible')) {
+			
+			$j('.pnfpb_mark_favourite_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
+			
+		}
+		else
+		{
+			$j('.pnfpb_mark_favourite_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
 		}
 		
 	}

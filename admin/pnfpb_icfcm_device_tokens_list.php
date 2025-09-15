@@ -234,50 +234,54 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
          */
         public function prepare_items($search = "")
         {
-            //data
-            if (isset($_REQUEST["s"])) {
-                $this->table_data = $this->get_table_data(
-                    sanitize_text_field(wp_unslash($_REQUEST["s"]))
-                );
-            } else {
-                $this->table_data = $this->get_table_data($search);
-            }
+			if (isset($_REQUEST["_wpnonce"]) && !wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"])), "pnfpb_icfcm_device_tokens_list")) {
+				die("wnonce failure");
+			} else {			
+				//data
+				if (isset($_REQUEST["s"])) {
+					$this->table_data = $this->get_table_data(
+						sanitize_text_field(wp_unslash($_REQUEST["s"]))
+					);
+				} else {
+					$this->table_data = $this->get_table_data($search);
+				}
 
-            $this->_column_headers = $this->get_column_info();
+				$this->_column_headers = $this->get_column_info();
 
-            /** Process bulk action */
-            $this->process_bulk_action();
+				/** Process bulk action */
+				$this->process_bulk_action();
 
-            $per_page = $this->get_items_per_page("records_per_page", 20);
-            $current_page = $this->get_pagenum();
-            $total_items = self::record_count();
+				$per_page = $this->get_items_per_page("records_per_page", 20);
+				$current_page = $this->get_pagenum();
+				$total_items = self::record_count();
 
-            if (isset($_REQUEST["s"])) {
-                $this->items = self::get_devicetokens(
-                    $per_page,
-                    $current_page,
-                    sanitize_text_field(wp_unslash($_REQUEST["s"]))
-                );
-                $total_items_search = self::get_devicetokens(
-                    0,
-                    $current_page,
-                    sanitize_text_field(wp_unslash($_REQUEST["s"]))
-                );
-                $this->set_pagination_args([
-                    "total_items" => count($total_items_search), //WE have to calculate the total number of items
-                    "per_page" => $per_page, //WE have to determine how many items to show on a page
-                ]);
-            } else {
-                $this->items = self::get_devicetokens(
-                    $per_page,
-                    $current_page,
-                    ""
-                );
-                $this->set_pagination_args([
-                    "total_items" => $total_items, //WE have to calculate the total number of items
-                    "per_page" => $per_page, //WE have to determine how many items to show on a page
-                ]);
-            }
+				if (isset($_REQUEST["s"])) {
+					$this->items = self::get_devicetokens(
+						$per_page,
+						$current_page,
+						sanitize_text_field(wp_unslash($_REQUEST["s"]))
+					);
+					$total_items_search = self::get_devicetokens(
+						0,
+						$current_page,
+						sanitize_text_field(wp_unslash($_REQUEST["s"]))
+					);
+					$this->set_pagination_args([
+						"total_items" => count($total_items_search), //WE have to calculate the total number of items
+						"per_page" => $per_page, //WE have to determine how many items to show on a page
+					]);
+				} else {
+					$this->items = self::get_devicetokens(
+						$per_page,
+						$current_page,
+						""
+					);
+					$this->set_pagination_args([
+						"total_items" => $total_items, //WE have to calculate the total number of items
+						"per_page" => $per_page, //WE have to determine how many items to show on a page
+					]);
+				}
+			}
         }
 
         public function pnfpb_url_scheme_start()

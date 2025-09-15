@@ -12,82 +12,10 @@
         "push-notification-for-post-and-buddypress"
     )
 ); ?></h1>
-
-<div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb-icfcm-slug"); ?>" 
-	   class="nav-tab tab">
-		<?php echo esc_html(
-    		__("Push Settings", "push-notification-for-post-and-buddypress")
-		); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_device_tokens_list"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Device tokens", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_pwa_app_settings"); ?>" 
-		class="nav-tab tab">
-			<?php echo esc_html(
-    			__("PWA", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfmtest_notification"); ?>"
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Send push notification", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc"); ?>"
-	   class=" nav-tab tab">
-			<?php echo esc_html(
-    			__("Push Notifications list", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_frontend_settings"); ?>"
-	   class="nav-tab tab active nav-tab-active">
-			<?php echo esc_html(
-    			__(
-        			"Frontend subscription settings",
-        			"push-notification-for-post-and-buddypress"
-    			)
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_button_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Customize buttons", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_integrate_app"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Integrate Mobile app", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb_icfm_settings_for_ngnix_server"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("NGINX", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Action Scheduler", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-</div>
+<?php
+	$pnfpb_tab_frontend_active = "nav-tab-active";
+	require_once( plugin_dir_path( __FILE__ ) . 'push_admin_menu_list.php' );
+?>
 
 <div class="pnfpb_column_1200">
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
@@ -573,6 +501,35 @@
 						/>
 				</td>
     		</tr>
+			<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_ic_fcm_frontend_settings_favourite_text">
+						<?php echo esc_html(
+           					__(
+               					"Subscription text for Likes/Mark as favourites",
+               					"push-notification-for-post-and-buddypress"
+           					)
+       					); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  
+						   id="pnfpb_ic_fcm_frontend_settings_favourite_text" 
+						   name="pnfpb_ic_fcm_frontend_settings_favourite_text" 
+						   type="text" 
+						   value="<?php if (
+    								get_option("pnfpb_ic_fcm_frontend_settings_favourite_text")
+								) {
+    								echo esc_attr(
+        								get_option("pnfpb_ic_fcm_frontend_settings_favourite_text")
+    								);
+								} else {
+    								echo esc_attr(
+        								__("Likes/Favourites", "push-notification-for-post-and-buddypress")
+    								);
+								} ?>" 
+						/>
+				</td>
+    		</tr>			
 			<tr>
 				<td class="column-columnname">
 					<div class="pnfpb_column_full">

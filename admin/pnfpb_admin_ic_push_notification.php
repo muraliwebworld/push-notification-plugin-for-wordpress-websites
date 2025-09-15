@@ -14,82 +14,10 @@
     	)
 	); ?>
 </h1>
-
-<div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb-icfcm-slug"); ?>" 
-	   class="nav-tab tab active nav-tab-active">
-		<?php echo esc_html(
-    		__("Push Settings", "push-notification-for-post-and-buddypress")
-		); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_device_tokens_list"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Device tokens", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_pwa_app_settings"); ?>" 
-		class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("PWA", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfmtest_notification"); ?>"
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Send push notification", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc"); ?>"
-	   class=" nav-tab tab">
-			<?php echo esc_html(
-    			__("Push Notifications list", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_frontend_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__(
-        			"Frontend subscription settings",
-        			"push-notification-for-post-and-buddypress"
-    			)
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_button_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Customize buttons", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_integrate_app"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Integrate Mobile app", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb_icfm_settings_for_ngnix_server"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("NGINX", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Action Scheduler", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-</div>
+<?php
+	$pnfpb_tab_settings_active = "nav-tab-active";
+	require_once( plugin_dir_path( __FILE__ ) . 'push_admin_menu_list.php' );
+?>
 
 <div class="pnfpb_column_left_900">
 	<form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
@@ -327,7 +255,27 @@
         			"pnfpb_ic_fcm_buddypress_contact_form7_content_enable"
     			);
 			}
-	
+		
+			if (
+    			get_option("pnfpb_ic_fcm_buddypress_mark_favourite_content_enable") == false ||
+    			get_option("pnfpb_ic_fcm_buddypress_mark_favourite_content_enable") == ""
+			) {
+    			$markfavouritecontent = "[username] liked your activity";
+			} else {
+    			$markfavouritecontent = get_option(
+        			"pnfpb_ic_fcm_buddypress_mark_favourite_content_enable"
+    			);
+			}
+		
+			$pnfpb_ic_fcm_async_notifications = "";
+			if (
+    			get_option("pnfpb_ic_fcm_async_notifications") === false 
+			) {
+    			$pnfpb_ic_fcm_async_notifications = 0;
+			} else {
+				$pnfpb_ic_fcm_async_notifications = get_option("pnfpb_ic_fcm_async_notifications");
+			}	
+
 			$pnfpb_popup_subscribe_icon =
     			plugin_dir_url(__DIR__) . "public/img/pushbell-pnfpb.png";
 		?>
@@ -351,10 +299,12 @@
 					?>
 				</tbody>
 			</table>
-			<?php
-				require_once( plugin_dir_path( __FILE__ ) . 'pnfpb_admin_push_settings_firebase_service_account.php' );
-				require_once( plugin_dir_path( __FILE__ ) . 'pnfpb_admin_push_notification_configuration.php' );
-			?>
+			<div class="pnfpb_column_full">
+				<?php submit_button(
+					__("Save changes", "push-notification-for-post-and-buddypress"),
+					"pnfpb_ic_push_save_configuration_button"
+				); ?>
+			</div>
 	</form>
 
 	<?php if (get_option("pnfpb_ic_fcm_api")) { ?>
@@ -387,6 +337,11 @@
 	</h4>
 	
 	<ol>
+	<li>
+		<?php echo esc_html(
+     		__("Required PHP version 8.1 or above", "push-notification-for-post-and-buddypress")
+ 		); ?>		
+	</li>
 	<li>
 		<?php echo esc_html(
      		__("Check out the", "push-notification-for-post-and-buddypress")

@@ -6,7 +6,7 @@
   
     "private": true,
   
-    "description": "push notification for post and buddypress",
+    "description": "Push Notification for Post and Buddypress",
   
     "author": "Muralidharan Ramasamy",
   
@@ -22,14 +22,14 @@
   
     ],
   
-    "homepage": "https://github.com/WordPress/gutenberg-examples/",
+    "homepage": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites",
   
-    "repository": "git+https://github.com/WordPress/gutenberg-examples.git",
+    "repository": "git+https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites.git",
   
     "bugs": {
   
       
-    "url": "https://github.com/WordPress/gutenberg-examples/issues"
+    "url": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites/discussions"
   
     },
   
@@ -38,10 +38,22 @@
     "devDependencies": {
   
       
-    "@wordpress/scripts": "^26.8.0",
+    "@wordpress/blocks": "^15.3.0",
   
       
-    "assert": "^2.0.0",
+    "@wordpress/e2e-test-utils": "^11.30.0",
+  
+      
+    "@wordpress/env": "^10.30.0",
+  
+      
+    "@wordpress/hooks": "^4.30.0",
+  
+      
+    "@wordpress/scripts": "^30.23.0",
+  
+      
+    "assert": "^2.1.0",
   
       
     "browserify-zlib": "^0.2.0",
@@ -50,7 +62,7 @@
     "buffer": "^6.0.3",
   
       
-    "crypto-browserify": "^3.12.0",
+    "crypto-browserify": "^3.12.1",
   
       
     "http2": "^3.3.7",
@@ -83,16 +95,16 @@
     "tls": "^0.0.1",
   
       
-    "url": "^0.11.1",
+    "url": "^0.11.4",
   
       
     "util": "^0.12.5",
   
       
-    "webpack": "^5.88.2",
+    "webpack": "^5.101.3",
   
       
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^6.0.1"
   
     },
   
@@ -102,7 +114,13 @@
     "build": "wp-scripts build",
   
       
+    "build:pnfpb_blocks": "wp-scripts build --webpack-copy-php --webpack-src-dir=src/pnfpb_push_notification_blocks --output-path=build/pnfpb_push_notification_blocks",
+  
+      
     "build:pnfpb_push_notification": "wp-scripts build --webpack-src-dir=src/pnfpb_push_notification --output-path=build/pnfpb_push_notification",
+  
+      
+    "build:pnfpb_push_notification_webpush": "wp-scripts build --webpack-src-dir=src/pnfpb_push_notification_webpush --output-path=build/pnfpb_push_notification_webpush",
   
       
     "build:pnfpb_service_worker": "wp-scripts build --webpack-src-dir=src/pnfpb_service_worker --output-path=build/pnfpb_service_worker",
@@ -127,19 +145,28 @@
     "dependencies": {
   
       
-    "@wordpress/blocks": "^12.15.0",
+    "@types/jquery.postmessage": "^0.0.32",
   
       
     "@wordpress/e2e-test-utils": "^10.8.0",
   
       
-    "@wordpress/env": "^8.3.0",
+    "@wordpress/env": "^10.3.0",
   
       
-    "firebase": "^10.1.0",
+    "firebase": "^12.2.1",
   
       
-    "install": "^0.13.0"
+    "install": "^0.13.0",
+  
+      
+    "jquery": "^3.7.1",
+  
+      
+    "jquery-ui-dist": "^1.13.2",
+  
+      
+    "window-post-message-proxy": "^0.2.6"
   
     },
   

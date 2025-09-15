@@ -769,7 +769,7 @@
 													<table>
 														<tr>
                 											<td class="column-columnname">
-                    											<button id="pnfpb_ic_fcm_popup_subscribe_button_icon" 
+                    											<button id="pnfpb_ic_fcm_popup_icon" 
 																		class="pnfpb_ic_push_settings_upload_icon">
 																	<?php echo esc_html(
                      													__(
@@ -1753,6 +1753,40 @@
                  													);
              													} ?>"  
 													/>
+												</td>
+												<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p>
+														<?php echo esc_html(
+                 											__(
+                     											"Subscription option text for Likes/Mark as favourite",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             											); ?>
+													</p>
+													<input  
+														   class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														   id="pnfpb_bell_icon_subscription_option_favourite_text" 
+														   name="pnfpb_bell_icon_subscription_option_favourite_text" 
+														   type="text" 
+														   value="<?php if (
+                 													get_option(
+                     													"pnfpb_bell_icon_subscription_option_favourite_text"
+                 													)
+             													) {
+                 													echo esc_attr(
+                     													get_option(
+                         													"pnfpb_bell_icon_subscription_option_favourite_text"
+                     													)
+                 													);
+             													} else {
+                 													echo esc_attr(
+                     													__(
+                         													"Likes/Favourites",
+                         													"push-notification-for-post-and-buddypress"
+                     													)
+                 													);
+             													} ?>"  
+													/>
 												</td>												
 											</tr>											
 										</tbody>
@@ -1762,6 +1796,38 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="pnfpb_row">
+					<div class="pnfpb_column_400">
+						<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" for="pnfpb_ic_fcm_async_notifications">
+								<label class="pnfpb_switch">
+									<input  id="pnfpb_ic_fcm_async_notifications" 
+										   name="pnfpb_ic_fcm_async_notifications" 
+										   type="checkbox" 
+										   value="1" <?php checked(
+             								"1",
+             								$pnfpb_ic_fcm_async_notifications,
+         									); ?>  
+									/>
+									<span class="pnfpb_slider round"></span>
+								</label>
+									<?php echo esc_html(
+             							__(
+                 							"Send push notification in asynchronous mode",
+                 							"push-notification-for-post-and-buddypress"
+             							)
+         							); ?>
+									<br/>
+									<?php echo esc_html(
+             							__(
+                						 	"(If it is enabled, all push notifications will be sent in async mode without interrupting website flow)",
+                 							"push-notification-for-post-and-buddypress"
+             							)
+         							); ?>
+							</label>
+						</div>						
+					</div>
+				</div>					
 				<div class="pnfpb_row">
 					<div class="pnfpb_column_400">
 						<div class="pnfpb_card">

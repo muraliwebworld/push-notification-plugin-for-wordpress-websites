@@ -1,0 +1,980 @@
+.pnfpb_ic_push_settings_table_row {
+	height:70px;
+}
+
+.pnfpb_ic_push_settings_table_label_checkbox {
+	padding-left:0px;
+	padding-right:10px;
+}
+
+.pnfpb_ic_push_settings_table_column {
+	border:0px solid #ccc;
+}
+
+.pnfpb_ic_push_settings_table_label_column {
+	width:60% !important;
+	display: inline-block;
+}
+
+.pnfpb_ic_push_settings_table_ondemand_label_column {
+	width:100% !important;
+	/*display:inline-block;*/
+}
+
+
+.pnfpb_ic_push_settings_table_value_column {
+	width:80% !important;
+}
+
+.pnfpb_ic_push_settings_table_value_column_input_field {
+	width:82% !important;
+}
+
+
+
+.pnfpb_ic_push_settings_header {
+	line-height:1.25em;
+}
+
+.pnfpb_ic_push_settings_header2 {
+	line-height:1.0em;
+}
+
+.pnfpb_ic_push_settings_upload_icon, .pnfpb_ic_push_settings_upload_icon_shortcode {
+	width:100%;
+    white-space:normal;
+    word-wrap:break-word;
+  	background-color: #135e96 !important; 
+  	border: none !important;
+  	color: white !important;
+  	padding: 10px !important;
+  	text-align: center !important;
+  	text-decoration: none !important;
+  	display: inline-block !important;
+  	font-size: 16px !important;
+  	margin: 4px 2px !important;
+  	cursor: pointer !important;
+  	border-radius: 8px !important;	
+}
+.devicetokens .column-id { width: 15%; }
+.devicetokens .column-device_id { width: 45% !important; }
+.devicetokens .column-userid { width: 20%; }
+.devicetokens .column-device_id { width: 20%; }
+.pnfpb_column_1000 .wrap #poststuff #post-body.columns-2 {
+    margin-right: 0px;
+}
+.pnfpb_ic_red_color_text { color: red;}
+.pnfpb_switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  margin-left: 4px;
+  margin-right: 5px;
+}
+
+.pnfpb_switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pnfpb_slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.pnfpb_slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .pnfpb_slider {
+  background-color: #135e96;
+}
+
+input:focus + .pnfpb_slider {
+  box-shadow: 0 0 1px #135e96;
+}
+
+input:checked + .pnfpb_slider:before {
+  -webkit-transform: translateX(17px);
+  -ms-transform: translateX(17px);
+  transform: translateX(17px);
+}
+
+/* Rounded sliders */
+.pnfpb_slider.round {
+  border-radius: 20px;
+}
+
+.pnfpb_slider.round:before {
+  border-radius: 50%;
+}
+
+.pnfpb_ic_push_settings_table_label_checkbox {
+	padding-left: 0px;
+	padding-right: 0px;
+	font-weight:500;
+}
+
+/* Float four columns side by side */
+.pnfpb_column {
+  float: left;
+  padding: 0 10px;
+  /*max-width: 200px;*/
+  margin-bottom: 10px;
+}
+
+.pnfpb_column_400 {
+  float: left;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+/* Remove extra left and right margins, due to padding */
+.pnfpb_row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.pnfpb_row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the counter cards */
+.pnfpb_card {
+  padding: 10px;
+  text-align: left;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: stretch;
+}
+
+.pnfpb_container {
+  display: inline;
+  position: relative;
+  padding-left: 35px;
+  padding-right: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.pnfpb_container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.pnfpb_checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.pnfpb_container:hover input ~ .pnfpb_checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.pnfpb_container input:checked ~ .pnfpb_checkmark {
+  background-color: #135e96;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.pnfpb_checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.pnfpb_container input:checked ~ .pnfpb_checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.pnfpb_container .pnfpb_checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .pnfpb_column {
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .pnfpb_container {
+  	display: block;
+   }
+}
+
+.pnfpb_activity_form_button, .pnfpb_post_type_content_button, .pnfpb_comments_content_button, .pnfpb_private_message_button, .pnfpb_ic_push_configuration_button, .pnfpb_avatar_change_button, .pnfpb_friendship_request_button, .pnfpb_new_member_button, .pnfpb_cover_image_change_button, .pnfpb_friendship_accept_button, .pnfpb_ic_push_frontend_save_configuration_button, .pnfpb_custom_push_prompt_button, .pnfpb_group_invitation_button, .pnfpb_group_details_updated_button, .pnfpb_new_user_registration_button, .pnfpb_contact_form7_button, .pnfpb_mark_favourite_button  {
+	background-color: #135e96 !important;
+    border: none !important;
+    color: white !important;
+    padding: 5px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+
+}
+
+.pnfpb_ic_push_save_configuration_button {
+	background-color: #135e96 !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+}
+
+.pnfpb_ic_firebase_configuration_button, .pnfpb_ic_or_button, .pnfpb_ic_onesignal_configuration_button, .pnfpb_ic_progressier_configuration_button, .pnfpb_ic_webtoapp_configuration_button, .pnfpb_ic_firebase_configuration_help_button {
+	background-color: #135e96 !important;
+    border: none !important;
+    color: white !important;
+    padding: 5px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+}
+
+.pnfpb_ic_private_message_form, .pnfpb_ic_push_prompt_form {
+	display: none;
+}
+
+.pnfpb_ic_new_member_form {
+	display: none;
+}
+
+.pnfpb_ic_friendship_request_form {
+	display: none;
+}
+
+.pnfpb_ic_friendship_accept_form {
+	display: none;
+}
+
+.pnfpb_ic_mark_favourite_form {
+	display: none;
+}
+
+
+.pnfpb_ic_avatar_change_form {
+	display: none;
+}
+
+.pnfpb_ic_cover_image_change_form {
+	display: none;
+}
+
+.pnfpb_ic_group_invitation_form {
+	display: none;
+}
+
+.pnfpb_ic_group_details_updated_form {
+	display: none;
+}
+
+.pnfpb_ic_new_user_registration_form {
+	display: none;
+}
+
+.pnfpb_ic_contact_form7_form {
+	display: none;
+}
+
+.pnfpb_ic_activity_content_form {
+	display: none;
+}
+
+.pnfpb_ic_comments_content_form {
+	display: none;
+}
+
+.pnfpb_ic_post_type_content_form {
+	display: none;
+}
+
+.pnfpb_ic_firebase_configuration_help {
+	display: none;
+	width: 100%;
+}
+
+.pnfpb_ic_onesignal_configuration {
+	display: none;
+}
+
+.pnfpb_ic_progressier_configuration {
+	display: none;
+}
+
+.pnfpb_ic_webtoapp_configuration {
+	display: none;
+}
+
+.pnfpb_ic_firebase_configuration {
+	display: block;
+}
+
+table.pnfpb_ic_push_settings_table {
+	border: 1px solid #000000;
+}
+
+table.pnfpb_ic_push_notification_settings_table {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-top: 1px solid #000000;
+}
+
+table.pnfpb_ic_push_firebase_settings_table {
+	border: 1px solid #000000;
+}
+
+td.pnfpb_ic_push_settings_table_label_column {
+	border-left: 0px solid #000000;
+}
+
+td.pnfpb_ic_push_settings_table_column {
+	border-bottom: 1px solid #000000;
+}
+.pnfpb_column_full p.submit {
+	text-align: center;
+}
+
+.pnfpb_column_full_ondemand p.submit {
+	text-align: left;
+}
+
+.pnfpb_column_400 p.submit {
+	margin-top: 0px;
+}
+
+.pnfpb_column_full {
+	width: 100%;
+}
+
+.pnfpb_column_70_percent {
+	width: 70%;
+	float: left;
+}
+.pnfpb_column_25_percent {
+	width: 25%;
+	float:left;
+	margin: 5px;
+}
+
+.pnfpb_column_1200 {
+	max-width: 1200px;
+	float:left;
+}
+
+.pnfpb_column_1000 {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.pnfpb_column_left_300 {
+	max-width: 300px;
+	margin-left:10px;
+	margin-top:20px;
+	float: left;
+}
+.pnfpb_column_left_900 {
+	max-width: 900px;
+	float:left;
+}
+
+.pnfpb-admin-right_sidebar {
+	background: #f8f8d8; 
+	border: 1px solid #333; 
+	padding: 3px 15px
+}
+
+.pnfpb_column_buddypress_functions {
+	width: 40%;
+}
+
+@media screen and (max-width: 600px) {
+	.pnfpb_column_buddypress_functions {
+		width: unset;
+	}
+}
+
+.pnfpb_ic_push_settings_table {
+	margin-top: 10px;
+}
+
+.pnfpb_max_width_236 {
+	max-width: 236px;
+}
+
+.pnfpb_max_width_40 {
+	max-width: 40px;
+}
+
+.pnfpb_width_60 {
+	width: 60%;
+}
+
+.pnfpb_width_15 {
+	width: 15%;
+}
+
+.pnfpb_width_20 {
+	width: 20%;
+}
+
+.pnfpb_float_right {
+	float: right;
+}
+
+.pnfpb_float_left {
+	float: left;
+}
+
+.pnfpb_padding_top_8 {
+	padding-top: 8px;
+}
+
+.pnfpb_flex_grow_1 {
+	flex-grow: 1;
+}
+
+.pnfpb_flex_grow_3 {
+	flex-grow: 3;
+}
+
+.pnfpb_flex_grow_6 {
+	flex-grow: 6;
+}
+
+.pnfpb_margin_top_8 {
+	margin-top: 8px;
+}
+
+.pnfpb_margin_top_6 {
+	margin-top: 6px;
+}
+
+.pnfpb_margin_left_4 {
+	margin-left: 4px;
+}
+
+
+.pnfpb_ic_fcm_post_timeschedule_seconds_block {
+	width:100px;
+	margin-right:10px;
+}
+
+#pnfpb_ic_fcm_post_timeschedule_seconds_block {
+	background-color: #fff;
+	color: #000;
+}
+
+.pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block {
+	width:100px;
+	margin-right:10px;
+}
+#pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds_block {
+	background-color: #fff;
+	color: #000;
+}
+
+.pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block {
+	width:100px;
+	margin-right:10px;
+}
+#pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_block {
+	background-color: #fff;
+	color: #000;
+}
+
+.pnfpb_schedule_later_ondemand {
+	flex-flow: row wrap !important;
+}
+
+.pnfpb_ic_push_settings_table_label_schedule_later_ondemand {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+.pnfpb-center-box {
+  border: 1px solid;
+  position: absolute;
+  top: 5%;
+  left: 20%;
+  text-align: center;
+  max-width: 800px;
+}
+
+.pnfpb_admin_top_menu {
+	min-height: 38px;
+	background-color: #fff;
+	font-size:14px;
+	margin:0 0 10px 0;
+	padding:0 20px;
+	max-width: 1200px;
+}
+
+.pnfpb_admin_top_menu a.tab.active {
+    border-bottom: 2px solid #135e96;
+}
+
+.pnfpb_admin_top_menu a.tab {
+    border-bottom: 2px solid #c3c4c7;
+    box-shadow: none;
+    color: #666;
+    display: inline-block;
+    margin-right: 30px;
+    padding: 10px 0 10px 0;
+    text-decoration: none;
+}
+
+.pnfpb-onetime-notifications-list {
+  margin: 15px 0;
+}
+.pnfpb-onetime-notifications-list tbody tr td.user-td {
+  display: flex;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+}
+.pnfpb-onetime-notifications-list tbody tr td.user-td > * {
+  margin-right: 5px;
+}
+.pnfpb-onetime-notifications-list tbody tr td img {
+  max-width: 100%;
+}
+
+.pnfpb-selectize-dropdown .selected {
+  background-color: #2271b1;
+}
+
+.pnfpb-pagination ul {
+  display: flex;
+}
+.pnfpb-pagination ul li {
+  margin-right: 5px;
+}
+.pnfpb-onetime-notifications-wrap {
+	max-width: 1200px;
+}
+
+.pnfpb_icfm_notification_search_content_class {
+	min-width: 500px;
+}
+
+@media screen and (max-width: 600px) {
+	.pnfpb_icfm_notification_search_content_class {
+		min-width: 330px;
+	}
+}
+
+.pnfpb_icfm_notification_search_content_label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.pnfpb_icfcm_service_account_upload_message {
+	color:black;
+	font-weight:bold;
+}
+.pnfpb_ic_pwa_app_pixels_input_custom_prompt_enable {
+	width:100px !important;
+}
+
+.pnfpb-push-msg-model-column-head {
+	width:100%;
+}
+
+.pnfpb-push-msg-model-column {
+	width: 180px;
+    flex-direction: row;
+    margin-right: 1em;
+    text-align: center;
+	background: #e3e3e3;
+	margin-bottom: 10px;
+	padding-bottom: 8px;
+	float: left;
+}
+
+
+.pnfpb-push-msg-model-prompt-button-container {
+	margin: 6px;
+    width: 180px;
+	height:25px;
+}
+
+.pnfpb-push-msg-model-outer-container {
+    width: 180px;
+	height: 150px;
+}
+
+.pnfpb-push-msg-model-container {
+    display: flex;
+    width: 150px;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 3px;
+    background: #ffffff;
+    overflow: auto;
+    margin: 0.5em 0;
+	margin: 0 auto;
+	margin-top: 0.9em;
+	height: 84px;
+}
+
+.pnfpb-push-msg-vertical-model-container {
+    display: flex;
+    width: 120px;
+	text-align: center;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 3px;
+    background: #ffffff;
+    overflow: auto;
+    margin: 0.5em 0;
+	margin: 0 auto;
+	margin-top: 0.9em;
+	height: 150px;
+}
+
+.pnfpb-push-model-icon {
+    width: 30px;
+    height: 30px;
+    margin: 6px;
+    margin-right: 3px;
+    border-radius: 2px;
+}
+
+.pnfpb-push-vertical-model-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    margin-top: 5px;
+	margin-bottom: 5px;
+    border-radius: 2px;
+}
+
+.pnfpb-push-vertical-model-bell {
+    margin-top: 5px;
+	margin-bottom: 5px;
+    border-radius: 2px;
+}
+
+.pnfpb-push-msg-vertical-model-bell-square {
+  	border-radius: 50%;
+  	padding: 5px; 
+  	width: 20px;
+ 	height: 20px;	
+	margin-top:80%;
+	margin-left:70%;
+}
+
+.pnfpb-push-msg-model-square {
+  border-radius: 50%;
+  background: #e5eb90;
+  padding: 5px; 
+  width: 20px;
+  height: 20px; 	
+}
+
+.pnfpb-push-msg-vertical-model-text-layout {
+    margin: 6px;
+    -ms-flex: 1;
+    flex: 1;
+	text-align: center;
+}
+
+.pnfpb-push-msg-model-text-layout {
+    margin: 6px;
+    margin-left: 3px;
+    -ms-flex: 1;
+    flex: 1;
+	text-align: right;
+}
+
+.pnfpb-push-msg-model-text-header-line {
+    height: 5px;
+    width: 80%;
+	text-align: center;
+    background: #7f8285;
+    margin: 10px 0;
+    border-radius: 1px;
+}
+
+.pnfpb-push-msg-model-text-line {
+    width: 85%;
+    height: 5px;
+    background: #e3e4e5;
+    margin: 5px 0;
+    border-radius: 1px;    
+}
+
+.pnfpb-push-msg-vertical-model-text-line {
+    width: 85%;
+    height: 5px;
+    background: #e3e4e5;
+    margin: 0 auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+    border-radius: 1px;    
+}
+
+.pnfpb-push-msg-model-text-long-line {
+    height: 5px;
+    width: 100%;
+    background: #e3e4e5;
+    margin: 5px 0;
+    border-radius: 1px;
+}
+
+.pnfpb-push-msg-vertical-model-text-long-line {
+    height: 5px;
+    width: 100%;
+    background: #e3e4e5;
+    margin: 0 auto;
+	margin-top: 5px;
+	margin-bottom: 5px;	
+    border-radius: 1px;
+}
+
+.pnfpb-push-msg-model-yes-button {
+	background-color: #7691e1;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 40px;
+    height: 20px;
+}
+
+.pnfpb-push-msg-model-cancel-button {
+	background-color: #c5c6c9;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 40px;
+    height: 20px;
+}
+
+.pnfpb-push-msg-vertical-model-yes-button {
+	background-color: #7691e1;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 80px;
+    height: 20px;
+}
+
+.pnfpb-push-msg-vertical-model-cancel-button {
+	background-color: #c5c6c9;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 5px;
+    width: 80px;
+    height: 20px;
+}
+
+.pnfpb_ic_push_settings_table_border_bottom {
+	border-bottom: 1px solid #000;
+}
+
+.pnfpb_ic_push_settings_table_label_custom_prompt_column {
+	width:93% !important;
+	display: inline-block;
+}
+
+.pnfpb_ic_push_settings_custom_prompt_table_label_column {
+    width: 100% !important;
+    display: inline-block;
+}
+
+.pnfpb_navy_blue_background_color {
+	background-color: #135e96;
+}
+
+.pnfpb_white_text_color {
+	color: #ffffff;
+}
+
+.pnfpb_section_header_font_16px {
+	font-size: 16px;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.pnfpb_schedule_push_notification_post_editor {
+	margin-top: 5px;
+	padding: 5px;
+	border-bottom: 1px solid #c3c4c7;
+	border-top: 1px solid #c3c4c7;
+}
+
+.pnfpb_schedule_push_notification_post_editor_label {
+	font-weight: bold;
+}
+
+.pnfpb_ic_fcm_on_demand_push_image_preview {
+	width:50px; 
+	height:50px;
+	overflow:hidden;
+	border-radius:0%;
+	margin:0px auto;
+	background-position:center;
+	background-repeat:no-repeat;
+	background-size:cover;
+}
+.pnfpb_ic_push_settings_table_margin_5px {
+	margin-top: 5px;
+}
+
+.pnfpb-push-msg-model-column-shortcode {
+    flex-direction: row;
+    margin-right: 1em;
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    float: left;
+}
+
+.pnfpb-notification-user-selected-item {
+	background-color: #f0f0f0;
+	padding: 5px;
+	margin: 2px;
+	border-radius: 3px;
+	display: inline-block;
+}
+
+.pnfpb-notification-user-remove-item {
+	cursor: pointer;
+	margin-left: 5px;
+	color: #888;
+}
+
+.pnfpb_ic_user_selected_items {
+	margin-top: 15px;
+	border: 1px solid #8c8f94;
+	min-height:100px;
+	min-width:250px;
+	width: 82% !important;
+}
+
+/* Style the tab */
+.pnfpb_notification_list_tab {
+  /*float: left;*/
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  /*width: 18%;*/
+}
+
+/* Style the buttons inside the tab */
+.pnfpb_notification_list_tab button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.pnfpb_notification_list_tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.pnfpb_notification_list_tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.pnfpb_notification_list_tabcontent {
+  padding: 0px 12px;
+}
+
+.pnfpb_notifications_list {
+	padding: 0 10px;
+    margin-bottom: 10px;
+}
+
+.pnfpb_notification_list_tablinks {
+	text-decoration: none;
+	color: #000000;
+}
+
+.pnfpb_notification_list_tablinks_active {
+  background-color: #ccc;
+}
+
+.pnfpb_config_tab_content {
+	display:none;
+}
+
+.pnfpb_config_tab_content.active {
+    display: block;
+	background: #f0f0f1;
+}
+
+
+/* Style the counter cards */
+.pnfpb_card_webpush {
+  text-align: left;
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+}

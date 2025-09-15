@@ -20,17 +20,27 @@ class ComposerStaticInit262d9e63f8bd2f149b6214732462bb17
         array (
             'phpseclib3\\' => 11,
         ),
+        'S' => 
+        array (
+            'SpomkyLabs\\Pki\\' => 15,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
+            'Psr\\Clock\\' => 10,
             'Psr\\Cache\\' => 10,
             'ParagonIE\\ConstantTime\\' => 23,
         ),
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Minishlink\\WebPush\\' => 19,
+        ),
+        'J' => 
+        array (
+            'Jose\\Component\\' => 15,
         ),
         'G' => 
         array (
@@ -45,6 +55,11 @@ class ComposerStaticInit262d9e63f8bd2f149b6214732462bb17
         array (
             'Firebase\\JWT\\' => 13,
         ),
+        'B' => 
+        array (
+            'Brick\\Math\\' => 11,
+            'Base64Url\\' => 10,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -52,9 +67,13 @@ class ComposerStaticInit262d9e63f8bd2f149b6214732462bb17
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
+        'SpomkyLabs\\Pki\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/pki-framework/src',
+        ),
         'Psr\\Log\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+            0 => __DIR__ . '/..' . '/psr/log/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -64,6 +83,10 @@ class ComposerStaticInit262d9e63f8bd2f149b6214732462bb17
         'Psr\\Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
+        'Psr\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
         'Psr\\Cache\\' => 
         array (
@@ -76,6 +99,14 @@ class ComposerStaticInit262d9e63f8bd2f149b6214732462bb17
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Minishlink\\WebPush\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/minishlink/web-push/src',
+        ),
+        'Jose\\Component\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-library',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -104,6 +135,14 @@ class ComposerStaticInit262d9e63f8bd2f149b6214732462bb17
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
+        'Base64Url\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/base64url/src',
         ),
     );
 

@@ -11,7 +11,7 @@
 
 <p><?php echo wp_kses_post(
     __(
-        "(Enable below option to use latest version of Firebase API - http v1. Recommended PHP version for this is 8.0 or above. It will work with PHP version 7.4 but recommended PHP version is 8.0 to use latest version of Firebase API httpv1)",
+        "(Enable below option to use latest version of Firebase API - http v1. Required PHP version is 8.1 or above)",
         "push-notification-for-post-and-buddypress"
     )
 ); ?></p>

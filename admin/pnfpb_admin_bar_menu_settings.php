@@ -35,14 +35,17 @@ if (!class_exists("PNFPB_ICFM_admin_bar_menu_class")) {
          */
         public function pnfpb_admin_main_menu(WP_Admin_Bar $wp_admin_bar)
         {
-            $wp_admin_bar->add_menu([
-                "id" => "pnfpb-ic-fcm-main-menu",
-                "title" => esc_html__(
-                    "PNFPB",
-                    "push-notification-for-post-and-buddypress"
-                ),
-                "href" => admin_url("admin.php?page=pnfpb-icfcm-slug"),
-            ]);
+			if ( current_user_can('administrator') ) {
+				
+				$wp_admin_bar->add_menu([
+					"id" => "pnfpb-ic-fcm-main-menu",
+					"title" => esc_html__(
+						"PNFPB",
+						"push-notification-for-post-and-buddypress"
+					),
+					"href" => admin_url("admin.php?page=pnfpb-icfcm-slug"),
+				]);
+			}
         }
 
         /**

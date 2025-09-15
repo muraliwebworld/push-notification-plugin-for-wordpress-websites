@@ -5,113 +5,128 @@
  * @since 1.99 version
  *
  */
-
-global $wpdb;
-
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
+if (!class_exists("PNFPB_webtoapp_notification_class")) {
+	
+    class PNFPB_webtoapp_notification_class
+    {
+		public function PNFPB_webtoapp_notification(
+            $pushid,
+            $pushtitle,
+            $pushcontent,
+            $pushlink,
+            $pushimageurl,
+            $target_device_ids = [],
+            $pushtype = "",
+            $grouppush = ""
+        ) {
+			global $wpdb;
 
-$apiaccesskey = get_option("pnfpb_ic_fcm_webtoapp_api_key");
+			$apiaccesskey = get_option("pnfpb_ic_fcm_webtoapp_api_key");
 
-$url =
-    "https://webtoapp.design/api/global_push_notifications?key=" .
-    $apiaccesskey;
+			$url =
+				"https://webtoapp.design/api/global_push_notifications?key=" .
+				$apiaccesskey;
 
-$pushcontent = mb_substr(
-    stripslashes(
-        wp_strip_all_tags(
-            urldecode(trim(htmlspecialchars_decode($pushcontent)))
-        )
-    ),
-    0,
-    130,
-    "UTF-8"
-);
+			$pushcontent = mb_substr(
+				stripslashes(
+					wp_strip_all_tags(
+						urldecode(trim(htmlspecialchars_decode($pushcontent)))
+					)
+				),
+				0,
+				130,
+				"UTF-8"
+			);
 
-$pushcontent = preg_replace("/\r|\n/", " ", $pushcontent);
+			$pushcontent = preg_replace("/\r|\n/", " ", $pushcontent);
 
-$pushimageurl = str_replace("&#038;", "&", $pushimageurl);
+			$pushimageurl = str_replace("&#038;", "&", $pushimageurl);
 
-if (substr($pushimageurl, 0, 2) === "//") {
-    $pushimageurl = str_replace("//", "https://", $pushimageurl);
-}
+			if (substr($pushimageurl, 0, 2) === "//") {
+				$pushimageurl = str_replace("//", "https://", $pushimageurl);
+			}
 
-if (
-    $pushtype === "privatemessages" ||
-    $pushtype === "friendshiprequest" ||
-    $pushtype === "friendshipaccepted"
-) {
-    $url =
-        "https://webtoapp.design/api/push_notifications?key=" . $apiaccesskey;
+			if (
+				$pushtype === "privatemessages" ||
+				$pushtype === "friendshiprequest" ||
+				$pushtype === "friendshipaccepted"
+			) {
+				$url =
+					"https://webtoapp.design/api/push_notifications?key=" . $apiaccesskey;
 
-    if (count($target_device_ids) > 0) {
-        for ($i = 0; $i < count($target_device_ids); $i++) {
-            $fields = [
-                "token" => $target_device_ids[$i],
-                "title" => trim($pushtitle),
-                "message" => $pushcontent,
-                "image_url" => $pushimageurl,
-                "url_to_open" => $pushlink,
-            ];
+				if (count($target_device_ids) > 0) {
+					for ($i = 0; $i < count($target_device_ids); $i++) {
+						$fields = [
+							"token" => $target_device_ids[$i],
+							"title" => trim($pushtitle),
+							"message" => $pushcontent,
+							"image_url" => $pushimageurl,
+							"url_to_open" => $pushlink,
+						];
 
-            $headers = [
-                "Content-Type" => "application/json",
-            ];
+						$headers = [
+							"Content-Type" => "application/json",
+						];
 
-            $body = wp_json_encode($fields);
+						$body = wp_json_encode($fields);
 
-            $args = [
-                "httpversion" => "1.0",
-                "blocking" => true,
-                "sslverify" => true,
-                "body" => $body,
-                "headers" => $headers,
-            ];
+						$args = [
+							"httpversion" => "1.0",
+							"blocking" => true,
+							"sslverify" => true,
+							"body" => $body,
+							"headers" => $headers,
+						];
 
-            $apiresults = wp_remote_post($url, $args);
+						$apiresults = wp_remote_post($url, $args);
 
-            $apibody = wp_remote_retrieve_body($apiresults);
-        }
-    }
-} else {
-    $topic = "pnfpbgeneral";
+						$apibody = wp_remote_retrieve_body($apiresults);
+					}
+				}
+			} else {
+				$topic = "pnfpbgeneral";
 
-    if (
-        get_option("pnfpb_ic_fcm_loggedin_notify") &&
-        get_option("pnfpb_ic_fcm_loggedin_notify") === "1"
-    ) {
-        $topic = "pnfpbgeneralloggedin";
-    }
+				if (
+					get_option("pnfpb_ic_fcm_loggedin_notify") &&
+					get_option("pnfpb_ic_fcm_loggedin_notify") === "1"
+				) {
+					$topic = "pnfpbgeneralloggedin";
+				}
 
-    if ($grouppush === "yes") {
-        $group_name = "pnfpbgroupid" . $groupid;
+				if ($grouppush === "yes") {
+					$group_name = "pnfpbgroupid" . $groupid;
 
-        $topic = $group_name;
-    }
+					$topic = $group_name;
+				}
 
-    $fields = [
-        "title" => trim($pushtitle),
-        "message" => $pushcontent,
-        "image_url" => $pushimageurl,
-        "url_to_open" => $pushlink,
-    ];
+				$fields = [
+					"title" => trim($pushtitle),
+					"message" => $pushcontent,
+					"image_url" => $pushimageurl,
+					"url_to_open" => $pushlink,
+				];
 
-    $headers = [
-        "Content-Type" => "application/json",
-    ];
+				$headers = [
+					"Content-Type" => "application/json",
+				];
 
-    $body = wp_json_encode($fields);
+				$body = wp_json_encode($fields);
 
-    $args = [
-        "httpversion" => "1.0",
-        "blocking" => true,
-        "sslverify" => true,
-        "body" => $body,
-        "headers" => $headers,
-    ];
+				$args = [
+					"httpversion" => "1.0",
+					"blocking" => true,
+					"sslverify" => true,
+					"body" => $body,
+					"headers" => $headers,
+				];
 
-    $apiresults = wp_remote_post($url, $args);
+				$apiresults = wp_remote_post($url, $args);
 
-    $apibody = wp_remote_retrieve_body($apiresults);
+				$apibody = wp_remote_retrieve_body($apiresults);
+			}
+		}
+	}
 }
 
 ?>

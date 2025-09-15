@@ -40,7 +40,7 @@
 	line-height:1.0em;
 }
 
-.pnfpb_ic_push_settings_upload_icon {
+.pnfpb_ic_push_settings_upload_icon, .pnfpb_ic_push_settings_upload_icon_shortcode {
 	width:100%;
     white-space:normal;
     word-wrap:break-word;
@@ -243,7 +243,7 @@ input:checked + .pnfpb_slider:before {
    }
 }
 
-.pnfpb_activity_form_button, .pnfpb_post_type_content_button, .pnfpb_comments_content_button, .pnfpb_private_message_button, .pnfpb_ic_push_configuration_button, .pnfpb_avatar_change_button, .pnfpb_friendship_request_button, .pnfpb_new_member_button, .pnfpb_cover_image_change_button, .pnfpb_friendship_accept_button, .pnfpb_ic_push_frontend_save_configuration_button, .pnfpb_custom_push_prompt_button, .pnfpb_group_invitation_button, .pnfpb_group_details_updated_button, .pnfpb_new_user_registration_button, .pnfpb_contact_form7_button  {
+.pnfpb_activity_form_button, .pnfpb_post_type_content_button, .pnfpb_comments_content_button, .pnfpb_private_message_button, .pnfpb_ic_push_configuration_button, .pnfpb_avatar_change_button, .pnfpb_friendship_request_button, .pnfpb_new_member_button, .pnfpb_cover_image_change_button, .pnfpb_friendship_accept_button, .pnfpb_ic_push_frontend_save_configuration_button, .pnfpb_custom_push_prompt_button, .pnfpb_group_invitation_button, .pnfpb_group_details_updated_button, .pnfpb_new_user_registration_button, .pnfpb_contact_form7_button, .pnfpb_mark_favourite_button  {
 	background-color: #135e96 !important;
     border: none !important;
     color: white !important;
@@ -301,6 +301,11 @@ input:checked + .pnfpb_slider:before {
 .pnfpb_ic_friendship_accept_form {
 	display: none;
 }
+
+.pnfpb_ic_mark_favourite_form {
+	display: none;
+}
+
 
 .pnfpb_ic_avatar_change_form {
 	display: none;
@@ -871,4 +876,35 @@ td.pnfpb_ic_push_settings_table_column {
 }
 .pnfpb_ic_push_settings_table_margin_5px {
 	margin-top: 5px;
+}
+
+.pnfpb-push-msg-model-column-shortcode {
+    flex-direction: row;
+    margin-right: 1em;
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    float: left;
+}
+
+.pnfpb-notification-user-selected-item {
+	background-color: #f0f0f0;
+	padding: 5px;
+	margin: 2px;
+	border-radius: 3px;
+	display: inline-block;
+}
+
+.pnfpb-notification-user-remove-item {
+	cursor: pointer;
+	margin-left: 5px;
+	color: #888;
+}
+
+.pnfpb_ic_user_selected_items {
+	margin-top: 15px;
+	border: 1px solid #8c8f94;
+	min-height:100px;
+	min-width:250px;
+	width: 82% !important;
 }

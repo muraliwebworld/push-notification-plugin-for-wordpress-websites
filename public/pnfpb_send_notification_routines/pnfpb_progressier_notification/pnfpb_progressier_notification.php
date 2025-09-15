@@ -6,115 +6,134 @@
  *
  */
 
-global $wpdb;
-
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 
-$apiaccesskey = get_option("pnfpb_ic_fcm_progressier_api_key");
+if (!class_exists("PNFPB_progressier_notification_class")) {
+	
+    class PNFPB_progressier_notification_class
+    {
+        public function PNFPB_progressier_notification(
+            $pushid,
+            $pushtitle,
+            $pushcontent,
+            $pushlink,
+            $pushimageurl,
+            $target_user_id = 0,
+            $pushtype = "",
+            $target_user_id_array = []
+        ) {
+			global $wpdb;
 
-$progressier_app_id = get_option("pnfpb_ic_pwa_thirdparty_app_id");
+			$apiaccesskey = get_option("pnfpb_ic_fcm_progressier_api_key");
 
-$url = "https://progressier.app/" . $progressier_app_id . "/send";
+			$progressier_app_id = get_option("pnfpb_ic_pwa_thirdparty_app_id");
 
-$recipients = json_decode('{"users":"all"}');
+			$url = "https://progressier.app/" . $progressier_app_id . "/send";
 
-$pushcontent = mb_substr(
-    stripslashes(
-        wp_strip_all_tags(
-            urldecode(trim(htmlspecialchars_decode($pushcontent)))
-        )
-    ),
-    0,
-    130,
-    "UTF-8"
-);
+			$recipients = json_decode('{"users":"all"}');
 
-$pushcontent = preg_replace("/\r|\n/", " ", $pushcontent);
+			$pushcontent = mb_substr(
+				stripslashes(
+					wp_strip_all_tags(
+						urldecode(trim(htmlspecialchars_decode($pushcontent)))
+					)
+				),
+				0,
+				130,
+				"UTF-8"
+			);
 
-$pushimageurl = str_replace("&#038;", "&", $pushimageurl);
+			$pushcontent = preg_replace("/\r|\n/", " ", $pushcontent);
 
-if (
-    $pushtype === "privatemessages" ||
-    $pushtype === "friendshiprequest" ||
-    $pushtype === "friendshipaccepted"
-) {
-    if ($target_user_id !== 0 && $target_user_id !== "") {
-        $recipients = json_decode('{"id": "' . $target_user_id . '"}');
+			$pushimageurl = str_replace("&#038;", "&", $pushimageurl);
 
-        $fields = [
-            "recipients" => $recipients,
-            "title" => trim($pushtitle),
-            "body" => $pushcontent,
-            "icon" => $pushimageurl,
-            "image" => $pushimageurl,
-            "url" => $pushlink,
-        ];
+			if (
+				$pushtype === "privatemessages" ||
+				$pushtype === "friendshiprequest" ||
+				$pushtype === "friendshipaccepted"
+			) {
+				if ($target_user_id !== 0 && $target_user_id !== "") {
+					$recipients = json_decode('{"id": "' . $target_user_id . '"}');
 
-        $headers = [
-            "Authorization" => "Bearer " . $apiaccesskey,
-            "Content-Type" => "application/json",
-        ];
+					$fields = [
+						"recipients" => $recipients,
+						"title" => trim($pushtitle),
+						"body" => $pushcontent,
+						"icon" => $pushimageurl,
+						"image" => $pushimageurl,
+						"url" => $pushlink,
+					];
 
-        $body = wp_json_encode($fields);
+					$headers = [
+						"Authorization" => "Bearer " . $apiaccesskey,
+						"Content-Type" => "application/json",
+					];
 
-        $args = [
-            "httpversion" => "1.0",
-            "blocking" => true,
-            "sslverify" => true,
-            "body" => $body,
-            "headers" => $headers,
-        ];
+					$body = wp_json_encode($fields);
 
-        $apiresults = wp_remote_post($url, $args);
+					$args = [
+						"httpversion" => "1.0",
+						"blocking" => true,
+						"sslverify" => true,
+						"body" => $body,
+						"headers" => $headers,
+					];
 
-        $apibody = wp_remote_retrieve_body($apiresults);
-    }
-} else {
-    if (count($target_user_id_array) > 0) {
-        $json_user_ids = '{"id":"';
+					$apiresults = wp_remote_post($url, $args);
 
-        $json_user_ids_data = "";
+					$apibody = wp_remote_retrieve_body($apiresults);
+				}
+				
+			} else {
+				
+				if (count($target_user_id_array) > 0) {
+					
+					$json_user_ids = '{"id":"';
 
-        $pnfpb_next_record = "";
+					$json_user_ids_data = "";
 
-        for ($i = 0; $i < count($target_user_id_array); $i++) {
-            $json_user_ids .= $pnfpb_next_record . $target_user_id_array[$i];
+					$pnfpb_next_record = "";
 
-            $pnfpb_next_record = ",";
-        }
+					for ($i = 0; $i < count($target_user_id_array); $i++) {
+						$json_user_ids .= $pnfpb_next_record . $target_user_id_array[$i];
 
-        $json_user_ids .= '"}';
+						$pnfpb_next_record = ",";
+					}
 
-        $recipients = json_decode($json_user_ids);
-    }
+					$json_user_ids .= '"}';
 
-    $fields = [
-        "recipients" => $recipients,
-        "title" => trim($pushtitle),
-        "body" => $pushcontent,
-        "icon" => $pushimageurl,
-        "image" => $pushimageurl,
-        "url" => $pushlink,
-    ];
+					$recipients = json_decode($json_user_ids);
+				}
 
-    $headers = [
-        "Authorization" => "Bearer " . $apiaccesskey,
-        "Content-Type" => "application/json",
-    ];
+				$fields = [
+					"recipients" => $recipients,
+					"title" => trim($pushtitle),
+					"body" => $pushcontent,
+					"icon" => $pushimageurl,
+					"image" => $pushimageurl,
+					"url" => $pushlink,
+				];
 
-    $body = wp_json_encode($fields);
+				$headers = [
+					"Authorization" => "Bearer " . $apiaccesskey,
+					"Content-Type" => "application/json",
+				];
 
-    $args = [
-        "httpversion" => "1.0",
-        "blocking" => true,
-        "sslverify" => true,
-        "body" => $body,
-        "headers" => $headers,
-    ];
+				$body = wp_json_encode($fields);
 
-    $apiresults = wp_remote_post($url, $args);
+				$args = [
+					"httpversion" => "1.0",
+					"blocking" => true,
+					"sslverify" => true,
+					"body" => $body,
+					"headers" => $headers,
+				];
 
-    $apibody = wp_remote_retrieve_body($apiresults);
+				$apiresults = wp_remote_post($url, $args);
+
+				$apibody = wp_remote_retrieve_body($apiresults);
+			}
+		}
+	}
 }
-
 ?>

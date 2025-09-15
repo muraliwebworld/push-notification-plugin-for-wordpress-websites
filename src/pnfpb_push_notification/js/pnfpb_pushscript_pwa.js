@@ -10,6 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 import { getApp, initializeApp } from 'firebase/app';
 import { deleteToken, getMessaging, getToken, isSupported } from "firebase/messaging";
 
+
 import { __ } from '@wordpress/i18n';
 
 import $ from "jquery";
@@ -70,6 +71,13 @@ var pnfpb_bell_icon_subscription_options_custom_prompt = '10000000000000';
 var pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = [];
 var pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox = [];
 
+var pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '0';
+
+var pnfpb_bell_icon_front_subscribe_favourite_checkbox = '0';
+
+var pnfpb_bell_icon_subscribe_favourite_checkbox = '0';
+
+var pnfpb_bell_icon_prompt_subscribe_favourite_checkbox = '0';
 
 var pnfpb_front_end_settings = [];
 
@@ -100,14 +108,18 @@ var pnfpb_front_end_settings_push_notify_types = JSON.parse(pnfpb_ajax_object_pu
 
 var pnfpb_show_push_notify_admin_types = ['activities','comments','mycomments','privatemessage','newmember','friend_request','friend_accept','avatar_change','coverimage_change'];
 
+var pnfpb_shortcode_installed = false;
+
+if (pnfpb_ajax_object_push.pnfpb_shortcode_installed && pnfpb_ajax_object_push.pnfpb_shortcode_installed === "1") {
+	pnfpb_shortcode_installed = true;
+}
 
 $j(function() {
-	
-//const { __ } = wp.i18n;
 
 var data = {
 	action: 'icpushcallback',
 	device_id:'',
+	nonce: pnfpb_ajax_object_push.nonce,
 	subscriptionoptions:'',
 	pushtype: 'icfirebasecred'
 };
@@ -117,9 +129,9 @@ let deferredPrompt;
 var PNFPBcustominstallprompt = '';
 
 var standalone = window.navigator.standalone,
-  userAgent = window.navigator.userAgent.toLowerCase(),
-  safari_pnfpb =/^(?!.*chrome).*safari/i.test(userAgent),
-  ios_pnfpb = /iphone|ipod|ipad/.test(userAgent);
+  userAgent_pnfpb = window.navigator.userAgent.toLowerCase(),
+  safari_pnfpb =/^(?!.*chrome).*safari/i.test(userAgent_pnfpb),
+  ios_pnfpb = /iphone|ipod|ipad/.test(userAgent_pnfpb);
 	
 var pnfpb_webview = false;
 var pnfpb_ios_browser = false;
@@ -135,7 +147,7 @@ if (!standalone && safari_pnfpb) {
 	//PNFPB_from_Flutter_mobileapp();	  	
   };
 
-  if (userAgent.includes('wv') && ios_pnfpb) {
+  if (userAgent_pnfpb.includes('wv') && ios_pnfpb) {
     // Android webview
     pnfpb_webview = true;
 	//PNFPB_from_Java_androidapp();
@@ -144,60 +156,28 @@ if (!standalone && safari_pnfpb) {
     // Chrome
     pnfpb_webview = false;
   }
+ 
 
+const pnfpb_localStorageKey = "pnfpb_ios_pwa_install_check";
 
-if (pnfpb_ios_browser) {
+const pnfpb_isIos = /iphone|ipad|ipod/.test(userAgent_pnfpb);
 
-	$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
-
-	$j( ".pnfpb_pwa_shortcode_box" ).parent(".widget_block").show();
-
-	$j(".pnfpb_pwa_shortcode_box").show();
-	
-	$j( ".pnfpb_pwa_ios_button" ).on("click", () => {
-
-        var pnfpb_screenWidth, pnfpb_screenHeight, pnfpb_dialogWidth, pnfpb_dialogHeight, pnfpb_isDesktop;    
-        pnfpb_screenWidth = window.screen.width;
-        pnfpb_screenHeight = window.screen.height;    
-
-        if (pnfpb_screenWidth < 500) {
-            pnfpb_dialogWidth = pnfpb_screenWidth * .95;
-            pnfpb_dialogHeight = pnfpb_screenHeight * .95;
-        } else {
-            pnfpb_dialogWidth = 500;
-            pnfpb_dialogHeight = 500;
-            pnfpb_isDesktop = true;
-        }		
-
-		$j( "#pnfpb-pwa-dialog-ios" ).dialog({
-			autoOpen: true,
-			resizable: false,
-			closeText : '',
-			open: function(event, ui) {
-			},			
-            width: pnfpb_dialogWidth,
-			maxWidth:600,
-            closeOnEscape: false,
-			draggable: false,
-			modal: true,
-			buttons: [
-			{
-				text: 'Ok',
-				open: function() {
-					$j(this).attr('style','font-weight:bold;color:white;background-color:blue;border:0px');
-				},
-				click: function() {			
-					$j( this ).dialog( "close" );
-				}
-			}
-			]
-		});	
-
-	});
-
+// check if the device is in standalone mode
+const pnfpb_isInStandaloneMode = "standalone" in window.navigator && window.navigator.standalone
+if (pnfpb_isInStandaloneMode) {
+	localStorage.setItem(pnfpb_localStorageKey, "true");
 }
 
-if (pnfpb_ios_browser && pnfpb_ajax_object_push.pwainstallpromptenabled === '1' ) {
+// show the modal only once
+const pnfpb_localStorageKeyValue = localStorage.getItem(pnfpb_localStorageKey);
+const pnfpb_iosInstallModalShown = pnfpb_localStorageKeyValue
+	? JSON.parse(pnfpb_localStorageKeyValue)
+	: false;
+
+const shouldShowModalResponse =
+	(pnfpb_isIos || safari_pnfpb) && !pnfpb_isInStandaloneMode && !pnfpb_iosInstallModalShown;
+
+if (shouldShowModalResponse && !$j(".pnfpb_pwa_shortcode_box").length && pnfpb_ajax_object_push.pnfpb_ic_ios_pwa_prompt_disable !== '1') {
 
 	let name = 'PNFPB_pwa_prompt' + "=";
 
@@ -239,7 +219,7 @@ if (pnfpb_ios_browser && pnfpb_ajax_object_push.pwainstallpromptenabled === '1' 
 
 			if (pnfpb_d.getTime) {
 
-				const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_show_again_days);
+				const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_ic_ios_pwa_prompt_reappear);
 
 				pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
 
@@ -250,7 +230,44 @@ if (pnfpb_ios_browser && pnfpb_ajax_object_push.pwainstallpromptenabled === '1' 
 			document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";					
 
 		});
+	} else {
+		$j('.pnfpb-pwa-dialog-ios-container').hide();
 	}
+} 
+
+if ((pnfpb_isIos || safari_pnfpb) && pnfpb_ajax_object_push.pnfpb_ic_ios_pwa_prompt_disable !== '1') {
+
+	if ($j(".pnfpb_pwa_shortcode_box").length) {
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").show();
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".widget_block").show();
+
+		$j(".pnfpb_pwa_shortcode_box").show();
+
+		$j( ".pnfpb_pwa_button" ).on("click", () => {
+
+			$j('.pnfpb-pwa-dialog-ios-container').show();
+
+		});
+		
+		$j('#pnfpb-pwa-dialog-ios-cancel').on( "click", function() {
+
+			$j('.pnfpb-pwa-dialog-ios-container').hide();
+		});		
+
+	} else  {
+
+		$j(".pnfpb_pwa_shortcode_box").hide();
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".panel-default").hide();
+
+		$j( ".pnfpb_pwa_shortcode_box" ).parent(".widget_block").hide();
+	}
+	
+} else {
+
+	$j('.pnfpb-pwa-dialog-ios-container').hide();
 
 }
 
@@ -356,7 +373,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 		}
 		else 
 		{
-			if (pnfpb_ios_browser) {
+			if (pnfpb_ios_browser && pnfpb_ajax_object_push.pnfpb_ic_ios_pwa_prompt_disable !== '1') {
 
 				$j(".pnfpb-pwa-ios-message-layout").show();
 
@@ -364,46 +381,34 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 			} else {
 
-				$j( ".pnfpb_pwa_ios_button" ).on("click", () => {
+				if (pnfpb_ajax_object_push.pnfpb_ic_ios_pwa_prompt_disable === '1') {
 
-					var pnfpb_screenWidth, pnfpb_screenHeight, pnfpb_dialogWidth, pnfpb_dialogHeight, pnfpb_isDesktop;    
-					pnfpb_screenWidth = window.screen.width;
-					pnfpb_screenHeight = window.screen.height;    
-			
-					if (pnfpb_screenWidth < 500) {
-						pnfpb_dialogWidth = pnfpb_screenWidth * .95;
-						pnfpb_dialogHeight = pnfpb_screenHeight * .95;
-					} else {
-						pnfpb_dialogWidth = 500;
-						pnfpb_dialogHeight = 500;
-						pnfpb_isDesktop = true;
-					}		
-			
-					$j( "#pnfpb-pwa-dialog-ios" ).dialog({
-						autoOpen: true,
-						resizable: false,
-						closeText : '',
-						open: function(event, ui) {
-						},			
-						width: pnfpb_dialogWidth,
-						maxWidth:600,
-						closeOnEscape: false,
-						draggable: false,
-						modal: true,
-						buttons: [
-						{
-							text: 'Ok',
-							open: function() {
-								$j(this).attr('style','font-weight:bold;color:white;background-color:blue;border:0px');
-							},
-							click: function() {			
-								$j( this ).dialog( "close" );
-							}
-						}
-						]
-					});	
-			
-				})
+					$j(".pnfpb-pwa-ios-message-layout").hide();
+
+					$j(".pnfpb-pwa-ios-message-container").hide();
+				}
+
+				$j('#pnfpb-pwa-dialog-ios-cancel').on( "click", function() {
+
+					$j('.pnfpb-pwa-dialog-ios-container').hide();
+		
+					const pnfpb_d = new Date();
+		
+					let expires = "expires="
+		
+					if (pnfpb_d.getTime) {
+		
+						const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_ic_ios_pwa_prompt_reappear);
+		
+						pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+		
+						expires = "expires="+ pnfpb_d.toUTCString();
+		
+					}
+		
+					document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";					
+		
+				});
 			}			
 		}
 	})
@@ -590,46 +595,28 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 				} else {
 						if (pnfpb_ios_browser) {
-							$j( ".pnfpb_pwa_ios_button" ).on("click", () => {
+							
+							$j('#pnfpb-pwa-dialog-ios-cancel').on( "click", function() {
 
-								var pnfpb_screenWidth, pnfpb_screenHeight, pnfpb_dialogWidth, pnfpb_dialogHeight, pnfpb_isDesktop;    
-								pnfpb_screenWidth = window.screen.width;
-								pnfpb_screenHeight = window.screen.height;    
-						
-								if (pnfpb_screenWidth < 500) {
-									pnfpb_dialogWidth = pnfpb_screenWidth * .95;
-									pnfpb_dialogHeight = pnfpb_screenHeight * .95;
-								} else {
-									pnfpb_dialogWidth = 500;
-									pnfpb_dialogHeight = 500;
-									pnfpb_isDesktop = true;
-								}		
-						
-								$j( "#pnfpb-pwa-dialog-ios" ).dialog({
-									autoOpen: true,
-									resizable: false,
-									closeText : '',
-									open: function(event, ui) {
-									},			
-									width: pnfpb_dialogWidth,
-									maxWidth:600,
-									closeOnEscape: false,
-									draggable: false,
-									modal: true,
-									buttons: [
-									{
-										text: 'Ok',
-										open: function() {
-											$j(this).attr('style','font-weight:bold;color:white;background-color:blue;border:0px');
-										},
-										click: function() {			
-											$j( this ).dialog( "close" );
-										}
-									}
-									]
-								});	
-						
-							});					
+								$j('.pnfpb-pwa-dialog-ios-container').hide();
+					
+								const pnfpb_d = new Date();
+					
+								let expires = "expires="
+					
+								if (pnfpb_d.getTime) {
+					
+									const pnfpb_show_again_days = parseInt(pnfpb_ajax_object_push.pnfpb_ic_ios_pwa_prompt_reappear);
+					
+									pnfpb_d.setTime(pnfpb_d.getTime() + (pnfpb_show_again_days*24*60*60*1000));
+					
+									expires = "expires="+ pnfpb_d.toUTCString();
+					
+								}
+					
+								document.cookie = "PNFPB_pwa_prompt" + "=" + "expiretime" + ";" + expires + ";path=/";					
+					
+							});				
 						}
 					}
 
@@ -692,7 +679,8 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 				projectId: firebasecredentialsobject.projectId,
 				storageBucket: firebasecredentialsobject.storageBucket,
 				messagingSenderId: firebasecredentialsobject.messagingSenderId,
-				appId: firebasecredentialsobject.appId
+				appId: firebasecredentialsobject.appId,
+				measurementId: "G-RTPBP8HELE"
 			};
 
 			vapidKey = firebasecredentialsobject.publicKey
@@ -749,9 +737,9 @@ if (pnfpb_ajax_object_push.pwainstallbuttontextcolor === '') {
 
 	
 var standalone = window.navigator.standalone,
-  userAgent = window.navigator.userAgent.toLowerCase(),
-  safari_pnfpb = /^(?!.*chrome).*safari/i.test(userAgent),
-  ios_pnfpb = /iphone|ipod|ipad/.test(userAgent);
+  userAgent_pnfpb = window.navigator.userAgent.toLowerCase(),
+  safari_pnfpb = /^(?!.*chrome).*safari/i.test(userAgent_pnfpb),
+  ios_pnfpb = /iphone|ipod|ipad/.test(userAgent_pnfpb);
 	
 var pnfpb_webview = false;
 
@@ -766,7 +754,7 @@ if (ios_pnfpb) {
 	//PNFPB_from_Flutter_mobileapp();	  	
   };
 } else {
-  if (userAgent.includes('wv')) {
+  if (userAgent_pnfpb.includes('wv')) {
     // Android webview
     pnfpb_webview = true;
 	//PNFPB_from_Java_androidapp();
@@ -776,6 +764,14 @@ if (ios_pnfpb) {
     pnfpb_webview = false;
   }
 };
+
+//$( '#buddypress' ).on( 'bp_heartbeat_tick', function( event, pnfpb_bpactivity_data ) { console.log(pnfpb_bpactivity_data); } );
+
+/*if ( didAction( 'bp_activity_posted_update' ) ) {
+	console.log( 'The "bp_activity_posted_update" action has already run.' );
+} else {
+	console.log( 'The "bp_activity_posted_update" action has not yet run.' );
+}*/
 	
 if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	navigator.serviceWorker.register(homeurl+'/pnfpb_icpush_pwa_sw.js',{scope:homeurl+'/'}).then(function(registration) {
@@ -814,7 +810,64 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
     			registration.update();	
      			// If updatefound is fired, it means that there's
       			// a new service worker being installed.
-      			//var installingWorker = registration.installing;
+				if (pnfpb_ajax_object_push.rest_nonce && pnfpb_ajax_object_push.rest_nonce !== '') {
+
+					const PNFPB_SW_rest_token_request = indexedDB.open("PNFPB_SW_Database", 2);
+					const PNFPB_SW_rest_token_Object = {key: 1, pnfpb_rest_token: pnfpb_ajax_object_push.rest_nonce};
+
+					PNFPB_SW_rest_token_request.onupgradeneeded = (event) => {
+						const PNFPB_SW_rest_token_db = event.target.result;
+						if (!PNFPB_SW_rest_token_db.objectStoreNames.contains("PNFPB_SW_rest_token_Store")) {
+							PNFPB_SW_rest_token_db.createObjectStore("PNFPB_SW_rest_token_Store", { keyPath: "key" }); // Define keyPath for unique identification
+						}
+						if (!PNFPB_SW_rest_token_db.objectStoreNames.contains("PNFPB_SW_Store")) {
+							PNFPB_SW_rest_token_db.createObjectStore("PNFPB_SW_Store", { keyPath: "key" }); // Define keyPath for unique identification
+						}						
+					};
+
+					PNFPB_SW_rest_token_request.onsuccess = (event) => {
+						const PNFPB_SW_rest_token_db = event.target.result;
+						const PNFPB_SW_rest_token_transaction = PNFPB_SW_rest_token_db.transaction(["PNFPB_SW_rest_token_Store"], "readwrite");
+						const PNFPB_SW_rest_token_objectStore = PNFPB_SW_rest_token_transaction.objectStore("PNFPB_SW_rest_token_Store");
+						const PNFPB_SW_rest_token_objectStore_get = PNFPB_SW_rest_token_transaction.objectStore("PNFPB_SW_rest_token_Store").get(1);
+						PNFPB_SW_rest_token_objectStore_get.onsuccess = (event) => {
+							let data = event.target.result;
+							if (event.target.result !== undefined  ) {
+								if (data.pnfpb_rest_token !== pnfpb_ajax_object_push.rest_nonce) {
+									const PNFPB_SW_rest_token_addRequest = PNFPB_SW_rest_token_objectStore.put(PNFPB_SW_rest_token_Object);
+									PNFPB_SW_rest_token_addRequest.onsuccess = () => {
+										console.log("Object added successfully");
+										PNFPB_SW_rest_token_db.close();
+									};
+									PNFPB_SW_rest_token_addRequest.onerror = (error) => {
+										console.error("Error adding object:", error);
+										PNFPB_SW_rest_token_db.close();
+									};
+								}
+							} else {
+								const PNFPB_SW_rest_token_addRequest = PNFPB_SW_rest_token_objectStore.put(PNFPB_SW_rest_token_Object);
+								PNFPB_SW_rest_token_addRequest.onsuccess = () => {
+									console.log("Object added successfully");
+									PNFPB_SW_rest_token_db.close();
+								};
+								PNFPB_SW_rest_token_addRequest.onerror = (error) => {
+									console.error("Error adding object:", error);
+									PNFPB_SW_rest_token_db.close();
+								};
+
+							}
+						};
+						PNFPB_SW_rest_token_objectStore_get.onerror = (event) => {
+									console.error("Error adding object:", error);
+									PNFPB_SW_rest_token_db.close();												
+						}; 
+					};
+
+					PNFPB_SW_rest_token_request.onerror = (event) => {
+						console.error("Database error:", event.target.errorCode);
+					};
+				}				
+				
       			registration.onupdatefound = () => {
         			var installingWorker = registration.installing;
         			installingWorker.onstatechange = () => {
@@ -852,11 +905,102 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	
 				if ('serviceWorker' in navigator && 'PushManager' in window && hasFirebaseMessagingSupport && ((pnfpb_ajax_object_push.notify_loggedin === '1' && isuserloggedin) || (pnfpb_ajax_object_push.notify_loggedin !== '1') )) {
 		
-					navigator.serviceWorker.ready.then(async (serviceWorkerRegistration) => {
+					// Listen to service worker messages sent via postMessage()
 
 						messaging = getMessaging(firebaseApp);
 
-						if (pnfpb_ajax_object_push.pnfpb_push_prompt === '1') {
+						//await pnfpb_syncMessagesLater();
+
+						/*onMessage(messaging, (payload) => {
+							//console.log('Message received. ', payload);
+
+							// Customize notification display here
+							const notificationTitle = payload.notification.title;
+							const notificationOptions = {
+								body: payload.notification.body,
+								icon: payload.notification.icon,
+							}
+				
+							registration.showNotification(notificationTitle, notificationOptions);							
+						});	*/					
+						
+						//navigator.serviceWorker.addEventListener('message', async (event) => {
+
+							//console.log(event.data);
+
+							/*if (event.data.notification_action && (event.data.notification_action === 'delivery_confirmation' || event.data.notification_action === 'opened_confirmation')) {
+
+								// Initialize Firebase Analytics
+								const analytics = getAnalytics(firebaseApp);
+
+								var notification_title = '';
+								var notification_content = '';
+								var notification_id = '';
+								var notification_action = '';
+
+								if (event.data.title) {
+									notification_title = event.data.title;
+								}
+
+								if (event.data.content) {
+									notification_content = event.data.content;
+								}
+								
+								if (event.data.notification_id) {
+									notification_id = event.data.notification_id;
+								}
+								
+								if (event.data.notification_action) {
+									notification_action = 'pnfpb_'+event.data.notification_action;
+								}							
+
+								// Log a custom event
+								logEvent(analytics, notification_action, {
+									notification_title:notification_title,
+									notification_content:notification_content,
+									notification_id:notification_id,
+									notification_action: event.data.notification_action,								
+								});
+							
+							}*/
+
+							//if (event.data.notification_action && (event.data.notification_action === 'delivery_confirmation' || event.data.notification_action === 'opened_confirmation')) {
+
+								//await pnfpb_receivePushNotification(registration,event.data,messaging);
+
+								/*switch (event.data.action) {
+									case 'pnfpb-readmore-notificationclick':
+										window.location.href = event.data.url
+										break
+										// no default
+									}*/
+							//}
+
+							/*if (event.data.messageType && event.data.data 
+								&& event.data.fcmOptions && event.data.fcmOptions.analyticsLabel 
+								&& event.data.messageType === 'push-received'
+								&& event.data.fcmOptions.analyticsLabel === 'pnfpb-analytics-label') {
+									await pnfpb_receivePushNotification(registration,event.data,messaging);
+								}*/
+
+						//});						
+
+
+					navigator.serviceWorker.ready.then(async (serviceWorkerRegistration) => {
+
+						//serviceWorkerRegistration.active.postMessage("Hi service worker");
+
+						/*serviceWorkerRegistration.sync.getTags().then((tags) => {
+							if (tags.includes("pnfpb-sync-messages")) {
+								console.log("Messages sync already requested");
+							}
+						});	*/					
+
+						shortcode_subscription_menu('');
+
+						if (pnfpb_ajax_object_push.pnfpb_push_prompt === '1' && (!$j(".pnfpb-push-subscribe-icon-shortcode").length && !pnfpb_shortcode_installed)) {
+
+							frontend_subscription_menu('');
 
 							await pnfpb_show_permission_dialog(serviceWorkerRegistration,'');
 	
@@ -864,9 +1008,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 						
 						serviceWorkerRegistration.pushManager.getSubscription().then(async function (subscription) {
 
-
-						if (pnfpb_ajax_object_push.pnfpb_push_prompt !== '1') {
-
+						if (pnfpb_ajax_object_push.pnfpb_push_prompt !== '1' && (!$j(".pnfpb-push-subscribe-icon-shortcode").length && !pnfpb_shortcode_installed)) {
 							if (!subscription) 
 							{
 								frontend_subscription_menu('');
@@ -902,8 +1044,6 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 								if (refreshedToken) {
 
 									sendTokenToServer(refreshedToken);
-
-									shortcode_subscription_menu(refreshedToken);
 
 									frontend_subscription_menu(refreshedToken);
 
@@ -951,12 +1091,14 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
         			})
 					.catch((err) => {
 						console.error(err);
+						console.error('Error during getSubscription()');
+						shortcode_subscription_menu('');
 						frontend_subscription_menu('');
 			
 				  	});		
 				})
 				.catch((err) => {
-					//console.error('Error during getSubscription()');
+					console.error('Error during getSubscription()');
 					console.error(err);
 					frontend_subscription_menu('');
 			  	});			
@@ -994,6 +1136,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 		pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
 
 		if ((pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_on_off === '1' && (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '1' || pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '2' )) && pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style3 !== '1' ) {
+
 
 			$j('.pnfpb-push-subscribe-icon').hide();
 
@@ -1101,10 +1244,8 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 						$j('.pnfpb_bell_icon_subscription_all_enable').off().on('click',function(event) {
 
-			
 							if ($j('.pnfpb_bell_icon_subscription_all_enable').is(":checked"))
 							{
-	
 	
 								pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
 	
@@ -1141,6 +1282,8 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 								$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
 		
 								$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+
+								$j('.pnfpb_bell_icon_subscription_favourite_enable').prop('checked',false);
 	
 								if (pnfpb_custom_post_types.length > 0) {
 	
@@ -1155,15 +1298,32 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									}
 								}
 		
-		
 							}
 							else 
 							{
 	
-	
 								pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
 							}								
 						});
+
+						$j('.pnfpb_bell_icon_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+							if ($j('.pnfpb_bell_icon_subscription_favourite_enable').is(":checked"))
+							{
+	
+							
+								$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+
+								pnfpb_bell_icon_subscribe_favourite_checkbox = '1';
+		
+																
+							}
+							else 
+							{
+								pnfpb_bell_icon_subscribe_favourite_checkbox = '0';
+							}								
+						});						
 						
 						
 						$j('.pnfpb_bell_icon_subscription_group_details_update_enable').off().on('click',function(event) {
@@ -1288,17 +1448,27 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 							}
 
 						}
-
+						
 						if (pnfpb_custom_post_types.length > 0) {
 
-							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
 
-								pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+								if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+
+									pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+								} else {
+
+									pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0';
+								}
 								
 							}
 
+						} else {
+							pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0000000000';
 						}
-	
+
+						pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+ pnfpb_bell_icon_subscribe_favourite_checkbox
 
 						$j('.pnfpb-popup-customprompt-transistion-allow-button').off().on( "click", async (event) => {
 
@@ -1438,6 +1608,25 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
 								}								
 							});
+
+							$j('.pnfpb_bell_icon_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+								if ($j('.pnfpb_bell_icon_subscription_favourite_enable').is(":checked"))
+								{
+		
+								
+									$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+	
+									pnfpb_bell_icon_subscribe_favourite_checkbox = '1';
+			
+																	
+								}
+								else 
+								{
+									pnfpb_bell_icon_subscribe_favourite_checkbox = '0';
+								}								
+							});
 							
 							
 							$j('.pnfpb_bell_icon_subscription_group_details_update_enable').off().on('click',function(event) {
@@ -1563,16 +1752,27 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									}
 		
 								}
-
+								
 								if (pnfpb_custom_post_types.length > 0) {
 
-									for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+									for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
 		
-										pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+										if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+		
+											pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+		
+										} else {
+		
+											pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0';
+										}
 										
 									}
 		
-								}		
+								} else {
+									pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0000000000';
+								}
+		
+								pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+ pnfpb_bell_icon_subscribe_favourite_checkbox		
 	
 
 							$j('.pnfpb-popup-customprompt-vertical-transistion-allow-button').off().on( "click", async (event) => {
@@ -1670,7 +1870,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 		} else {
 
-		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_on_off === '1' && (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '1' || pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '2' ) ) {
+		if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_on_off === '1' &&  (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '1' || pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '2' ) ) {
 
 			$j('.pnfpb-push-subscribe-icon').hide();
 
@@ -1840,6 +2040,25 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	
 	
 								pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+							}								
+						});
+
+						$j('.pnfpb_bell_icon_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+							if ($j('.pnfpb_bell_icon_subscription_favourite_enable').is(":checked"))
+							{
+	
+							
+								$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+
+								pnfpb_bell_icon_subscribe_favourite_checkbox = '1';
+		
+																
+							}
+							else 
+							{
+								pnfpb_bell_icon_subscribe_favourite_checkbox = '0';
 							}								
 						});
 						
@@ -1971,16 +2190,27 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 								}
 	
 							}
-
+							
 							if (pnfpb_custom_post_types.length > 0) {
 
-								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
 	
-									pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+									if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+	
+										pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+	
+									} else {
+	
+										pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0';
+									}
 									
 								}
 	
-							}							
+							} else {
+								pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0000000000';
+							}
+	
+							pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+ pnfpb_bell_icon_subscribe_favourite_checkbox							
 							
 							$j('.pnfpb-popup-customprompt-container').hide();
 
@@ -2122,6 +2352,25 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 		
 		
 									pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+								}								
+							});
+
+							$j('.pnfpb_bell_icon_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+								if ($j('.pnfpb_bell_icon_subscription_favourite_enable').is(":checked"))
+								{
+		
+								
+									$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+	
+									pnfpb_bell_icon_subscribe_favourite_checkbox = '1';
+			
+																	
+								}
+								else 
+								{
+									pnfpb_bell_icon_subscribe_favourite_checkbox = '0';
 								}								
 							});
 							
@@ -2257,16 +2506,27 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									}
 		
 								}
-
+								
 								if (pnfpb_custom_post_types.length > 0) {
 
-                                    for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-        
-                                        pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
-                                        
-                                    }
-        
-                                }
+									for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
+		
+										if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+		
+											pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+		
+										} else {
+		
+											pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0';
+										}
+										
+									}
+		
+								} else {
+									pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+'0000000000';
+								}
+		
+								pnfpb_bell_icon_subscription_options_custom_prompt = pnfpb_bell_icon_subscription_options_custom_prompt+ pnfpb_bell_icon_subscribe_favourite_checkbox
 
 								$j('.pnfpb-popup-customprompt-vertical-container').hide();
 
@@ -2489,7 +2749,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 					$j('.pnfpb-push-subscribe-options-button').text(pnfpb_push_subscribe_options_button);
 
-					$j('.pnfpb-push-subscribe-options-button').hide();
+					$j('.pnfpb-push-subscribe-options-button').show();
 
 					if ($j('.pnfpb-push-subscribe-options-button-container').length) {
 
@@ -2579,7 +2839,25 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 							pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
 						}								
 					});
-					
+
+					$j('.pnfpb_bell_icon_prompt_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+						if ($j('.pnfpb_bell_icon_prompt_subscription_favourite_enable').is(":checked"))
+						{
+
+						
+							$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
+
+							pnfpb_bell_icon_prompt_subscribe_favourite_checkbox = '1';
+	
+															
+						}
+						else 
+						{
+							pnfpb_bell_icon_prompt_subscribe_favourite_checkbox = '0';
+						}								
+					});
 					
 					$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').off().on('click',function(event) {
 	
@@ -2706,9 +2984,9 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 						
 						$j('.pnfpb_bell_icon_custom_prompt_loader').show();
 	
-						$j('.pnfpb_bell_icon_subscription_options_container').hide();					
+						$j('.pnfpb_bell_icon_subscription_options_container').show();					
 	
-						$j('.pnfpb-push-subscribe-options-button').hide();
+						$j('.pnfpb-push-subscribe-options-button').prop('disabled', true);
 	
 						var pnfpb_bell_icon_prompt_subscription_options = '';
 	
@@ -2721,17 +2999,27 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 							}
 
 						}
-
+						
 						if (pnfpb_custom_post_types.length > 0) {
 
-							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
 
-								pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+								if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+
+									pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+								} else {
+
+									pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+'0';
+								}
 								
 							}
 
+						} else {
+							pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+'0000000000';
 						}
-						
+
+						pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_prompt_subscribe_favourite_checkbox;
 
 						getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async function (refreshedToken) {		
 			
@@ -2743,6 +3031,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									action: 'icpushcallback',
 									device_id:deviceid,
 									subscriptionoptions:pnfpb_bell_icon_prompt_subscription_options,
+									nonce: pnfpb_ajax_object_push.nonce,
 									pushtype: 'subscribe-button'
 								};
 			
@@ -2754,7 +3043,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	
 									$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
 	
-									$j('.pnfpb-push-subscribe-options-button').show();
+									$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 	
 									$j('.pnfpb_bell_icon_subscription_options_container').show();		
 	
@@ -2790,298 +3079,724 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 
 				}
 
-
-
-
-	
-				$j('.pnfpb-popup-unsubscribe-class').off().on( "click", async (event) => {
-
-					var subscribetext = $j('.pnfpb-push-subscribe-button').text();
+								
+				$j('.pnfpb-push-subscribe-button').off().on( "click", async (event) => {
 
 					event.stopPropagation(); 
-	
+			
 					event.preventDefault();
-					
-					$j('.pnfpb-push-subscribe-button-layout').hide();
 
-					pnfpb_bell_prompt_processing = '1';
+					if ($j('.pnfpb-push-subscribe-button').hasClass("pnfpb-popup-subscribe-class")) {
 
-					registration.pushManager.getSubscription().then(async (subscription) => {
+						var subscribetext = $j('.pnfpb-push-subscribe-button').text();
 
-						if (subscription) {
+						pnfpb_bell_prompt_processing = '1';
 
-							$j('.pnfpb-push-status-text').text(pnfpb_popup_wait_message);
+						registration.pushManager.getSubscription().then(async function (subscription) {
 
-							$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");	
+							if (!subscription) {
 
-							getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async (refreshedToken) => {
+								$j('.pnfpb-push-subscribe-button-layout').show();
 
-								subscription.unsubscribe().then((successful) => {
+								$j('.pnfpb-push-subscribe-button').prop('disabled', true);
+								
+								$j('.pnfpb-push-subscribe-options-button').prop('disabled', true);						
 
-								  	deleteToken(messaging).then(function (deleteTokenstatus) {
+								$j('.pnfpb-push-status-text').text(pnfpb_popup_wait_message);
 
-										if (deleteTokenstatus) {
+								$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
 
-											var pnfpbshortcodeactive = 'no';
+								$j('.pnfpb_bell_icon_custom_prompt_loader').show();
 
-											var isadminpage = 'no';
-											
-											if (window.location.href.match('wp-admin') !== null) {
-												isadminpage = 'yes';
-											}
-											
-											if( $j(".pnfpb_subscribe_button").length || $j(".pnfpb_push_notification_frontend_settings_submit").length )
+								var pnfpb_ic_fcm_custom_prompt_subscribe_text_1 = __("We would like to show you notifications for the latest news and updates",'push-notification-for-post-and-buddypress');
+
+								var pnfpb_ic_fcm_custom_prompt_subscribe_text_2 = "";
+			
+								if (pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text && pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text != '') {
+							
+									pnfpb_ic_fcm_custom_prompt_subscribe_text_1 = pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text;
+									
+									pnfpb_ic_fcm_custom_prompt_subscribe_text_2 = pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text_line_2;
+									
+								}						
+								
+								if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_on_off === '1' && (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style	 === '1' || pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '2' )) {
+
+									if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '1') {
+
+										$j('.pnfpb-popup-customprompt-transistion-body-line-1').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_1);
+
+										$j('.pnfpb-popup-customprompt-transistion-body-line-2').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_2);
+
+										$j('.pnfpb-popup-customprompt-transistion-confirmation').hide();
+								
+										$j('.pnfpb-popup-customprompt-container').show();
+
+										$j('.pnfpb-popup-customprompt-transistion').show();
+
+										pnfpb_bell_icon_subscription_options_custom_prompt = '';
+
+										$j('.pnfpb_bell_icon_subscription_all_enable').off().on('click',function(event) {
+							
+											if ($j('.pnfpb_bell_icon_subscription_all_enable').is(":checked"))
 											{
-												pnfpbshortcodeactive = 'yes';
-											}	
-											
-											var data = {
-												action: 'icpushcallback',
-												device_id:refreshedToken,
-												isadminpage:isadminpage,
-												pnfpbshortcodeactive:pnfpbshortcodeactive,
-												pushtype: 'deletepushtoken'
-											};
-												
-											$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
-							
-												var responseobject = JSON.parse(response);
-
-												pnfpb_bell_prompt_processing = '';
-											
-												if (responseobject.subscriptionstatus === 'deleted') {
-											
-													console.log(__('Push subscription token deleted successfully','push-notification-for-post-and-buddypress'));
-											
-												}
-												else {
-													console.log(__('Push subscription token deletion failed in database','push-notification-for-post-and-buddypress'));
-												}
-
-												if ($j(".subscribegroupbutton").length || $j(".unsubscribegroupbutton").length) {
-
-													$j(".subscribegroupbutton").addClass( "subscribe-init-display-off" );
-													$j(".unsubscribegroupbutton").addClass( "subscribe-init-display-off" );
-													$j(".subscribe-notification-group").addClass( "subscribe-init-display-off" );
-													$j(".unsubscribe-notification-group").addClass( "subscribe-init-display-off" );
-												}
-
-												$j('.pnfpb-push-subscribe-button').text(pnfpb_popup_subscribe_button);
-
-												$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-unsubscribe-class");
-
-												$j('.pnfpb-push-subscribe-button').addClass("pnfpb-popup-subscribe-class");
-
-												$j('.pnfpb-push-status-text').removeClass("pnfpb-push-status-text-opened");	
-
-												$j('.pnfpb-push-status-text').text(pnfpb_popup_unsubscribe_text);
-	
-												$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
-												
-
-												pnfpb_bell_icon_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
-										
-												pnfpb_bell_icon_subscription_options_custom_prompt = '10000000000000';
-												
-										
-												pnfpb_bell_icon_prompt_subscription_options_custom_prompt = '10000000000000';
-												
-												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
-											
-											});												
-	
-
-										}
-	
-									}).catch((e) => {
-
-										pnfpb_bell_prompt_processing = '';
-
-										console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
-
-									});
-								}).catch((e) => {
-
-									pnfpb_bell_prompt_processing = '';
-
-									console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
-
-								});
-							})
-						}
-					}).catch((e) => {
-
-						pnfpb_bell_prompt_processing = '';
-
-						console.log(__("Unsubscribe subscription failed",'push-notification-for-post-and-buddypress'));
-
-					});
-				});							
-								
-				$j('.pnfpb-popup-subscribe-class').off().on( "click", async (event) => {
-
-					event.stopPropagation(); 
-	
-					event.preventDefault();
-
-					var subscribetext = $j('.pnfpb-push-subscribe-button').text();
-
-					pnfpb_bell_prompt_processing = '1';
-
-					if (!subscription) {
-
-						$j('.pnfpb-push-subscribe-button-layout').hide();
-
-						$j('.pnfpb-push-subscribe-button').hide();
-						
-						$j('.pnfpb-push-subscribe-options-button').hide();						
-
-						$j('.pnfpb-push-status-text').text(pnfpb_popup_wait_message);
-
-						$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
-
-						var pnfpb_ic_fcm_custom_prompt_subscribe_text_1 = __("We would like to show you notifications for the latest news and updates",'push-notification-for-post-and-buddypress');
-
-						var pnfpb_ic_fcm_custom_prompt_subscribe_text_2 = "";
-	
-						if (pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text && pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text != '') {
 					
-							pnfpb_ic_fcm_custom_prompt_subscribe_text_1 = pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text;
-							
-							pnfpb_ic_fcm_custom_prompt_subscribe_text_2 = pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text_line_2;
-							
-						}						
+												pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+					
+												if (pnfpb_show_push_notify_types.length > 0) {
+					
+													for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
+					
+														pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
+					
+													}
+					
+												}
+											
+												$j('.pnfpb_bell_icon_subscription_post_enable').prop('checked',false);
 						
-						if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_on_off === '1' && (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style	 === '1' || pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '2' )) {
-
-							if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '1') {
-
-								$j('.pnfpb-popup-customprompt-transistion-body-line-1').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_1);
-
-								$j('.pnfpb-popup-customprompt-transistion-body-line-2').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_2);
-
-								$j('.pnfpb-popup-customprompt-transistion-confirmation').hide();
+												$j('.pnfpb_bell_icon_subscription_activity_enable').prop('checked',false);
 						
-								$j('.pnfpb-popup-customprompt-container').show();
-
-								$j('.pnfpb-popup-customprompt-transistion').show();
-
-								pnfpb_bell_icon_subscription_options_custom_prompt = '';
-
-								$j('.pnfpb_bell_icon_subscription_all_enable').off().on('click',function(event) {
-	
-				
-									if ($j('.pnfpb_bell_icon_subscription_all_enable').is(":checked"))
-									{
-			
-			
-										pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
-			
-										if (pnfpb_show_push_notify_types.length > 0) {
-			
-											for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
-			
-												pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
-			
-											}
-			
-										}
-									
-										$j('.pnfpb_bell_icon_subscription_post_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_activity_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_all_comments_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_my_comments_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_private_message_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_new_member_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_friendship_request_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_friendship_accepted_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_avatar_change_enable').prop('checked',false);
-										
-										$j('.pnfpb_bell_icon_subscription_cover_image_change_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
-				
-										$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
-			
-										if (pnfpb_custom_post_types.length > 0) {
-			
-											for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-			
-												$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
-			
-												var pnfpb_index = $j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').attr("pnfpb_index");
-			
-												pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+												$j('.pnfpb_bell_icon_subscription_all_comments_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_my_comments_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_private_message_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_new_member_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_friendship_request_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_friendship_accepted_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_avatar_change_enable').prop('checked',false);
 												
+												$j('.pnfpb_bell_icon_subscription_cover_image_change_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
+						
+												$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+					
+												if (pnfpb_custom_post_types.length > 0) {
+					
+													for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+					
+														$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
+					
+														var pnfpb_index = $j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').attr("pnfpb_index");
+					
+														pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+														
+													}
+												}
+						
+						
 											}
+											else 
+											{
+					
+					
+												pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+											}								
+										});
+
+										$j('.pnfpb_bell_icon_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+											if ($j('.pnfpb_bell_icon_subscription_favourite_enable').is(":checked"))
+											{
+					
+											
+												$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+					
+												pnfpb_bell_icon_subscribe_favourite_checkbox = '1';
+						
+																				
+											}
+											else 
+											{
+												pnfpb_bell_icon_subscribe_favourite_checkbox = '0';
+											}								
+										});										
+										
+										
+										$j('.pnfpb_bell_icon_subscription_group_details_update_enable').off().on('click',function(event) {
+						
+								
+											if ($j('.pnfpb_bell_icon_subscription_group_details_update_enable').is(":checked"))
+											{
+					
+											
+												$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+			
+												pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '1';
+						
+																				
+											}
+											else 
+											{
+												pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '0';
+											}								
+										});
+										
+										$j('.pnfpb_bell_icon_subscription_group_invite_enable').off().on('click',function(event) {
+						
+								
+											if ($j('.pnfpb_bell_icon_subscription_group_invite_enable').is(":checked"))
+											{
+					
+											
+												$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+			
+												pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '1';
+						
+																					
+											}
+											else 
+											{
+					
+												pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '0';
+											}								
+										});			
+											
+			
+											if (pnfpb_show_push_notify_types.length > 0) {
+			
+												for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
+			
+													if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
+						
+														$j('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable').off().on('click',function(event) {
+						
+															var pnfpb_selector = '.'+$(this).attr("class");
+						
+															var pnfpb_index = $(this).attr("pnfpb_index");
+						
+															if ($j(pnfpb_selector).is(":checked"))
+															{
+						
+																pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '1';
+						
+															
+																if (pnfpb_notify_type_element > 0) {
+									
+																	pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+														
+																	$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+						
+																}
+																						
+															}
+															else 
+															{
+						
+																pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '0';
+						
+															}
+														
+						
+														});
+													}								
+						
+												}
+					
+											}										
+			
+											if (pnfpb_custom_post_types.length > 0) {
+			
+												for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+					
+													$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
+					
+													$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').off().on('click',function(event) {
+									
+														if ($j(this).is(":checked"))
+														{
+					
+															pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
+									
+															pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+														
+															$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+									
+																							
+														}
+														else 
+														{
+			
+															pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
+			
+														}
+			
+													});                             
+					
+												}
+					
+											}     														
+				
+										$j('.pnfpb-popup-customprompt-transistion-allow-button').off().on( "click", async (event) => {
+								
+											//var pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscribe_all_checkbox + pnfpb_bell_icon_subscribe_post_checkbox + pnfpb_bell_icon_subscribe_all_comments_checkbox + pnfpb_bell_icon_subscribe_my_comments_checkbox + pnfpb_bell_icon_subscribe_private_message_checkbox + pnfpb_bell_icon_subscribe_new_member_checkbox + pnfpb_bell_icon_subscribe_friendship_request_checkbox  + pnfpb_bell_icon_subscribe_friendship_accepted_checkbox  + pnfpb_bell_icon_subscribe_avatar_change_checkbox + pnfpb_bell_icon_subscribe_cover_image_checkbox + '0' + pnfpb_bell_icon_subscribe_activity_checkbox + pnfpb_bell_icon_subscribe_group_details_checkbox + pnfpb_bell_icon_subscribe_group_invite_checkbox;
+
+											var pnfpb_bell_icon_subscription_options = '';
+
+											if (pnfpb_show_push_notify_types.length > 0) {
+
+												for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < pnfpb_show_push_notify_types.length; pnfpb_notify_type_element++) {
+					
+													pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element];
+													
+												}
+					
+											}
+											
+											if (pnfpb_custom_post_types.length > 0) {
+					
+												for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
+
+													if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+					
+														pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+													} else {
+
+														pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0';
+													}
+													
+												}
+					
+											} else {
+												pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0000000000';
+											}
+											
+											pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_favourite_checkbox;
+
+											$j('.pnfpb-popup-customprompt-container').hide();
+
+											pnfpb_bell_prompt_processing = '1';
+
+											await requestPermission(registration,'',pnfpb_bell_icon_subscription_options);						
+				
+										});						
+				
+										$j('.pnfpb-popup-customprompt-transistion-cancel-button').off().on( "click", async (event) => {
+
+											$j('pnfpb-popup-customprompt-container-dialog-slideDown').css("animation-name", "slideDownOut");
+								
+											$j('pnfpb-popup-customprompt-container-dialog-slideDown').css("-webkit-animation-name", "slideDownOut");
+				
+											$j('.pnfpb-popup-customprompt-container').hide();
+				
+										});
+				
+									} else {
+				
+										if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '2') {
+
+											$j('.pnfpb-popup-customprompt-vertical-transistion-body-line-1').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_1);
+
+											$j('.pnfpb-popup-customprompt-vertical-transistion-body-line-2').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_2);
+
+											$j('.pnfpb-popup-customprompt-vertical-transistion-confirmation').hide();
+				
+											$j('.pnfpb-popup-customprompt-vertical-container').show();
+
+											$j('.pnfpb-popup-customprompt-vertical-transistion').show();
+
+											pnfpb_bell_icon_subscription_options_custom_prompt = '';
+
+											$j('.pnfpb_bell_icon_subscription_all_enable').off().on('click',function(event) {
+				
+							
+												if ($j('.pnfpb_bell_icon_subscription_all_enable').is(":checked"))
+												{
+						
+						
+													pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+						
+													if (pnfpb_show_push_notify_types.length > 0) {
+						
+														for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
+						
+															pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
+						
+														}
+						
+													}
+												
+													$j('.pnfpb_bell_icon_subscription_post_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_activity_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_all_comments_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_my_comments_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_private_message_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_new_member_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_friendship_request_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_friendship_accepted_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_avatar_change_enable').prop('checked',false);
+													
+													$j('.pnfpb_bell_icon_subscription_cover_image_change_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
+							
+													$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+						
+													if (pnfpb_custom_post_types.length > 0) {
+						
+														for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+						
+															$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
+						
+															var pnfpb_index = $j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').attr("pnfpb_index");
+						
+															pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+															
+														}
+													}
+							
+							
+												}
+												else 
+												{
+						
+						
+													pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+												}								
+											});
+
+											$j('.pnfpb_bell_icon_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+												if ($j('.pnfpb_bell_icon_subscription_favourite_enable').is(":checked"))
+												{
+						
+												
+													$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+						
+													pnfpb_bell_icon_subscribe_favourite_checkbox = '1';
+							
+																					
+												}
+												else 
+												{
+													pnfpb_bell_icon_subscribe_favourite_checkbox = '0';
+												}								
+											});											
+											
+											
+											$j('.pnfpb_bell_icon_subscription_group_details_update_enable').off().on('click',function(event) {
+							
+									
+												if ($j('.pnfpb_bell_icon_subscription_group_details_update_enable').is(":checked"))
+												{
+						
+												
+													$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+				
+													pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '1';
+							
+																					
+												}
+												else 
+												{
+													pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '0';
+												}								
+											});
+											
+											$j('.pnfpb_bell_icon_subscription_group_invite_enable').off().on('click',function(event) {
+							
+									
+												if ($j('.pnfpb_bell_icon_subscription_group_invite_enable').is(":checked"))
+												{
+						
+												
+													$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+				
+													pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '1';
+							
+																						
+												}
+												else 
+												{
+						
+													pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '0';
+												}								
+											});			
+												
+				
+												if (pnfpb_show_push_notify_types.length > 0) {
+				
+													for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
+				
+														if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
+							
+															$j('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable').off().on('click',function(event) {
+							
+																var pnfpb_selector = '.'+$(this).attr("class");
+							
+																var pnfpb_index = $(this).attr("pnfpb_index");
+							
+																if ($j(pnfpb_selector).is(":checked"))
+																{
+							
+																	pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '1';
+							
+																
+																	if (pnfpb_notify_type_element > 0) {
+										
+																		pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+															
+																		$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+							
+																	}
+																							
+																}
+																else 
+																{
+							
+																	pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '0';
+							
+																}
+															
+							
+															});
+														}								
+							
+													}
+						
+												}										
+				
+												if (pnfpb_custom_post_types.length > 0) {
+				
+													for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+						
+														$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
+						
+														$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').off().on('click',function(event) {
+										
+															if ($j(this).is(":checked"))
+															{
+						
+																pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
+										
+																pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+															
+																$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+										
+																								
+															}
+															else 
+															{
+				
+																pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
+				
+															}
+				
+														});                             
+						
+													}
+						
+												}     															
+				
+											$j('.pnfpb-popup-customprompt-vertical-transistion-allow-button').off().on( "click", async (event) => {
+
+				
+												var pnfpb_bell_icon_subscription_options = '';
+
+												if (pnfpb_show_push_notify_types.length > 0) {
+			
+													for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < pnfpb_show_push_notify_types.length; pnfpb_notify_type_element++) {
+						
+														pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element];
+														
+													}
+						
+												}
+												
+												if (pnfpb_custom_post_types.length > 0) {
+						
+													for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
+
+														if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+						
+															pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+														}  else  {
+
+															pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0';
+
+														}
+														
+													}
+						
+												} else {
+													pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0000000000';
+												}
+
+												pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_favourite_checkbox;
+												
+												$j('.pnfpb-popup-customprompt-vertical-container').hide();
+
+												pnfpb_bell_prompt_processing = '1';
+
+												await requestPermission(registration,'',pnfpb_bell_icon_subscription_options);	
+				
+											});						
+					
+											$j('.pnfpb-popup-customprompt-vertical-transistion-cancel-button').off().on( "click", async (event) => {
+
+												$j('pnfpb-popup-customprompt-vertical-container-dialog-slideDown').css("animation-name", "slideDownOut");
+									
+												$j('pnfpb-popup-customprompt-vertical-container-dialog-slideDown').css("-webkit-animation-name", "slideDownOut");
+
+												$j('.pnfpb-popup-customprompt-vertical-container').hide();
+					
+											})
+				
 										}
 				
+									}							
+
+								} else {
+
+									var pnfpb_bell_icon_subscription_options = '';
+
+									$j('.pnfpb_bell_icon_prompt_subscription_all_enable').off().on('click',function(event) {
+
+					
+										if ($j('.pnfpb_bell_icon_prompt_subscription_all_enable').is(":checked"))
+										{
 				
-									}
-									else 
-									{
-			
-			
-										pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
-									}								
-								});
-								
-								
-								$j('.pnfpb_bell_icon_subscription_group_details_update_enable').off().on('click',function(event) {
 				
-						
-									if ($j('.pnfpb_bell_icon_subscription_group_details_update_enable').is(":checked"))
-									{
-			
-									
-										$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
-	
-										pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '1';
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
 				
-																		
-									}
-									else 
-									{
-										pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '0';
-									}								
-								});
-								
-								$j('.pnfpb_bell_icon_subscription_group_invite_enable').off().on('click',function(event) {
+											if (pnfpb_show_push_notify_types.length > 0) {
 				
-						
-									if ($j('.pnfpb_bell_icon_subscription_group_invite_enable').is(":checked"))
-									{
-			
-									
-										$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
-	
-										pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '1';
+												for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
 				
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
+				
+												}
+				
+											}
+										
+											$j('.pnfpb_bell_icon_prompt_subscription_post_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_activity_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_all_comments_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_my_comments_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_private_message_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_new_member_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_friendship_request_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_friendship_accepted_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_avatar_change_enable').prop('checked',false);
+											
+											$j('.pnfpb_bell_icon_prompt_subscription_cover_image_change_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').prop('checked',false);
+					
+											$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').prop('checked',false);
+				
+											if (pnfpb_custom_post_types.length > 0) {
+				
+												for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+				
+													$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
+				
+													var pnfpb_index = $j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').attr("pnfpb_index");
+				
+													pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+													
+												}
+											}
+					
+					
+										}
+										else 
+										{
+
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+										}								
+									});
+
+									$j('.pnfpb_bell_icon_prompt_subscription_favourite_enable').off().on('click',function(event) {
+		
+				
+										if ($j('.pnfpb_bell_icon_prompt_subscription_favourite_enable').is(":checked"))
+										{
+				
+										
+											$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
+				
+											pnfpb_bell_icon_prompt_subscribe_favourite_checkbox = '1';
+					
 																			
-									}
-									else 
-									{
-			
-										pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '0';
-									}								
-								});			
+										}
+										else 
+										{
+											pnfpb_bell_icon_prompt_subscribe_favourite_checkbox = '0';
+										}								
+									});
 									
-	
+									
+									$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').off().on('click',function(event) {
+					
+							
+										if ($j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').is(":checked"))
+										{
+										
+											$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
+
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+					
+										}
+										else 
+										{
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+										}								
+									});
+									
+									$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').off().on('click',function(event) {
+					
+							
+										if ($j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').is(":checked"))
+										{
+										
+											$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
+
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+																				
+										}
+										else 
+										{
+				
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+										}								
+									});				
+									
+									
+									
 									if (pnfpb_show_push_notify_types.length > 0) {
-	
+				
 										for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
-	
+				
 											if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
 				
-												$j('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable').off().on('click',function(event) {
+												$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable').off().on('click',function(event) {
 				
 													var pnfpb_selector = '.'+$(this).attr("class");
 				
@@ -3090,14 +3805,14 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 													if ($j(pnfpb_selector).is(":checked"))
 													{
 				
-														pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '1';
+														pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '1';
 				
 													
 														if (pnfpb_notify_type_element > 0) {
 							
-															pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+															pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
 												
-															$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+															$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
 				
 														}
 																				
@@ -3105,7 +3820,7 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 													else 
 													{
 				
-														pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '0';
+														pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '0';
 				
 													}
 												
@@ -3114,545 +3829,261 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 											}								
 				
 										}
-			
-									}										
-	
+				
+									}
+				
 									if (pnfpb_custom_post_types.length > 0) {
-	
+				
 										for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-			
-											$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
-			
-											$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').off().on('click',function(event) {
-							
-												if ($j(this).is(":checked"))
+				
+											$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').off().on('click',function(event) {
+					
+												var pnfpb_selector = '.'+$(this).attr("class");
+				
+												var pnfpb_index = $(this).attr("pnfpb_index");
+				
+												if ($j(pnfpb_selector).is(":checked"))
 												{
-			
-													pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
-							
-													pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
+				
+													pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+				
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
 												
-													$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+													$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
 							
-																					
+									
 												}
 												else 
 												{
-	
-													pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
-	
+													
+													pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '0';
+				
+				
 												}
-	
-											});                             
-			
+				
+				
+											});								
+				
 										}
-			
-									}     														
-		
-								$j('.pnfpb-popup-customprompt-transistion-allow-button').off().on( "click", async (event) => {
-
-						
-									//var pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscribe_all_checkbox + pnfpb_bell_icon_subscribe_post_checkbox + pnfpb_bell_icon_subscribe_all_comments_checkbox + pnfpb_bell_icon_subscribe_my_comments_checkbox + pnfpb_bell_icon_subscribe_private_message_checkbox + pnfpb_bell_icon_subscribe_new_member_checkbox + pnfpb_bell_icon_subscribe_friendship_request_checkbox  + pnfpb_bell_icon_subscribe_friendship_accepted_checkbox  + pnfpb_bell_icon_subscribe_avatar_change_checkbox + pnfpb_bell_icon_subscribe_cover_image_checkbox + '0' + pnfpb_bell_icon_subscribe_activity_checkbox + pnfpb_bell_icon_subscribe_group_details_checkbox + pnfpb_bell_icon_subscribe_group_invite_checkbox;
-
-									var pnfpb_bell_icon_subscription_options = '';
+				
+									}					
+				
 
 									if (pnfpb_show_push_notify_types.length > 0) {
 
 										for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < pnfpb_show_push_notify_types.length; pnfpb_notify_type_element++) {
 			
-											pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element];
+											pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element];
 											
 										}
 			
 									}
-			
+									
+									
 									if (pnfpb_custom_post_types.length > 0) {
 			
 										for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+
+											if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
 			
-											pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+												pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+											} else {
+
+												pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0';
+
+											}
 											
 										}
 			
-									}	
-
-									$j('.pnfpb-popup-customprompt-container').hide();
-
+									} else {
+										pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0000000000';
+									}
+									
+									pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_favourite_checkbox;	
+									
 									pnfpb_bell_prompt_processing = '1';
 
-									await requestPermission(registration,'',pnfpb_bell_icon_subscription_options);						
-		
-								});						
-		
-								$j('.pnfpb-popup-customprompt-transistion-cancel-button').off().on( "click", async (event) => {
+									await requestPermission(registration,'',pnfpb_bell_icon_subscription_options);
 
-									$j('pnfpb-popup-customprompt-container-dialog-slideDown').css("animation-name", "slideDownOut");
-						
-									$j('pnfpb-popup-customprompt-container-dialog-slideDown').css("-webkit-animation-name", "slideDownOut");
-		
-									$j('.pnfpb-popup-customprompt-container').hide();
-		
-								});
-		
+								}
+
 							} else {
-		
-								if (pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_style === '2') {
 
-									$j('.pnfpb-popup-customprompt-vertical-transistion-body-line-1').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_1);
+								console.log('Push notification already subscribed');
 
-									$j('.pnfpb-popup-customprompt-vertical-transistion-body-line-2').text(pnfpb_ic_fcm_custom_prompt_subscribe_text_2);
+								$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
 
-									$j('.pnfpb-popup-customprompt-vertical-transistion-confirmation').hide();
-		
-									$j('.pnfpb-popup-customprompt-vertical-container').show();
+								$j('.pnfpb-push-subscribe-button').text(pnfpb_popup_unsubscribe_button);
+			
+								$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-subscribe-class");
 
-									$j('.pnfpb-popup-customprompt-vertical-transistion').show();
+								$j('.pnfpb-push-subscribe-button').addClass("pnfpb-popup-unsubscribe-class");
 
-									pnfpb_bell_icon_subscription_options_custom_prompt = '';
+								$j('.pnfpb-push-status-text').removeClass("pnfpb-push-status-text-opened");	
 
-									$j('.pnfpb_bell_icon_subscription_all_enable').off().on('click',function(event) {
+								$j('.pnfpb-push-status-text').text(pnfpb_popup_subscribe_text);
+
+								$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
+
+								$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 		
-					
-										if ($j('.pnfpb_bell_icon_subscription_all_enable').is(":checked"))
-										{
-				
-				
-											pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
-				
-											if (pnfpb_show_push_notify_types.length > 0) {
-				
-												for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
-				
-													pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
-				
-												}
-				
-											}
-										
-											$j('.pnfpb_bell_icon_subscription_post_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_activity_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_all_comments_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_my_comments_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_private_message_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_new_member_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_friendship_request_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_friendship_accepted_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_avatar_change_enable').prop('checked',false);
-											
-											$j('.pnfpb_bell_icon_subscription_cover_image_change_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
-					
-											$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
-				
-											if (pnfpb_custom_post_types.length > 0) {
-				
-												for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-				
-													$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
-				
-													var pnfpb_index = $j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').attr("pnfpb_index");
-				
-													pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
-													
-												}
-											}
-					
-					
-										}
-										else 
-										{
-				
-				
-											pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
-										}								
-									});
-									
-									
-									$j('.pnfpb_bell_icon_subscription_group_details_update_enable').off().on('click',function(event) {
-					
-							
-										if ($j('.pnfpb_bell_icon_subscription_group_details_update_enable').is(":checked"))
-										{
-				
-										
-											$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+								$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);	
+
+							}
+
+						});
+
+					} else {
+
+						if ($j('.pnfpb-push-subscribe-button').hasClass("pnfpb-popup-unsubscribe-class")) {
+
+							var subscribetext = $j('.pnfpb-push-subscribe-button').text();
+
+							$j('.pnfpb-push-subscribe-button-layout').show();
+
+							$j('.pnfpb_bell_icon_custom_prompt_loader').show();
 		
-											pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '1';
-					
-																			
-										}
-										else 
-										{
-											pnfpb_bell_icon_subscribe_push_type_checkbox[12] = '0';
-										}								
-									});
-									
-									$j('.pnfpb_bell_icon_subscription_group_invite_enable').off().on('click',function(event) {
-					
-							
-										if ($j('.pnfpb_bell_icon_subscription_group_invite_enable').is(":checked"))
-										{
-				
-										
-											$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
+							pnfpb_bell_prompt_processing = '1';
 		
-											pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '1';
-					
-																				
-										}
-										else 
-										{
-				
-											pnfpb_bell_icon_subscribe_push_type_checkbox[13] = '0';
-										}								
-									});			
-										
+							registration.pushManager.getSubscription().then(async (subscription) => {
 		
-										if (pnfpb_show_push_notify_types.length > 0) {
+								if (subscription) {
 		
-											for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
+									$j('.pnfpb-push-subscribe-button').prop('disabled', true);
+								
+									$j('.pnfpb-push-subscribe-options-button').prop('disabled', true);								
 		
-												if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
-					
-													$j('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable').off().on('click',function(event) {
-					
-														var pnfpb_selector = '.'+$(this).attr("class");
-					
-														var pnfpb_index = $(this).attr("pnfpb_index");
-					
-														if ($j(pnfpb_selector).is(":checked"))
-														{
-					
-															pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '1';
-					
+									$j('.pnfpb-push-status-text').text(pnfpb_popup_wait_message);
+		
+									$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");	
+		
+									getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async (refreshedToken) => {
+		
+										subscription.unsubscribe().then((successful) => {
+		
+											deleteToken(messaging).then(function (deleteTokenstatus) {
+		
+												if (deleteTokenstatus) {
+		
+		
+													var data = {
+														action: 'icpushcallback',
+														device_id:refreshedToken,
+														nonce: pnfpb_ajax_object_push.nonce,
+														pushtype: 'deletepushtoken'
+													};
 														
-															if (pnfpb_notify_type_element > 0) {
-								
-																pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
-													
-																$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
-					
-															}
-																					
-														}
-														else 
-														{
-					
-															pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_index] = '0';
-					
-														}
-													
-					
-													});
-												}								
-					
-											}
-				
-										}										
-		
-										if (pnfpb_custom_post_types.length > 0) {
-		
-											for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-				
-												$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
-				
-												$j('.pnfpb_bell_icon_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').off().on('click',function(event) {
-								
-													if ($j(this).is(":checked"))
-													{
-				
-														pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
-								
-														pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '0';
-													
-														$j('.pnfpb_bell_icon_subscription_all_enable').prop('checked',false);
-								
-																						
-													}
-													else 
-													{
-		
-														pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
-		
-													}
-		
-												});                             
-				
-											}
-				
-										}     															
-		
-									$j('.pnfpb-popup-customprompt-vertical-transistion-allow-button').off().on( "click", async (event) => {
+													$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
 
-		
-										var pnfpb_bell_icon_subscription_options = '';
-
-										if (pnfpb_show_push_notify_types.length > 0) {
-	
-											for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < pnfpb_show_push_notify_types.length; pnfpb_notify_type_element++) {
-				
-												pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_push_type_checkbox[pnfpb_notify_type_element];
-												
-											}
-				
-										}
-				
-										if (pnfpb_custom_post_types.length > 0) {
-				
-											for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-				
-												pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_subscribe_custom_post_checkbox[pnfpb_post_type_element];
-												
-											}
-				
-										}
-										
-										$j('.pnfpb-popup-customprompt-vertical-container').hide();
-
-										pnfpb_bell_prompt_processing = '1';
-
-										await requestPermission(registration,'',pnfpb_bell_icon_subscription_options);	
-		
-									});						
-			
-									$j('.pnfpb-popup-customprompt-vertical-transistion-cancel-button').off().on( "click", async (event) => {
-
-										$j('pnfpb-popup-customprompt-vertical-container-dialog-slideDown').css("animation-name", "slideDownOut");
-							
-										$j('pnfpb-popup-customprompt-vertical-container-dialog-slideDown').css("-webkit-animation-name", "slideDownOut");
-
-										$j('.pnfpb-popup-customprompt-vertical-container').hide();
-			
-									})
-		
-								}
-		
-							}							
-
-						} else {
-
-							var pnfpb_bell_icon_subscription_options = '';
-
-							$j('.pnfpb_bell_icon_prompt_subscription_all_enable').off().on('click',function(event) {
-
-			
-								if ($j('.pnfpb_bell_icon_prompt_subscription_all_enable').is(":checked"))
-								{
-		
-		
-									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
-		
-									if (pnfpb_show_push_notify_types.length > 0) {
-		
-										for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
-		
-											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
-		
-										}
-		
-									}
-								
-									$j('.pnfpb_bell_icon_prompt_subscription_post_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_activity_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_all_comments_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_my_comments_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_private_message_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_new_member_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_friendship_request_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_friendship_accepted_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_avatar_change_enable').prop('checked',false);
+														$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
 									
-									$j('.pnfpb_bell_icon_prompt_subscription_cover_image_change_enable').prop('checked',false);
+														var responseobject = JSON.parse(response);
+		
+														pnfpb_bell_prompt_processing = '';
+													
+														if (responseobject.subscriptionstatus === 'deleted') {
+													
+															console.log(__('Push subscription token deleted successfully','push-notification-for-post-and-buddypress'));
+													
+														}
+														else {
+															console.log(__('Push subscription token deletion failed in database','push-notification-for-post-and-buddypress'));
+														}
+		
+														if ($j(".subscribegroupbutton").length || $j(".unsubscribegroupbutton").length) {
+		
+															$j(".subscribegroupbutton").addClass( "subscribe-init-display-off" );
+															$j(".unsubscribegroupbutton").addClass( "subscribe-init-display-off" );
+															$j(".subscribe-notification-group").addClass( "subscribe-init-display-off" );
+															$j(".unsubscribe-notification-group").addClass( "subscribe-init-display-off" );
+		
+															// Get an array of all cookie names (the regex matches what we don't want)
+															var cookieNames = document.cookie.split(/=[^;]*(?:;\s*|$)/);
+		
+															// Remove any that match the pattern
+															for (var i = 0; i < cookieNames.length; i++) {
+																if (/^pnfpb_group_push_notification_/.test(cookieNames[i])) {
+																	document.cookie = cookieNames[i] + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + path;
+																}
+															}													
+		
+														}
+		
+														$j('.pnfpb-push-subscribe-button').text(pnfpb_popup_subscribe_button);
+		
+														$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-unsubscribe-class");
+		
+														$j('.pnfpb-push-subscribe-button').addClass("pnfpb-popup-subscribe-class");
+		
+														$j('.pnfpb-push-status-text').removeClass("pnfpb-push-status-text-opened");	
+		
+														$j('.pnfpb-push-status-text').text(pnfpb_popup_unsubscribe_text);
 			
-									$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').prop('checked',false);
-			
-									$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').prop('checked',false);
+														$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
 		
-									if (pnfpb_custom_post_types.length > 0) {
-		
-										for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-		
-											$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').prop('checked',false);
-		
-											var pnfpb_index = $j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').attr("pnfpb_index");
-		
-											pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
-											
-										}
-									}
-			
-			
-								}
-								else 
-								{
-		
-		
-									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
-								}								
-							});
-							
-							
-							$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').off().on('click',function(event) {
-			
-					
-								if ($j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').is(":checked"))
-								{
-		
+														$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 								
-									$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
-									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+														$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);													
+														
+		
+														pnfpb_bell_icon_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+												
+														pnfpb_bell_icon_subscription_options_custom_prompt = '10000000000000';
+														
+												
+														pnfpb_bell_icon_prompt_subscription_options_custom_prompt = '10000000000000';
+														
+														pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+													
+													});												
 			
-																	
-								}
-								else 
-								{
-									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
-								}								
-							});
-							
-							$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').off().on('click',function(event) {
-			
-					
-								if ($j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').is(":checked"))
-								{
-		
-								
-									$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
-									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
-			
-																		
-								}
-								else 
-								{
-		
-									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
-								}								
-							});				
-							
-							
-							
-							if (pnfpb_show_push_notify_types.length > 0) {
-		
-								for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
-		
-									if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
-		
-										$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable').off().on('click',function(event) {
-		
-											var pnfpb_selector = '.'+$(this).attr("class");
-		
-											var pnfpb_index = $(this).attr("pnfpb_index");
-		
-											if ($j(pnfpb_selector).is(":checked"))
-											{
-		
-												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '1';
-		
-											
-												if (pnfpb_notify_type_element > 0) {
-					
-													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
-										
-													$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
 		
 												}
-																		
-											}
-											else 
-											{
+			
+											}).catch((e) => {
 		
-												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '0';
+												pnfpb_bell_prompt_processing = '';
 		
-											}
-										
+												console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
+		
+											});
+										}).catch((e) => {
+		
+											pnfpb_bell_prompt_processing = '';
+		
+											console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
 		
 										});
-									}								
+									})
+								} else {
+
+									$j('.pnfpb-push-subscribe-button').text(pnfpb_popup_subscribe_button);
 		
-								}
-		
-							}
-		
-							if (pnfpb_custom_post_types.length > 0) {
-		
-								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-		
-									$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable').off().on('click',function(event) {
+									$j('.pnfpb-push-subscribe-button').removeClass("pnfpb-popup-unsubscribe-class");
+
+									$j('.pnfpb-push-subscribe-button').addClass("pnfpb-popup-subscribe-class");
+
+									$j('.pnfpb-push-status-text').removeClass("pnfpb-push-status-text-opened");	
+
+									$j('.pnfpb-push-status-text').text(pnfpb_popup_unsubscribe_text);
+
+									$j('.pnfpb-push-status-text').addClass("pnfpb-push-status-text-opened");
+
+									$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 			
-										var pnfpb_selector = '.'+$(this).attr("class");
-		
-										var pnfpb_index = $(this).attr("pnfpb_index");
-		
-										if ($j(pnfpb_selector).is(":checked"))
-										{
-		
-											pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
-		
-											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
-										
-											$j('.pnfpb_bell_icon_prompt_subscription_all_enable').prop('checked',false);
-					
-							
-										}
-										else 
-										{
-											
-											pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '0';
-		
-		
-										}
-		
-		
-									});								
-		
+									$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);	
+
 								}
+							}).catch((e) => {
 		
-							}					
+								pnfpb_bell_prompt_processing = '';
 		
-
-							if (pnfpb_show_push_notify_types.length > 0) {
-
-								for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < pnfpb_show_push_notify_types.length; pnfpb_notify_type_element++) {
-	
-									pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element];
-									
-								}
-	
-							}
-	
-							if (pnfpb_custom_post_types.length > 0) {
-	
-								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-	
-									pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element];
-									
-								}
-	
-							}							
-							
-							pnfpb_bell_prompt_processing = '1';
-
-							await requestPermission(registration,'',pnfpb_bell_icon_subscription_options);
-
+								console.log(__("Unsubscribe subscription failed",'push-notification-for-post-and-buddypress'));
+		
+							});
+						
 						}
-				
 
 					}
 			
@@ -3668,9 +4099,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 			
 
 async function shortcode_subscription_menu(refreshedToken) {
-    if( $j(".pnfpb_subscribe_button").length )
+    if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed )
     {
-	  if ("serviceWorker" in navigator && refreshedToken && refreshedToken != '') {
+
+	  if ("serviceWorker" in navigator ) {
 		navigator.serviceWorker.ready.then(function (registration) {	
 	        // [START get_messaging_object]
             // Retrieve Firebase Messaging object.
@@ -3692,1185 +4124,941 @@ async function shortcode_subscription_menu(refreshedToken) {
 			var subscribecoverimageshortcode = '0';
 			var unsubscribeallshortcode = '0';
 			
-		    $j(".pnfpb_subscribe_button").on( "click", async function(event) {
+			shortcode_subscription_options(registration,'')
 
-				event.preventDefault();
-
-				getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async function (refreshedToken) {
-
-					if (refreshedToken) {												
-
-						shortcode_subscription_options(refreshedToken);
-
-					}
-					else
-					{
-						console.log(__("Notification from permission not granted or blocked!!!",'push-notification-for-post-and-buddypress'));
-	 
-						if (!pnfpb_webview) {
-							shortcode_subscription_options('');
-							await requestPermission(registration,'shortcode','10000000000000');
-
-						}
-							
-					}						
-				}).catch( async (err)  => {
-					console.log(__('Unable to retrieve refreshed token ','push-notification-for-post-and-buddypress'), err);
-					if (!pnfpb_webview) {
-						navigator.serviceWorker.ready.then(function (registration) {
-							$j(".pnfpb_subscribe_button").on( "click", async function(event) {
-								event.preventDefault();
-								shortcode_subscription_options('');
-								getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async function (refreshedToken) {
-									if (refreshedToken) {
-
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',true);
-										shortcode_subscription_options(refreshedToken);
-			
-									}
-									else
-									{							
-										shortcode_subscription_options('');
-										await requestPermission(registration,'shortcode','10000000000000');
-									}
-								})
-							})
-						})
-					}
-				});
-		        
-			})
 		}) 
-	  } else  {
-		if ("serviceWorker" in navigator) {
-				if (!pnfpb_webview) {
-					navigator.serviceWorker.ready.then(function (registration) {
-							$j(".pnfpb_subscribe_button").on( "click", async function(event) {
-							event.preventDefault();
-							shortcode_subscription_options('');
-							getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async function (refreshedToken) {
-								if (refreshedToken) {
-
-									$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',true);
-									shortcode_subscription_options(refreshedToken);
-		
-								}
-								else
-								{									
-									shortcode_subscription_options('');
-									await requestPermission(registration,'shortcode','10000000000000');
-								}
-							})
-						})
-					});
-				}
-
-		}
-		else {
-			console.log('Service worker not present');
-		}
-		console.log(__("Notification from permission not granted or blocked!!!",'push-notification-for-post-and-buddypress'));
+	  } else {
+		console.log('Service worker not available in browser')
 	  }
 	} 
 }
 
-function shortcode_subscription_options(refreshedToken) {
-	if (!refreshedToken || refreshedToken === '') {
+function shortcode_subscription_options(registration,refreshedToken) {
 
-		if ($j(".ui-dialog").is(":visible") && $j( "#pnfpb_subscribe_dialog_confirm" ).dialog('isOpen') === true) {
+	pnfpb_bell_icon_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
 
-			$j( "#pnfpb_subscribe_dialog_confirm" ).dialog( "close" );
-			
-		}		
+	pnfpb_bell_icon_subscription_options_custom_prompt = '10000000000000';
 
-		$j(".pnfpb-subscribe-notifications").show();
-		$j(".pnfpb_subscribe_dialog_confirm_heading_notoken").show();
-		$j(".pnfpb_subscribe_dialog_confirm_heading_token").hide();	
+	pnfpb_bell_icon_prompt_subscription_options_custom_prompt = '10000000000000';
+
+	pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+
+	$j('.pnfpb-push-subscribe-icon-shortcode').show();
+
+	var pnfpb_popup_subscribe_text = __("You are subscribed to push notification",'push-notification-for-post-and-buddypress');
+
+	if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_message != '') {
+
+		pnfpb_popup_subscribe_text = pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_message;
+
+	}
+
+	var pnfpb_popup_unsubscribe_text = __("Push notification not subscribed",'push-notification-for-post-and-buddypress');
+
+	if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_message != '') {
+
+		pnfpb_popup_unsubscribe_text = pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_message;
 		
-		$j( "#pnfpb_subscribe_dialog_confirm" ).dialog({
-			autoOpen: true, 
-			resizable: true,
-			width: 300,
-			position: { my: 'top', at: 'top+40' },
-			closeText : '',
-			open: function(event, ui) {
-				$j(this).css("height", "400px");
-			},									
-			modal: true,
-			 create: function(event, ui) {
-				  $j("body").css({ overflow: 'hidden' })
-			 },
-			 beforeClose: function(event, ui) {
-				  $j("body").css({ overflow: 'inherit' })
-			 },									
-			buttons: [
-			{ 	
-				text: pnfpb_cancel_button_text,
-				   open: function() {
-					$j(this).attr('style','font-weight:normal;color:#000000;background-color:#dddddd;border:0px');
-				},
-				click: function() {
-					$j(this).dialog( "close" );
-			}}]
-		});		
+	}
 
-	} else  {
+	var pnfpb_popup_wait_message = __("Please wait...processing",'push-notification-for-post-and-buddypress');
 
-		if ($j(".ui-dialog").is(":visible") && $j( "#pnfpb_subscribe_dialog_confirm" ).dialog('isOpen') === true) {
+	if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_wait_message && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_wait_message != '') {
 
-			$j( "#pnfpb_subscribe_dialog_confirm" ).dialog( "close" );
-
-		}
-
-		var subscriptionoptions = '10000000000';
-		var subscribeallshortcode = '0';
-		var subscribepostactivitiesshortcode = '0';
-		var subscribeactivitiesshortcode = '0';
-		var subscribeallcommentsshortcode = '0';
-		var subscribemypostshortcode = '0';
-		var subscribeprivatemessagesshortcode = '0';
-		var subscribenewmembershortcode = '0';
-		var subscribefriendshiprequestshortcode = '0';
-		var subscribefriendshipacceptshortcode = '0';
-		var subscribeuseravatarshortcode = '0';
-		var subscribecoverimageshortcode = '0';
-		var subscribegroupinviteshortcode = '0';
-		var subscribegroupdetailsshortcode = '0';		
-		var unsubscribeallshortcode = '0';
-
-		$j(".pnfpb-subscribe-notifications").show();
-							
-		if ($j('#pnfpb_ic_subscribe_all_shortcode_enable').is(":checked"))
-		{
-		  	subscribeallshortcode = '1';
-		}
-		else 
-		{
-			subscribeallshortcode = '0';
-		}
-	
-		if ($j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').is(":checked"))
-		{
-		  	subscribepostactivitiesshortcode = '1';
-		}
-		else 
-		{
-			subscribepostactivitiesshortcode = '0';
-		}
-
-		if ($j('#pnfpb_ic_subscribe_activities_shortcode_enable').is(":checked"))
-		{
-		  	subscribeactivitiesshortcode = '1';
-		}
-		else 
-		{
-			subscribeactivitiesshortcode = '0';
-		}		
-	
-		if ($j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').is(":checked"))
-		{
-		  	subscribeallcommentsshortcode = '1';
-		}
-		else 
-		{
-			subscribeallcommentsshortcode = '0';
-		}
-	
-		if ($j('#pnfpb_ic_subscribe_private_message_shortcode_enable').is(":checked"))
-		{
-			subscribeprivatemessagesshortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
-			
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-		}
-		else 
-		{
-			subscribeprivatemessagesshortcode = '0';
-		}
-	
-		if ($j('#pnfpb_ic_subscribe_new_member_shortcode_enable').is(":checked"))
-		{
-			subscribenewmembershortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
-			
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-		}
-		else 
-		{
-
-			subscribenewmembershortcode = '0';
-		}
-	
-		if ($j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').is(":checked"))
-		{
-			subscribefriendshiprequestshortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
-			
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-		}
-		else 
-		{
-			subscribefriendshiprequestshortcode = '0';
-		}
-	
-		if ($j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').is(":checked"))
-		{
-			subscribefriendshipacceptshortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
-			
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-		}
-		else 
-		{
-			subscribefriendshipacceptshortcode = '0';
-		}
-	
-		if ($j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').is(":checked"))
-		{
-			subscribeuseravatarshortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
-			
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-		}
-		else 
-		{
-			subscribeuseravatarshortcode = '0';
-		}
-	
-		if ($j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').is(":checked"))
-		{
-			subscribecoverimageshortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
-			
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-		}
-		else 
-		{
-			subscribecoverimageshortcode = '0';
-		}
+		pnfpb_popup_wait_message = pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_wait_message;
 		
-		if ($j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').is(":checked"))
-		{
-			subscribegroupdetailsshortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
+	}
+	
+	var pnfpb_popup_subscribe_button = __("Subscribe",'push-notification-for-post-and-buddypress');
 
+	if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_button && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_button != '') {
+
+		pnfpb_popup_subscribe_button = pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_subscribe_button;
 		
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-		}
-		else 
-		{
-			subscribegroupdetailsshortcode = '0';
-		}		
-	
-		if ($j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').is(":checked"))
-		{
-			subscribegroupinviteshortcode = '1';
-			subscribeallshortcode = '0'; 
-			unsubscribeallshortcode = '0';
+	}
 
-			$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-			$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-		}
-		else 
-		{
-			subscribegroupinviteshortcode = '0';
-		}		
-	
-	
-		if ($j('#pnfpb_ic_subscribe_my_post_shortcode_enable').is(":checked") && pnfpb_ajax_object_push.isloggedin === 1)
-		{
-			$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Subscribe notifications on comments from my Posts/my BuddyPress activities",'push-notification-for-post-and-buddypress'));
-			$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);								
-		  	subscribemypostshortcode = '1';
-		}
-		else 
-		{
-			subscribemypostshortcode = '0';
-			if (pnfpb_ajax_object_push.isloggedin != 1) {
-				$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Login required to subscribe notifications on comments from my Posts/my BuddyPress activities",'push-notification-for-post-and-buddypress'));
-				$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',true);
-			}
-			else 
-			{
-				$j('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Subscribe notifications on comments from my Posts/my BuddyPress activities",'push-notification-for-post-and-buddypress'));
-				$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);										
-			}
-		}
-	
-		if ($j('#pnfpb_ic_unsubscribe_all_shortcode_enable').is(":checked"))
-		{
-		  	unsubscribeallshortcode = '1';
-		}
-		else 
-		{
-			unsubscribeallshortcode = '0';
-		}
-	
-		$j("#pnfpb_ic_subscribe_private_message_shortcode_enable").on('click',function() {
+	var pnfpb_popup_unsubscribe_button = __("Unsubscribe",'push-notification-for-post-and-buddypress');
+
+	if (pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_button && pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_button != '') {
+
+		pnfpb_popup_unsubscribe_button = pnfpb_ajax_object_push.pnfpb_ic_fcm_popup_unsubscribe_button;
 		
-			if ($j('#pnfpb_ic_subscribe_private_message_shortcode_enable').is(":checked"))
-			{
-			  	subscribeprivatemessagesshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-			}
-			else 
-			{
-				subscribeprivatemessagesshortcode = '0';
-			}								
-		});
+	}
 	
+	var pnfpb_push_subscribe_options_button = __("Update",'push-notification-for-post-and-buddypress');
 
-	
-		if ($j('#pnfpb_ic_subscribe_all_shortcode_enable').on('click',function() {
+	if (pnfpb_ajax_object_push.pnfpb_push_subscribe_options_button && pnfpb_ajax_object_push.pnfpb_push_subscribe_options_button != '') {
+
+		pnfpb_push_subscribe_options_button = pnfpb_ajax_object_push.pnfpb_push_subscribe_options_button;
 		
-			if ($j('#pnfpb_ic_subscribe_all_shortcode_enable').is(":checked"))
-			{
-				subscribeallshortcode = '1';
-				subscribemypostshortcode = '0';
-				subscribeallcommentsshortcode = '0';
-				subscribepostactivitiesshortcode = '0';
-				subscribeactivitiesshortcode = '0';
-				subscribeprivatemessagesshortcode = '0';
-				subscribenewmembershortcode = '0';
-				subscribefriendshiprequestshortcode = '0';
-				subscribefriendshipacceptshortcode = '0';
-				subscribeuseravatarshortcode = '0';
-				subscribecoverimageshortcode = '0';
-			
-				unsubscribeallshortcode = '0';	
-			
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-				$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);	
-			
-			}
-			else 
-			{
-				subscribeallshortcode = '0';
-			}								
-		}));
+	}
 
-		if (pnfpb_custom_post_types.length > 0) {
+	$j('.pnfpb_shortcode_popup_close').on( "click", function(event) {
 
-			for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+		event.stopPropagation(); 
 
-				if ($j('.pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').is(":checked"))
-				{
-					pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '1';
-					subscribeallshortcode = '0'; 
-					unsubscribeallshortcode = '0';
-														
+		event.preventDefault();
+
+		$j('.pnfpb-push-subscribe-button-layout-shortcode').hide();
+
+	});
+
+	registration.pushManager.getSubscription().then(async function (subscription) {	
+
+		if (subscription) {
+
+			await checkdeviceid(registration,subscription);
+
+		} 
+
+	});		
+
+
+	$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");
+
+	$j('.pnfpb-push-subscribe-icon-shortcode').on( "mouseenter", function(event) {
+
+		$j('.pnfpb-push-status-text-shortcode').text(__('Verifying subscription status...','push-notification-for-post-and-buddypress'));
+
+		navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+
+			serviceWorkerRegistration.pushManager.getSubscription().then(async function (subscription) {
+
+				if (subscription && pnfpb_bell_prompt_processing !== '1') {
+
+					$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_subscribe_text);
+
+					$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+
 				}
-				else 
-				{
-					pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '0';
+				else {
+
+					if (pnfpb_bell_prompt_processing === '1') {
+
+						$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");
+
+					} else {
+
+						$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_unsubscribe_text);
+
+						$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+
+					}
+
 				}
-			}
-
-
-			for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-							
 				
-				if ($j('.pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').off().on('click',function(event) {
+			})
+
+		});
+
+	}).on( "mouseleave", function() {
+
+		$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");
+
+	});	
+
+	$j('.pnfpb-push-subscribe-icon-shortcode').on( "click", function(event) {
+
+		event.stopPropagation(); 
+
+		event.preventDefault();
+
+		pnfpb_bell_icon_prompt_subscription_options_custom_prompt = '10000000000000';
 		
-					if ($j('.pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').is(":checked"))
+		pnfpb_subscription_options = '';
+
+
+		$j('.pnfpb-push-subscribe-button-layout-shortcode').toggle();
+
+		$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");
+
+		if ($('.pnfpb-push-subscribe-button-layout-shortcode').is(':visible')) {
+
+			$j('.pnfpb-push-subscribe-button-layout-shortcode').addClass("pnfpb-push-subscribe-button-layout-opened-shortcode");	
+
+		}
+		else {
+
+			$j('.pnfpb-push-subscribe-button-layout-shortcode').removeClass("pnfpb-push-subscribe-button-layout-opened-shortcode");
+
+		}
+
+		$j('.pnfpb-push-subscribe-button-shortcode').text(__('Please wait...verifying status','push-notification-for-post-and-buddypress'));
+
+		registration.pushManager.getSubscription().then(async function (subscription) {
+
+			if (subscription) {
+
+				$j('.pnfpb-push-subscribe-options-button-shortcode').text(pnfpb_push_subscribe_options_button);
+
+				$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', true);
+
+				if ($j('.pnfpb-push-subscribe-options-button-container-shortcode').length) {
+
+					$j('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+				}
+
+				$j('.pnfpb-push-subscribe-button-shortcode').text(pnfpb_popup_unsubscribe_button);
+
+				$j('.pnfpb-push-subscribe-button-shortcode').show();
+
+				$j('.pnfpb-push-subscribe-button-shortcode').removeClass("pnfpb-popup-subscribe-class-shortcode");
+
+				$j('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-unsubscribe-class-shortcode");
+
+				pnfpb_subscription_options = '';
+
+				$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+
+				$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', true);				
+				
+				await checkdeviceid(registration,subscription);
+
+				$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').off().on('click',function(event) {
+
+		
+					if ($j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').is(":checked"))
 					{
-						pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '1';
-						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+
+						if (pnfpb_show_push_notify_types.length > 0) {
+
+							for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
+
+							}
+
+						}
 					
-						$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-						$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);									
+						$j('.pnfpb_bell_icon_prompt_subscription_post_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_activity_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_all_comments_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_my_comments_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_private_message_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_new_member_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_friendship_request_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_friendship_accepted_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_avatar_change_enable_shortcode').prop('checked',false);
+						
+						$j('.pnfpb_bell_icon_prompt_subscription_cover_image_change_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked',false);
+
+						$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked',false);
+
+						if (pnfpb_custom_post_types.length > 0) {
+
+							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+
+								$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked',false);
+
+								var pnfpb_index = $j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').attr("pnfpb_index");
+
+								pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+								
+							}
+						}
+
+
 					}
 					else 
 					{
-						pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element] = '0';
+
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+					}								
+				});
+				
+				$j('.pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').off().on('click',function(event) {
+		
+				
+					if ($j('.pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').is(":checked"))
+					{
+
+					
+						$j('.pnfpb_bell_icon_shortcode_subscription_all_enable').prop('checked',false);
+
+						pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '1';
+
+														
 					}
+					else 
+					{
+						pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '0';
+					}								
+				});				
+				
+				$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').off().on('click',function(event) {
+
+		
+					if ($j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').is(":checked"))
+					{
+
+					
+						$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+
+														
+					}
+					else 
+					{
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+					}								
+				});
+				
+				$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').off().on('click',function(event) {
+
+		
+					if ($j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').is(":checked"))
+					{
+
+					
+						$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+
+															
+					}
+					else 
+					{
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+					}								
+				});				
+				
+				if (pnfpb_show_push_notify_types.length > 0) {
+
+					for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
+
+						if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
+
+							$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable_shortcode').off().on('click',function(event) {
+
+								var pnfpb_selector = '.'+$(this).attr("class");
+
+								var pnfpb_index = $(this).attr("pnfpb_index");
+
+								if ($j(pnfpb_selector).is(":checked"))
+								{
+
+									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '1';
+
+								
+									if (pnfpb_notify_type_element > 0) {
+		
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
 							
-				}));				
+										$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
 
-			}
+									}
+															
+								}
+								else 
+								{
 
-		}		
+									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '0';
+
+								}
+							
+
+							});
+						}								
+
+					}
+
+				}
+
+				if (pnfpb_custom_post_types.length > 0) {
+
+					for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+
+						$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').off().on('click',function(event) {
+
+							var pnfpb_selector = '.'+$(this).attr("class");
+
+							var pnfpb_index = $(this).attr("pnfpb_index");
+
+							if ($j(pnfpb_selector).is(":checked"))
+							{
+
+								pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+							
+								$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
 		
-		if ($j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').is(":checked"))
-			{
-			  	subscribepostactivitiesshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';	
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);									
-			}
-			else 
-			{
-				subscribepostactivitiesshortcode = '0';
-			}								
-		}));
+				
+							}
+							else 
+							{
+								
+								pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '0';
 
-		if ($j('#pnfpb_ic_subscribe_activities_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_activities_shortcode_enable').is(":checked"))
-			{
-			  	subscribeactivitiesshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';	
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);									
-			}
-			else 
-			{
-				subscribeactivitiesshortcode = '0';
-			}								
-		}));		
-	
-	
-		if ($j('#pnfpb_ic_subscribe_new_member_shortcode_enable').on('click',function() {
 
-			if ($j('#pnfpb_ic_subscribe_new_member_shortcode_enable').is(":checked"))
-			{
-			  	subscribenewmembershortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-			}
-			else 
-			{
+							}
 
-				subscribenewmembershortcode = '0';
-			}								
-		}));	
-	
-		if ($j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').is(":checked"))
-			{
-			  	subscribefriendshiprequestshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-			}
-			else 
-			{
-				subscribefriendshiprequestshortcode = '0';
-			}								
-		}));
-	
-		if ($j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').is(":checked"))
-			{
-			  	subscribefriendshipacceptshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-			}
-			else 
-			{
-				subscribefriendshipacceptshortcode = '0';
-			}								
-		}));
-	
-		if ($j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').is(":checked"))
-			{
-			  	subscribeuseravatarshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-			}
-			else 
-			{
-				subscribeuseravatarshortcode = '0';
-			}								
-		}));
-	
-		if ($j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').is(":checked"))
-			{
-			 	subscribecoverimageshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-			}
-			else 
-			{
-				subscribecoverimageshortcode = '0';
-			}								
-		}));							
-	
-	
-		if ($j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').is(":checked"))
-			{
-			  	subscribeallcommentsshortcode = '1';
-				subscribemypostshortcode = '0';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
-			
-			
-				$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-			
-			}
-			else 
-			{
-				subscribeallcommentsshortcode = '0';
-			}								
-		}));
-	
-		if ($j('#pnfpb_ic_subscribe_my_post_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_my_post_shortcode_enable').is(":checked"))
-			{
-			  	subscribemypostshortcode = '1';
-				subscribeallcommentsshortcode = '0';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
 
-			
-				$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-			}
-			else 
-			{
-				subscribemypostshortcode = '0';
-			}								
-		}));
+						});								
 
-		if ($j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').is(":checked"))
-			{
-				subscribegroupdetailsshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
+					}
 
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-			}
-			else 
-			{
-				subscribegroupdetailsshortcode = '0';
-			}								
-		}));
-		
-		if ($j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').is(":checked"))
-			{
-				subscribegroupinviteshortcode = '1';
-				subscribeallshortcode = '0'; 
-				unsubscribeallshortcode = '0';
+				}
+				
+				$j('.pnfpb-push-subscribe-options-button-shortcode').off().on( "click", async (event) => {
 
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-				$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-			}
-			else 
-			{
-				subscribegroupinviteshortcode = '0';
-			}								
-		}));		
-	
-		if ($j('#pnfpb_ic_unsubscribe_all_shortcode_enable').on('click',function() {
-		
-			if ($j('#pnfpb_ic_unsubscribe_all_shortcode_enable').is(":checked"))
-			{
-			  	unsubscribeallshortcode = '1';
-				subscribemypostshortcode = '0';
-				subscribeallcommentsshortcode = '0';
-				subscribeprivatemessagesshortcode = '0';
-				subscribenewmembershortcode = '0';
-				subscribefriendshiprequestshortcode = '0';
-				subscribefriendshipacceptshortcode = '0';
-				subscribeuseravatarshortcode = '0';
-				subscribecoverimageshortcode = '0';
-				subscribepostactivitiesshortcode = '0';
-				subscribeactivitiesshortcode = '0'; 
-				subscribeallshortcode = '0';
-				subscribegroupinviteshortcode = '0';
-				subscribegroupdetailsshortcode = '0';
+					event.stopPropagation(); 
+					
+					event.preventDefault();	
+					
+					$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
 
-			
-				$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked',false);
-				$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-				$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);													
-			}
-			else 
-			{
-				unsubscribeallshortcode = '0';
-			}								
-		}));
+					$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', true);
+					
+					$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', true);
 
-	
-		var pnfpb_subscribe_button_text = pnfpb_ajax_object_push.save_button_text;
-		var pnfpb_cancel_button_text = pnfpb_ajax_object_push.cancel_button_text;
-		var pnfpb_subscribe_text_confirm = pnfpb_ajax_object_push.subscribe_dialog_text_confirm;
-		var pnfpb_unsubscribe_text_confirm = pnfpb_ajax_object_push.unsubscribe_dialog_text_confirm;
+					var pnfpb_bell_icon_prompt_subscription_options = '';
 
-		$j(".pnfpb_subscribe_dialog_confirm_heading_notoken").hide();
-		$j(".pnfpb_subscribe_dialog_confirm_heading_token").show();	
-		
-	
-		$j( "#pnfpb_subscribe_dialog_confirm" ).dialog({
-			autoOpen: true, 
-			resizable: true,
-			width: 300,
-			position: { my: 'top', at: 'top+40' },
-			closeText : '',
-			open: function(event, ui) {
-				$j(this).css("height", "400px");
-			},									
-			modal: true,
-			 create: function(event, ui) {
-				  $j("body").css({ overflow: 'hidden' })
-			 },
-			 beforeClose: function(event, ui) {
-				  $j("body").css({ overflow: 'inherit' })
-			 },									
-			buttons: [
-			{ 	
-				text: pnfpb_cancel_button_text,
-				   open: function() {
-					$j(this).attr('style','font-weight:normal;color:#000000;background-color:#dddddd;border:0px');
-				},
-				click: function() {
-					 $j(this).dialog( "close" );
-			}},
-			{
-				text: pnfpb_subscribe_button_text,
-				   open: function() {
-					$j(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_push.subscribe_button_color+';border:0px');
-				},
-				click: function() {
+					if (pnfpb_show_push_notify_types.length > 0) {
 
-					$j(".pnfpb-unsubscribe-alert-msg").html('<div class="pnfpbloader"></div>');
+						for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
 
-					$j( "#pnfpb-unsubscribe-dialog" ).dialog({ closeText:'', buttons: []});
-
-					subscriptionoptions = subscribeallshortcode + subscribepostactivitiesshortcode + subscribeallcommentsshortcode + subscribemypostshortcode + subscribeprivatemessagesshortcode + subscribenewmembershortcode + subscribefriendshiprequestshortcode + subscribefriendshipacceptshortcode + unsubscribeallshortcode + subscribeuseravatarshortcode + subscribecoverimageshortcode + subscribeactivitiesshortcode + subscribegroupinviteshortcode + subscribegroupdetailsshortcode;
-
-					if (pnfpb_custom_post_types.length > 0 && subscribeallshortcode !== '1') {
-
-						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-			
-							subscriptionoptions  = subscriptionoptions + pnfpb_shortcode_settings_custom_post_types[pnfpb_post_type_element];
-
+							pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element];
 							
 						}
-			
+
+					}
+					
+					if (pnfpb_custom_post_types.length > 0) {
+
+						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
+
+							if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+
+								pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+							} else {
+
+								pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+'0';
+							}
+							
+						}
+
+					} else {
+						pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+'0000000000';
 					}
 
-					if (refreshedToken) {
-	   
-						deviceid = refreshedToken;
-	
-						var data = {
-							action: 'icpushcallback',
-							device_id:deviceid,
-							subscriptionoptions:subscriptionoptions,
-							pushtype: 'subscribe-button'
-						};
+					pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox;
+
+					getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async function (refreshedToken) {		
 		
-						$j.post(pnfpb_ajax_object_push.ajax_url, data, function(responseajax) {
+						if (refreshedToken) {
+	   
+							deviceid = refreshedToken;
+	
+							var data = {
+								action: 'icpushcallback',
+								device_id:deviceid,
+								subscriptionoptions:pnfpb_bell_icon_prompt_subscription_options,
+								nonce: pnfpb_ajax_object_push.nonce,
+								pushtype: 'subscribe-button'
+							};
+		
+							$j.post(pnfpb_ajax_object_push.ajax_url, data, function(responseajax) {
 							
 								var response = JSON.parse(responseajax);
 							
-								subscriptionoptions = response.subscriptionoptions;
-								
-								var subscriptionoptionsarray = [];
-							
-								if (subscriptionoptions) {
+								pnfpb_subscription_options = response.subscriptionoptions;
 
-									subscriptionoptionsarray = subscriptionoptions.split('');
-								}
-								
-								if (subscriptionoptionsarray.length >= 14)
-								{
+								$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
 
-									if (subscriptionoptionsarray[0] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
+								$j('.pnfpb-push-subscribe-options-button-shortcode').show();
 
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
-									}
-	
-									if (subscriptionoptionsarray[1] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
-									}
+								$j('.pnfpb-push-subscribe-options-button-container-shortcode').show();
 
-									if (subscriptionoptionsarray[11] === '1' )
-									{
-										$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', false);
-									}									
-	
-									if (subscriptionoptionsarray[2] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
-									}
-	
-									if (subscriptionoptionsarray[3] === '1')
-									{
-										  $j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
-									}
-									
-									if (subscriptionoptionsarray[4] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-									}
-									
-									if (subscriptionoptionsarray[5] === '1' )
-									{
-										$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-									}
-									
-									if (subscriptionoptionsarray[6] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-									}
-									
-									if (subscriptionoptionsarray[7] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
-									}
-									
-									if (subscriptionoptionsarray[9] === '1' )
-									{
-										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-									}
-									
-									if (subscriptionoptionsarray[10] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
-									}															
-
-									if (subscriptionoptionsarray[8] === '1' )
-									{
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-										$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-										$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
-
-									}
-									else 
-									{
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
-									}
-
-									if (subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1' )
-									{
-										$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);							
-				
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-									}
-											
-									if (subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1')
-									{
-										$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', true);
-										$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-										$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);							
-				
-									}
-									else 
-									{
-										$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
-									}
-									
-									if (subscriptionoptionsarray.length > 14) {
-
-										var subscription_options_element = 14;
-
-										for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-
-											if (subscriptionoptionsarray[subscription_options_element] === '1' && subscriptionoptionsarray[0] !== '1' && subscriptionoptionsarray[8] !== '1')
-											{
-												$j('#pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').prop('checked', true);
-
-												$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);		
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').prop('checked', false);
-
-											}
-										
-											subscription_options_element++;
-
-										}
-
-									}
-																		
-								}
+								$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
 					
-								if (response.subscriptionstatus != 'fail')
-								{
-									if (response.subscriptionstatus != 'duplicate'){
-										
-											navigator.serviceWorker.ready.then(function (registration) {
+								$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);								
 
-												registration.pushManager.getSubscription().then(function (subscription) {
-													
-													if (!subscription) 
-													{				                                                        
-												
-														   registration.pushManager.subscribe({
-															userVisibleOnly: true,
-															applicationServerKey: urlBase64ToUint8Array(vapidKey)
-														   }).then(function (subscription) {
+								$j('.pnfpb-push-status-text-shortcode').text(__('Subscription options updated','push-notification-for-post-and-buddypress'));
 
-													
-															if ( response.subscriptionoptions !== '00000000000' && response.subscriptionoptions !== '00000000001' && response.subscriptionoptions !== '' && response.subscriptionoptions !== null) 
-															{
-																$j(".pnfpb-unsubscribe-alert-msg").html("<p>"+pnfpb_unsubscribe_text_confirm+"</p>");
+								$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+
 	
-																if( $j(".pnfpb_subscribe_button").length )
-																{
-																	   $j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.unsubscribe_button_text_shortcode);
-																 }
-															}
-															else 
-															{
-																	$j(".pnfpb-unsubscribe-alert-msg").html("<p>"+pnfpb_subscribe_text_confirm+"</p>");
+							});
+						}
+					});
+
+				});					
+				
+
+			} else  {
+
+				if ($j('.pnfpb-push-subscribe-options-button-container-shortcode').length) {
+
+					$j('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+
+					$j('.pnfpb-push-subscribe-options-button-shortcode').show();
+
+				}
+
+				$j('.pnfpb-push-subscribe-button-shortcode').text(pnfpb_popup_subscribe_button);
+
+				$j('.pnfpb-push-subscribe-button-shortcode').show();
+
+				$j('.pnfpb-push-subscribe-button-shortcode').removeClass("pnfpb-popup-unsubscribe-class-shortcode");
+
+				$j('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-subscribe-class-shortcode");					
+
+			}
+
+			//$j('.pnfpb-popup-unsubscribe-class-shortcode').off().on( "click", async (event) => {
+
+
+			//});
+			
 	
-																	if( $j(".pnfpb_subscribe_button").length )
-																	{
-																		$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text_shortcode);
-																	}																
-															}			       			                                                
-													   
-												   
-															$j( "#pnfpb-unsubscribe-dialog" ).dialog(
-																{ 
-																	closeText:'',
-																	buttons: [
-																		{ 	
-																			text: pnfpb_ajax_object_push.shortcode_close_button_text,
-																			   open: function() {
-																				$j(this).attr('style','font-weight:normal;color:#000000;background-color:#dddddd;border:0px');
-																			},
-																			click: function() {
-																				 $j(this).dialog( "close" );
-																				 $(this).dialog('destroy');
-																		}},
-																	]																	
-																}
-															);
-													   
-														}).catch(function () {
+			$j('.pnfpb-push-subscribe-button-shortcode').off().on( "click", async (event) => {
 
-													
-															if( $j(".pnfpb_subscribe_button").length )
-															{
-																$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text_shortcode);
-															}			       			                                                
+				event.stopPropagation(); 
 
+				event.preventDefault();
 
-															$j(".pnfpb-unsubscribe-alert-msg").html(__("cloud messaging push notification - device update failed",'push-notification-for-post-and-buddypress'));
-													
-															$j( "#pnfpb-unsubscribe-dialog" ).dialog(
-																{ 
-																	closeText:'',
-																	buttons: [
-																		{ 	
-																			text: pnfpb_ajax_object_push.shortcode_close_button_text,
-																			   open: function() {
-																				$j(this).attr('style','font-weight:normal;color:#000000;background-color:#dddddd;border:0px');
-																			},
-																			click: function() {
-																				 $j(this).dialog( "close" );
-																				 $(this).dialog('destroy');
-																		}},
-																	]																	
-																}
-															);
+				if ($j('.pnfpb-push-subscribe-button-shortcode').hasClass("pnfpb-popup-subscribe-class-shortcode")) {
 
-														});
-														
-													}
-													else
-													{
-														
-													
-														if( $j(".pnfpb_subscribe_button").length )
-														{
-																$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.unsubscribe_button_text_shortcode);
-														}			       			                                                
-														if ( subscriptionoptions !== '00000000000' && subscriptionoptions !== '00000000001' && subscriptionoptions !== '' && subscriptionoptions !== null) 
-														{
-															$j(".pnfpb-unsubscribe-alert-msg").html("<p>"+pnfpb_subscribe_text_confirm+"</p>");
+					var subscribetext = $j('.pnfpb-push-subscribe-button-shortcode').text();
 
-															if( $j(".pnfpb_subscribe_button").length )
-															{
-														   		$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.unsubscribe_button_text_shortcode);
-															 }
-														}
-														else 
-														{
-																$j(".pnfpb-unsubscribe-alert-msg").html("<p>"+pnfpb_unsubscribe_text_confirm+"</p>");
+					pnfpb_bell_prompt_processing = '1';
 
-																if( $j(".pnfpb_subscribe_button").length )
-																{
-																	$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text_shortcode);
-																}																
-														}
-													   
-														$j( "#pnfpb-unsubscribe-dialog" ).dialog(
-															{ 
-																closeText:'',
-																buttons: [
-																	{ 	
-																		text: pnfpb_ajax_object_push.shortcode_close_button_text,
-																		   open: function() {
-																			$j(this).attr('style','font-weight:normal;color:#000000;background-color:#dddddd;border:0px');
-																		},
-																		click: function() {
-																			 $j(this).dialog( "close" );
-																			 $(this).dialog('destroy');
-																	}},
-																]																	
-															}
-														);
-													}
-													
-												});
-												
-											});
+					registration.pushManager.getSubscription().then(async function (subscription) {
 
+						if (!subscription) {
+
+							$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+							
+							$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);						
+
+							$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_wait_message);
+
+							$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+
+							$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+
+							var pnfpb_ic_fcm_custom_prompt_subscribe_text_1 = __("We would like to show you notifications for the latest news and updates",'push-notification-for-post-and-buddypress');
+
+							var pnfpb_ic_fcm_custom_prompt_subscribe_text_2 = "";
+
+							if (pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text && pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text != '') {
+						
+								pnfpb_ic_fcm_custom_prompt_subscribe_text_1 = pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text;
+								
+								pnfpb_ic_fcm_custom_prompt_subscribe_text_2 = pnfpb_ajax_object_push.pnfpb_ic_fcm_custom_prompt_subscribe_text_line_2;
+								
+							}						
+
+								var pnfpb_bell_icon_subscription_options = '';
+
+								$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').off().on('click',function(event) {
+
+				
+									if ($j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').is(":checked"))
+									{
+			
+			
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+			
+										if (pnfpb_show_push_notify_types.length > 0) {
+			
+											for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
+			
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
+			
+											}
+			
 										}
-										else
-										{
-
-											if ( subscriptionoptions !== '00000000000' && subscriptionoptions !== '00000000001' && subscriptionoptions !== '' && subscriptionoptions !== null) 
-											{
-
-												if( $j(".pnfpb_subscribe_button").length )
-												{
-											  	 	$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.unsubscribe_button_text_shortcode);
-												}
+									
+										$j('.pnfpb_bell_icon_prompt_subscription_post_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_activity_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_all_comments_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_my_comments_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_private_message_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_new_member_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_friendship_request_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_friendship_accepted_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_avatar_change_enable_shortcode').prop('checked',false);
+										
+										$j('.pnfpb_bell_icon_prompt_subscription_cover_image_change_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked',false);
+				
+										$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked',false);
+			
+										if (pnfpb_custom_post_types.length > 0) {
+			
+											for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+			
+												$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked',false);
+			
+												var pnfpb_index = $j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').attr("pnfpb_index");
+			
+												pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
 												
+											}
+										}
+				
+				
+									}
+									else 
+									{
+
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+									}								
+								});
+
+								$j('.pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').off().on('click',function(event) {
+		
+				
+									if ($j('.pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').is(":checked"))
+									{
+				
+									
+										$j('.pnfpb_bell_icon_shortcode_subscription_all_enable').prop('checked',false);
+				
+										pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '1';
+				
+																		
+									}
+									else 
+									{
+										pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '0';
+									}								
+								});								
+								
+								
+								$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').off().on('click',function(event) {
+				
+						
+									if ($j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').is(":checked"))
+									{
+			
+										$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+																		
+									}
+									else 
+									{
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+									}								
+								});
+								
+								$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').off().on('click',function(event) {
+				
+						
+									if ($j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').is(":checked"))
+									{
+									
+										$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+																			
+									}
+									else 
+									{
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+									}								
+								});				
+								
+								
+								
+								if (pnfpb_show_push_notify_types.length > 0) {
+			
+									for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
+			
+										if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
+			
+											$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable_shortcode').off().on('click',function(event) {
+			
+												var pnfpb_selector = '.'+$(this).attr("class");
+			
+												var pnfpb_index = $(this).attr("pnfpb_index");
+			
+												if ($j(pnfpb_selector).is(":checked"))
+												{
+			
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '1';
+			
+												
+													if (pnfpb_notify_type_element > 0) {
+						
+														pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+											
+														$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+			
+													}
+																			
+												}
+												else 
+												{
+			
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '0';
+			
+												}
+											
+			
+											});
+										}								
+			
+									}
+			
+								}
+			
+								if (pnfpb_custom_post_types.length > 0) {
+			
+									for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+			
+										$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').off().on('click',function(event) {
+				
+											var pnfpb_selector = '.'+$(this).attr("class");
+			
+											var pnfpb_index = $(this).attr("pnfpb_index");
+			
+											if ($j(pnfpb_selector).is(":checked"))
+											{
+			
+												pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+			
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+											
+												$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+						
+								
 											}
 											else 
 											{
-
-												if( $j(".pnfpb_subscribe_button").length )
-												{
-											  	 	$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text_shortcode);
-												}												
-
+												
+												pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '0';
+			
+			
 											}
-
-
-											console.log(__("Already subscribed...device id already exists...not updated",'push-notification-for-post-and-buddypress'));
-										}
-
-								}
-								else
-								{
-
-													
-									if( $j(".pnfpb_subscribe_button").length )
-									{
-										$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text_shortcode);
+			
+			
+										});								
+			
 									}
-									
-									$j(".pnfpb-unsubscribe-alert-msg").html("<p>Push notification subscription failed..try again!!</p>");
-									
-									$j( "#pnfpb-unsubscribe-dialog" ).dialog(
-										{ 
-											closeText:'',
-											buttons: [
-												{ 	
-													text: pnfpb_ajax_object_push.shortcode_close_button_text,
-													   open: function() {
-														$j(this).attr('style','font-weight:normal;color:#000000;background-color:#dddddd;border:0px');
-													},
-													click: function() {
-														 $j(this).dialog( "close" );
-														 $(this).dialog('destroy');
-												}},
-											]																	
-										}
-									);
+			
+								}					
+			
 
-									console.log(__("device update failed",'push-notification-for-post-and-buddypress'));
+								if (pnfpb_show_push_notify_types.length > 0) {
+
+									for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < pnfpb_show_push_notify_types.length; pnfpb_notify_type_element++) {
+
+										pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element];
+										
+									}
+
 								}
-	
-						});
-	
-					} else {
-						console.log(__('No refreshed token from Firebase','push-notification-for-post-and-buddypress'));
-					}									
+								
+								if (pnfpb_custom_post_types.length > 0) {
 
-				},
-			}]
-		});
-		
-		$j('#pnfpb_subscribe_dialog_confirm').on('dialogclose', function(event) {
-			$j(".pnfpb-unsubscribe-alert-msg").html("");
-			$j(".pnfpb-subscribe-alert-msg").html("");
-		});
-	}
+									for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <=10; pnfpb_post_type_element++) {
+
+										if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+
+											pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+										} else {
+
+											pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0';
+										}
+										
+									}
+
+								} else {
+									pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+'0000000000';
+								}
+								
+								pnfpb_bell_icon_subscription_options = pnfpb_bell_icon_subscription_options+pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox;
+								
+								pnfpb_bell_prompt_processing = '1';
+
+								await requestPermission(registration,'',pnfpb_bell_icon_subscription_options);
+
+							} else {
+
+								console.log('Push notification already subscribed');
+
+								$j('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-unsubscribe-class-shortcode");
+			
+								$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");	
+
+								$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_subscribe_text);
+
+								$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+
+							}
+						});
+
+					} else {
+
+						if ($j('.pnfpb-push-subscribe-button-shortcode').hasClass("pnfpb-popup-unsubscribe-class-shortcode")) {
+
+							var subscribetext = $j('.pnfpb-push-subscribe-button-shortcode').text();
+
+							$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', true);
+								
+							$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', true);
+							
+							$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+			
+							pnfpb_bell_prompt_processing = '1';
+			
+							registration.pushManager.getSubscription().then(async (subscription) => {
+			
+								if (subscription) {
+			
+									$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_wait_message);
+			
+									$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");	
+			
+									getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async (refreshedToken) => {
+			
+										subscription.unsubscribe().then((successful) => {
+			
+											  deleteToken(messaging).then(function (deleteTokenstatus) {
+			
+												if (deleteTokenstatus) {
+			
+													var data = {
+														action: 'icpushcallback',
+														device_id:refreshedToken,
+														nonce: pnfpb_ajax_object_push.nonce,
+														pushtype: 'deletepushtoken'
+													};
+														
+													$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+									
+														var responseobject = JSON.parse(response);
+			
+														pnfpb_bell_prompt_processing = '';
+													
+														if (responseobject.subscriptionstatus === 'deleted') {
+													
+															console.log(__('Push subscription token deleted successfully','push-notification-for-post-and-buddypress'));
+													
+														}
+														else {
+															console.log(__('Push subscription token deletion failed in database','push-notification-for-post-and-buddypress'));
+														}
+			
+														if ($j(".subscribegroupbutton").length || $j(".unsubscribegroupbutton").length) {
+			
+															$j(".subscribegroupbutton").addClass( "subscribe-init-display-off" );
+															$j(".unsubscribegroupbutton").addClass( "subscribe-init-display-off" );
+															$j(".subscribe-notification-group").addClass( "subscribe-init-display-off" );
+															$j(".unsubscribe-notification-group").addClass( "subscribe-init-display-off" );
+			
+															// Get an array of all cookie names (the regex matches what we don't want)
+															var cookieNames = document.cookie.split(/=[^;]*(?:;\s*|$)/);
+			
+															// Remove any that match the pattern
+															for (var i = 0; i < cookieNames.length; i++) {
+																if (/^pnfpb_group_push_notification_/.test(cookieNames[i])) {
+																	document.cookie = cookieNames[i] + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + path;
+																}
+															}													
+			
+														}
+			
+														$j('.pnfpb-push-subscribe-button-shortcode').text(pnfpb_popup_subscribe_button);
+
+														$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+			
+														$j('.pnfpb-push-subscribe-button-shortcode').removeClass("pnfpb-popup-unsubscribe-class-shortcode");
+			
+														$j('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-subscribe-class-shortcode");
+			
+														$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");	
+			
+														$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_unsubscribe_text);
+			
+														$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+			
+														$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+								
+														$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);						
+			
+														pnfpb_bell_icon_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+												
+														pnfpb_bell_icon_subscription_options_custom_prompt = '10000000000000';
+												
+														pnfpb_bell_icon_prompt_subscription_options_custom_prompt = '10000000000000';
+														
+														pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+													
+													});												
+			
+			
+												}
+			
+											}).catch((e) => {
+			
+												pnfpb_bell_prompt_processing = '';
+			
+												console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
+			
+											});
+										}).catch((e) => {
+			
+											pnfpb_bell_prompt_processing = '';
+			
+											console.log(__("Unsubscribe token failed",'push-notification-for-post-and-buddypress'));
+			
+										});
+									})
+								} else {
+
+									console.log('Push notification not subscribed');
+
+									$j('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-subscribe-class-shortcode");
+			
+									$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");	
+
+									$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_unsubscribe_text);
+
+									$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+
+								}
+							}).catch((e) => {
+			
+								pnfpb_bell_prompt_processing = '';
+			
+								console.log(__("Unsubscribe subscription failed",'push-notification-for-post-and-buddypress'));
+			
+							});							
+
+						}
+					}
+				})
+			})
+		})
+
+
 }
 
 async function frontend_subscription_menu(refreshedToken) {
@@ -4923,6 +5111,23 @@ async function frontend_subscription_menu(refreshedToken) {
 
 							pnfpb_front_end_settings[12] = '0';
 						}
+
+				
+						if ($j('.pnfpb_ic_fcm_front_favourite_enable').is(":checked"))
+						{
+	
+						
+							$j('.pnfpb_ic_fcm_front_subscription_all_enable').prop('checked',false);
+	
+							pnfpb_bell_icon_front_subscribe_favourite_checkbox = '1';
+	
+															
+						}
+						else 
+						{
+							pnfpb_bell_icon_front_subscribe_favourite_checkbox = '0';
+						}								
+					
 						
 						if (pnfpb_front_end_settings_push_notify_types.length > 0) {
 
@@ -5000,16 +5205,27 @@ async function frontend_subscription_menu(refreshedToken) {
 							}
 
 						}
-
+						
 						if (pnfpb_custom_post_types_subscriptions.length > 0) {
 
-							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types_subscriptions.length; pnfpb_post_type_element++) {
+							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
 
-								frontend_subscriptionoptions  = frontend_subscriptionoptions + pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element];
+								if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element]) {
+
+									frontend_subscriptionoptions  = frontend_subscriptionoptions + pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element];
+
+								} else  {
+
+									frontend_subscriptionoptions  = frontend_subscriptionoptions + '0';
+								}
 								
 							}
 
-						}						
+						} else {
+							frontend_subscriptionoptions = frontend_subscriptionoptions+'0000000000';
+						}
+
+						frontend_subscriptionoptions  = frontend_subscriptionoptions + pnfpb_bell_icon_front_subscribe_favourite_checkbox;
 
                 		if (hasFirebaseMessagingSupport && 'serviceWorker' in navigator && Notification.permission === 'granted') {
 					
@@ -5017,136 +5233,162 @@ async function frontend_subscription_menu(refreshedToken) {
 
 								registration.pushManager.getSubscription().then(async function (subscription) {
 							
-									if (subscription && refreshedToken) {
-							 
-										deviceid = refreshedToken;
+									if (subscription) {
+
+										getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then(async function (refreshedToken) {
+								
+											deviceid = refreshedToken;
+								
+											var data = {
+												action: 'icpushcallback',
+												device_id:deviceid,
+												subscriptionoptions:frontend_subscriptionoptions,
+												nonce: pnfpb_ajax_object_push.nonce,
+												pushtype: 'subscribe-button'
+											};
+									
+											$j.post(pnfpb_ajax_object_push.ajax_url, data, function(responseajax) {
+
+												var response = JSON.parse(responseajax);
+														
+												frontend_subscriptionoptions = response.subscriptionoptions;
+
+												var subscriptionoptionsarray = [];
+														
+												if (frontend_subscriptionoptions && frontend_subscriptionoptions !== '') {
+													subscriptionoptionsarray = frontend_subscriptionoptions.split('');
+												} else {
+													frontend_subscriptionoptions = '1000000000000';
+													subscriptionoptionsarray = frontend_subscriptionoptions.split('');
+												}								
+
+												if (subscriptionoptionsarray.length >= 10)
+												{
+													$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('error');
+													$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('info');
+													$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('success');
+													$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
+													$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved','push-notification-for-post-and-buddypress'));
 							
-										var data = {
-											action: 'icpushcallback',
-								   			device_id:deviceid,
-											subscriptionoptions:frontend_subscriptionoptions,
-											pushtype: 'subscribe-button'
-										};
-								
-										$j.post(pnfpb_ajax_object_push.ajax_url, data, function(responseajax) {
-
-											var response = JSON.parse(responseajax);
-													
-											frontend_subscriptionoptions = response.subscriptionoptions;
-
-											var subscriptionoptionsarray = [];
-													
-											if (frontend_subscriptionoptions && frontend_subscriptionoptions !== '') {
-												subscriptionoptionsarray = frontend_subscriptionoptions.split('');
-											} else {
-												frontend_subscriptionoptions = '1000000000000';
-												subscriptionoptionsarray = frontend_subscriptionoptions.split('');
-											}								
-
-											if (subscriptionoptionsarray.length >= 10)
-											{
-												$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('error');
-												$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('info');
-												$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('success');
-												$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
-												$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved','push-notification-for-post-and-buddypress'));
-						
-								
-												if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
-													{
-													  $j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', true);
-	
-													}
-													else 
-													{
-														$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', false);
-													}
-												
-													if ((subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1') || subscriptionoptionsarray[0] === '1')
-													{
-													  $j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', true);
-													
-													}
-													else 
-													{
-														$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', false);
-													}
-	
-													if (subscriptionoptionsarray.length > 0) {
-	
-	
-														for (var pnfpb_frontend_settings_element = 0; pnfpb_frontend_settings_element < 12; pnfpb_frontend_settings_element++) {
+									
+													if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
+														{
+														$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', true);
 		
-															if (pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] !== 'unsubscribe-all' && pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] !== 'all')  {
-	
+														}
+														else 
+														{
+															$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', false);
+														}
+													
+														if ((subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1') || subscriptionoptionsarray[0] === '1')
+														{
+														$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', true);
+														
+														}
+														else 
+														{
+															$j('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', false);
+														}
 
-																if (subscriptionoptionsarray[pnfpb_frontend_settings_element] === '1'  || subscriptionoptionsarray[0] === '1')
+														if ((subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1') || subscriptionoptionsarray[0] === '1')
+														{
+															$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', true);
+														}
+														else 
+														{
+															$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', false);
+														}														
+		
+														if (subscriptionoptionsarray.length > 0) {
+		
+		
+															for (var pnfpb_frontend_settings_element = 0; pnfpb_frontend_settings_element < 12; pnfpb_frontend_settings_element++) {
+			
+																if (pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] !== 'unsubscribe-all' && pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] !== 'all')  {
+		
+
+																	if (subscriptionoptionsarray[pnfpb_frontend_settings_element] === '1'  || subscriptionoptionsarray[0] === '1')
+																	{
+																	
+																		$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
+		
+																	}
+																	else 
+																	{
+																		if ((pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'bcomment' || pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'mybcomment') && (subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[3] === '1')) {
+
+																			$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
+			
+																		} else {
+			
+																			$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
+			
+																		}
+																	}
+															
+																} 
+		
+															}
+		
+														}													
+														
+														if (subscriptionoptionsarray.length > 14) {
+		
+															var subscription_options_element = 14;
+		
+															for (var pnfpb_frontend_post_type_element = 0; pnfpb_frontend_post_type_element < pnfpb_custom_post_types.length; pnfpb_frontend_post_type_element++) {
+			
+																if (subscriptionoptionsarray[subscription_options_element] === '1'  || subscriptionoptionsarray[0] === '1')
 																{
-																
-																	$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
-	
+																	$j('.pnfpb_ic_fcm_front_subscription_'+pnfpb_custom_post_types[pnfpb_frontend_post_type_element]+'_enable').prop('checked', true);
+		
 																}
 																else 
 																{
-																	if ((pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'bcomment' || pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element] === 'mybcomment') && (subscriptionoptionsarray[2] === '1' || subscriptionoptionsarray[3] === '1')) {
-
-																		$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', true);
+																	$j('.pnfpb_ic_fcm_front_subscription_'+pnfpb_custom_post_types[pnfpb_frontend_post_type_element]+'_enable').prop('checked', false);
 		
-																	} else {
-		
-																		$j('.pnfpb_ic_fcm_front_'+pnfpb_front_end_settings_push_notify_types[pnfpb_frontend_settings_element]+'_enable').prop('checked', false);
-		
-																	}
 																}
-														
-															} 
-	
-														}
-	
-													}													
-													
-													if (subscriptionoptionsarray.length > 14) {
-	
-														var subscription_options_element = 14;
-	
-														for (var pnfpb_frontend_post_type_element = 0; pnfpb_frontend_post_type_element < pnfpb_custom_post_types.length; pnfpb_frontend_post_type_element++) {
+																
+																subscription_options_element++;
 		
-															if (subscriptionoptionsarray[subscription_options_element] === '1'  || subscriptionoptionsarray[0] === '1')
-															{
-																$j('.pnfpb_ic_fcm_front_subscription_'+pnfpb_custom_post_types[pnfpb_frontend_post_type_element]+'_enable').prop('checked', true);
-	
 															}
-															else 
-															{
-																$j('.pnfpb_ic_fcm_front_subscription_'+pnfpb_custom_post_types[pnfpb_frontend_post_type_element]+'_enable').prop('checked', false);
-	
-															}
-															
-															subscription_options_element++;
-	
-														}
-	
-													}											
-	
+		
+														}											
+		
+														$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+
+														$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
+
+												}
+												else 
+												{
+
 													$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
 
 													$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 
-											}
-											else 
-											{
+													$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
+													$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
+													$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings','push-notification-for-post-and-buddypress'));
+													$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
+												}
 
-												$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+											})
 
-												$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
+										}).catch((err) => {
 
-												$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
-												$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-												$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings','push-notification-for-post-and-buddypress'));
-												$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
-											}
+											console.log(__('Unable to retrieve refreshed token ','push-notification-for-post-and-buddypress'), err);
+			
+											$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
 
-										})
+											$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
+
+											$j('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
+											$j('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
+											$j('.pnfpb_ic_front_push_notification_settings_text').html(__('Retrieving Firebase token error on saving notification settings','push-notification-for-post-and-buddypress'));
+											$j('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
+										});
 									}
 									else 
 									{
@@ -5232,7 +5474,7 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			// …
 		  }
 		});
-	  } else if (Notification.permission === "denied" && pnfpb_ajax_object_push.pnfpb_push_prompt === '1') {
+	  } else if (Notification.permission === "denied" && (pnfpb_ajax_object_push.pnfpb_push_prompt === '1' || ($j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed))) {
 
 		var pnfpb_screenWidth, pnfpb_screenHeight, pnfpb_dialogWidth, pnfpb_dialogHeight, pnfpb_isDesktop;    
 		pnfpb_screenWidth = window.screen.width;
@@ -5342,8 +5584,10 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 			if( $j(".pnfpb-push-subscribe-button").length && pnfpb_ajax_object_push.pnfpb_ic_fcm_prompt_on_off !== '1') {
 	
 				$j('.pnfpb_bell_icon_custom_prompt_loader').show();
-	
-				$j('.pnfpb_bell_icon_prompt_subscription_options_container').hide();
+
+				$j('.pnfpb-push-subscribe-button').prop('disabled', true);;
+			
+				$j('.pnfpb-push-subscribe-options-button').prop('disabled', true);						
 	
 				$j('.pnfpb-push-status-text').text(pnfpb_popup_wait_message);
 	
@@ -5576,9 +5820,9 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 	
 									$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
 
-									$j('.pnfpb-push-subscribe-button').show();
+									$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 			
-									$j('.pnfpb-push-subscribe-options-button').show();													
+									$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);													
 	
 									$j('.pnfpb_bell_icon_prompt_subscription_options_container').show();
 
@@ -5599,28 +5843,36 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 	
 							  	deviceid = currentToken;
-			  
-								var pnfpbshortcodeactive = 'no';
-			  
-								var isadminpage = 'no';
-			  
-								if (window.location.href.match('wp-admin') !== null) {
-									isadminpage = 'yes';
+
+								var subscription_endpoint = '';
+								var subscription_p256dh = '';
+								var subscription_auth = '';
+								if (subscription.endpoint) {
+									subscription_endpoint = subscription.endpoint;
 								}
-			
-		
+								if (subscription.getKey("auth")) {
+									const authBuffer = subscription.getKey('auth');
+									const authUint8 = new Uint8Array(authBuffer);
+									subscription_auth = btoa(String.fromCharCode.apply(null, authUint8));									
+								}								
+								if (subscription.getKey("p256dh")) {
+									const p256dhBuffer = subscription.getKey('p256dh');
+									const p256dhUint8 = new Uint8Array(p256dhBuffer);
+									subscription_p256dh = btoa(String.fromCharCode.apply(null, p256dhUint8));									
+								}										
+			  
 								var data = {
 								action: 'icpushcallback',
+								nonce: pnfpb_ajax_object_push.nonce,
 								device_id:deviceid,
-								isadminpage:isadminpage,
 								subscriptionoptions:subscription_options,
-								pnfpbshortcodeactive:pnfpbshortcodeactive,
-								pnfpb_endpoint:subscription.endpoint,
-								pnfpb_options:subscription.options.applicationServerKey,
+								pnfpb_endpoint:subscription_endpoint,
+								pnfpb_options:subscription_p256dh,
+								pnfpb_subscription_token:subscription_auth,
 								pushtype:'normal'
 								};
 
-								$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+								$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(response) {
 
 									pnfpb_bell_prompt_processing = '';
 				
@@ -5652,6 +5904,16 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 											
 											if (subscriptionoptionsarray.length >= 4)
 											{
+
+														if ((subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1') || subscriptionoptionsarray[0] === '1')
+														{
+														  	$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', true);
+		
+														}
+														else 
+														{
+															$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', false);
+														}												
 							
 														if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
 														{
@@ -5737,6 +5999,16 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 											if( $j(".pnfpb_bell_icon_subscription_options_container").length) 
 											{
+
+												if (subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1')
+													{
+														  $j('#pnfpb_bell_icon_subscription_favourite_enable_shortcode').prop('checked', true);
+	
+													}
+													else 
+													{
+														$j('#pnfpb_bell_icon_subscription_favourite_enable_shortcode').prop('checked', false);
+													}												
 	
 												if (subscriptionoptionsarray[12] === '1')
 													{
@@ -5902,43 +6174,191 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 													}
 
-											}												
-								
-											if( $j(".pnfpb_subscribe_button").length && shortcode_field === 'shortcode') {
-	
-													navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-	
-														getToken(messaging,{serviceWorkerRegistration:serviceWorkerRegistration,vapidKey:vapidKey }).then(async function (refreshedToken) {
-					
-															if (refreshedToken) {												
-																$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',true);
-																shortcode_subscription_options(refreshedToken);
-	
-															}
-														})
-	
-													})
-	
+													if (subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1')
+														{
+															  $j('#pnfpb_bell_icon_prompt_subscription_favourite_enable').prop('checked', true);
+		
+														}
+														else 
+														{
+															$j('#pnfpb_bell_icon_prompt_subscription_favourite_enable').prop('checked', false);
+														}													
+
 											}
-											   
+											
+											if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+												if (subscriptionoptionsarray[0] === '1')
+													{
+		
+														$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', true);
+		
+		
+														pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+		
+													}
+													else 
+													{
+		
+														$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', false);
+		
+			
+														pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+		
+													}
+
+													if (subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1')
+														{
+															  $j('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', true);
+		
+														}
+														else 
+														{
+															$j('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', false);
+														}													
+	
+												if (subscriptionoptionsarray[12] === '1' && subscriptionoptionsarray[0] !== '1')
+												{
+	
+													$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', true);
+	
+	
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+	
+												}
+												else 
+												{
+	
+													$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', false);
+	
+	
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+	
+												}
+												
+												if (subscriptionoptionsarray[13] === '1' && subscriptionoptionsarray[0] !== '1')
+												{
+	
+													$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', true);
+	
+	
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+	
+												}
+												else 
+												{
+	
+													$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', false);
+	
+	
+													pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+	
+												}
+	
+												if (subscriptionoptionsarray.length > 0) {
+	
+													for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < 12; pnfpb_post_type_element++) {
+	
+														if (pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'unsubscribe-all' && pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'all') {	
+															
+															if (subscriptionoptionsarray[pnfpb_post_type_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
+															{
+																$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+	
+																pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '1';
+													
+															}
+															else 
+															{
+																if (subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1') {
+	
+																	$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+	
+																	pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
+	
+																}															
+															}
+														
+														} else {
+	
+															if (pnfpb_show_push_notify_types[pnfpb_post_type_element] === 'all' && subscriptionoptionsarray[0] === '1' )
+															{
+	
+																$j('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[0]+'_enable_shortcode').prop('checked', true);
+	
+																pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+	
+															} else {
+	
+																if (subscriptionoptionsarray[8] === '1' ) {
+																
+																	pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+	
+																}
+															}
+	
+														}
+	
+	
+													}
+	
+												}													
+												
+												if (subscriptionoptionsarray.length > 14) {
+	
+													var subscription_options_element = 14;
+	
+													for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+	
+	
+														if (subscriptionoptionsarray[subscription_options_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
+														{
+															$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+	
+	
+															pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
+														}
+														else 
+														{
+															$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+	
+	
+															pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
+														}
+														
+														subscription_options_element++;
+	
+													}
+	
+	
+												}
+													
+												$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+	
+												$j('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+												
+												$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+									
+												$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);
+												
+												$j('.pnfpb-push-subscribe-button-shortcode').text(pnfpb_popup_unsubscribe_button);
+	
+												$j('.pnfpb-push-subscribe-button-shortcode').removeClass("pnfpb-popup-subscribe-class-shortcode");
+						   
+												$j('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-unsubscribe-class-shortcode");
+				
+												$j('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");	
+									   
+												$j('.pnfpb-push-status-text-shortcode').text(pnfpb_popup_subscribe_text);
+									   
+												$j('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");													
+											}											
 																   
 									}
 								else
 								{
 									pnfpb_bell_prompt_processing = '';
 	
-									if( $j(".pnfpb_subscribe_button").length )
-									{
-										$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.unsubscribe_button_text_shortcode);
-									}
-									
-									if( $j(".pnfpb-push-subscribe-button").length )
-									{									
-										$j('.pnfpb-push-subscribe-button').show();
-						
-										$j('.pnfpb-push-subscribe-options-button').show();
-
-									}
 						   
 									console.log(__("Already subscribed...device id already exists...not updated",'push-notification-for-post-and-buddypress'));
 								}
@@ -5949,16 +6369,73 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 								pnfpb_bell_prompt_processing = '';
 
-								if( $j(".pnfpb-push-subscribe-button").length )
-								{									
-									$j('.pnfpb-push-subscribe-button').show();
-					
-									$j('.pnfpb-push-subscribe-options-button').show();
-
-								}
 	
 							   console.log(__("device update failed",'push-notification-for-post-and-buddypress'));
-						   }			
+						   }
+
+							const PNFPB_message = vapidKey;
+							const PNFPB_encoder = new TextEncoder();
+							const PNFPB_data = PNFPB_encoder.encode(PNFPB_message);
+							const PNFPB_algorithm = "SHA-256";
+							const PNFPB_readableHash = await getReadableHash(PNFPB_data, PNFPB_algorithm);
+
+  							if (PNFPB_readableHash) {
+								const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database", 2);
+								const PNFPB_SW_auth_token = PNFPB_readableHash;
+								const PNFPB_SW_Object = {key: 1, pnfpb_auth_token: PNFPB_SW_auth_token, subscription_token: subscription_auth};
+
+								PNFPB_SW_request.onupgradeneeded = (event) => {
+									const PNFPB_SW_db = event.target.result;
+									if (!PNFPB_SW_rest_token_db.objectStoreNames.contains("PNFPB_SW_rest_token_Store")) {
+										PNFPB_SW_rest_token_db.createObjectStore("PNFPB_SW_rest_token_Store", { keyPath: "key" }); // Define keyPath for unique identification
+									}									
+									if (!PNFPB_SW_db.objectStoreNames.contains("PNFPB_SW_Store")) {
+										PNFPB_SW_db.createObjectStore("PNFPB_SW_Store", { keyPath: "key" }); // Define keyPath for unique identification
+									}
+								};
+
+								PNFPB_SW_request.onsuccess = (event) => {
+									const PNFPB_SW_db = event.target.result;
+									const PNFPB_SW_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_Store"], "readwrite");
+									const PNFPB_SW_objectStore = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store");
+									const PNFPB_SW_objectStore_get = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store").get(1);
+									PNFPB_SW_objectStore_get.onsuccess = (event) => {
+										let data = event.target.result;
+										if (event.target.result !== undefined  ) {
+											if (data.pnfpb_auth_token !== PNFPB_readableHash) {
+												const PNFPB_SW_addRequest = PNFPB_SW_objectStore.put(PNFPB_SW_Object);
+												PNFPB_SW_addRequest.onsuccess = () => {
+													console.log("Object added successfully");
+													PNFPB_SW_db.close();
+												};
+												PNFPB_SW_addRequest.onerror = (error) => {
+													console.error("Error adding object:", error);
+													PNFPB_SW_db.close();
+												};
+											}
+										} else {
+											const PNFPB_SW_addRequest = PNFPB_SW_objectStore.put(PNFPB_SW_Object);
+											PNFPB_SW_addRequest.onsuccess = () => {
+												console.log("Object added successfully");
+												PNFPB_SW_db.close();
+											};
+											PNFPB_SW_addRequest.onerror = (error) => {
+												console.error("Error adding object:", error);
+												PNFPB_SW_db.close();
+											};
+
+										}
+									};
+									PNFPB_SW_objectStore_get.onerror = (event) => {
+										console.error("Error adding object:", error);
+										PNFPB_SW_db.close();
+									};
+								};
+
+								PNFPB_SW_request.onerror = (event) => {
+									console.error("Database error:", event.target.errorCode);
+								};								
+							}
 				}).fail(function(response) {
 					
 					console.log('Error: ' + response.responseText);
@@ -5992,11 +6469,20 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 					if( $j(".pnfpb-push-subscribe-button").length )
 					{									
-						$j('.pnfpb-push-subscribe-button').show();
+						$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 		
-						$j('.pnfpb-push-subscribe-options-button').show();
+						$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 
-					}				
+					}
+					
+					if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+						$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+	
+						$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+	
+						$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+					}					
 			  }
 		
 		
@@ -6013,11 +6499,20 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 				 	if( $j(".pnfpb-push-subscribe-button").length )
 					{									
-						$j('.pnfpb-push-subscribe-button').show();
+						$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 		
-						$j('.pnfpb-push-subscribe-options-button').show();
+						$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 
-					}				  
+					}
+					
+					if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+						$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+	
+						$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+	
+						$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+					}					
 			});
 	
 			// TODO(developer): Retrieve an Instance ID token for use with FCM.
@@ -6034,12 +6529,20 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 				console.log(__('An error occurred while subscribing push notification in browser ','push-notification-for-post-and-buddypress'));
 
 				if( $j(".pnfpb-push-subscribe-button").length )
-					{									
-						$j('.pnfpb-push-subscribe-button').show();
+				{									
+					$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 		
-						$j('.pnfpb-push-subscribe-options-button').show();
+					$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 
-					}	
+				}
+				if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+					$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+	
+					$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+	
+					$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+				}	
 			}
 	
 			}).catch((err) => {
@@ -6056,11 +6559,19 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 			   if( $j(".pnfpb-push-subscribe-button").length )
 			  {									
-				  $j('.pnfpb-push-subscribe-button').show();
+				  $j('.pnfpb-push-subscribe-button').prop('disabled', false);
   
-				  $j('.pnfpb-push-subscribe-options-button').show();
+				  $j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 
-			  }				
+			  }
+			  if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+				$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+				$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+
+				$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+			}			  			
 
 			})
 
@@ -6078,11 +6589,19 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 			   if( $j(".pnfpb-push-subscribe-button").length )
 			  {									
-				  $j('.pnfpb-push-subscribe-button').show();
+				  $j('.pnfpb-push-subscribe-button').prop('disabled', false);
   
-				  $j('.pnfpb-push-subscribe-options-button').show();
+				  $j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 
-			  }				
+			  }
+			  if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+				$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+				$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+
+				$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+			}			  			
 
 			})
 		  } else {
@@ -6114,11 +6633,20 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 				if( $j(".pnfpb-push-subscribe-button").length )
 				{									
-					$j('.pnfpb-push-subscribe-button').show();
+					$j('.pnfpb-push-subscribe-button').prop('disabled', false);
 	
-					$j('.pnfpb-push-subscribe-options-button').show();
+					$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 
-				}			  
+				}
+				
+				if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+					$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+					$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+
+					$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+				}				
 		  }		
 	
 	}
@@ -6132,24 +6660,24 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 					var subscriptionoptions = '100000000000';
 					var subscriptionoptionsarray = subscriptionoptions.split('');
 					
-					var pnfpbshortcodeactive = 'no';
-					var isadminpage = 'no';
-					if (window.location.href.match('wp-admin') !== null) {
-						isadminpage = 'yes';
-					}
-        			if( $j(".pnfpb_subscribe_button").length || $j(".pnfpb_push_notification_frontend_settings_submit").length )
-        			{
-						pnfpbshortcodeactive = 'yes';
-					}
 					
 					if( $j(".pnfpb-push-subscribe-button").length  ) {
 
 						$j('.pnfpb_bell_icon_custom_prompt_loader').show();
 
-						$j('.pnfpb_bell_icon_prompt_subscription_options_container').hide();
+						$j('.pnfpb-push-subscribe-options-button').prop('disabled', true);
 
-						$j('.pnfpb-push-subscribe-options-button').hide();
+						$j('.pnfpb-push-subscribe-button').prop('disabled', true);
 
+					}
+
+					if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+
+						$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+
+						$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', true);					
+	
+						$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', true);
 					}
 					
 					deviceid = '';
@@ -6169,19 +6697,35 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 							   
 								deviceid = currentToken;
-  
-								
+
+								var subscription_endpoint = '';
+								var subscription_p256dh = '';
+								var subscription_auth = '';
+								if (subscription.endpoint) {
+									subscription_endpoint = subscription.endpoint;
+									}
+								if (subscription.getKey("auth")) {
+									const authBuffer = subscription.getKey('auth');
+									const authUint8 = new Uint8Array(authBuffer);
+									subscription_auth = btoa(String.fromCharCode.apply(null, authUint8));									
+								}								
+								if (subscription.getKey("p256dh")) {
+									const p256dhBuffer = subscription.getKey('p256dh');
+									const p256dhUint8 = new Uint8Array(p256dhBuffer);
+									subscription_p256dh = btoa(String.fromCharCode.apply(null, p256dhUint8));									
+								}								
+									
 								var data = {
 									action: 'icpushcallback',
 									device_id:deviceid,
-									isadminpage:isadminpage,
-									pnfpbshortcodeactive:pnfpbshortcodeactive,
-									pnfpb_endpoint:subscription.endpoint,
-									pnfpb_options:vapidKey,									
+									nonce: pnfpb_ajax_object_push.nonce,
+									pnfpb_endpoint:subscription_endpoint,
+									pnfpb_options:subscription_p256dh,
+									pnfpb_subscription_token:subscription_auth,
 									pushtype: 'checkdeviceid'
 					    		};
 								
-								$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+								$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(response) {
 
 										var responseobject = JSON.parse(response);	
 
@@ -6207,13 +6751,24 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 											$j('.pnfpb_bell_icon_prompt_subscription_options_container').show();
 
-											$j('.pnfpb-push-subscribe-options-button').show();
+											$j('.pnfpb-push-subscribe-button').prop('disabled', false);
+
+											$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
 					
 										}
-														
+		
 										if (subscriptionoptionsarray.length >= 4)
 										{
 										
+											if ((subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1') || subscriptionoptionsarray[0] === '1')
+											{
+												$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', true);
+											}
+											else 
+											{
+												$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', false);
+											}
+																						
 											if ((subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1') || subscriptionoptionsarray[0] === '1')
 											{
   												$j('#pnfpb_ic_fcm_front_group_details_update_enable').prop('checked', true);
@@ -6297,182 +6852,173 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 										$j('.pnfpb_frontend_subscriptions_options_menu_all').show();
 
-										if( $j(".pnfpb_subscribe_button").length) {
+										if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
 
 											if (subscriptionoptionsarray[0] === '1')
 											{
-  												$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
+
+												$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', true);
+
+
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+
 											}
 											else 
 											{
-												$j('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[1] === '1' )
-											{
-  												$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
+
+												$j('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', false);
+
+	
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+
 											}
 
-											if (subscriptionoptionsarray[11] === '1'  )
+											if (subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1')
 											{
-												$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', false);
-											}											
-							
-											if (subscriptionoptionsarray[2] === '1' )
-											{
-  												$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[3] === '1')
-											{
-  												$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[4] === '1' )
-											{
-  												$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[5] === '1' )
-											{
-  												$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[6] === '1' )
-											{
-  												$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[7] === '1')
-											{
-  												$j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[9] === '1' )
-											{
-  												$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-											}
-							
-											if (subscriptionoptionsarray[10] === '1')
-											{
-  												$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', true);
-											}
-											else 
-											{
-												$j('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
-											}							
+													$j('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', true);
 
-											if (subscriptionoptionsarray[8] === '1')
-											{
-  												$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', true);
 											}
 											else 
 											{
-												$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
+												$j('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', false);
+											}												
+
+											if (subscriptionoptionsarray[12] === '1' && subscriptionoptionsarray[0] !== '1')
+											{
+
+												$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', true);
+
+
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+
+											}
+											else 
+											{
+
+												$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', false);
+
+
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+
+											}
+											
+											if (subscriptionoptionsarray[13] === '1' && subscriptionoptionsarray[0] !== '1')
+											{
+
+												$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', true);
+
+
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+
+											}
+											else 
+											{
+
+												$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', false);
+
+
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+
 											}
 
-											if (subscriptionoptionsarray[12] === '1' )
-												{
-													  $j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', true);
+											if (subscriptionoptionsarray.length > 0) {
+
+												for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < 12; pnfpb_post_type_element++) {
+
+													if (pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'unsubscribe-all' && pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'all') {	
+														
+														if (subscriptionoptionsarray[pnfpb_post_type_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
+														{
+															$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+
+															pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '1';
+												
+														}
+														else 
+														{
+															if (subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1') {
+
+																$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+
+																pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
+
+															}															
+														}
+													
+													} else {
+
+														if (pnfpb_show_push_notify_types[pnfpb_post_type_element] === 'all' && subscriptionoptionsarray[0] === '1' )
+														{
+
+															$j('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[0]+'_enable_shortcode').prop('checked', true);
+
+															pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+
+														} else {
+
+															if (subscriptionoptionsarray[8] === '1' ) {
+															
+																pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+
+															}
+														}
+
+													}
+
+
 												}
-												else 
-												{
-													$j('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-												}
-								
-												if (subscriptionoptionsarray[13] === '1')
-												{
-													  $j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', true);
-												}
-												else 
-												{
-													$j('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
-												}											
 
+											}													
 											
 											if (subscriptionoptionsarray.length > 14) {
 
 												var subscription_options_element = 14;
-		
+
 												for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
-		
-													if (subscriptionoptionsarray[subscription_options_element] === '1')
+
+
+													if (subscriptionoptionsarray[subscription_options_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
 													{
-														$j('#pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').prop('checked', true);
-		
-														$j('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);		
+														$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+
+
+														pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
 													}
 													else 
 													{
-														$j('#pnfpb_ic_subscribe_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_shortcode_enable').prop('checked', false);
-		
+														$j('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+
+
+														pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
 													}
-												
-													subscription_options_element++;
-		
-												}
-		
-											}
-																				
-										        
-			                				if ((subscriptionoptions !== '00000000000' && subscriptionoptions !== '00000000001' && subscriptionoptions !== '' && subscriptionoptions !== null) && responseobject.subscriptionstatus === 'subscribed')
-			                				{
-
-
-                                				if( $j(".pnfpb_subscribe_button").length )
-                                				{
 													
-	                                				$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.unsubscribe_button_text_shortcode);
-                               	 				}			                             
-			                				}
-			                				else
-			                				{
-						
-                                				if( $j(".pnfpb_subscribe_button").length )
-                                				{
-	                                				$j(".pnfpb_subscribe_button").html(pnfpb_ajax_object_push.subscribe_button_text_shortcode);
-                                				}			                    
-			               	 				}
+													subscription_options_element++;
+
+												}
+
+
+											}
+												
+											$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+											$j('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+											
+											$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+								
+											$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);													
 										}
 
 										if( $j(".pnfpb_bell_icon_subscription_options_container").length) {
 				
+											if (subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1')
+											{
+													$j('#pnfpb_bell_icon_subscription_favourite_enable').prop('checked', true);
+
+											}
+											else 
+											{
+												$j('#pnfpb_bell_icon_subscription_favourite_enable').prop('checked', false);
+											}											
 
 											if (subscriptionoptionsarray[12] === '1')
 											{
@@ -6605,6 +7151,16 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 	
 												}
 
+												if (subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1')
+													{
+														  $j('#pnfpb_bell_icon_prompt_subscription_favourite_enable').prop('checked', true);
+	
+													}
+													else 
+													{
+														$j('#pnfpb_bell_icon_prompt_subscription_favourite_enable').prop('checked', false);
+													}												
+
 											if (subscriptionoptionsarray[12] === '1' && subscriptionoptionsarray[0] !== '1')
 											{
 
@@ -6720,34 +7276,166 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 
 
 											}
-											
-											
 										
-										}												
+										}
 
+										const PNFPB_message = vapidKey;
+										const PNFPB_encoder = new TextEncoder();
+										const PNFPB_data = PNFPB_encoder.encode(PNFPB_message);
+										const PNFPB_algorithm = "SHA-256";
+										const PNFPB_readableHash = await getReadableHash(PNFPB_data, PNFPB_algorithm);
+
+										if (PNFPB_readableHash) {										
+													
+											const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database", 2);
+											const PNFPB_SW_Object = {key: 1, pnfpb_auth_token: PNFPB_readableHash, subscription_token: subscription_auth};
+
+											PNFPB_SW_request.onupgradeneeded = (event) => {
+												const PNFPB_SW_db = event.target.result;
+												if (!PNFPB_SW_rest_token_db.objectStoreNames.contains("PNFPB_SW_rest_token_Store")) {
+													PNFPB_SW_rest_token_db.createObjectStore("PNFPB_SW_rest_token_Store", { keyPath: "key" }); // Define keyPath for unique identification
+												}												
+												if (!PNFPB_SW_db.objectStoreNames.contains("PNFPB_SW_Store")) {
+													PNFPB_SW_db.createObjectStore("PNFPB_SW_Store", { keyPath: "key" }); // Define keyPath for unique identification
+												}
+											};
+
+											PNFPB_SW_request.onsuccess = (event) => {
+												const PNFPB_SW_db = event.target.result;
+												const PNFPB_SW_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_Store"], "readwrite");
+												const PNFPB_SW_objectStore = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store");
+												const PNFPB_SW_objectStore_get = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store").get(1);
+												PNFPB_SW_objectStore_get.onsuccess = (event) => {
+													let data = event.target.result;
+													if (event.target.result !== undefined  ) {
+														if (data.pnfpb_auth_token !== PNFPB_readableHash) {
+															const PNFPB_SW_addRequest = PNFPB_SW_objectStore.put(PNFPB_SW_Object);
+															PNFPB_SW_addRequest.onsuccess = () => {
+																console.log("Object added successfully");
+																PNFPB_SW_db.close();
+															};
+															PNFPB_SW_addRequest.onerror = (error) => {
+																console.error("Error adding object:", error);
+																PNFPB_SW_db.close();
+															};
+														}
+													} else {
+														const PNFPB_SW_addRequest = PNFPB_SW_objectStore.put(PNFPB_SW_Object);
+														PNFPB_SW_addRequest.onsuccess = () => {
+															console.log("Object added successfully");
+															PNFPB_SW_db.close();
+														};
+														PNFPB_SW_addRequest.onerror = (error) => {
+															console.error("Error adding object:", error);
+															PNFPB_SW_db.close();
+														};
+
+													}
+												};
+												PNFPB_SW_objectStore_get.onerror = (event) => {
+															console.error("Error adding object:", error);
+															PNFPB_SW_db.close();												
+												}; 
+											};
+
+											PNFPB_SW_request.onerror = (event) => {
+												console.error("Database error:", event.target.errorCode);
+											};
+										}									
 							
-									});
+									}).catch((err) => {
+										console.log(__('An error occurred while retrieving token. ','push-notification-for-post-and-buddypress'), err);
+										if( $j(".pnfpb-push-subscribe-button").length  ) {
+
+											$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
+					
+											$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
+					
+											$j('.pnfpb-push-subscribe-button').prop('disabled', false);
+					
+										}
+					
+										if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+					
+											$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+					
+											$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+						
+											$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+										}
+									})
 								
+								} else {
+									console.log(__('An error occurred while retrieving token. ','push-notification-for-post-and-buddypress'));
+									if( $j(".pnfpb-push-subscribe-button").length  ) {
+
+										$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
+				
+										$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
+				
+										$j('.pnfpb-push-subscribe-button').prop('disabled', false);
+				
+									}
+				
+									if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+				
+										$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+				
+										$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+					
+										$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+									}
 								}
 							
+						}).catch((err) => {
+							console.log(__('An error occurred while retrieving token. ','push-notification-for-post-and-buddypress'), err);
+							if( $j(".pnfpb-push-subscribe-button").length  ) {
+
+								$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
+		
+								$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
+		
+								$j('.pnfpb-push-subscribe-button').prop('disabled', false);
+		
+							}
+		
+							if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+		
+								$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+		
+								$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+			
+								$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+							}
 						})
 						
 					}
 					else 
 					{
 
-						var isadminpage = 'no';
-						
-						if (window.location.href.match('wp-admin') !== null) {
-							isadminpage = 'yes';
-						}			
+						if( $j(".pnfpb-push-subscribe-button").length  ) {
+
+							$j('.pnfpb_bell_icon_custom_prompt_loader').hide();
+	
+							$j('.pnfpb-push-subscribe-options-button').prop('disabled', false);
+	
+							$j('.pnfpb-push-subscribe-button').prop('disabled', false);
+	
+						}
+	
+						if( $j(".pnfpb-push-subscribe-icon-shortcode").length || pnfpb_shortcode_installed) {
+	
+							$j('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+	
+							$j('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);					
+		
+							$j('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+						}						
+
+
 						deviceid = '';
 						
-						if( $j(".pnfpb_subscribe_button").length || $j(".pnfpb_push_notification_frontend_settings_submit").length )
-						{
-							pnfpbshortcodeactive = 'yes';
-						}						
-						
+				
 						if (pnfpb_pushtoken_fromflutter && pnfpb_pushtoken_fromflutter != '') {
 							   
 							deviceid = pnfpb_pushtoken_fromflutter;
@@ -6758,19 +7446,36 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 							   
 							deviceid = pnfpb_pushtoken_fromAndroid;
 				
+						}
+						
+						var subscription_endpoint = '';
+						var subscription_p256dh = '';
+						var subscription_auth = '';
+						if (subscription.endpoint) {
+							subscription_endpoint = subscription.endpoint;
+						}
+						if (subscription.getKey("auth")) {
+							const authBuffer = subscription.getKey('auth');
+							const authUint8 = new Uint8Array(authBuffer);
+							subscription_auth = btoa(String.fromCharCode.apply(null, authUint8));									
+						}								
+						if (subscription.getKey("p256dh")) {
+							const p256dhBuffer = subscription.getKey('p256dh');
+							const p256dhUint8 = new Uint8Array(p256dhBuffer);
+							subscription_p256dh = btoa(String.fromCharCode.apply(null, p256dhUint8));									
 						}						
 								
 						var data = {
 							action: 'icpushcallback',
 							device_id:deviceid,
-							isadminpage:isadminpage,
-							pnfpbshortcodeactive:pnfpbshortcodeactive,
-							pnfpb_endpoint:subscription.endpoint,
-							pnfpb_options:vapidKey,								
+							nonce: pnfpb_ajax_object_push.nonce,
+							pnfpb_endpoint:subscription_endpoint,
+							pnfpb_options:subscription_p256dh,
+							pnfpb_subscription_token:subscription_auth,							
 							pushtype: 'checkdeviceid'
 					    };
 								
-						$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
+						$j.post(pnfpb_ajax_object_push.ajax_url, data, async function(response) {
 
 							$j('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
 
@@ -6785,6 +7490,16 @@ async function requestPermission(registration,shortcode_field='',subscription_op
 														
 							if (subscriptionoptionsarray.length >= 4)
 							{
+
+								if (subscriptionoptionsarray[24] && subscriptionoptionsarray[24] === '1')
+								{
+										$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', true);
+
+								}
+								else 
+								{
+									$j('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', false);
+								}								
 						
 								if (subscriptionoptionsarray[1] === '1'  || subscriptionoptionsarray[0] === '1')
 								{
@@ -7025,29 +7740,79 @@ async function requestPermission(registration,shortcode_field='',subscription_op
                                 	}			                    
 			               	 	}
 							}
+
+							const PNFPB_message = vapidKey;
+							const PNFPB_encoder = new TextEncoder();
+							const PNFPB_data = PNFPB_encoder.encode(PNFPB_message);
+							const PNFPB_algorithm = "SHA-256";
+							const PNFPB_readableHash = await getReadableHash(PNFPB_data, PNFPB_algorithm);
+
+							if (PNFPB_readableHash && subscription_auth && subscription_auth !== '') {								
+
+								const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database", 2);
+								const PNFPB_SW_Object = {key: 1, pnfpb_auth_token: PNFPB_readableHash, subscription_token: subscription_auth};
+
+								PNFPB_SW_request.onupgradeneeded = (event) => {
+									const PNFPB_SW_db = event.target.result;
+									if (!PNFPB_SW_rest_token_db.objectStoreNames.contains("PNFPB_SW_rest_token_Store")) {
+										PNFPB_SW_rest_token_db.createObjectStore("PNFPB_SW_rest_token_Store", { keyPath: "key" }); // Define keyPath for unique identification
+									}									
+									if (!PNFPB_SW_db.objectStoreNames.contains("PNFPB_SW_Store")) {
+										PNFPB_SW_db.createObjectStore("PNFPB_SW_Store", { keyPath: "key" }); // Define keyPath for unique identification
+									}
+								};
+
+								PNFPB_SW_request.onsuccess = (event) => {
+									const PNFPB_SW_db = event.target.result;
+									const PNFPB_SW_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_Store"], "readwrite");
+									const PNFPB_SW_objectStore = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store");
+									const PNFPB_SW_addRequest = PNFPB_SW_objectStore.put(PNFPB_SW_Object);
+									PNFPB_SW_addRequest.onsuccess = () => {
+										console.log("Object added successfully");
+										PNFPB_SW_db.close();
+									};
+									PNFPB_SW_addRequest.onerror = (error) => {
+										console.error("Error adding object:", error);
+										PNFPB_SW_db.close();
+									};
+								};
+
+								PNFPB_SW_request.onerror = (event) => {
+									console.error("Database error:", event.target.errorCode);
+								};
+							}						
 						})
 						
 					}
+			}).catch((err) => {
+				console.log(__('An error occurred serviceworker. ','push-notification-for-post-and-buddypress'), err);
 			})
+		} else {
+
 		}
 
         
     }
 
- 	// Listen to service worker messages sent via postMessage()
-	navigator.serviceWorker.addEventListener('message', (event) => {
-		if (!event.data.action) {
-	  		return
-		}
-  
-		switch (event.data.action) {
-	  		case 'pnfpb-readmore-notificationclick':
-				window.location.href = event.data.url
-				break
-	  			// no default
-			}
-  	})	
+	async function getReadableHash(data, algorithm) {
+	try {
+		const buffer = await crypto.subtle.digest(algorithm, data);
+		const hexString = arrayBufferToHex(buffer);
+		return hexString;
+	} catch (error) {
+		console.error("Error during hashing:", error);
+		return null; // Or handle the error appropriately
+	}
+	}	
 
+	function arrayBufferToHex(buffer) {
+	const byteArray = new Uint8Array(buffer);
+	const hexCodes = [...byteArray].map(value => {
+		const hex = value.toString(16);
+		return hex.padStart(2, '0');
+	});
+	return hexCodes.join('');
+	}	
 
 }
 

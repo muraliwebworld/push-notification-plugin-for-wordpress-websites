@@ -4,9 +4,9 @@ Author URI: https://www.muraliwebworld.com
 Tags:  push notification,mobile app,progressive web app,buddypress,firebase
 Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/
 Requires at least: 6.2
-Tested up to: 6.7
-Requires PHP: 7.4
-Stable tag: 2.11
+Tested up to: 6.8
+Requires PHP: 8.1
+Stable tag: 3.01
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,9 +20,10 @@ It sends push notifications to desktop, android/ios mobile apps using Firebase C
 
 ** Plugin allows to choose different push notification providers **
 1. Firebase - FCM (Free push notifications for desktop, PWA and mobile apps)
-2. Onesignal (Free push notification for desktop, PWA and mobile apps)
-3. Progressier (Push notifications for PWA)
-4. webtoapp.design (Push notifications for Mobile apps)
+2. Self-hosted push notification using web-push
+3. Onesignal (Free push notification for desktop, PWA and mobile apps)
+4. Progressier (Push notifications for PWA)
+5. webtoapp.design (Push notifications for Mobile apps)
 (Plugin allows to send push notifications to both Firebase/Onesignal and webtoapp.design users simultaneously)
 
 ** Plugin sends Push notifications for following **
@@ -41,9 +42,10 @@ It sends push notifications to desktop, android/ios mobile apps using Firebase C
 11. Friendship accepted in BuddyPress (only to requestor).
 12. User avatar change in BuddyPress.
 13. Cover image change in BuddyPress.
-14. Supports Push notifications for BuddyBoss and Better Messages plugins
-15. Woocommerce custom post type push notifications.
-16. Ability to process more than 200,000 subscribers unlimited push notifications using background action scheduler.
+14. Mark as favourites or Likes on BuddyPress activities.
+15. Supports Push notifications for BuddyBoss and Better Messages plugins
+16. Woocommerce custom post type push notifications.
+17. Ability to process more than 200,000 subscribers unlimited push notifications using background action scheduler.
 
 ** Admin only push notifications (only to administrators) **
 1. When contact form(contactform7 plugin) submitted.
@@ -58,8 +60,9 @@ Choose Horizontal or Vertical custom prompt style and customize the text, color 
 Enable/Disable Bell prompt icon to subscribe/unsubscribe notifications. Front end users will be able to subscribe to particular category like post, activity, comments, friendship request/accept, other options while subscribing for first time or if user wants to update subscribe options from bell prompt at any time it is needed.
 
 = Shortcodes =
-Use shortcode [member name] and [group name] in push notification title and custom content to display user name in title/content in push notifications, similarly for BuddyPress group activities [group name] place holder is available to display group name in title/content in push notifications.
-For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications
+[subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications for frontend users.
+[PNFPB_PWA_PROMPT] to install PWA.
+[member name] and [group name] are avilable to display user name in push notifications, For BuddyPress group activities [group name] shortcode to display group name in push notifications.
 
 = Subscribe/Unsubscribe various push notifications in front end = 
 Front end push notification menu is available for BuddyPress Front end users to subscribe/unsubscribe various push notifications according to their choices. This menu is available in user profile - settings area. For other users, shortcode is available to display subscription menu for Front end users to subscribe/unsubscribe various push notifications according to their choices.
@@ -123,7 +126,8 @@ Following are steps to configure the plugin,
 	4.l. Group invite
 	4.m. Group details update
 	4.n. Contactform7 submitted (Admin notification)
-	4.o. New user registration (Admin notification)	
+	4.o. New user registration (Admin notification)
+	4.p  Mark as favourites or Likes on BuddyPress activities.
 
 = Scheduling push notifications =
 
@@ -165,18 +169,7 @@ Push notifications will better work in normal browser not in cognito private bro
 
 After completing above steps, push notification will be displayed based on option selected for posts/buddypress while publishing posts or custom post types or during new BuddyPress activities or comments.
 
-11.For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications for following
-
-	11.1. Subscribe all notifications
-	11.2. Subscribe to all new post/new BuddyPress activity notifications
-	11.3. Subscribe to all new comments for post,BuddyPress activities notifications
-	11.4. Subscribe to new comments notifications only from My BuddyPress activities or My post based on Post Author id/BuddyPress activity Author id
-	11.5. New BuddyPress member joined
-	11.6. Friend request in BuddyPress
-	11.7. Friendship accepted in BuddyPress
-	11.8. User avatar change in BuddyPress
-	11.9. Cover image change in BuddyPress
-	11.10. Unsubscribe all notifications
+11.For front end users Shortcode [subscribe_PNFPB_push_notification] is available to Subscribe/Unsubscribe push notifications for various push notification options.
 
 12. Shortcode [PNFPB_PWA_PROMPT] to create button to install PWA. If user clicks this button, it will show default prompt to install PWA. This shortcode can be placed anywhere or in sidebar according to convenience. 
 
@@ -206,47 +199,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 12.Special settings for NGINX based server
 
 == Changelog ==
-= 2.11 version 8 February 2025 =
-* Update (for web push): Show or hide group subscription buttons depending on push notification subscription.
-* bug fix.
-* Updated readme.txt file related to security.
-= 2.10 version 4 February 2025 =
-* Security fix for PNFPB shortcode active or not active update in options.
-* Bug fix : Group activity subscribe and unsubscribe button
-* Bug fix : Push notifications only for subscribed forum topic users
-* Update  : Addition line field added for Push notification Subscribe - custom prompt text
-* Update  : Users will now be able to subscribe for notification using Frontend subscription settings page (in web browser push notifications).
-= 2.09 version 26 January 2025 =
-* PHP Code aligned and re-formatted
-= 2.08 version 24 January 2025 =
-* PHP Code aligned and re-formatted
-* Security fix
-* Changed language translation text domain matching with plugin slug push-notification-for-post-and-buddypress as per coding standards.
-= 2.07 version 10 January 2025 =
-* Security fix
-= 2.06 version 4 January 2025 =
-* Update & Bug fixes for Onesignal push notifications - Updated and fixed problems as per latest version of Onesignal SDK v16.
-= 2.05 version 28 November 2024 =
-* Bug fix: Bell icon push notification options problem resolved.
-* Bug fix: New topic click link in push notification is resolved to open topic link instead of list of topics.
-= 2.04 version November 26 2024 =
-* Bug fix: Frontend notification subscriptions for mobile app using PNFPB REST API problem is resolved. Mobile app users using REST API will now be able to subscribe or unsubscribe frontend notifications from android/ios apps.
-* Update: Updated logic to have async routines for subscriptions and to send notifications using Firebase httpv1.
-* Update: Optimized various push notification subscriptions for frontend/bell icon.
-* Update: New admin option to send notifications only for new post/frontend custom post types/frontend forum topic/reply. This option will not send notifications for modified post/custom post types.
-* Update: New admin option to send notifications only to subscribers of bbpress/BuddyBoss forum topic.
-* Bug fix: Forum topic reply url click link in push notification is fixed.
-* Resolved problem related load text domain for WordPress 6.7 version.
-* Compatible with WordPress version 6.7
-= 2.03 version November 11 2024 =
-* Compatible with WordPress version 6.7
-* PNFPB REST API Android app changes - Added default click action "OPEN_MAIN_ACTIVITY" in push notification parameter for android app. Android app manifest xml needs to contain separate intent filter with name "OPEN_MAIN_ACTIVITY" for default intent under Mainactivity class along with intent filter for launcher.
-* PNFPB REST API Android/ios app changes - PNFPB mobile app REST API supports AES/GCM/NoPadding  aes-256-gcm decryption. From mobile app, if subscrition tokens are encrypted using AES/GCM/NoPadding using secretkey then PNFPB plugin mobile app REST API routine will able to decrypt data sent from mobile app using aes-256-gcm OPEN SSL decryption php routine.
-* PNFPB Private message push notification is now compatible with Better-messages chat link for background push notifications. If push notification link for better messages is clicked in mobile app, it will be redirected to Better-messages plugin chat link page in webview app.
-[Old release version details are available here](https://www.pnfpb.com/release-notes-pnfpb-plugin-push-notification-for-post-and-buddypress/)
-
+= 3.01 version 16 Sep 2025 =
+* New feature: Self-hosted push notification using web-push. Plugin supports Firebase, self-supported web-push, Onesignal, Progressier & webtoapp push notifications
+* Bug fixes
+* Delivery and read reports for push notification sent using Firebase and web-push.
+* Optimized plugin code to replace functions with separate classes.
+* Admin area UI changes.
+* Requires atleast PHP version 8.1 and above. Compatible with latest PHP version 8.3 and above.
 
 == Upgrade Notice ==
-* Update (for web push): Show or hide group subscription buttons depending on push notification subscription.
-* bug fix.
-* Updated readme.txt file related to security.
+*  New Self-hosted push notification. Delivery reports for push notification, admin are UI changes, Bug fixes.

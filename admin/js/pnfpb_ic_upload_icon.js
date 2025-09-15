@@ -91,7 +91,7 @@ $j(document).ready(function() {
 	
 	var pushprompt_subscribe_icon_mediaUploader_512;
 	
-	$j('#pnfpb_ic_fcm_popup_subscribe_button_icon').on('click',function(e) {
+	$j('#pnfpb_ic_fcm_popup_icon').on('click',function(e) {
 		e.preventDefault();
 		if( pushprompt_subscribe_icon_mediaUploader_512 ) {
 			pushprompt_subscribe_icon_mediaUploader_512.open();
@@ -110,14 +110,18 @@ $j(document).ready(function() {
 			attachment = pushprompt_subscribe_icon_mediaUploader_512.state().get('selection').first().toJSON();
 			var imagewidth = attachment.width;
 			var imageheight = attachment.height;
-			if (imagewidth === 32 && imageheight === 32){
+			if (imagewidth < 85 && imageheight < 85 ){
 				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').text('');
 				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon').val(attachment.url);
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('border-radius','50%');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('width','32px');				
 				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('background-image','url(' + attachment.url + ')');
 			}
 			else
 			{
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('border-radius','unset');
 				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('background-image','none');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').css('width','200px');
 				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview').text('Image size must be 32x32 pixels');
 			}
 		});
@@ -150,16 +154,61 @@ $j(document).ready(function() {
 			if (imagewidth < 85 && imageheight < 85){
 				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').text('');
 				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon').val(attachment.url);
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('border-radius','50%');
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('width','32px');				
 				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('background-image','url(' + attachment.url + ')');
 			}
 			else
 			{
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('border-radius','unset');
 				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('background-image','none');
+				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').css('width','200px');
 				$j('#pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon_preview').text('Image size must be less than 85x85 pixels');
 			}
 		});
 		
 		pnfpb_custom_prompt_subscribe_icon_mediaUploader_512.open();
+		
+	});	
+	
+	var pushprompt_subscribe_icon_mediaUploader_512_shortcode;
+	
+	$j('#pnfpb_ic_fcm_popup_icon_shortcode').on('click',function(e) {
+		e.preventDefault();
+		if( pushprompt_subscribe_icon_mediaUploader_512_shortcode ) {
+			pushprompt_subscribe_icon_mediaUploader_512_shortcode.open();
+			return;
+		}
+		
+		pushprompt_subscribe_icon_mediaUploader_512_shortcode = wp.media.frames.file_frame = wp.media({
+			title: __('Select a Picture',"push-notification-for-post-and-buddypress"),
+			button: {
+				text: __('Select a Picture',"push-notification-for-post-and-buddypress")
+			},
+			multiple: false
+		});
+		
+		pushprompt_subscribe_icon_mediaUploader_512_shortcode.on('select', function() {
+			attachment = pushprompt_subscribe_icon_mediaUploader_512_shortcode.state().get('selection').first().toJSON();
+			var imagewidth = attachment.width;
+			var imageheight = attachment.height;
+			if (imagewidth < 85 && imageheight < 85){
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').text('');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_shortcode').val(attachment.url);
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').css('border-radius','50%');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').css('width','32px');				
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').css('background-image','url(' + attachment.url + ')');
+			}
+			else
+			{
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').css('border-radius','unset');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').css('background-image','none');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').css('width','200px');
+				$j('#pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode').text('Image size must be 32x32 pixels');
+			}
+		});
+		
+		pushprompt_subscribe_icon_mediaUploader_512_shortcode.open();
 		
 	});	
 	

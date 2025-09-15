@@ -128,6 +128,10 @@
         		<?php }
      $posttypecount++;
      $rowcount++;
+			if ($posttypecount >= 10) {
+				
+				break;
+			}
 
           }
           ?>

@@ -95,12 +95,11 @@ if (pnfpb_webview) {
 
 	$jwebview(document).ready(function() {
 
-	if (pnfpb_webview) {
-		
 		var data = {
 			action: 'icpushcallback',
 			device_id:'',
 			subscriptionoptions:'',
+			nonce: pnfpb_ajax_object_mobile_app_interface_script.nonce,
 			pushtype: 'icfirebasecred'
 		};
 		
@@ -127,8 +126,12 @@ if (pnfpb_webview) {
 				
 
 					checkdeviceid_webview('');
+				
+					if ($jwebview(".pnfpb-push-subscribe-icon-shortcode").length) {
 
-					mobileapp_subscribe_shortcode();
+						mobileapp_subscribe_shortcode();
+						
+					}
 
 					frontend_subscription_menu_webview('');
 				
@@ -143,7 +146,7 @@ if (pnfpb_webview) {
 						var subscribebuttonid = '#subscribegroupbutton-'+groupId;										
 						if( $jwebview("#pnfpb_group_users_subscribe_dialog_confirm").length === 0 ) {
 
-							$jwebview(this).append( '<div id="pnfpb_group_users_subscribe_dialog_confirm" class="pnfpb_group_users_subscribe_dialog_confirm" title="Subscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_push.group_subscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
+							$jwebview(this).append( '<div id="pnfpb_group_users_subscribe_dialog_confirm" class="pnfpb_group_users_subscribe_dialog_confirm" title="Subscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_mobile_app_interface_script.group_subscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
 						}
  						var subscribe_button_text = pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_text;
 						$jwebview( "#pnfpb_group_users_subscribe_dialog_confirm" ).dialog({  
@@ -154,7 +157,7 @@ if (pnfpb_webview) {
 			   				buttons: [{
       							text: subscribe_button_text,
 								open: function() {
-								$jwebview(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_push.subscribe_button_color+';border:0px');
+								$jwebview(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_color+';border:0px');
 											},
       							click: function() {
 									const d = new Date();
@@ -172,7 +175,7 @@ if (pnfpb_webview) {
 									if (subscribeGroupid) {
 										subscribeGroupid.postMessage(groupId);
 									}								
-									$jwebview(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_push.group_subscribe_dialog_text_confirm+"</p>");
+									$jwebview(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_mobile_app_interface_script.group_subscribe_dialog_text_confirm+"</p>");
 			       			    	$jwebview( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 									$jwebview(subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 									$jwebview(unsubscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
@@ -201,7 +204,7 @@ if (pnfpb_webview) {
 						var subscribebuttonid = '#subscribegroupbutton-'+groupId;
 						if( $jwebview("#pnfpb_group_users_unsubscribe_dialog_confirm").length === 0 ) {
 
-							$jwebview(this).append( '<div id="pnfpb_group_users_unsubscribe_dialog_confirm" class="pnfpb_group_users_unsubscribe_dialog_confirm" title="Unsubscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_push.group_unsubscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
+							$jwebview(this).append( '<div id="pnfpb_group_users_unsubscribe_dialog_confirm" class="pnfpb_group_users_unsubscribe_dialog_confirm" title="Unsubscribe" style="display:none;"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>'+pnfpb_ajax_object_mobile_app_interface_script.group_unsubscribe_dialog_text+'</div><div id="pnfpb-group-unsubscribe-dialog" title="Confirmation"><div id="pnfpb-group-unsubscribe-alert-msg" class="pnfpb-group-unsubscribe-alert-msg"></div></div>' );
 						}
 						var unsubscribe_button_text = pnfpb_ajax_object_mobile_app_interface_script.unsubscribe_button_text;									
 						$jwebview( "#pnfpb_group_users_unsubscribe_dialog_confirm" ).dialog({  
@@ -212,7 +215,7 @@ if (pnfpb_webview) {
 							buttons: [{
       							text: unsubscribe_button_text,
 								open: function() {
-									$jwebview(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_push.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_push.subscribe_button_color+';border:0px');
+									$jwebview(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_color+';border:0px');
 								},
       							click: function() {
 								
@@ -229,7 +232,7 @@ if (pnfpb_webview) {
 									$jwebview(subscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
 									$jwebview(unsubscribebuttonid).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 									$jwebview(subscribebuttonid).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );
-									$jwebview(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_push.group_unsubscribe_dialog_text_confirm+"</p>");
+									$jwebview(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_mobile_app_interface_script.group_unsubscribe_dialog_text_confirm+"</p>");
 									$jwebview( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 									$jwebview("#pnfpb_group_users_unsubscribe_dialog_confirm").dialog("close");
 								},
@@ -269,6 +272,7 @@ if (pnfpb_webview) {
 				var subscribecoverimageshortcode = '0';
 				var subscribegroupinviteshortcode = '0';
 				var subscribegroupdetailsshortcode = '0';
+				var subscribemarkasfavouriteshortcode = '0';
 				var unsubscribeallshortcode = '0';
 				var subscribeactivitiesshortcode = '0';	
 				
@@ -424,6 +428,17 @@ if (pnfpb_webview) {
 						subscribegroupdetailsshortcode = '0';
 					}
 					
+					if ($jwebview('#pnfpb_ic_fcm_front_favourite_enable').is(":checked"))
+					{
+						subscribemarkasfavouriteshortcode = '1';
+						subscribeallshortcode = '0'; 
+						unsubscribeallshortcode = '0';
+					}
+					else 
+					{
+						subscribemarkasfavouriteshortcode = '0';
+					}					
+					
 					var frontend_custom_post_types_mobile_app = '';
 					
 					var pnfpb_custom_post_types_subscriptions = [];
@@ -452,19 +467,26 @@ if (pnfpb_webview) {
 					
 					if (pnfpb_custom_post_types_subscriptions.length > 0) {
 
-						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types_subscriptions.length; pnfpb_post_type_element++) {
+						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
+							
+							if (pnfpb_post_type_element <  pnfpb_custom_post_types_subscriptions.length && pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element] ) {
 
-							frontend_custom_post_types_mobile_app  = frontend_custom_post_types_mobile_app + pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element];
+								frontend_custom_post_types_mobile_app  = frontend_custom_post_types_mobile_app + pnfpb_custom_post_types_subscriptions[pnfpb_post_type_element];
+								
+							} else {
+								
+								frontend_custom_post_types_mobile_app  = frontend_custom_post_types_mobile_app + '0';
+							}
 								
 						}
 
 					}	else {
 						
-						frontend_custom_post_types_mobile_app = '0000';
+						frontend_custom_post_types_mobile_app = '0000000000';
 						
 					}				
 		
-					subscriptionoptions = subscribeallshortcode + subscribepostactivitiesshortcode + subscribeallcommentsshortcode + subscribemypostshortcode + subscribeprivatemessagesshortcode + subscribenewmembershortcode + subscribefriendshiprequestshortcode + subscribefriendshipacceptshortcode + unsubscribeallshortcode + subscribeuseravatarshortcode + subscribecoverimageshortcode + subscribeactivitiesshortcode + subscribegroupdetailsshortcode + subscribegroupinviteshortcode + frontend_custom_post_types_mobile_app;					
+					subscriptionoptions = subscribeallshortcode + subscribepostactivitiesshortcode + subscribeallcommentsshortcode + subscribemypostshortcode + subscribeprivatemessagesshortcode + subscribenewmembershortcode + subscribefriendshiprequestshortcode + subscribefriendshipacceptshortcode + unsubscribeallshortcode + subscribeuseravatarshortcode + subscribecoverimageshortcode + subscribeactivitiesshortcode + subscribegroupdetailsshortcode + subscribegroupinviteshortcode + frontend_custom_post_types_mobile_app + subscribemarkasfavouriteshortcode;					
 
 		
 					if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.frontendsubscriptionOptions) {
@@ -481,6 +503,7 @@ if (pnfpb_webview) {
 							action: 'icpushcallback',
 							device_id:deviceid,
 							subscriptionoptions:subscriptionoptions,
+							nonce: pnfpb_ajax_object_mobile_app_interface_script.nonce,
 							pushtype: 'subscribe-button'
 						};
 									
@@ -501,12 +524,27 @@ if (pnfpb_webview) {
 					}
 					else 
 					{
-						$jwebview('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
-						$jwebview('.pnfpb_frontend_subscriptions_options_menu_all').show();
-						$jwebview('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
-						$jwebview('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
-						$jwebview('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings',"push-notification-for-post-and-buddypress"));
-						$jwebview('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
+						if ((pnfpb_pushtoken_fromflutter && pnfpb_pushtoken_fromflutter !== '') || (pnfpb_pushtoken_fromAndroid && pnfpb_pushtoken_fromAndroid != '')) {
+							
+							$jwebview('.pnfpb_bell_icon_custom_prompt_loader_frontend').hide();
+							$jwebview('.pnfpb_frontend_subscriptions_options_menu_all').show();
+							$jwebview('.pnfpb_ic_front_push_notification_settings_messages').removeClass('success');
+							$jwebview('.pnfpb_ic_front_push_notification_settings_messages').addClass('error');
+							$jwebview('.pnfpb_ic_front_push_notification_settings_text').html(__('Error in saving notification settings',"push-notification-for-post-and-buddypress"));
+							$jwebview('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
+							
+						} else {
+							
+							if (frontendsubscriptionOptions) {
+								frontendsubscriptionOptions.postMessage(subscriptionoptions);
+							}
+									
+							$jwebview('.pnfpb_ic_front_push_notification_settings_messages').removeClass('error');
+							$jwebview('.pnfpb_ic_front_push_notification_settings_messages').removeClass('info');
+							$jwebview('.pnfpb_ic_front_push_notification_settings_messages').addClass('success');
+							$jwebview('.pnfpb_ic_front_push_notification_settings_messages').attr('style','display: flex !important');
+							$jwebview('.pnfpb_ic_front_push_notification_settings_text').html(__('Your notification settings have been saved',"push-notification-for-post-and-buddypress"));
+						}
 					}
 				})							
 		
@@ -525,6 +563,33 @@ if (pnfpb_webview) {
 
 		async function checkdeviceid_webview() {
 			
+			var pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '';
+
+			var pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+
+			var pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox = [];
+
+			var pnfpb_bell_icon_subscribe_push_type_checkbox = [];
+
+			var pnfpb_bell_icon_subscribe_custom_post_checkbox = [];				
+
+			var pnfpb_custom_post_types = JSON.parse(pnfpb_ajax_object_mobile_app_interface_script.pnfpb_show_custom_post_types);
+
+
+			for (var pnfpb_custom_type_element = 0; pnfpb_custom_type_element < pnfpb_custom_post_types.length; pnfpb_custom_type_element++) {
+
+				if (pnfpb_custom_post_types[pnfpb_custom_type_element] !== 'buddypress') {
+
+					pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox.push('0');
+
+					pnfpb_bell_icon_subscribe_custom_post_checkbox.push('0');
+
+				}
+
+			}
+
+			var pnfpb_show_push_notify_types = JSON.parse(pnfpb_ajax_object_mobile_app_interface_script.pnfpb_show_push_notify_types);					
+			
 			var isadminpage = 'no';
 						
 			if (window.location.href.match('wp-admin') !== null) {
@@ -536,7 +601,7 @@ if (pnfpb_webview) {
 							
 			$jwebview('.pnfpb_frontend_subscriptions_options_menu_all').hide();
 		
-			if( $jwebview(".pnfpb_subscribe_button").length || $jwebview(".pnfpb_push_notification_frontend_settings_submit").length )
+			if( $jwebview(".pnfpb-push-subscribe-icon-shortcode").length || $jwebview(".pnfpb_push_notification_frontend_settings_submit").length )
 			{
 				pnfpbshortcodeactive = 'yes';
 			}						
@@ -551,13 +616,25 @@ if (pnfpb_webview) {
 			   
 				deviceid = pnfpb_pushtoken_fromAndroid;
 
-			}						
-				
+			}
+			
+			var pnfpb_bell_icon_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+
+			var pnfpb_bell_icon_subscription_options_custom_prompt = '10000000000000';
+
+			var pnfpb_bell_icon_prompt_subscription_options_custom_prompt = '10000000000000';
+
+			var pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+
+			$jwebview('.pnfpb-push-subscribe-icon-shortcode').show();
+
+	
 			var data = {
 				action: 'icpushcallback',
 				device_id:deviceid,
 				isadminpage:isadminpage,
 				pnfpbshortcodeactive:pnfpbshortcodeactive,
+				nonce: pnfpb_ajax_object_mobile_app_interface_script.nonce,
 				pnfpb_endpoint:'',
 				pnfpb_options:vapidKey,								
 				pushtype: 'checkdeviceid'
@@ -683,6 +760,16 @@ if (pnfpb_webview) {
 						$jwebview('#pnfpb_ic_fcm_front_group_invite_enable').prop('checked', false);
 					}
 					
+					if ((subscriptionoptionsarray[25] && subscriptionoptionsarray[25] === '1') || subscriptionoptionsarray[0] === '1')
+					{
+					 	$jwebview('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', true);
+
+					}
+					else 
+					{
+						$jwebview('#pnfpb_ic_fcm_front_favourite_enable').prop('checked', false);
+					}					
+					
 					if (subscriptionoptionsarray.length > 14) {
 
 						var subscription_options_element = 14;
@@ -712,168 +799,194 @@ if (pnfpb_webview) {
 							
 				$jwebview('.pnfpb_frontend_subscriptions_options_menu_all').show();
 			
-				if( $jwebview(".pnfpb_subscribe_button").length) { 
+				if( $jwebview(".pnfpb-push-subscribe-icon-shortcode").length) {
 
 					if (subscriptionoptionsarray[0] === '1')
 					{
-					  	$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[1] === '1')
-					{
-					 	 $jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
-					}
 
-					if (subscriptionoptionsarray[11] === '1')
-					{
-					 	 $jwebview('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', false);
-					}					
-			
-					if (subscriptionoptionsarray[2] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[3] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[4] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[5] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[6] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[7] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[9] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-					}
-			
-					if (subscriptionoptionsarray[10] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
-					}							
+						$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', true);
 
-					if (subscriptionoptionsarray[8] === '1')
-					{
-					  	$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', true);
-					}
-					else 
-					{
-						$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
-					}
-					
-					if (subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1')
-					{
-						$jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', true);
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
 
 					}
 					else 
 					{
-						$jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
+
+						$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', false);
+
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+
 					}
-							
-					if (subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1')
+
+					if (subscriptionoptionsarray[25] && subscriptionoptionsarray[25] === '1')
 					{
-						$jwebview('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', true);
+						$jwebview('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', true);
 
 					}
 					else 
 					{
-						$jwebview('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
-					}					
-			
-							
-					if ((subscriptionoptions !== '00000000000' && subscriptionoptions !== '00000000001' && subscriptionoptions !== '' && subscriptionoptions !== null) && responseobject.subscriptionstatus === 'subscribed')
-						{
+						$jwebview('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', false);
+					}												
 
-						 if( $jwebview(".pnfpb_subscribe_button").length )
-						{
-							$jwebview(".pnfpb_subscribe_button").html(pnfpb_ajax_object_mobile_app_interface_script.unsubscribe_button_text_shortcode);
-					 	}			                             
-					}
-					else
+					if (subscriptionoptionsarray[12] === '1' && subscriptionoptionsarray[0] !== '1')
 					{
-	 
-						if( $jwebview(".pnfpb_subscribe_button").length )
-						{
-							$jwebview(".pnfpb_subscribe_button").html(pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_text_shortcode);
-						}			                    
+
+						$jwebview('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', true);
+
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+
 					}
+					else 
+					{
+
+						$jwebview('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', false);
+
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+
+					}
+
+					if (subscriptionoptionsarray[13] === '1' && subscriptionoptionsarray[0] !== '1')
+					{
+
+						$jwebview('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', true);
+
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+
+					}
+					else 
+					{
+
+						$jwebview('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', false);
+
+
+						pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+
+					}
+
+					if (subscriptionoptionsarray.length > 0) {
+
+						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < 12; pnfpb_post_type_element++) {
+
+							if (pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'unsubscribe-all' && pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'all') {	
+
+								if (subscriptionoptionsarray[pnfpb_post_type_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
+								{
+									$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+
+									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '1';
+
+								}
+								else 
+								{
+									if (subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1') {
+
+										$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
+
+									}															
+								}
+
+							} else {
+
+								if (pnfpb_show_push_notify_types[pnfpb_post_type_element] === 'all' && subscriptionoptionsarray[0] === '1' )
+								{
+
+									$jwebview('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[0]+'_enable_shortcode').prop('checked', true);
+
+									pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+
+								} else {
+
+									if (subscriptionoptionsarray[8] === '1' ) {
+
+										pnfpb_bell_icon_subscribe_push_type_checkbox[0] = '1';
+
+									}
+								}
+
+							}
+
+
+						}
+
+					}													
+
+					if (subscriptionoptionsarray.length > 14) {
+
+						var subscription_options_element = 14;
+
+						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+
+
+							if (subscriptionoptionsarray[subscription_options_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
+							{
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+
+
+								pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
+							}
+							else 
+							{
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+
+
+								pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
+							}
+
+							subscription_options_element++;
+
+						}
+
+					}
+
+					$jwebview('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+					$jwebview('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+
+					$jwebview('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+
+					$jwebview('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);													
 				}
 			})		
 		}
 
 		async function mobileapp_subscribe_shortcode() {
 			
-			if( $jwebview(".pnfpb_subscribe_button").length  && (pnfpb_pushtoken_fromflutter && pnfpb_pushtoken_fromflutter !== '') || (pnfpb_pushtoken_fromAndroid && pnfpb_pushtoken_fromAndroid != ''))
-			{
-				// [START get_messaging_object]
-				// Retrieve Firebase Messaging object.
-				// [END get_messaging_object]
-				// [START set_public_vapid_key]
-				// Add the public key generated from the console here.
-				// [END set_public_vapid_key]
-	
+			if( $jwebview(".pnfpb-push-subscribe-icon-shortcode").length  && 
+			   ((pnfpb_pushtoken_fromflutter && pnfpb_pushtoken_fromflutter !== '') || 
+				(pnfpb_pushtoken_fromAndroid && pnfpb_pushtoken_fromAndroid != ''))) {
+				
+				var pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '';
+
+				var pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox = [];
+				
+				var pnfpb_bell_icon_prompt_subscribe_push_type_checkbox = ['1','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+
+				var pnfpb_bell_icon_subscribe_push_type_checkbox = [];
+
+				var pnfpb_bell_icon_subscribe_custom_post_checkbox = [];				
+
+				var pnfpb_custom_post_types = JSON.parse(pnfpb_ajax_object_mobile_app_interface_script.pnfpb_show_custom_post_types);
+
+				for (var pnfpb_custom_type_element = 0; pnfpb_custom_type_element < pnfpb_custom_post_types.length; pnfpb_custom_type_element++) {
+
+					if (pnfpb_custom_post_types[pnfpb_custom_type_element] !== 'buddypress') {
+
+						pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox.push('0');
+
+						pnfpb_bell_icon_subscribe_custom_post_checkbox.push('0');
+
+					}
+
+				}
+
+				var pnfpb_show_push_notify_types = JSON.parse(pnfpb_ajax_object_mobile_app_interface_script.pnfpb_show_push_notify_types);
 	
 				var subscriptionoptions = '00000000000';
 			
@@ -889,7 +1002,7 @@ if (pnfpb_webview) {
 					
 				}
 			
-				if( $jwebview(".pnfpb_subscribe_button").length )
+				if( $jwebview(".pnfpb-push-subscribe-icon-shortcode").length )
 				{
 					pnfpbshortcodeactive = 'yes';
 				}
@@ -906,14 +1019,84 @@ if (pnfpb_webview) {
 								   
 					deviceid = pnfpb_pushtoken_fromAndroid;
 					
-				}				
+				}
+				
+				$jwebview('.pnfpb_shortcode_popup_close').on( "click", function(event) {
+
+					event.stopPropagation(); 
+
+					event.preventDefault();
+
+					$jwebview('.pnfpb-push-subscribe-button-layout-shortcode').hide();
+
+				});				
+				
+		
+				
+				var pnfpb_popup_subscribe_text = __("You are subscribed to push notification",'push-notification-for-post-and-buddypress');
+
+				if (pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_subscribe_message && pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_subscribe_message != '') {
+
+					pnfpb_popup_subscribe_text = pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_subscribe_message;
+
+				}
+
+				var pnfpb_popup_unsubscribe_text = __("Push notification not subscribed",'push-notification-for-post-and-buddypress');
+
+				if (pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_unsubscribe_message && pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_unsubscribe_message != '') {
+
+					pnfpb_popup_unsubscribe_text = pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_unsubscribe_message;
+
+				}
+
+				var pnfpb_popup_wait_message = __("Please wait...processing",'push-notification-for-post-and-buddypress');
+
+				if (pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_wait_message && pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_wait_message != '') {
+
+					pnfpb_popup_wait_message = pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_wait_message;
+
+				}
+
+				var pnfpb_popup_subscribe_button = __("Subscribe",'push-notification-for-post-and-buddypress');
+
+				if (pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_subscribe_button && pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_subscribe_button != '') {
+
+					pnfpb_popup_subscribe_button = pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_subscribe_button;
+
+				}
+
+				var pnfpb_popup_unsubscribe_button = __("Unsubscribe",'push-notification-for-post-and-buddypress');
+
+				if (pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_unsubscribe_button && pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_unsubscribe_button != '') {
+
+					pnfpb_popup_unsubscribe_button = pnfpb_ajax_object_mobile_app_interface_script.pnfpb_ic_fcm_popup_unsubscribe_button;
+
+				}
+
+				var pnfpb_push_subscribe_options_button = __("Update",'push-notification-for-post-and-buddypress');
+
+				if (pnfpb_ajax_object_mobile_app_interface_script.pnfpb_push_subscribe_options_button && pnfpb_ajax_object_mobile_app_interface_script.pnfpb_push_subscribe_options_button != '') {
+
+					pnfpb_push_subscribe_options_button = pnfpb_ajax_object_mobile_app_interface_script.pnfpb_push_subscribe_options_button;
+
+				}
 			
-			
-				if (deviceid && $jwebview(".pnfpb_subscribe_button").length) {
+				if (deviceid && $jwebview(".pnfpb-push-subscribe-icon-shortcode").length) {
+
+					$jwebview('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+
+					$jwebview('.pnfpb-push-subscribe-options-button-container-shortcode').hide();
+
+					$jwebview('.pnfpb-push-subscribe-button-shortcode').prop('disabled', true);
+
+					$jwebview('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', true);
+					
+					$jwebview('.pnfpb-push-subscribe-button-shortcode').hide();
 								   
 								
 					var data = {
 						action: 'icpushcallback',
+						nonce: pnfpb_ajax_object_mobile_app_interface_script.nonce,
 						device_id:deviceid,
 						isadminpage:isadminpage,
 						pnfpbshortcodeactive:pnfpbshortcodeactive,
@@ -929,183 +1112,175 @@ if (pnfpb_webview) {
 								
 						subscriptionoptionsarray = subscriptionoptions.split('');
 	
-						if (subscriptionoptionsarray[0] === '1')
-						{
-						  	$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
-						}
-								
-						if (subscriptionoptionsarray[1] === '1' )
-						{
-						 	 $jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
-						}
+						if( $jwebview(".pnfpb-push-subscribe-icon-shortcode").length) {
 
-						if (subscriptionoptionsarray[11] === '1')
-						{
-							  $jwebview('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', true);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', false);
-						}							
-								
-						if (subscriptionoptionsarray[2] === '1')
-						{
-						  	$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
-						}
-								
-						if (subscriptionoptionsarray[3] === '1')
-						{
-						  	$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
-						}							
-	
-						if (subscriptionoptionsarray[4] === '1')
-						{
-							$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-						}
-																
-						if (subscriptionoptionsarray[5] === '1')
-						{
-							$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-						}
-																
-						if (subscriptionoptionsarray[6] === '1')
-						{
-						  	$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-						}
-																
-						if (subscriptionoptionsarray[7] === '1')
-						{
-						  	$jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', false);
-						}
-																
-						if (subscriptionoptionsarray[9] === '1')
-						{
-						  	$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-						}
-																
-						if (subscriptionoptionsarray[10] === '1')
-						{
-						  	$jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked', false);
-						}															
-	
-						if (subscriptionoptionsarray[8] === '1')
-						{
-						 	 $jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-							$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-							$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-							$jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked', false);
-							$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-							$jwebview('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', false);
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
-						}
-
-						if (subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1')
-						{
-							$jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);							
-	
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-						}
-								
-						if (subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1')
-						{
-							$jwebview('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', true);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);							
-	
-						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
-						}						
-								
-													
-						if (responseobject.subscriptionstatus == 'subscribed')
-						{
-						 
-						 	if( $jwebview(".pnfpb_subscribe_button").length )
-						 	{
-								$jwebview(".pnfpb_subscribe_button").html(pnfpb_ajax_object_mobile_app_interface_script.unsubscribe_button_text_shortcode);
-							 }			                             
-						}
-						else
-						{
-						 
-							if( $jwebview(".pnfpb_subscribe_button").length )
+							if (subscriptionoptionsarray[0] === '1')
 							{
-								$jwebview(".pnfpb_subscribe_button").html(pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_text_shortcode);
-							 }			                    
+
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', true);
+
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+
+							}
+							else 
+							{
+
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked', false);
+
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+
+							}
+
+							if (subscriptionoptionsarray[25] && subscriptionoptionsarray[25] === '1')
+							{
+								$jwebview('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', true);
+
+							}
+							else 
+							{
+								$jwebview('#pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').prop('checked', false);
+							}												
+
+							if (subscriptionoptionsarray[12] === '1' && subscriptionoptionsarray[0] !== '1')
+							{
+
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', true);
+
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+
+							}
+							else 
+							{
+
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked', false);
+
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+
+							}
+
+							if (subscriptionoptionsarray[13] === '1' && subscriptionoptionsarray[0] !== '1')
+							{
+
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', true);
+
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+
+							}
+							else 
+							{
+
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked', false);
+
+
+								pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+
+							}
+
+							if (subscriptionoptionsarray.length > 0) {
+
+								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < 12; pnfpb_post_type_element++) {
+
+									if (pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'unsubscribe-all' && pnfpb_show_push_notify_types[pnfpb_post_type_element] !== 'all') {	
+
+										if (subscriptionoptionsarray[pnfpb_post_type_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
+										{
+											$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '1';
+
+										}
+										else 
+										{
+											if (subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1') {
+
+												$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_post_type_element] = '0';
+
+											}															
+										}
+
+									} else {
+
+										if (pnfpb_show_push_notify_types[pnfpb_post_type_element] === 'all' && subscriptionoptionsarray[0] === '1' )
+										{
+
+											$jwebview('.pnfpb_bell_icon_subscription_'+pnfpb_show_push_notify_types[0]+'_enable_shortcode').prop('checked', true);
+
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+
+										} else {
+
+											if (subscriptionoptionsarray[8] === '1' ) {
+
+												pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+
+											}
+										}
+
+									}
+
+
+								}
+
+							}													
+
+							if (subscriptionoptionsarray.length > 14) {
+
+								var subscription_options_element = 14;
+
+								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+
+
+									if (subscriptionoptionsarray[subscription_options_element] === '1' && subscriptionoptionsarray[8] !== '1' && subscriptionoptionsarray[0] !== '1')
+									{
+										$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', true);
+
+
+										pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '1';
+									}
+									else 
+									{
+										$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked', false);
+
+
+										pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element] = '0';
+									}
+
+									subscription_options_element++;
+
+								}
+
+
+							}
+
+							$jwebview('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+							$jwebview('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+
+							$jwebview('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+
+							$jwebview('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);													
 						}
 									
+					}).catch((err) => {
+						console.log(__('An error occurred while subscribing push notification. ','push-notification-for-post-and-buddypress'), err);
+						$jwebview('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+						$jwebview('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+
+						$jwebview('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);							
 					});
 								
 				}
-			
-		
+
 				var subscriptionoptions = '0000000000000';
 			  	var unsubscribeallshortcode = '1';
 				var subscribemypostshortcode = '0';
@@ -1122,656 +1297,350 @@ if (pnfpb_webview) {
 				var subscribegroupinviteshortcode = '0'; 
 				var subscribeallshortcode = '0';
 			
-				$jwebview(".pnfpb_subscribe_button").on( "click", function(event) {
-					
+				$jwebview('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");
+
+				$jwebview('.pnfpb-push-subscribe-icon-shortcode').on( "click", function(event) {
+
+					event.stopPropagation(); 
+
 					event.preventDefault();
-					
-								
-					 $jwebview(".pnfpb-subscribe-notifications").show();
-								
-					if ($jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').is(":checked"))
-					{
-					  	subscribeallshortcode = '1';
+
+					pnfpb_bell_icon_prompt_subscription_options_custom_prompt = '10000000000000';
+
+					pnfpb_subscription_options = '';
+
+					$jwebview('.pnfpb-push-subscribe-button-layout-shortcode').toggle();
+
+					$jwebview('.pnfpb-push-status-text-shortcode').removeClass("pnfpb-push-status-text-opened-shortcode");
+
+					if ($jwebview('.pnfpb-push-subscribe-button-layout-shortcode').is(':visible')) {
+
+						$jwebview('.pnfpb-push-subscribe-button-layout-shortcode').addClass("pnfpb-push-subscribe-button-layout-opened-shortcode");	
+
 					}
-					else 
-					{
-						subscribeallshortcode = '0';
-					}
-								
-					if ($jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').is(":checked"))
-					{
-					  	subscribepostactivitiesshortcode = '1';
-					}
-					else 
-					{
-						subscribepostactivitiesshortcode = '0';
+					else {
+
+						$jwebview('.pnfpb-push-subscribe-button-layout-shortcode').removeClass("pnfpb-push-subscribe-button-layout-opened-shortcode");
+
 					}
 
-					if ($jwebview('#pnfpb_ic_subscribe_activities_shortcode_enable').is(":checked"))
-					{
-						subscribeactivitiesshortcode = '1';
-					}
-					else 
-					{
-						subscribeactivitiesshortcode = '0';
-					}					
-								
-					if ($jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').is(":checked"))
-					{
-					  	subscribeallcommentsshortcode = '1';
-					}
-					else 
-					{
-						subscribeallcommentsshortcode = '0';
-					}							
-								
-					if ($jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').is(":checked") && pnfpb_ajax_object_mobile_app_interface_script.isloggedin === 1)
-					{
-						
-						$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);								
-					  	subscribemypostshortcode = '1';
-					}
-					else 
-					{
-						subscribemypostshortcode = '0';
-						if (pnfpb_ajax_object_mobile_app_interface_script.isloggedin != 1) {
-							$jwebview('.pnfpb_ic_subscribe_my_post_shortcode_label_checkbox').html(__("Login required to subscribe notifications on comments from my Posts/my BuddyPress activities","push-notification-for-post-and-buddypress"));
-							$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',true);
+					$jwebview('.pnfpb-push-subscribe-button-shortcode').text(__('Please wait...verifying status','push-notification-for-post-and-buddypress'));
+
+					if (subscriptionoptionsarray.length > 14) {
+
+						$jwebview('.pnfpb-push-subscribe-options-button-shortcode').text(pnfpb_push_subscribe_options_button);
+
+
+						if ($jwebview('.pnfpb-push-subscribe-options-button-container-shortcode').length) {
+
+							$jwebview('.pnfpb-push-subscribe-options-button-container-shortcode').show();
 						}
-						else 
-						{
-							$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('disabled',false);										
-						}
-					}
-				
-					if ($jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').is(":checked"))
-					{
-					  	subscribeprivatemessagesshortcode = '1';
-						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';
-										
-						$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-						$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-					}
-					else 
-					{
-						subscribeprivatemessagesshortcode = '0';
-					}
-								
-					if ($jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').is(":checked"))
-					{
-					 	 subscribenewmembershortcode = '1';
-						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';
-										
-						$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-						$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-					}
-					else 
-					{
-	
-						subscribenewmembershortcode = '0';
-					}
-								
-					if ($jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').is(":checked"))
-					{
-					  	subscribefriendshiprequestshortcode = '1';
-						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';
-										
-						$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-						$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-					}
-					else 
-					{
-						subscribefriendshiprequestshortcode = '0';
-					}
-								
-					if ($jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').is(":checked"))
-					{
-					  	subscribefriendshipacceptshortcode = '1';
-						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';
-										
-						$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-						$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-					}
-					else 
-					{
-						subscribefriendshipacceptshortcode = '0';
-					}
-								
-					if ($jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').is(":checked"))
-					{
-					  	subscribeuseravatarshortcode = '1';
-						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';
-										
-						$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-						$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-					}
-					else 
-					{
-						subscribeuseravatarshortcode = '0';
-					}
-								
-					if ($jwebview('#pnfpb_ic_subscribe_cover_image_shortcode_enable').is(":checked"))
-					{
-					  	subscribecoverimageshortcode = '1';
-						subscribeallshortcode = '0'; 
-						unsubscribeallshortcode = '0';
-										
-						$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-						$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-					}
-					else 
-					{
-						subscribecoverimageshortcode = '0';
-					}							
-					
-								
-					if ($jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').is(":checked"))
-					{
-					  	unsubscribeallshortcode = '1';
-					}
-					else 
-					{
-						unsubscribeallshortcode = '0';
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').text(pnfpb_popup_unsubscribe_button);
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').hide();
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').removeClass("pnfpb-popup-subscribe-class-shortcode");
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-unsubscribe-class-shortcode");
+
+						pnfpb_subscription_options = '';
+
+					} else {
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').text(pnfpb_popup_subscribe_button);
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').hide();
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').addClass("pnfpb-popup-subscribe-class-shortcode");
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').removeClass("pnfpb-popup-unsubscribe-class-shortcode");
 					}
 
-					if ($jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').is(":checked"))
-					{
-						subscribegroupdetailsshortcode = '1';
-					}
 
-					if ($jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').is(":checked"))
-					{
-						subscribegroupinviteshortcode = '1';
-					}
-								
-					if ($jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').is(":checked"))
-						{	
-						  	subscribeallshortcode = '1';
-							subscribemypostshortcode = '0';
-							subscribeallcommentsshortcode = '0';
-							subscribepostactivitiesshortcode = '0';
-							subscribeactivitiesshortcode = '0';
-							subscribeprivatemessagesshortcode = '0';
-							subscribenewmembershortcode = '0';
-							subscribefriendshiprequestshortcode = '0';
-							subscribefriendshipacceptshortcode = '0';
-							subscribeuseravatarshortcode = '0';
-							subscribecoverimageshortcode = '0';
-							subscribegroupdetailsshortcode = '0';
-							subscribegroupinviteshortcode = '0';
-										
-							unsubscribeallshortcode = '0';	
-										
-							$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							subscribeallshortcode = '0';
-						}								
-					}));
-									
-					if ($jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').is(":checked"))
-						{
-						  	subscribepostactivitiesshortcode = '1';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';	
-							
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);									
-						}
-						else 
-						{
-							subscribepostactivitiesshortcode = '0';
-						}								
-					}))	;
-								
-					if ($jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').is(":checked"))
-						{
-						  	subscribeallcommentsshortcode = '1';
-							subscribemypostshortcode = '0';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-									
-							$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);									
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-								
-						}
-						else 
-						{
-							subscribeallcommentsshortcode = '0';
-						}								
-					}));
-								
-					if ($jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').is(":checked"))
-						{
-							subscribemypostshortcode = '1';
-							subscribeallcommentsshortcode = '0';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-						}
-						else 
-						{
-							subscribemypostshortcode = '0';
-						}								
-					}));
-				
-					if ($jwebview("#pnfpb_ic_subscribe_private_message_shortcode_enable").on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').is(":checked"))
-						{
-							subscribeprivatemessagesshortcode = '1';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-						}
-						else 
-						{
-								subscribeprivatemessagesshortcode = '0';
-						}								
-					}));
-	
-					if ($jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').on('click',function() {
-	
-						if ($jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').is(":checked"))
-						{
-							subscribenewmembershortcode = '1';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-						}
-						else 
-						{
-	
-							subscribenewmembershortcode = '0';
-						}								
-					}));	
-								
-					if ($jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').is(":checked"))
-						{
-							subscribefriendshiprequestshortcode = '1';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-						}
-						else 
-						{
-							subscribefriendshiprequestshortcode = '0';
-						}								
-					}));
-								
-					if ($jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').is(":checked"))
-						{
-							subscribefriendshipacceptshortcode = '1';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-						}
-						else 
-						{
-							subscribefriendshipacceptshortcode = '0';
-						}								
-					}));
-								
-					if ($jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').is(":checked"))
-						{
-							subscribeuseravatarshortcode = '1';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-						}
-						else 
-						{
-							subscribeuseravatarshortcode = '0';
-						}								
-					}));
-								
-					if ($jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').is(":checked"))
-						{
-							subscribecoverimageshortcode = '1';
-							subscribeallshortcode = '0'; 
-							unsubscribeallshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-							$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);	
-										
-						}
-						else 
-						{
-							subscribecoverimageshortcode = '0';
-						}								
-					}));							
-				
-								
-					if ($jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').on('click',function() {
-									
-						if ($jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').is(":checked"))
-						{
-							unsubscribeallshortcode = '1';
-							subscribemypostshortcode = '0';
-							subscribeallcommentsshortcode = '0';
-							subscribeprivatemessagesshortcode = '0';
-							subscribenewmembershortcode = '0';
-							subscribefriendshiprequestshortcode = '0';
-							subscribefriendshipacceptshortcode = '0';
-							subscribeuseravatarshortcode = '0';
-							subscribecoverimageshortcode = '0';
-							subscribepostactivitiesshortcode = '0'; 
-							subscribeallshortcode = '0';
-							subscribegroupdetailsshortcode = '0';
-							subscribegroupinviteshortcode = '0';
-										
-							$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_friendship_accepted_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked',false);
-							$jwebview('#pnfpb_ic_subscribe_cover_image_change_shortcode_enable').prop('checked',false);								
-						}
-						else 
-						{
-							unsubscribeallshortcode = '0';
-						}								
-					}));							
-								
-								
-					var pnfpb_subscribe_button_text = pnfpb_ajax_object_mobile_app_interface_script.save_button_text;
-					var pnfpb_cancel_button_text = pnfpb_ajax_object_mobile_app_interface_script.cancel_button_text;
-					var pnfpb_subscribe_text_confirm = pnfpb_ajax_object_mobile_app_interface_script.subscribe_dialog_text_confirm;
-					var pnfpb_unsubscribe_text_confirm = pnfpb_ajax_object_mobile_app_interface_script.unsubscribe_dialog_text_confirm;
-	
-					$jwebview( "#pnfpb_subscribe_dialog_confirm" ).dialog({
-						autoOpen: true,  
-						resizable: false,
-						height: "auto",
-						closeText : '',
-						open: function(event, ui) {
-						},									
-						width: 300,									
-						modal: true,
-						buttons: [
-							{ 	
-								text: pnfpb_cancel_button_text,
-								   open: function() {
-									$jwebview(this).attr('style','font-weight:normal;color:#000000;background-color:#dddddd;border:0px');
-								},
-								click: function() {
-									 $jwebview(this).dialog( "close" );
-								}},
-								{
-									text: pnfpb_subscribe_button_text,
-									   open: function() {
-										$jwebview(this).attr('style','font-weight:bold;color:'+pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_text_color+';background-color:'+pnfpb_ajax_object_mobile_app_interface_script.subscribe_button_color+';border:0px');
-									},
-									click: function() 
-									{
-										
-										subscriptionoptions = subscribeallshortcode + subscribepostactivitiesshortcode + subscribeallcommentsshortcode + subscribemypostshortcode + subscribeprivatemessagesshortcode + subscribenewmembershortcode + subscribefriendshiprequestshortcode + subscribefriendshipacceptshortcode + unsubscribeallshortcode + subscribeuseravatarshortcode + subscribecoverimageshortcode  + subscribeactivitiesshortcode + subscribegroupinviteshortcode + subscribegroupdetailsshortcode;
-								
-										var data = {
-												action: 'icpushcallback',
-												device_id:deviceid,
-												subscriptionoptions:subscriptionoptions,
-												pushtype: 'subscribe-button'
-										};
-									
-										$jwebview.post(pnfpb_ajax_object_mobile_app_interface_script.ajax_url, data, function(responseajax) {
-	
-												var response = JSON.parse(responseajax);
-														
-												subscriptionoptions = response.subscriptionoptions;
-														
-												var subscriptionoptionsarray = subscriptionoptions.split('');
-															
-												if (subscriptionoptionsarray.length >= 14)
-												{
-	
-													if (subscriptionoptionsarray[0] === '1')
-													{
-													 	$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-														$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-														$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-		
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked', false);
-													}
-								
-													if (subscriptionoptionsarray[1] === '1')
-													{
-													  	$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked', false);
-													}
+					$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').off().on('click',function(event) {
 
-													if (subscriptionoptionsarray[1] === '11')
-													{
-													  	$jwebview('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_activities_shortcode_enable').prop('checked', false);
-													}													
-								
-													if (subscriptionoptionsarray[2] === '1')
-													{
-													  	$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked', false);
-													}
-								
-													if (subscriptionoptionsarray[3] === '1')
-													{
-													  	$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked', false);
-													}							
-	
-													if (subscriptionoptionsarray[4] === '1')
-													{
-														$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-													}
-																
-													if (subscriptionoptionsarray[5] === '1')
-													{
-														$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-													}
-																
-													if (subscriptionoptionsarray[6] === '1')
-													{
-													  	$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-													}
-																
-													if (subscriptionoptionsarray[7] === '1')
-													{
-													  	$jwebview('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
-													}
-																
-													if (subscriptionoptionsarray[8] === '1')
-													{
-													 	 $jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-													}
-																
-													if (subscriptionoptionsarray[9] === '1')
-													{
-													  	$jwebview('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', false);
-													}															
-	
-													if (subscriptionoptionsarray[10] === '1')
-													{
-													  	$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);
-														$jwebview('#pnfpb_ic_subscribe_post_activities_shortcode_enable').prop('checked',false);
-														$jwebview('#pnfpb_ic_subscribe_all_comments_shortcode_enable').prop('checked',false);
-														$jwebview('#pnfpb_ic_subscribe_my_post_shortcode_enable').prop('checked',false);
-														$jwebview('#pnfpb_ic_subscribe_private_message_shortcode_enable').prop('checked', false);
-														$jwebview('#pnfpb_ic_subscribe_new_member_shortcode_enable').prop('checked', false);
-														$jwebview('#pnfpb_ic_subscribe_friendship_request_shortcode_enable').prop('checked', false);
-														$jwebview('#pnfpb_ic_subscribe_friendship_accept_shortcode_enable').prop('checked', false);
-														$jwebview('#pnfpb_ic_subscribe_user_avatar_shortcode_enable').prop('checked', false);
-														$jwebview('#pnfpb_ic_subscribe_cover_image_shortcode_enable').prop('checked', false);
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked', false);
-													}
 
-													if (subscriptionoptionsarray[12] && subscriptionoptionsarray[12] === '1')
-													{
-														$jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);							
-								
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_group_details_update_shortcode_enable').prop('checked', false);
-													}
-															
-													if (subscriptionoptionsarray[13] && subscriptionoptionsarray[13] === '1')
-													{
-														$jwebview('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', true);
-														$jwebview('#pnfpb_ic_subscribe_all_shortcode_enable').prop('checked',false);	
-														$jwebview('#pnfpb_ic_unsubscribe_all_shortcode_enable').prop('checked',false);							
-								
-													}
-													else 
-													{
-														$jwebview('#pnfpb_ic_subscribe_group_invite_shortcode_enable').prop('checked', false);
-													}													
-	
-												}
-								
-										});
-								
-									},
+						if ($jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').is(":checked"))
+						{
+
+							pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '1';
+
+							if (pnfpb_show_push_notify_types.length > 0) {
+
+								for (var pnfpb_notify_type_element = 1; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
+
+									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element] = '0';
+
 								}
 
-							]
-						});
-									
-						$jwebview('#pnfpb_subscribe_dialog_confirm').on('dialogclose', function(event) {
-							$jwebview(".pnfpb-unsubscribe-alert-msg").html("");
-							$jwebview(".pnfpb-subscribe-alert-msg").html("");
-						});
-						
-				})
+							}
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_post_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_activity_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_all_comments_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_my_comments_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_private_message_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_new_member_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_friendship_request_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_friendship_accepted_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_avatar_change_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_cover_image_change_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').prop('checked',false);
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').prop('checked',false);
+
+							if (pnfpb_custom_post_types.length > 0) {
+
+								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+
+									$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').prop('checked',false);
+
+									var pnfpb_index = $jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').attr("pnfpb_index");
+
+									pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+
+								}
+							}
+
+
+						}
+						else 
+						{
+
+
+							pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+						}								
+					});
+
+					$jwebview('.pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').off().on('click',function(event) {
+
+
+						if ($jwebview('.pnfpb_bell_icon_prompt_subscription_favourite_enable_shortcode').is(":checked"))
+						{
+
+
+							$jwebview('.pnfpb_bell_icon_shortcode_subscription_all_enable').prop('checked',false);
+
+							pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '1';
+
+
+						}
+						else 
+						{
+							pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox = '0';
+						}								
+					});				
+
+					$jwebview('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').off().on('click',function(event) {
+
+
+						if ($jwebview('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable_shortcode').is(":checked"))
+						{
+
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+							pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '1';
+
+
+						}
+						else 
+						{
+							pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[12] = '0';
+						}								
+					});
+
+					$jwebview('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').off().on('click',function(event) {
+
+
+						if ($jwebview('.pnfpb_bell_icon_prompt_subscription_group_invite_enable_shortcode').is(":checked"))
+						{
+
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+							pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '1';
+
+
+						}
+						else 
+						{
+
+							pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[13] = '0';
+						}								
+					});				
+
+					if (pnfpb_show_push_notify_types.length > 0) {
+
+						for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 12; pnfpb_notify_type_element++) {
+
+							if (pnfpb_show_push_notify_types[pnfpb_notify_type_element] !== 'all') {
+
+								$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_show_push_notify_types[pnfpb_notify_type_element]+'_enable_shortcode').off().on('click',function(event) {
+
+									var pnfpb_selector = '.'+$jwebview(this).attr("class");
+
+									var pnfpb_index = $jwebview(this).attr("pnfpb_index");
+
+									if ($jwebview(pnfpb_selector).is(":checked"))
+									{
+
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '1';
+
+
+										if (pnfpb_notify_type_element > 0) {
+
+											pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+
+											$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+
+										}
+
+									}
+									else 
+									{
+
+										pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_index] = '0';
+
+									}
+
+
+								});
+							}								
+
+						}
+
+					}
+
+					if (pnfpb_custom_post_types.length > 0) {
+
+						for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
+
+							$jwebview('.pnfpb_bell_icon_prompt_subscription_'+pnfpb_custom_post_types[pnfpb_post_type_element]+'_enable_shortcode').off().on('click',function(event) {
+
+								var pnfpb_selector = '.'+$jwebview(this).attr("class");
+
+								var pnfpb_index = $jwebview(this).attr("pnfpb_index");
+
+								if ($jwebview(pnfpb_selector).is(":checked"))
+								{
+
+									pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '1';
+
+									pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[0] = '0';
+
+									$jwebview('.pnfpb_bell_icon_prompt_subscription_all_enable_shortcode').prop('checked',false);
+
+
+								}
+								else 
+								{
+
+									pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_index-14] = '0';
+
+
+								}
+
+
+							});								
+
+						}
+
+					}
+
+					$jwebview('.pnfpb-push-subscribe-options-button-shortcode').off().on( "click", async (event) => {
+
+						event.stopPropagation(); 
+
+						event.preventDefault();	
+
+						$jwebview('.pnfpb_bell_icon_custom_prompt_loader_shortcode').show();
+
+						$jwebview('.pnfpb-push-subscribe-button-shortcode').prop('disabled', true);
+
+						$jwebview('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', true);
+
+						var pnfpb_bell_icon_prompt_subscription_options = '';
+
+						if (pnfpb_show_push_notify_types.length > 0) {
+
+							for (var pnfpb_notify_type_element = 0; pnfpb_notify_type_element < 14; pnfpb_notify_type_element++) {
+
+								pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_prompt_subscribe_push_type_checkbox[pnfpb_notify_type_element];
+
+							}
+
+						}
+
+						if (pnfpb_custom_post_types.length > 0) {
+
+							for (var pnfpb_post_type_element = 0; pnfpb_post_type_element <= 10; pnfpb_post_type_element++) {
+
+								if (pnfpb_post_type_element < pnfpb_custom_post_types.length && pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element]) {
+
+									pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_prompt_subscribe_custom_post_checkbox[pnfpb_post_type_element];
+
+								} else {
+
+									pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+'0';
+								}
+
+							}
+
+						}
+
+						pnfpb_bell_icon_prompt_subscription_options = pnfpb_bell_icon_prompt_subscription_options+pnfpb_bell_icon_shortcode_subscribe_favourite_checkbox;
+
+						if (deviceid) {
+
+							var data = {
+								action: 'icpushcallback',
+								device_id:deviceid,
+								subscriptionoptions:pnfpb_bell_icon_prompt_subscription_options,
+								nonce: pnfpb_ajax_object_mobile_app_interface_script.nonce,
+								pushtype: 'subscribe-button'
+							};
+
+							$jwebview.post(pnfpb_ajax_object_mobile_app_interface_script.ajax_url, data, function(responseajax) {
+
+								var response = JSON.parse(responseajax);
+
+								pnfpb_subscription_options = response.subscriptionoptions;
+
+								$jwebview('.pnfpb_bell_icon_custom_prompt_loader_shortcode').hide();
+
+								$jwebview('.pnfpb-push-subscribe-options-button-shortcode').show();
+
+								$jwebview('.pnfpb-push-subscribe-options-button-container-shortcode').show();
+
+								$jwebview('.pnfpb-push-subscribe-button-shortcode').prop('disabled', false);
+
+								$jwebview('.pnfpb-push-subscribe-options-button-shortcode').prop('disabled', false);								
+
+								$jwebview('.pnfpb-push-status-text-shortcode').text(__('Subscription options updated','push-notification-for-post-and-buddypress'));
+
+								$jwebview('.pnfpb-push-status-text-shortcode').addClass("pnfpb-push-status-text-opened-shortcode");
+
+
+							});
+						}
+
+					});				
+
+				});
 	
 			}	 
 		 
 		}
-	}
 
-});
+	});
 }

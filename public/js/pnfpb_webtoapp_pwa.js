@@ -2,17 +2,19 @@ var pnfpb_webtoapp_userid;
 
 var pnfpbwebtoapptoken;
 
-const { __ } = wp.i18n;
+if (typeof __ === 'undefined') {
+	const { __ } = wp.i18n;
+}
 
 pnfpb_webtoapp_userid = pnfpb_ajax_object_webtoapp_push.userid;
 
 var pnfpb_webtoapp_userid_os = pnfpb_webtoapp_userid;
 
 
-var standalone = window.navigator.standalone,
-  userAgent = window.navigator.userAgent.toLowerCase(),
-  safari = /safari/.test(userAgent),
-  ios = /iphone|ipod|ipad/.test(userAgent);
+var pnfpb_standalone = window.navigator.standalone,
+  pnfpb_userAgent = window.navigator.userAgent.toLowerCase(),
+  pnfpb_safari = /safari/.test(pnfpb_userAgent),
+  pnfpb_ios = /iphone|ipod|ipad/.test(pnfpb_userAgent);
 	
 var pnfpb_webview = false;
 
@@ -22,23 +24,23 @@ var $j = jQuery.noConflict();
 
 $j(document).ready( async function() {
 	
-	if (ios) {
-  		if (!standalone && safari) {
-    		// Safari
-    		pnfpb_webview = false;
-  		} else if (!standalone && !safari) {
-    		// iOS webview
-    		pnfpb_webview = true;
-  	
-  		};
+	if (pnfpb_ios) {
+	  if (!pnfpb_standalone && pnfpb_safari) {
+		// Safari
+		pnfpb_webview = false;
+	  } else if (!pnfpb_standalone && !pnfpb_safari) {
+		// iOS webview
+		pnfpb_webview = true;
+
+	  };
 	} else {
-  		if (userAgent.includes('wv')) {
-    		// Android webview
-    		pnfpb_webview = true;
-  		} else {
-    		// Chrome
-    		pnfpb_webview = false;
-  		}
+	  if (pnfpb_userAgent.includes('wv')) {
+		// Android webview
+		pnfpb_webview = true;
+	  } else {
+		// Chrome
+		pnfpb_webview = false;
+	  }
 	};
 	
 	is_webtoapp = navigator.userAgent.includes("App-WebView");
@@ -57,15 +59,13 @@ $j(document).ready( async function() {
 			
 				await setNotificationTopicSubscriptionStatus(true, "pnfpbondemand");
 			
-				console.log(pnfpbwebtoapptoken);
-				
-				console.log(pnfpbwebtoappid);
 			
 				if (pnfpbwebtoappid) {
 					var data = {
 						action: 'icpushcallback',
 						webtoapp_userid:pnfpbwebtoappid,
 						webtoapp_deviceid:pnfpbwebtoapptoken,
+						nonce: pnfpb_ajax_object_webtoapp_push.nonce,
 						pushtype: 'webtoapp_subscribed_users'
 					};	
 					$j.post(pnfpb_ajax_object_webtoapp_push.ajax_url, data, function(responseajax) {
@@ -122,6 +122,7 @@ $j(document).ready( async function() {
 					action: 'icpushcallback',
 					device_id:deviceid,
 					bpgroup_id:leave_group_id,
+					nonce: pnfpb_ajax_object_webtoapp_push.nonce,
 					pushtype: 'unsubscribe-group-button'
 				};
 								
@@ -193,6 +194,7 @@ $j(document).ready( async function() {
 					action: 'icpushcallback',
 					device_id:deviceid,
 					bpgroup_id:leave_group_id,
+					nonce: pnfpb_ajax_object_webtoapp_push.nonce,
 					pushtype: 'unsubscribe-group-button'
 				};
 								
@@ -271,6 +273,7 @@ $j(document).ready( async function() {
 								action: 'icpushcallback',
 								device_id:deviceid,
 								bpgroup_id:groupId,
+								nonce: pnfpb_ajax_object_webtoapp_push.nonce,
 								pushtype: 'subscribe-group-button'
 							};
 								
@@ -350,6 +353,7 @@ $j(document).ready( async function() {
 									action: 'icpushcallback',
 									device_id:deviceid,
 									bpgroup_id:groupId,
+									nonce: pnfpb_ajax_object_webtoapp_push.nonce,
 									pushtype: 'unsubscribe-group-button'
 								};
 								
@@ -422,6 +426,7 @@ $j(document).ready( async function() {
 			var data = {
 				action: 'icpushcallback',
 				webtoapp_get_subscriptionoptions_id:pnfpbwebtoappid,
+				nonce: pnfpb_ajax_object_webtoapp_push.nonce,
 				pushtype: 'webtoapp_get_frontend_subscriptions'
 			};
 							
@@ -700,6 +705,7 @@ $j(document).ready( async function() {
 						
 						var data = {
 							action: 'icpushcallback',
+							nonce: pnfpb_ajax_object_webtoapp_push.nonce,
 							webtoapp_subscriptionoptions:subscriptionoptions,
 							pushtype: 'webtoapp_frontend_subscriptions'
 						};

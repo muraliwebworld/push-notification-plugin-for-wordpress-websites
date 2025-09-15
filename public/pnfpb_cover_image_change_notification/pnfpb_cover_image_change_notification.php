@@ -11,191 +11,282 @@
  *
  * @since 1.47
  */
+if (!class_exists("PNFPB_cover_image_change_notification_class")) {
+    class PNFPB_cover_image_change_notification_class
+    {
+        public function PNFPB_cover_image_change_notification(
+			$item_id = 0,
+			$cover_url = ''
+		) {
+			$apiaccesskey = get_option("pnfpb_ic_fcm_google_api");
+			
+			$webpush_option = get_option("pnfpb_webpush_push");
+			$webpush_firebase = get_option("pnfpb_webpush_push_firebase");
+			
+			$iconurl = bp_core_fetch_avatar([
+				"item_id" => $item_id, // output user id of post author
+				"type" => "full",
+				"html" => false, // FALSE = return url, TRUE (default) = return url wrapped with html
+			]);
 
-$apiaccesskey = get_option("pnfpb_ic_fcm_google_api");
+			$imageurl = "";			
 
-// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
+			// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 
-if (
-    (get_option("pnfpb_ic_fcm_cover_image_change_enable") == 1 &&
-        get_option("pnfpb_progressier_push") !== "1" &&
-        ($apiaccesskey != "" && $apiaccesskey != false)) ||
-    (get_option("pnfpb_ic_fcm_cover_image_change_enable") == 1 &&
-        (get_option("pnfpb_onesignal_push") === "1" ||
-            get_option("pnfpb_httpv1_push") === "1"))
-) {
-    global $wpdb;
+			if (
+				(get_option("pnfpb_ic_fcm_cover_image_change_enable") == 1 &&
+					get_option("pnfpb_progressier_push") !== "1" &&
+					($apiaccesskey != "" && $apiaccesskey != false)) ||
+				(get_option("pnfpb_ic_fcm_cover_image_change_enable") == 1 &&
+					(get_option("pnfpb_onesignal_push") === "1" ||
+					$webpush_option === '1' || 
+					 $webpush_option === '2' || 
+					$webpush_firebase === '1'||	
+					 get_option("pnfpb_httpv1_push") === "1"))
+			) {
+				global $wpdb;
 
-    $deviceidswebview = [];
+				$deviceidswebview = [];
 
-    $deviceids = [];
+				$deviceids = [];
 
-    $member_name = bp_core_get_user_displayname($item_id);
+				$member_name = bp_core_get_user_displayname($item_id);
 
-    $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+				$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 
-    $url = "https://fcm.googleapis.com/fcm/send";
+				$url = "https://fcm.googleapis.com/fcm/send";
 
-    $activity_content_push = "";
+				$activity_content_push = "";
 
-    $notificationtitle =
-        $member_name .
-        esc_html(
-            __(
-                " updated cover photo",
-                "push-notification-for-post-and-buddypress"
-            )
-        );
+				$notificationtitle =
+					$member_name .
+					esc_html(
+						__(
+							" updated cover photo",
+							"push-notification-for-post-and-buddypress"
+						)
+					);
 
-    $titletext = get_option("pnfpb_ic_fcm_cover_image_change_text");
+				$titletext = get_option("pnfpb_ic_fcm_cover_image_change_text");
 
-    if ($titletext && $titletext !== "") {
-        $notificationtitle = str_replace(
-            "[member name]",
-            $member_name,
-            $titletext
-        );
-    }
+				if ($titletext && $titletext !== "") {
+					$notificationtitle = str_replace(
+						"[member name]",
+						$member_name,
+						$titletext
+					);
+				}
 
-    $activity_content_push = str_replace(
-        "[member name]",
-        $member_name,
-        $activity_content_push
-    );
+				$activity_content_push =
+					$member_name .
+					esc_html(
+						__(
+							" updated profile cover image",
+							"push-notification-for-post-and-buddypress"
+						)
+					);				
+				
+				$contenttext = get_option("pnfpb_ic_fcm_cover_image_change_content");
 
-    if (function_exists("bp_members_get_user_url")) {
-        $messageurl = esc_url(bp_members_get_user_url($item_id));
-    } else {
-        $messageurl = esc_url(bp_core_get_user_domain($item_id));
-    }
+				if ($contenttext && $contenttext != '') {
+					$activity_content_push = str_replace(
+						"[member name]",
+						$member_name,
+						$contenttext
+					);		
+				}	
 
-    if (get_option("pnfpb_onesignal_push") === "1") {
-        $target_userid_array = [];
+				if (function_exists("bp_members_get_user_url")) {
+					$messageurl = esc_url(bp_members_get_user_url($item_id));
+				} else {
+					$messageurl = esc_url(bp_core_get_user_domain($item_id));
+				}
+				
+				$webpush_option = get_option("pnfpb_webpush_push");
+				$webpush_firebase = get_option("pnfpb_webpush_push_firebase");			
+				$target_deviceid_values = [];					
+				
+				if ($webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1') {
+					
+					$target_deviceid_values = $wpdb->get_results(
+						$wpdb->prepare(
+							"SELECT * FROM %i WHERE device_id NOT LIKE %s AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,10,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+							$table_name,
+							"%!!%",
+							"","",""
+						)
+					);
+					
+					if (count($target_deviceid_values) > 0) {
+						foreach ($target_deviceid_values as $target_deviceid_value) {
+							$target_subscription_array[] =  [
+								"endpoint" => $target_deviceid_value->web_auth,
+								"keys" => [
+									'p256dh' => $target_deviceid_value->web_256,
+									'auth' => $target_deviceid_value->subscription_auth_token
+								]
+							];
+						}
 
-        if (
-            (get_option("pnfpb_ic_fcm_loggedin_notify") &&
-                get_option("pnfpb_ic_fcm_loggedin_notify") === "1") ||
-            get_option("pnfpb_ic_fcm_frontend_enable_subscription") === "1"
-        ) {
-            $target_userid_array_values = $wpdb->get_col(
-                $wpdb->prepare(
-                    "SELECT userid FROM %i WHERE device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,10,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
-                    $table_name,
-                    "%onesignal%"
-                )
-            );
+						$PNFPB_WP_web_push_notification_class_obj = new PNFPB_web_push_notification_class();
+						$PNFPB_WP_web_push_notification_class_obj->PNFPB_web_push_notification(
+							0,
+							$notificationtitle,
+							mb_substr(
+								stripslashes(
+									wp_strip_all_tags(trim($activity_content_push))
+								),
+								0,
+								130,
+								"UTF-8"
+							),
+							$iconurl,
+							$imageurl,
+							$messageurl,
+							["click_url" => $messageurl],
+							$target_subscription_array,
+							0,
+							0,
+							"coverimagechange"
+						);						
+					}
+					
+				} else {
 
-            $target_userid_array = array_map(function ($value) {
-                return $value == 1 ? "1pnfpbadm" : $value;
-            }, $target_userid_array_values);
-        }
+					if (get_option("pnfpb_onesignal_push") === "1") {
+						$target_userid_array = [];
 
-        if (
-            get_option("pnfpb_ic_fcm_buddypressoptions_schedule_now_enable") &&
-            get_option("pnfpb_ic_fcm_buddypressoptions_schedule_now_enable") ===
-                "1"
-        ) {
-            $action_scheduler_status = as_schedule_single_action(
-                time(),
-                "PNFPB_onesignal_schedule_push_notification_hook",
-                [
-                    $activity_id,
-                    $activitytitle,
-                    $localactivitycontent,
-                    $activitylink,
-                    $imageurl,
-                    $target_userid_array,
-                ]
-            );
-        } else {
-            $response = $this->PNFPB_icfcm_onesignal_push_notification(
-                $activity_id,
-                $activitytitle,
-                $localactivitycontent,
-                $activitylink,
-                $imageurl,
-                $target_userid_array
-            );
-        }
-    } else {
-        $iconurl = bp_core_fetch_avatar([
-            "item_id" => $item_id, // output user id of post author
-            "type" => "full",
-            "html" => false, // FALSE = return url, TRUE (default) = return url wrapped with html
-        ]);
+						$target_userid_array_values = $wpdb->get_col(
+							$wpdb->prepare(
+								"SELECT userid FROM %i WHERE device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,10,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+								$table_name,
+								"%onesignal%"
+							)
+						);
 
-        $imageurl = "";
+						$target_userid_array = array_map(function ($value) {
+							return $value == 1 ? "1pnfpbadm" : $value;
+						}, $target_userid_array_values);
 
-        if (
-            get_option("pnfpb_ic_fcm_cover_image_change_content") != false &&
-            get_option("pnfpb_ic_fcm_cover_image_change_content") != ""
-        ) {
-            $activity_content_push = get_option(
-                "pnfpb_ic_fcm_cover_image_change_content"
-            );
-        }
+						if (
+							get_option("pnfpb_ic_fcm_buddypressoptions_schedule_now_enable") &&
+							get_option("pnfpb_ic_fcm_buddypressoptions_schedule_now_enable") ===
+								"1"
+						) {
+							$action_scheduler_status = as_schedule_single_action(
+								time(),
+								"PNFPB_onesignal_schedule_push_notification_hook",
+								[
+									$item_id,
+									$notificationtitle,
+									mb_substr(
+										stripslashes(
+											wp_strip_all_tags(trim($activity_content_push))
+										),
+										0,
+										130,
+										"UTF-8"
+									),
+									$messageurl,
+									$iconurl,
+									$target_userid_array,
+								]
+							);
+						} else {
+							$PNFPB_WP_onesignal_notification_class_obj = new PNFPB_onesignal_notification_class();
+							$PNFPB_WP_onesignal_notification_class_obj->PNFPB_onesignal_notification(
+									$item_id,
+									$notificationtitle,
+									mb_substr(
+										stripslashes(
+											wp_strip_all_tags(trim($activity_content_push))
+										),
+										0,
+										130,
+										"UTF-8"
+									),
+									$messageurl,
+									$iconurl,
+									$target_userid_array,
+							);
+						}
+					} else {
 
-        if (get_option("pnfpb_httpv1_push") === "1") {
-            if (
-                get_option(
-                    "pnfpb_ic_fcm_buddypressoptions_schedule_now_enable"
-                ) &&
-                get_option(
-                    "pnfpb_ic_fcm_buddypressoptions_schedule_now_enable"
-                ) === "1"
-            ) {
-                $action_scheduler_status = as_schedule_single_action(
-                    time(),
-                    "PNFPB_httpv1_schedule_push_notification_hook",
-                    [
-                        0,
-                        $notificationtitle,
-                        mb_substr(
-                            stripslashes(
-                                wp_strip_all_tags(trim($activity_content_push))
-                            ),
-                            0,
-                            130,
-                            "UTF-8"
-                        ),
-                        $iconurl,
-                        $iconurl,
-                        $messageurl,
-                        ["click_url" => $messageurl],
-                        [],
-                        [],
-                        $item_id,
-                        0,
-                        "coverimagechange",
-                    ]
-                );
-            } else {
-                $this->PNFPB_icfcm_httpv1_send_push_notification(
-                    0,
-                    $notificationtitle,
-                    mb_substr(
-                        stripslashes(
-                            wp_strip_all_tags(trim($activity_content_push))
-                        ),
-                        0,
-                        130,
-                        "UTF-8"
-                    ),
-                    $iconurl,
-                    $iconurl,
-                    $messageurl,
-                    ["click_url" => $messageurl],
-                    [],
-                    [],
-                    $item_id,
-                    0,
-                    "coverimagechange"
-                );
-            }
-        }
+						if (
+							get_option("pnfpb_ic_fcm_cover_image_change_content") != false &&
+							get_option("pnfpb_ic_fcm_cover_image_change_content") != ""
+						) {
+							$activity_content_push = get_option(
+								"pnfpb_ic_fcm_cover_image_change_content"
+							);
+						}
 
-        do_action("PNFPB_connect_to_external_api_for_cover_image_change");
-    }
+						if (get_option("pnfpb_httpv1_push") === "1") {
+							if (
+								get_option(
+									"pnfpb_ic_fcm_buddypressoptions_schedule_now_enable"
+								) &&
+								get_option(
+									"pnfpb_ic_fcm_buddypressoptions_schedule_now_enable"
+								) === "1"
+							) {
+								$action_scheduler_status = as_schedule_single_action(
+									time(),
+									"PNFPB_httpv1_schedule_push_notification_hook",
+									[
+										0,
+										$notificationtitle,
+										mb_substr(
+											stripslashes(
+												wp_strip_all_tags(trim($activity_content_push))
+											),
+											0,
+											130,
+											"UTF-8"
+										),
+										$iconurl,
+										$iconurl,
+										$messageurl,
+										["click_url" => $messageurl],
+										[],
+										[],
+										$item_id,
+										0,
+										"coverimagechange",
+									]
+								);
+							} else {
+								$FB_httpv1_notification_class_obj = new PNFPB_firebase_httpv1_notification_class();
+								$FB_httpv1_notification_class_obj->PNFPB_firebase_httpv1_notification(							
+									0,
+									$notificationtitle,
+									mb_substr(
+										stripslashes(
+											wp_strip_all_tags(trim($activity_content_push))
+										),
+										0,
+										130,
+										"UTF-8"
+									),
+									$iconurl,
+									$iconurl,
+									$messageurl,
+									["click_url" => $messageurl],
+									[],
+									[],
+									$item_id,
+									0,
+									"coverimagechange"
+								);
+							}
+						}
+
+						do_action("PNFPB_connect_to_external_api_for_cover_image_change");
+					}
+				}
+			}
+		}
+	}
 }
 
 ?>

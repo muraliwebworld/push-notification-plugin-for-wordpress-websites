@@ -14,19 +14,27 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
 
             global $wpdb;
             $table = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
-            $client = new Google_Client();
-            // Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-            $client->useApplicationDefaultCredentials();
-            // Alternatively, provide the JSON authentication file directly.
-            $configArray = json_decode(get_option("pnfpb_sa_json_data"), true);
-            $client->setAuthConfig($configArray);
-            // Add the scope as a string (multiple scopes can be provided as an array)
-            $client->addScope(
-                "https://www.googleapis.com/auth/firebase.messaging"
-            );
-            $client->refreshTokenWithAssertion();
-            $pnfpb_fbauth_token_array = $client->getAccessToken();
-            $pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
+			$pnfpb_fbauth_token = get_option("pnfpb_firebase_oauth_token");
+
+			if (get_option("pnfpb_firebase_oauth_token") === false || get_option("pnfpb_firebase_oauth_token") === "") {
+
+				$client = new Google_Client();
+
+				// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
+				//
+				$client->useApplicationDefaultCredentials();
+
+				// Alternatively, provide the JSON authentication file directly.
+				$configArray = json_decode(get_option("pnfpb_sa_json_data"), true);
+				$client->setAuthConfig($configArray);
+
+				// Add the scope as a string (multiple scopes can be provided as an array)
+				$client->addScope("https://www.googleapis.com/auth/firebase.messaging");
+				$client->refreshTokenWithAssertion();
+				$pnfpb_fbauth_token_array = $client->getAccessToken();
+				$pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
+				update_option("pnfpb_firebase_oauth_token", $pnfpb_fbauth_token);
+			}
             $url = "https://iid.googleapis.com/iid/v1:batchAdd";
             $headers = [
                 "Authorization" => "Bearer " . $pnfpb_fbauth_token,
@@ -70,14 +78,14 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
             ]);
 
             $pnfpb_topic_subscriptions_request = Requests::request_multiple(
-                $pnfpb_topic_requests
+                $pnfpb_topic_requests, array("blocking" => false)
             );
 
             $deviceid_version_update_status = $wpdb->query(
                 $wpdb->prepare(
                     "UPDATE %i SET firebase_version = %s WHERE device_id LIKE %s",
                     $table,
-                    "httpv5",
+                    "v5",
                     "%" . $wpdb->esc_like($bpdeviceid) . "%"
                 )
             );
@@ -88,7 +96,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
             $bpdeviceid,
             $pushtype = "",
             $old_subscription_option = "",
-            $pnfpb_versionvalue = "httpv5"
+            $pnfpb_versionvalue = "v5"
         ) {
             /*** Function to opt for various Firebase httpv1 push notification options  ***/
 
@@ -138,19 +146,27 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                 }
             }
 
-            $client = new Google_Client();
-            // Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-            $client->useApplicationDefaultCredentials();
-            // Alternatively, provide the JSON authentication file directly.
-            $configArray = json_decode(get_option("pnfpb_sa_json_data"), true);
-            $client->setAuthConfig($configArray);
-            // Add the scope as a string (multiple scopes can be provided as an array)
-            $client->addScope(
-                "https://www.googleapis.com/auth/firebase.messaging"
-            );
-            $client->refreshTokenWithAssertion();
-            $pnfpb_fbauth_token_array = $client->getAccessToken();
-            $pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
+			$pnfpb_fbauth_token = get_option("pnfpb_firebase_oauth_token");
+
+			if (get_option("pnfpb_firebase_oauth_token") === false || get_option("pnfpb_firebase_oauth_token") === "") {
+
+				$client = new Google_Client();
+
+				// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
+				//
+				$client->useApplicationDefaultCredentials();
+
+				// Alternatively, provide the JSON authentication file directly.
+				$configArray = json_decode(get_option("pnfpb_sa_json_data"), true);
+				$client->setAuthConfig($configArray);
+
+				// Add the scope as a string (multiple scopes can be provided as an array)
+				$client->addScope("https://www.googleapis.com/auth/firebase.messaging");
+				$client->refreshTokenWithAssertion();
+				$pnfpb_fbauth_token_array = $client->getAccessToken();
+				$pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
+				update_option("pnfpb_firebase_oauth_token", $pnfpb_fbauth_token);
+			}
             $url = "https://iid.googleapis.com/iid/v1:batchAdd";
             $headers = [
                 "Authorization" => "Bearer " . $pnfpb_fbauth_token,
@@ -346,7 +362,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                         $subscription_option_array[3] !==
                             $old_subscription_option_array[3]) ||
                         count($old_subscription_option_array) <= 3 ||
-                        $pnfpb_versionvalue !== "httpv5")) ||
+                        $pnfpb_versionvalue !== "v5")) ||
                 (count($subscription_option_array) > 3 &&
                     $subscription_option_array[2] === "1" &&
                     get_option(
@@ -356,7 +372,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                         $subscription_option_array[2] !==
                             $old_subscription_option_array[2]) ||
                         count($old_subscription_option_array) <= 3 ||
-                        $pnfpb_versionvalue !== "httpv5"))
+                        $pnfpb_versionvalue !== "v5"))
             ) {
                 $urlmycomments = "https://iid.googleapis.com/iid/v1:batchAdd";
                 $fieldsmycomments = wp_json_encode([
@@ -383,7 +399,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                             $subscription_option_array[3] !==
                                 $old_subscription_option_array[3]) ||
                             count($old_subscription_option_array) <= 3 ||
-                            $pnfpb_versionvalue !== "httpv5")) ||
+                            $pnfpb_versionvalue !== "v5")) ||
                     (((count($subscription_option_array) > 3 &&
                         $subscription_option_array[2] === "0") ||
                         (count($subscription_option_array) > 8 &&
@@ -396,7 +412,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                             $subscription_option_array[2] !==
                                 $old_subscription_option_array[2]) ||
                             count($old_subscription_option_array) <= 3 ||
-                            $pnfpb_versionvalue !== "httpv5"))
+                            $pnfpb_versionvalue !== "v5"))
                 ) {
                     $urlmycomments =
                         "https://iid.googleapis.com/iid/v1:batchRemove";
@@ -422,7 +438,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                     $subscription_option_array[4] !==
                         $old_subscription_option_array[4]) ||
                     count($old_subscription_option_array) <= 4 ||
-                    $pnfpb_versionvalue !== "httpv5")
+                    $pnfpb_versionvalue !== "v5")
             ) {
                 $urlnewmemberjoined =
                     "https://iid.googleapis.com/iid/v1:batchAdd";
@@ -468,7 +484,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                     $subscription_option_array[9] !==
                         $old_subscription_option_array[9]) ||
                     count($old_subscription_option_array) <= 9 ||
-                    $pnfpb_versionvalue !== "httpv5")
+                    $pnfpb_versionvalue !== "v5")
             ) {
                 $urlavatarchange = "https://iid.googleapis.com/iid/v1:batchAdd";
                 $fieldsavatarchange = wp_json_encode([
@@ -492,7 +508,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                         $subscription_option_array[9] !==
                             $old_subscription_option_array[9]) ||
                         count($old_subscription_option_array) <= 9 ||
-                        $pnfpb_versionvalue !== "httpv5")
+                        $pnfpb_versionvalue !== "v5")
                 ) {
                     $urlavatarchange =
                         "https://iid.googleapis.com/iid/v1:batchRemove";
@@ -518,7 +534,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                     $subscription_option_array[10] !==
                         $old_subscription_option_array[10]) ||
                     count($old_subscription_option_array) <= 10 ||
-                    $pnfpb_versionvalue !== "httpv5")
+                    $pnfpb_versionvalue !== "v5")
             ) {
                 $urlcoverimagechange =
                     "https://iid.googleapis.com/iid/v1:batchAdd";
@@ -543,7 +559,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                         $subscription_option_array[10] !==
                             $old_subscription_option_array[10]) ||
                         count($old_subscription_option_array) <= 10 ||
-                        $pnfpb_versionvalue !== "httpv5")
+                        $pnfpb_versionvalue !== "v5")
                 ) {
                     $urlcoverimagechange =
                         "https://iid.googleapis.com/iid/v1:batchRemove";
@@ -569,7 +585,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                     $subscription_option_array[12] !==
                         $old_subscription_option_array[12]) ||
                     count($old_subscription_option_array) <= 12 ||
-                    $pnfpb_versionvalue !== "httpv5")
+                    $pnfpb_versionvalue !== "v5")
             ) {
                 $urlgroupinvite = "https://iid.googleapis.com/iid/v1:batchAdd";
                 $fieldsgroupinvite = wp_json_encode([
@@ -593,7 +609,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                         $subscription_option_array[12] !==
                             $old_subscription_option_array[12]) ||
                         count($old_subscription_option_array) <= 12 ||
-                        $pnfpb_versionvalue !== "httpv5")
+                        $pnfpb_versionvalue !== "v5")
                 ) {
                     $urlgroupinvite =
                         "https://iid.googleapis.com/iid/v1:batchRemove";
@@ -619,7 +635,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                     $subscription_option_array[13] !==
                         $old_subscription_option_array[13]) ||
                     count($old_subscription_option_array) <= 13 ||
-                    $pnfpb_versionvalue !== "httpv5")
+                    $pnfpb_versionvalue !== "v5")
             ) {
                 $urlgroupdetailsupdate =
                     "https://iid.googleapis.com/iid/v1:batchAdd";
@@ -645,7 +661,7 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                         $subscription_option_array[13] !==
                             $old_subscription_option_array[13]) ||
                         count($old_subscription_option_array) <= 13 ||
-                        $pnfpb_versionvalue !== "httpv5")
+                        $pnfpb_versionvalue !== "v5")
                 ) {
                     $urlgroupdetailsupdate =
                         "https://iid.googleapis.com/iid/v1:batchRemove";
@@ -762,14 +778,14 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
             }
 
             $pnfpb_topic_subscriptions_request = Requests::request_multiple(
-                $pnfpb_topic_requests
+                $pnfpb_topic_requests, array("blocking" => false)
             );
 
             $deviceid_version_update_status = $wpdb->query(
                 $wpdb->prepare(
                     "UPDATE %i SET firebase_version = %s WHERE device_id LIKE %s",
                     $table,
-                    "httpv5",
+                    "v5",
                     "%" . $wpdb->esc_like($bpdeviceid) . "%"
                 )
             );

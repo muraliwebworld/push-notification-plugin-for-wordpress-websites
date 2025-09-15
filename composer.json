@@ -1,6 +1,7 @@
 {
     "require": {
-        "google/apiclient": "^2.15"
+        "google/apiclient": "^2.15",
+        "minishlink/web-push": "^9.0"
     },
     "scripts": {
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup"

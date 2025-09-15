@@ -8,81 +8,10 @@
 <h1 class="pnfpb_ic_push_settings_header"><?php echo esc_html(
     __("PNFPB - Customize buttons", "push-notification-for-post-and-buddypress")
 ); ?></h1>
-<div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb-icfcm-slug"); ?>" 
-	   class="nav-tab tab">
-		<?php echo esc_html(
-    		__("Push Settings", "push-notification-for-post-and-buddypress")
-		); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_device_tokens_list"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Device tokens", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_pwa_app_settings"); ?>" 
-		class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("PWA", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfmtest_notification"); ?>"
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Send push notification", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc"); ?>"
-	   class=" nav-tab tab">
-			<?php echo esc_html(
-    			__("Push Notifications list", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_frontend_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__(
-        			"Frontend subscription settings",
-        			"push-notification-for-post-and-buddypress"
-    			)
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_button_settings"); ?>"
-	   class="nav-tab tab  active nav-tab-active">
-			<?php echo esc_html(
-    			__("Customize buttons", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_integrate_app"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Integrate Mobile app", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb_icfm_settings_for_ngnix_server"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("NGINX", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Action Scheduler", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-</div>
+<?php
+	$pnfpb_tab_adminbutton_active = "active";
+	require_once( plugin_dir_path( __FILE__ ) . 'push_admin_menu_list.php' );
+?>
 
 <div class="pnfpb_column_1200">
 <form action="options.php" method="post" enctype="multipart/form-data" class="form-field">
@@ -496,233 +425,369 @@
 					</h3>
 				</td>
 			</tr>
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_button_shortcode_text">
-						<?php echo esc_html(
-           					__(
-               					"Shortcode - subscription button text",
-               					"push-notification-for-post-and-buddypress"
-           					)
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_button_shortcode_text" 
-						   name="pnfpb_ic_fcm_subscribe_button_shortcode_text" type="text" 
-						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_button_shortcode_text")
-									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_button_shortcode_text"));
-									} else {
-    									echo esc_attr(
-        									__(
-            									"Subscribe to push notifications",
-            									"push-notification-for-post-and-buddypress"
-        									)
-    									);
-									} ?>" 
-					/>
-				</td>
-    		</tr>
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_unsubscribe_button_shortcode_text">
-						<?php echo esc_html(
-           					__(
-               					"Shortcode - unsubscription button text",
-               					"push-notification-for-post-and-buddypress"
-           					)
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_button_shortcode_text" 
-						   name="pnfpb_ic_fcm_unsubscribe_button_shortcode_text" type="text" 
-						   value="<?php if (
-    							get_option("pnfpb_ic_fcm_unsubscribe_button_shortcode_text")
-							) {
-    							echo esc_attr(get_option("pnfpb_ic_fcm_unsubscribe_button_shortcode_text"));
-							} else {
-    							echo esc_attr(
-        						__(
-            						"Unsubscribe to push notifications",
-            						"push-notification-for-post-and-buddypress"
-        						)
-    						);
-						} ?>" 
-					/>
-				</td>
-    		</tr>			
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_button_text_shortcode">
-						<?php echo esc_html(
-           					__(
-               					"Shortcode - site subscribe/un-subscribe save text",
-               					"push-notification-for-post-and-buddypress"
-           					)
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_save_button_text_shortcode" 
-						   name="pnfpb_ic_fcm_subscribe_save_button_text_shortcode" type="text" 
-						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_save_button_text_shortcode")
-									) {
-    									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_subscribe_save_button_text_shortcode")
-    									);
-									} else {
-    									echo esc_attr(__("Save", "push-notification-for-post-and-buddypress"));
-									} ?>" 
-					/>
-				</td>
-    		</tr>
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_unsubscribe_button_text_shortcode">
-						<?php echo esc_html(
-           					__(
-               					"Shortcode - site subscribe/un-subscribe cancel text",
-               					"push-notification-for-post-and-buddypress"
-           					)
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_cancel_button_text_shortcode" 
-						   name="pnfpb_ic_fcm_unsubscribe_cancel_button_text_shortcode" type="text" 
-						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_unsubscribe_cancel_button_text_shortcode")
-									) {
-    									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_unsubscribe_cancel_button_text_shortcode")
-    									);
-									} else {
-    									echo esc_attr(__("Cancel", "push-notification-for-post-and-buddypress"));
-									} ?>" 
-					/>
-				</td>
-    		</tr>
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_shortcode_close_button_text">
-						<?php echo esc_html(
-           					__("Close", "push-notification-for-post-and-buddypress")
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_shortcode_close_button_text" 
-						   name="pnfpb_ic_fcm_shortcode_close_button_text" type="text" 
-						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_shortcode_close_button_text")
-									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_shortcode_close_button_text"));
-									} else {
-    									echo esc_attr(__("Close", "push-notification-for-post-and-buddypress"));
-								} ?>" 
-					/>
-				</td>
-    		</tr>			
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
-						<?php echo esc_html(
-           					__(
-               					"Sub-heading text while subscribing for (first time) push notification in shortcode popup box",
-               					"push-notification-for-post-and-buddypress"
-           					)
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text" name="pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text" type="text" 
-						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text")
-									) {
-    									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_subscribe_subheading_notoken_dialog_text")
-    									);
-									} else {
-    									echo esc_attr(
-        									__(
-            									"Please wait...subscribing push notification is in progress.",
-            									"push-notification-for-post-and-buddypress"
-        									)
-    									);
-									} ?>" 
-					/>
-				</td>
-    		</tr>
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
-						<?php echo esc_html(
-           					__(
-               					"Sub-heading text for the users with subscription in shortcode popup box",
-               					"push-notification-for-post-and-buddypress"
-           					)
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text" type="text" 
-						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text")
-									) {
-    									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_subscribe_subheading_withtoken_dialog_text")
-    									);
-									} else {
-    									echo esc_attr(
-        									__(
-            									"You are subscribed. Change/Update subscriptions according to your choice.",
-            									"push-notification-for-post-and-buddypress"
-        									)
-    									);
-									} ?>" 
-					/>
-				</td>
-    		</tr>			
-			<tr class="pnfpb_ic_push_settings_table_row">
-    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
-						<?php echo esc_html(
-           					__(
-               					"Subscribe all notifications option text in shortcode",
-               					"push-notification-for-post-and-buddypress"
-           					)
-       					); ?>
-					</label>
-					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_all_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_all_dialog_text" type="text" 
-						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_all_dialog_text")
-									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_all_dialog_text"));
-									} else {
-    									echo esc_attr(
-        									__("All notifications", "push-notification-for-post-and-buddypress")
-    									);
-									} ?>" 
-					/>
-				</td>
-    		</tr>
-			<?php
-   $args = [
-       "public" => true,
-       "_builtin" => false,
-   ];
+    						<tr class="pnfpb_ic_push_settings_table_row pnfpb_ic_push_settings_table_border_bottom">
+        						<td class="pnfpb_ic_push_settings_table_label_column column-columnname 
+										   pnfpb_ic_push_settings_table_label_custom_prompt_column">
+									<table class="pnfpb_ic_push_firebase_settings_table widefat fixed">
+										<thead>
+											<tr>
+												<th>
+													<?php echo "<b>" .
+                 										esc_html(
+                     										__(
+                         										"Customize Bell prompt icon in shortcode, Button color and text",
+                         										"push-notification-for-post-and-buddypress"
+                     										)
+                 										) .
+                 									"</b>"; ?>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+    										<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">										
+													<p>
+														<?php echo esc_html(
+                  											__(
+                      											"Push Subscribe prompt Icon(32x32 pixels)",
+                      											"push-notification-for-post-and-buddypress"
+                  											)
+              											); ?>
+													</p>
+													<table>
+														<tr>
+                											<td class="column-columnname">
+                    											<button id="pnfpb_ic_fcm_popup_icon_shortcode" 
+																		class="pnfpb_ic_push_settings_upload_icon_shortcode">
+																	<?php echo esc_html(
+                     													__(
+                         													"Upload Icon",
+                         													"push-notification-for-post-and-buddypress"
+                     													)
+                 												); ?>
+																</button>
+                    											<input type="hidden" id="pnfpb_ic_fcm_popup_subscribe_button_icon_shortcode" 
+																	   name="pnfpb_ic_fcm_popup_subscribe_button_icon_shortcode" 
+																	   value="<?php if (
+                                   											get_option(
+                                       											"pnfpb_ic_fcm_popup_subscribe_button_icon_shortcode"
+                                   											)
+                               												) {
+                                   												echo esc_attr(
+                                       												get_option(
+                                           												"pnfpb_ic_fcm_popup_subscribe_button_icon_shortcode"
+                                       												)
+                                   												);
+                               												} else {
+                                   												echo esc_attr(plugin_dir_url(__DIR__)) .
+                                       												"public/img/pushbell-pnfpb.png";
+                               													} ?>" 
+																	/>
+                											</td>
+            											</tr>
+														<tr>
+                											<td class="column-columnname">
+                    											<div style="display:block;width:100%; overflow:hidden; text-align:center;">
+                        											<div id="pnfpb_ic_fcm_popup_subscribe_button_icon_preview_shortcode" 
+																		 style="background-image: url(
+																			<?php if (
+                                       											get_option(
+                                           											"pnfpb_ic_fcm_popup_subscribe_button_icon_shortcode"
+                                       											)
+                                   											) {
+                                       											echo esc_url(
+                                           											get_option(
+                                              									 		"pnfpb_ic_fcm_popup_subscribe_button_icon_shortcode"
+                                           											)
+                                       											);
+                                   											} else {
+                                       											echo esc_url(plugin_dir_url(__DIR__)) .
+                                           										"public/img/pushbell-pnfpb.png";
+                                   											} ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:20px auto;background-position:center;background-repeat:no-repeat;background-size:cover;">
+																	</div>
+                    											</div>
+                											</td>
+            											</tr>
+													</table>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo esc_html(
+                 											__(
+                     											"Header text in custom prompt",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             										); ?></p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														   id="pnfpb_ic_fcm_popup_header_text_shortcode" name="pnfpb_ic_fcm_popup_header_text_shortcode" 
+														   type="text" 
+														   value="<?php if (
+                 												get_option("pnfpb_ic_fcm_popup_header_text_shortcode")
+             												) {
+                 												echo esc_attr(
+                     												get_option("pnfpb_ic_fcm_popup_header_text_shortcode")
+                 												);
+             												} else {
+                 												echo esc_attr(
+                     												__(
+                         												"Manage push notifications",
+                         												"push-notification-for-post-and-buddypress"
+                     												)
+                 												);
+             												} ?>"  
+														 />
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo esc_html(
+                 											__(
+                     											"Button text color",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             										); ?></p>
+													<input class="pnfpb_ic_push_settings_table_value_column_input_field 
+																  pnfpb_ic_fcm_push_prompt_button_background" 
+														   id="pnfpb_ic_fcm_popup_subscribe_button_text_color_shortcode" 
+														   name="pnfpb_ic_fcm_popup_subscribe_button_text_color_shortcode" 
+														   type="color" 
+														   value="<?php if (
+                 														get_option("pnfpb_ic_fcm_popup_subscribe_button_text_color_shortcode")
+             														) {
+                 														echo esc_attr(
+                     														get_option(
+                         														"pnfpb_ic_fcm_popup_subscribe_button_text_color_shortcode"
+                     														)
+                 														);
+             														} else {
+                 														echo esc_attr("#ffffff");
+             														} ?>" 
+													/>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo esc_html(
+                 										__(
+                     										"Push notification subscribe Button background color",
+                     										"push-notification-for-post-and-buddypress"
+                 										)
+             											); ?>
+													</p>
+													<input class="pnfpb_ic_push_settings_table_value_column_input_field 
+																  pnfpb_ic_fcm_push_prompt_button_background" 
+														   id="pnfpb_ic_fcm_popup_subscribe_button_color_shortcode" 
+														   name="pnfpb_ic_fcm_popup_subscribe_button_color_shortcode" type="color" 
+														   value="<?php if (
+                 													get_option("pnfpb_ic_fcm_popup_subscribe_button_color_shortcode")
+             													) {
+                 													echo esc_attr(
+                     													get_option("pnfpb_ic_fcm_popup_subscribe_button_color_shortcode")
+                 													);
+             													} else {
+                 													echo esc_attr("#e54b4d");
+             													} ?>" 
+													/>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p><?php echo esc_html(
+                										 	__(
+                     											"Push notification subscribe text",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             											); ?>
+													</p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														   id="pnfpb_ic_fcm_popup_subscribe_button_shortcode" 
+														   name="pnfpb_ic_fcm_popup_subscribe_button_shortcode" type="text" 
+														   value="<?php if (
+                 													get_option("pnfpb_ic_fcm_popup_subscribe_button_shortcode")
+             													) {
+                 													echo esc_attr(
+                     													get_option("pnfpb_ic_fcm_popup_subscribe_button_shortcode")
+                 													);
+             													} else {
+                 													echo esc_attr(
+                     														__(
+                         														"Subscribe",
+                         														"push-notification-for-post-and-buddypress"
+                     														)
+                 														);
+             													} ?>"  
+													/>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p>
+														<?php echo esc_html(
+                 											__(
+                     											"Push notification unsubscribe text",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             											); ?>
+													</p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														   id="pnfpb_ic_fcm_popup_unsubscribe_button_shortcode" 
+														   name="pnfpb_ic_fcm_popup_unsubscribe_button_shortcode" 
+														   type="text" value="<?php if (
+                 												get_option("pnfpb_ic_fcm_popup_unsubscribe_button_shortcode")
+             												) {
+                 												echo esc_attr(
+                     												get_option("pnfpb_ic_fcm_popup_unsubscribe_button_shortcode")
+                 												);
+             												} else {
+                 												echo esc_attr(
+                     												__(
+                         												"Unsubscribe",
+                         												"push-notification-for-post-and-buddypress"
+                     												)
+                 												);
+             											} ?>"  
+													/>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p>
+														<?php echo esc_html(
+                 											__(
+                     											"Notification subscribed message when hover on push icon",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             											); ?>
+													</p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														   id="pnfpb_ic_fcm_popup_subscribe_message_shortcode" 
+														   name="pnfpb_ic_fcm_popup_subscribe_message_shortcode" type="text" 
+														   value="<?php if (
+                 													get_option("pnfpb_ic_fcm_popup_subscribe_message_shortcode")
+             													) {
+                 													echo esc_attr(
+                     													get_option("pnfpb_ic_fcm_popup_subscribe_message_shortcode")
+                 													);
+             													} else {
+                 													echo esc_attr(
+                     													__(
+                         													"You are subscribed to push notification",
+                         													"push-notification-for-post-and-buddypress"
+                     													)
+                 													);
+             													} ?>"  
+													/>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p>
+														<?php echo esc_html(
+                 											__(
+                     											"Notification not subscribed message when hover on push icon",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             											); ?>
+													</p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														   id="pnfpb_ic_fcm_popup_unsubscribe_message_shortcode" 
+														   name="pnfpb_ic_fcm_popup_unsubscribe_message_shortcode" type="text" 
+														   value="<?php if (
+                 													get_option("pnfpb_ic_fcm_popup_unsubscribe_message_shortcode")
+             													) {
+                 													echo esc_attr(
+                     													get_option("pnfpb_ic_fcm_popup_unsubscribe_message_shortcode")
+                 													);
+             													} else {
+                 													echo esc_attr(
+                     													__(
+                         													"Push notification not subscribed",
+                         													"push-notification-for-post-and-buddypress"
+                     													)
+                 													);
+             													} ?>"  
+													/>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<p>
+														<?php echo esc_html(
+                 											__(
+                     											"Wait message while processing push subscription",
+                     											"push-notification-for-post-and-buddypress"
+                 											)
+             											); ?>
+													</p>
+													<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+														   id="pnfpb_ic_fcm_popup_wait_message_shortcode" 
+														   name="pnfpb_ic_fcm_popup_wait_message_shortcode" 
+														   type="text" value="<?php if (
+                 												get_option("pnfpb_ic_fcm_popup_wait_message_shortcode")
+             												) {
+                 												echo esc_attr(
+                     												get_option("pnfpb_ic_fcm_popup_wait_message_shortcode")
+                 												);
+             												} else {
+                 												echo esc_attr(
+                     												__(
+                         												"Please wait...processing",
+                         												"push-notification-for-post-and-buddypress"
+                     												)
+                 												);
+             												} ?>"  
+													/>
+												</td>
+											</tr>
+											<tr class="pnfpb_ic_push_settings_table_row">
+        										<td class="pnfpb_ic_push_settings_table_label_column column-columnname">							
+													<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_padding_top_8" 
+														   for="pnfpb_bell_icon_prompt_options_on_off_shortcode">
+														<?php echo esc_html(
+                  											__(
+                      											"Show subscription options button",
+                      											"push-notification-for-post-and-buddypress"
+                  											)
+              											); ?>
+													</label>												
+													<label class="pnfpb_switch">
+														<input  id="pnfpb_bell_icon_prompt_options_on_off_shortcode" 
+															   name="pnfpb_bell_icon_prompt_options_on_off_shortcode" 
+															   type="checkbox" value="1" <?php if (
+                  												get_option("pnfpb_bell_icon_prompt_options_on_off_shortcode", "0") ===
+                     											 "0" ||
+                  												get_option("pnfpb_bell_icon_prompt_options_on_off_shortcode", "0") ===
+                      											"1"
+              													) {
+                  													echo esc_attr("checked");
+              													} ?>  
+														/>
+														<span class="pnfpb_slider round"></span>
+													</label>
+												</td>
+											</tr>											
+										</tbody>
+									</table>
+								</td>
+							</tr>
+								<?php
+					   $args = [
+						   "public" => true,
+						   "_builtin" => false,
+					   ];
 
-   $output = "names"; // or objects
-   $operator = "and"; // 'and' or 'or'
+					   $output = "names"; // or objects
+					   $operator = "and"; // 'and' or 'or'
 
-   $custposttypes = get_post_types($args, $output, $operator);
+					   $custposttypes = get_post_types($args, $output, $operator);
 
-   foreach ($custposttypes as $post_type) {
-       if ($post_type !== "buddypress") { ?>		
+					   foreach ($custposttypes as $post_type) {
+						   if ($post_type !== "buddypress") { ?>		
 						<tr class="pnfpb_ic_push_settings_table_row">
     						<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
 								<label 
-									   for="<?php echo esc_attr( "pnfpb_ic_fcm_subscribe_dialog_". $post_type."_text"); ?>">
+									   for="<?php echo esc_attr( "pnfpb_bell_icon_subscription_option_". $post_type."_text"); ?>">
 									<?php echo esc_html(
     									__(
        								 	"Customize text for subscription ",
@@ -732,14 +797,14 @@
 							</label>
 								<br/>
 								<input class="pnfpb_ic_push_settings_table_value_column_input_field"  
-									   id="<?php echo esc_html("pnfpb_ic_fcm_subscribe_".$post_type."_dialog_text"); ?>" 
-									   name="<?php echo esc_html("pnfpb_ic_fcm_subscribe_".$post_type."_dialog_text"); ?>" 
+									   id="<?php echo esc_html("pnfpb_bell_icon_subscription_option_".$post_type."_text_shortcode"); ?>" 
+									   name="<?php echo esc_html("pnfpb_bell_icon_subscription_option_".$post_type."_text_shortcode"); ?>" 
 									   type="text" 
 									   value="<?php if (
-    											get_option("pnfpb_ic_fcm_subscribe_" . $post_type . "_dialog_text")
+    											get_option("pnfpb_bell_icon_subscription_option_" . $post_type . "_text_shortcode")
 											) {
     											echo esc_attr(
-        											get_option("pnfpb_ic_fcm_subscribe_" . $post_type . "_dialog_text")
+        											get_option("pnfpb_bell_icon_subscription_option_" . $post_type . "_text_shortcode")
     											);
 											} else {
     											echo esc_attr(ucwords($post_type));
@@ -753,23 +818,27 @@
    ?>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_ic_fcm_subscribe_text_shortcode">
 						<?php echo esc_html(
            					__(
-               					"New post notifications option text in shortcode",
+               					"Subscribe all notifications option text in shortcode",
                					"push-notification-for-post-and-buddypress"
            					)
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_post_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_post_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_all_text_shortcode" name="pnfpb_bell_icon_subscription_option_all_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_post_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_all_text_shortcode")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_post_dialog_text"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_all_text_shortcode"));
 									} else {
-    									echo esc_attr(__("New post", "push-notification-for-post-and-buddypress"));
+    									echo esc_attr(
+        										__(
+            										"Subscribe all",
+            										"push-notification-for-post-and-buddypress"
+        										)
+    									);
 									} ?>" 
 					/>
 				</td>
@@ -779,19 +848,42 @@
 					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
 						<?php echo esc_html(
            					__(
+               					"New post notifications option text in shortcode",
+               					"push-notification-for-post-and-buddypress"
+           					)
+       					); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_post_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_post_text_shortcode" type="text" 
+						   value="<?php if (
+    									get_option("pnfpb_bell_icon_subscription_option_post_text_shortcode")
+									) {
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_post_text_shortcode"));
+									} else {
+    									echo esc_attr(__("New post", "push-notification-for-post-and-buddypress"));
+									} ?>" 
+					/>
+				</td>
+    		</tr>			
+			<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_bell_icon_subscription_option_text_shortcode">
+						<?php echo esc_html(
+           					__(
                					"New BuddyPress activity notifications option text in shortcode",
                					"push-notification-for-post-and-buddypress"
            					)
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_post_activity_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_post_activity_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_activity_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_activity_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_post_activity_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_activity_text_shortcode")
 									) {
     									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_subscribe_post_activity_dialog_text")
+        									get_option("pnfpb_bell_icon_subscription_option_activity_text_shortcode")
     									);
 									} else {
     									echo esc_attr(
@@ -803,7 +895,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_bell_icon_subscription_option_text_shortcode">
 						<?php echo esc_html(
            					__(
                					"Subscribe all comments notifications option text in shortcode",
@@ -812,13 +904,13 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_all_comments_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_all_comments_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_all_comments_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_all_comments_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_all_comments_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_all_comments_text_shortcode")
 									) {
     									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_subscribe_all_comments_dialog_text")
+        									get_option("pnfpb_bell_icon_subscription_option_all_comments_text_shortcode")
     									);
 									} else {
     										echo esc_attr(__("Comments", "push-notification-for-post-and-buddypress"));
@@ -828,7 +920,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_bell_icon_subscription_option_text_shortcode">
 						<?php echo esc_html(
            					__(
                					"Subscribe comments notifications only from my post/my BuddyPress activities option text in shortcode",
@@ -837,12 +929,12 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_my_comments_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_my_comments_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_my_comments_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_my_comments_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_my_comments_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_my_comments_text_shortcode")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_my_comments_dialog_text"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_my_comments_text_shortcode"));
 									} else {
     									echo esc_attr(
         									__(
@@ -856,7 +948,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_bell_icon_subscription_option_subscribe_text_shortcode">
 						<?php echo esc_html(
            					__(
                					"Subscribe Private messages option text in shortcode",
@@ -865,13 +957,13 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_private_message_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_private_message_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_private_message_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_private_message_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_private_message_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_private_message_text_shortcode")
 									) {
     									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_subscribe_private_message_dialog_text")
+        									get_option("pnfpb_bell_icon_subscription_option_private_message_text_shortcode")
     									);
 									} else {
     										echo esc_attr(
@@ -883,7 +975,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_bell_icon_subscription_option_text_shortcode">
 						<?php echo esc_html(
            					__(
                					"Subscribe new member joined option text in shortcode",
@@ -892,12 +984,12 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_new_member_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_new_member_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_new_member_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_new_member_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_new_member_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_new_member_text_shortcode")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_new_member_dialog_text"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_new_member_text_shortcode"));
 									} else {
     									echo esc_attr(
         									__("New member joined", "push-notification-for-post-and-buddypress")
@@ -908,7 +1000,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_bell_icon_subscription_option_subscribe_dialog_text">
 						<?php echo esc_html(
            					__(
                					"Subscribe Friend request option text in shortcode",
@@ -917,13 +1009,13 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_friend_request_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_friend_request_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_friend_request_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_friend_request_text_shortcode" type="text" 
 						   value="<?php if (
-    										get_option("pnfpb_ic_fcm_subscribe_friend_request_dialog_text")
+    										get_option("pnfpb_bell_icon_subscription_option_friend_request_text_shortcode")
 										) {
     										echo esc_attr(
-        										get_option("pnfpb_ic_fcm_subscribe_friend_request_dialog_text")
+        										get_option("pnfpb_bell_icon_subscription_option_friend_request_text_shortcode")
     										);
 										} else {
     										echo esc_attr(
@@ -935,7 +1027,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_bell_icon_subscription_option_subscribe_text_shortcode">
 						<?php echo esc_html(
            					__(
                					"Subscribe Friendship accepted text in shortcode",
@@ -944,13 +1036,13 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_friendship_accepted_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_friendship_accepted_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_friendship_accepted_text_shortcode")
 									) {
     									echo esc_attr(
-        									get_option("pnfpb_ic_fcm_subscribe_friendship_accepted_dialog_text")
+        									get_option("pnfpb_bell_icon_subscription_option_friendship_accepted_text_shortcode")
     									);
 									} else {
     									echo esc_attr(
@@ -962,7 +1054,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_bell_icon_subscription_option_text_shortcode">
 						<?php echo esc_html(
            					__(
                					"Subscribe user avatar change option text in shortcode",
@@ -971,12 +1063,12 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_user_avatar_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_user_avatar_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_user_avatar_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_user_avatar_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_user_avatar_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_user_avatar_text_shortcode")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_user_avatar_dialog_text"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_user_avatar_text_shortcode"));
 									} else {
     									echo esc_attr(
         									__("User avatar change", "push-notification-for-post-and-buddypress")
@@ -987,7 +1079,7 @@
     		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_ic_fcm_subscribe_text_shortcode">
 						<?php echo esc_html(
            					__(
                					"Subscribe cover image change option text in shortcode",
@@ -996,12 +1088,12 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_cover_image_dialog_text" 
-						   name="pnfpb_ic_fcm_subscribe_cover_image_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_cover_image_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_cover_image_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_cover_image_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_cover_image_text_shortcode")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_cover_image_dialog_text"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_cover_image_text_shortcode"));
 									} else {
     									echo esc_attr(
         									__("Cover image change", "push-notification-for-post-and-buddypress")
@@ -1009,37 +1101,60 @@
 									} ?>" 
 					/>
 				</td>
-    		</tr>			
+    		</tr>
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text">
+					<label for="pnfpb_ic_fcm_subscribe_text_shortcode">
 						<?php echo esc_html(
            					__(
-               					"Un-subscribe all notifications option text in shortcode",
+               					"Subscribe Group details update option text in shortcode",
                					"push-notification-for-post-and-buddypress"
            					)
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_all_dialog_text" name="pnfpb_ic_fcm_unsubscribe_all_dialog_text" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_group_details_update_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_group_details_update_text_shortcode" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_unsubscribe_all_dialog_text")
+    									get_option("pnfpb_bell_icon_subscription_option_group_details_update_text_shortcode")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_unsubscribe_all_dialog_text"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_group_details_update_text_shortcode"));
 									} else {
     									echo esc_attr(
-        										__(
-            										"Unsubscribe all notifications",
-            										"push-notification-for-post-and-buddypress"
-        										)
+        									__("Group details update", "push-notification-for-post-and-buddypress")
     									);
 									} ?>" 
 					/>
 				</td>
-    		</tr>			
+    		</tr>	
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_subscribe_dialog_text_confirm">
+					<label for="pnfpb_ic_fcm_subscribe_text_shortcode">
+						<?php echo esc_html(
+           					__(
+               					"Group invite option text in shortcode",
+               					"push-notification-for-post-and-buddypress"
+           					)
+       					); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_group_invite_text_shortcode" 
+						   name="pnfpb_bell_icon_subscription_option_group_invite_text_shortcode" type="text" 
+						   value="<?php if (
+    									get_option("pnfpb_bell_icon_subscription_option_group_invite_text_shortcode")
+									) {
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_group_invite_text_shortcode"));
+									} else {
+    									echo esc_attr(
+        									__("Group invite", "push-notification-for-post-and-buddypress")
+    									);
+									} ?>" 
+					/>
+				</td>
+    		</tr>				
+			<tr class="pnfpb_ic_push_settings_table_row">
+    			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
+					<label for="pnfpb_bell_icon_subscription_option_text_shortcode_confirm">
 						<?php echo esc_html(
            					__(
                					"Site Subscription dialog text after complete using shortcode",
@@ -1048,12 +1163,12 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_subscribe_dialog_text_confirm" 
-						   name="pnfpb_ic_fcm_subscribe_dialog_text_confirm" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_option_text_shortcode_confirm" 
+						   name="pnfpb_bell_icon_subscription_option_text_shortcode_confirm" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_subscribe_dialog_text_confirm")
+    									get_option("pnfpb_bell_icon_subscription_option_text_shortcode_confirm")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_subscribe_dialog_text_confirm"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_option_text_shortcode_confirm"));
 									} else {
     									echo esc_attr(
         									__(
@@ -1067,7 +1182,7 @@
     		</tr>				
 			<tr class="pnfpb_ic_push_settings_table_row">
     			<td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-					<label for="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm">
+					<label for="pnfpb_bell_icon_subscription_text_shortcode_text_confirm">
 						<?php echo esc_html(
            					__(
                					"Site unsubscription dialog text after complete using shortcode",
@@ -1076,12 +1191,12 @@
        					); ?>
 					</label>
 					<br/>
-					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm" 
-						   name="pnfpb_ic_fcm_unsubscribe_dialog_text_confirm" type="text" 
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field"  id="pnfpb_bell_icon_subscription_text_shortcode_text_confirm" 
+						   name="pnfpb_bell_icon_subscription_text_shortcode_text_confirm" type="text" 
 						   value="<?php if (
-    									get_option("pnfpb_ic_fcm_unsubscribe_dialog_text_confirm")
+    									get_option("pnfpb_bell_icon_subscription_text_shortcode_text_confirm")
 									) {
-    									echo esc_attr(get_option("pnfpb_ic_fcm_unsubscribe_dialog_text_confirm"));
+    									echo esc_attr(get_option("pnfpb_bell_icon_subscription_text_shortcode_text_confirm"));
 									} else {
     									echo esc_attr(
         									__(

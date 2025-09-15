@@ -12,83 +12,10 @@
         "push-notification-for-post-and-buddypress"
     )
 ); ?></h1>
-
-<div class="nav-tab-wrapper">
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb-icfcm-slug"); ?>" 
-	   class="nav-tab tab">
-		<?php echo esc_html(
-    		__("Push Settings", "push-notification-for-post-and-buddypress")
-		); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_device_tokens_list"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Device tokens", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_pwa_app_settings"); ?>" 
-		class="nav-tab tab">
-			<?php echo esc_html(
-    			__("PWA", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfmtest_notification"); ?>"
-	   	class="nav-tab tab active nav-tab-active">
-			<?php echo esc_html(
-    			__("Send push notification", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_onetime_notifications_list&orderby=id&order=desc"); ?>"
-	   class=" nav-tab tab">
-			<?php echo esc_html(
-    			__("Push Notifications list", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_frontend_settings"); ?>"
-	   class="nav-tab tab">
-			<?php echo esc_html(
-    			__(
-        			"Frontend subscription settings",
-        			"push-notification-for-post-and-buddypress"
-    			)
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_button_settings"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Customize buttons", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_integrate_app"); ?>" 
-	   	class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Integrate Mobile app", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     admin_url()."admin.php?page=pnfpb_icfm_settings_for_ngnix_server"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("NGINX", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-	<a href="<?php echo esc_url(
-     	admin_url()."admin.php?page=pnfpb_icfm_action_scheduler&s=pnfpb&action=-1&paged=1&action2=-1"); ?>"
-	   class="nav-tab tab ">
-			<?php echo esc_html(
-    			__("Action Scheduler", "push-notification-for-post-and-buddypress")
-			); ?>
-	</a>
-</div>
-
+<?php
+	$pnfpb_tab_sendpush_active = "nav-tab-active";
+	require_once( plugin_dir_path( __FILE__ ) . 'push_admin_menu_list.php' );
+?>
 <div class="pnfpb_column_1200">
 <h2 class="pnfpb_ic_push_settings_details"><?php echo esc_html(
     __(
@@ -115,6 +42,14 @@ $onetime_push_date_field = "";
 $onetime_push_time_field = "";
 
 global $wpdb;
+	
+$senderid = 0;
+	
+if ( is_user_logged_in() ) {
+	
+    $senderid = get_current_user_id();
+	
+}
 
 if (
     isset($_POST["submit"]) &&
@@ -122,33 +57,62 @@ if (
     isset($_POST["pnfpb_ic_on_demand_push_content"])
 ) {
     $apiaccesskey = get_option("pnfpb_ic_fcm_google_api");
+	$webpush_option = get_option("pnfpb_webpush_push");
+	$webpush_firebase = get_option("pnfpb_webpush_push_firebase");	
 
     if (
         ($apiaccesskey != "" && $apiaccesskey != false) ||
         get_option("pnfpb_httpv1_push") === "1" ||
         get_option("pnfpb_onesignal_push") === "1" ||
         get_option("pnfpb_progressier_push") === "1" ||
-        get_option("pnfpb_webtoapp_push") === "1"
+        get_option("pnfpb_webtoapp_push") === "1" ||
+		$webpush_option === "1" || 
+		$webpush_option === "2" ||
+		$webpush_firebase === "1"
     ) {
         $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+		
+		$is_selected_userids = false;
+		
+		if (isset($_POST["pnfpb_ic_on_demand_push_select_user_ids"]) && sanitize_text_field(
+                $_POST["pnfpb_ic_on_demand_push_select_user_ids"]
+            ) !== '') {
+			
+  			$on_demand_push_select_user_id_array = explode(',',sanitize_text_field( $_POST["pnfpb_ic_on_demand_push_select_user_ids"] ));
+			$sanitized_on_demand_push_select_user_id_array = implode( ',', wp_parse_id_list( $on_demand_push_select_user_id_array ) );
+			
+			$deviceids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id NOT LIKE %s AND userid IN ({$sanitized_on_demand_push_select_user_id_array})",
+					$table_name,
+					"%@N%"
+				)
+			);
 
-        $deviceids = $wpdb->get_col(
-            $wpdb->prepare(
-                "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id NOT LIKE %s AND device_id NOT LIKE %s",
-                $table_name,
-                "%webview%",
-                "%@N%"
-            )
-        );
+			$deviceidswebview = array();
+			
+			$is_selected_userids = true;
+			
+		} else {		
 
-        $deviceidswebview = $wpdb->get_col(
-            $wpdb->prepare(
-                "SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id NOT LIKE %s",
-                $table_name,
-                "%webview%",
-                "%@N%"
-            )
-        );
+			$deviceids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id NOT LIKE %s",
+					$table_name,
+					"%@N%"
+				)
+			);
+
+			$deviceidswebview = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id NOT LIKE %s",
+					$table_name,
+					"%webview%",
+					"%@N%"
+				)
+			);
+			
+		}
 
         $url = "https://fcm.googleapis.com/fcm/send";
 
@@ -177,238 +141,438 @@ if (
                 $_POST["pnfpb_ic_on_demand_push_url_link"]
             );
         }
+		
+		$send_push_type = 'ondemand';
 
-        if (get_option("pnfpb_webtoapp_push") === "1") {
-            if (
-                isset($_POST["pnfpb_ic_fcm_ondemand_schedule_now_enable"]) &&
-                $_POST["pnfpb_ic_fcm_ondemand_schedule_now_enable"] === "1"
-            ) {
-                $action_scheduler_status = as_schedule_single_action(
-                    time(),
-                    "PNFPB_webtoapp_schedule_push_notification_hook",
-                    [
-                        0,
-                        stripslashes(
-                            wp_strip_all_tags(
-                                sanitize_text_field(
-                                    wp_unslash(
-                                        $_POST["pnfpb_ic_on_demand_push_title"]
-                                    )
-                                )
-                            )
-                        ),
-                        $activity_content_push,
-                        $postlink,
-                        $imageurl,
-                    ]
-                );
-            } else {
-                $response = $this->PNFPB_icfcm_webtoapp_send_push_notification(
-                    0,
-                    stripslashes(
-                        wp_strip_all_tags(
-                            sanitize_text_field(
-                                wp_unslash(
-                                    $_POST["pnfpb_ic_on_demand_push_title"]
-                                )
-                            )
-                        )
-                    ),
-                    $activity_content_push,
-                    $postlink,
-                    $imageurl
-                );
-            }
-        }
+		if ($is_selected_userids){
+			$send_push_type = 'ondemandselectedusers';
+		}		
+		
+		if ($webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1') {
 
-        if (get_option("pnfpb_progressier_push") === "1") {
-            if (
-                isset($_POST["pnfpb_ic_fcm_ondemand_schedule_now_enable"]) &&
-                $_POST["pnfpb_ic_fcm_ondemand_schedule_now_enable"] === "1"
-            ) {
-                $action_scheduler_status = as_schedule_single_action(
-                    time(),
-                    "PNFPB_progressier_schedule_push_notification_hook",
-                    [
-                        0,
-                        stripslashes(
-                            wp_strip_all_tags(
-                                sanitize_text_field(
-                                    wp_unslash(
-                                        $_POST["pnfpb_ic_on_demand_push_title"]
-                                    )
-                                )
-                            )
-                        ),
-                        $activity_content_push,
-                        $postlink,
-                        $imageurl,
-                    ]
-                );
-            } else {
-                $response = $this->PNFPB_icfcm_progressier_send_push_notification(
-                    0,
-                    stripslashes(
-                        wp_strip_all_tags(
-                            sanitize_text_field(
-                                wp_unslash(
-                                    $_POST["pnfpb_ic_on_demand_push_title"]
-                                )
-                            )
-                        )
-                    ),
-                    $activity_content_push,
-                    $postlink,
-                    $imageurl
-                );
-            }
-        } else {
-            if (get_option("pnfpb_onesignal_push") === "1") {
-                if (
-                    isset(
-                        $_POST["pnfpb_ic_fcm_ondemand_schedule_now_enable"]
-                    ) &&
-                    $_POST["pnfpb_ic_fcm_ondemand_schedule_now_enable"] === "1"
-                ) {
-                    $action_scheduler_status = as_schedule_single_action(
-                        time(),
-                        "PNFPB_onesignal_schedule_push_notification_hook",
-                        [
-                            0,
-                            stripslashes(
-                                wp_strip_all_tags(
-                                    sanitize_text_field(
-                                        wp_unslash(
-                                            $_POST[
-                                                "pnfpb_ic_on_demand_push_title"
-                                            ]
-                                        )
-                                    )
-                                )
-                            ),
-                            $activity_content_push,
-                            $postlink,
-                            $imageurl,
-                        ]
-                    );
-                } else {
-                    $response = $this->PNFPB_icfcm_onesignal_push_notification(
-                        0,
-                        stripslashes(
-                            wp_strip_all_tags(
-                                sanitize_text_field(
-                                    wp_unslash(
-                                        $_POST["pnfpb_ic_on_demand_push_title"]
-                                    )
-                                )
-                            )
-                        ),
-                        $activity_content_push,
-                        $postlink,
-                        $imageurl
-                    );
-                }
-            } else {
-                if (count($regid) > 0) {
-                    if (get_option("pnfpb_httpv1_push") === "1") {
-                        if (
-                            isset(
-                                $_POST[
-                                    "pnfpb_ic_fcm_ondemand_schedule_now_enable"
-                                ]
-                            ) &&
-                            $_POST[
-                                "pnfpb_ic_fcm_ondemand_schedule_now_enable"
-                            ] === "1"
-                        ) {
-                            $action_scheduler_status = as_schedule_single_action(
-                                time(),
-                                "PNFPB_httpv1_schedule_push_notification_hook",
-                                [
-                                    0,
-                                    stripslashes(
-                                        wp_strip_all_tags(
-                                            sanitize_text_field(
-                                                wp_unslash(
-                                                    $_POST[
-                                                        "pnfpb_ic_on_demand_push_title"
-                                                    ]
-                                                )
-                                            )
-                                        )
-                                    ),
-                                    mb_substr(
-                                        stripslashes(
-                                            wp_strip_all_tags(
-                                                urldecode(
-                                                    trim(
-                                                        htmlspecialchars_decode(
-                                                            $activity_content_push
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                        0,
-                                        130,
-                                        "UTF-8"
-                                    ),
-                                    $imageurl,
-                                    $imageurl,
-                                    $postlink,
-                                    ["click_url" => $postlink],
-                                    $regid,
-                                    [],
-                                    0,
-                                    0,
-                                    "ondemand",
-                                ]
-                            );
-                        } else {
-                            $this->PNFPB_icfcm_httpv1_send_push_notification(
-                                0,
-                                stripslashes(
-                                    wp_strip_all_tags(
-                                        sanitize_text_field(
-                                            wp_unslash(
-                                                $_POST[
-                                                    "pnfpb_ic_on_demand_push_title"
-                                                ]
-                                            )
-                                        )
-                                    )
-                                ),
-                                mb_substr(
-                                    stripslashes(
-                                        wp_strip_all_tags(
-                                            urldecode(
-                                                trim(
-                                                    htmlspecialchars_decode(
-                                                        $activity_content_push
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    ),
-                                    0,
-                                    130,
-                                    "UTF-8"
-                                ),
-                                $imageurl,
-                                $imageurl,
-                                $postlink,
-                                ["click_url" => $postlink],
-                                $regid,
-                                [],
-                                0,
-                                0,
-                                "ondemand"
-                            );
-                        }
-                    }
-                }
-            }
-        }
+			$target_deviceid_values = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM %i WHERE device_id NOT LIKE %s AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,12,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+					$table_name,
+					"%!!%",
+					"","",""
+				)
+			);
+
+			if (count($target_deviceid_values) > 0) {
+				foreach ($target_deviceid_values as $target_deviceid_value) {
+					$target_subscription_array[] =  [
+						"endpoint" => $target_deviceid_value->web_auth,
+						"keys" => [
+							'p256dh' => $target_deviceid_value->web_256,
+							'auth' => $target_deviceid_value->subscription_auth_token
+						]
+					];
+				}
+				
+				if (
+					defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON
+				) {
+					$PNFPB_WP_web_push_notification_class_obj = new PNFPB_web_push_notification_class();
+					$PNFPB_WP_web_push_notification_class_obj->PNFPB_web_push_notification(
+						0,
+						stripslashes(
+							wp_strip_all_tags(
+								sanitize_text_field(
+									wp_unslash(
+										$_POST[
+											"pnfpb_ic_on_demand_push_title"
+										]
+									)
+								)
+							)
+						),
+						mb_substr(
+							stripslashes(
+								wp_strip_all_tags(
+									urldecode(
+										trim(
+											htmlspecialchars_decode(
+												$activity_content_push
+											)
+										)
+									)
+								)
+							),
+							0,
+							130,
+							"UTF-8"
+						),
+						$imageurl,
+						$imageurl,
+						$postlink,
+						["click_url" => $postlink],
+						$target_subscription_array,
+						$senderid,
+						0,
+						$send_push_type
+					);						
+				} else {
+					$action_scheduler_status = as_schedule_single_action(
+						time()-5,
+						"PNFPB_webpush_schedule_push_notification_hook",
+						[
+							0,
+							stripslashes(
+								wp_strip_all_tags(
+									sanitize_text_field(
+										wp_unslash(
+											$_POST[
+												"pnfpb_ic_on_demand_push_title"
+											]
+										)
+									)
+								)
+							),
+							mb_substr(
+								stripslashes(
+									wp_strip_all_tags(
+										urldecode(
+											trim(
+												htmlspecialchars_decode(
+													$activity_content_push
+												)
+											)
+										)
+									)
+								),
+								0,
+								130,
+								"UTF-8"
+							),
+							$imageurl,
+							$imageurl,
+							$postlink,
+							["click_url" => $postlink],
+							$target_subscription_array,
+							$senderid,
+							0,
+							$send_push_type,
+						]
+					);
+				}
+			}
+		} else {		
+
+			if (get_option("pnfpb_webtoapp_push") === "1") {
+				if (
+					defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON
+				) {
+					$PNFPB_WP_webtoapp_notification_class_obj = new PNFPB_webtoapp_notification_class();
+					$PNFPB_WP_webtoapp_notification_class_obj->PNFPB_webtoapp_notification(
+						0,
+						stripslashes(
+							wp_strip_all_tags(
+								sanitize_text_field(
+									wp_unslash(
+										$_POST["pnfpb_ic_on_demand_push_title"]
+									)
+								)
+							)
+						),
+						$activity_content_push,
+						$postlink,
+						$imageurl
+					);					
+				} else {
+					$action_scheduler_status = as_schedule_single_action(
+						time()-5,
+						"PNFPB_webtoapp_schedule_push_notification_hook",
+						[
+							0,
+							stripslashes(
+								wp_strip_all_tags(
+									sanitize_text_field(
+										wp_unslash(
+											$_POST["pnfpb_ic_on_demand_push_title"]
+										)
+									)
+								)
+							),
+							$activity_content_push,
+							$postlink,
+							$imageurl,
+						]
+					);
+				}
+			}
+
+			if (get_option("pnfpb_progressier_push") === "1") {
+				if (
+					defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON
+				) {
+					if ($is_selected_userids) {
+						$PNFPB_WP_progressier_notification_class_obj = new PNFPB_progressier_notification_class();
+						$PNFPB_WP_progressier_notification_class_obj->PNFPB_progressier_notification(
+							0,
+							stripslashes(
+								wp_strip_all_tags(
+									sanitize_text_field(
+										wp_unslash(
+											$_POST["pnfpb_ic_on_demand_push_title"]
+										)
+									)
+								)
+							),
+							$activity_content_push,
+							$postlink,
+							$imageurl,
+							$deviceids
+						);					
+					} else {
+						$PNFPB_WP_progressier_notification_class_obj = new PNFPB_progressier_notification_class();
+						$PNFPB_WP_progressier_notification_class_obj->PNFPB_progressier_notification(
+							0,
+							stripslashes(
+								wp_strip_all_tags(
+									sanitize_text_field(
+										wp_unslash(
+											$_POST["pnfpb_ic_on_demand_push_title"]
+										)
+									)
+								)
+							),
+							$activity_content_push,
+							$postlink,
+							$imageurl
+						);					
+					}					
+				} else {
+					if ($is_selected_userids) {
+						$action_scheduler_status = as_schedule_single_action(
+							time()-5,
+							"PNFPB_progressier_schedule_push_notification_hook",
+							[
+								0,
+								stripslashes(
+									wp_strip_all_tags(
+										sanitize_text_field(
+											wp_unslash(
+												$_POST["pnfpb_ic_on_demand_push_title"]
+											)
+										)
+									)
+								),
+								$activity_content_push,
+								$postlink,
+								$imageurl,
+								$deviceids
+							]
+						);				
+					} else {
+						$action_scheduler_status = as_schedule_single_action(
+							time()-5,
+							"PNFPB_progressier_schedule_push_notification_hook",
+							[
+								0,
+								stripslashes(
+									wp_strip_all_tags(
+										sanitize_text_field(
+											wp_unslash(
+												$_POST["pnfpb_ic_on_demand_push_title"]
+											)
+										)
+									)
+								),
+								$activity_content_push,
+								$postlink,
+								$imageurl,
+							]
+						);
+					}
+				}
+			} else {
+				if (get_option("pnfpb_onesignal_push") === "1") {
+					if (
+						defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON
+					) {
+						if ($is_selected_userids) {
+							$PNFPB_WP_onesignal_notification_class_obj = new PNFPB_onesignal_notification_class();
+							$PNFPB_WP_onesignal_notification_class_obj->PNFPB_onesignal_notification(
+									0,
+									stripslashes(
+										wp_strip_all_tags(
+											sanitize_text_field(
+												wp_unslash(
+													$_POST["pnfpb_ic_on_demand_push_title"]
+												)
+											)
+										)
+									),
+									$activity_content_push,
+									$postlink,
+									$imageurl,
+									$deviceids
+								);
+						} else {
+							$PNFPB_WP_onesignal_notification_class_obj = new PNFPB_onesignal_notification_class();
+							$PNFPB_WP_onesignal_notification_class_obj->PNFPB_onesignal_notification(
+								0,
+								stripslashes(
+									wp_strip_all_tags(
+										sanitize_text_field(
+											wp_unslash(
+												$_POST["pnfpb_ic_on_demand_push_title"]
+											)
+										)
+									)
+								),
+								$activity_content_push,
+								$postlink,
+								$imageurl
+							);
+						}						
+					} else {
+						if ($is_selected_userids) {
+							$action_scheduler_status = as_schedule_single_action(
+								time()-5,
+								"PNFPB_onesignal_schedule_push_notification_hook",
+								[
+									0,
+									stripslashes(
+										wp_strip_all_tags(
+											sanitize_text_field(
+												wp_unslash(
+													$_POST[
+														"pnfpb_ic_on_demand_push_title"
+													]
+												)
+											)
+										)
+									),
+									$activity_content_push,
+									$postlink,
+									$imageurl,
+									$deviceids
+								]
+							);
+						} else {
+							$action_scheduler_status = as_schedule_single_action(
+								time()-5,
+								"PNFPB_onesignal_schedule_push_notification_hook",
+								[
+									0,
+									stripslashes(
+										wp_strip_all_tags(
+											sanitize_text_field(
+												wp_unslash(
+													$_POST[
+														"pnfpb_ic_on_demand_push_title"
+													]
+												)
+											)
+										)
+									),
+									$activity_content_push,
+									$postlink,
+									$imageurl
+								]
+							);						
+						}
+					}
+				} else {
+					if (count($regid) > 0 || count($deviceidswebview) > 0) {
+
+						if (get_option("pnfpb_httpv1_push") === "1") {
+
+							if (
+								defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON
+							) {
+								$FB_httpv1_notification_class_obj = new PNFPB_firebase_httpv1_notification_class();
+								$FB_httpv1_notification_class_obj->PNFPB_firebase_httpv1_notification(							
+									0,
+									stripslashes(
+										wp_strip_all_tags(
+											sanitize_text_field(
+												wp_unslash(
+													$_POST[
+														"pnfpb_ic_on_demand_push_title"
+													]
+												)
+											)
+										)
+									),
+									mb_substr(
+										stripslashes(
+											wp_strip_all_tags(
+												urldecode(
+													trim(
+														htmlspecialchars_decode(
+															$activity_content_push
+														)
+													)
+												)
+											)
+										),
+										0,
+										130,
+										"UTF-8"
+									),
+									$imageurl,
+									$imageurl,
+									$postlink,
+									["click_url" => $postlink],
+									$regid,
+									$deviceidswebview,
+									$senderid,
+									0,
+									$send_push_type
+								);								
+							} else {
+								$action_scheduler_status = as_schedule_single_action(
+									time()-5,
+									"PNFPB_httpv1_schedule_push_notification_hook",
+									[
+										0,
+										stripslashes(
+											wp_strip_all_tags(
+												sanitize_text_field(
+													wp_unslash(
+														$_POST[
+															"pnfpb_ic_on_demand_push_title"
+														]
+													)
+												)
+											)
+										),
+										mb_substr(
+											stripslashes(
+												wp_strip_all_tags(
+													urldecode(
+														trim(
+															htmlspecialchars_decode(
+																$activity_content_push
+															)
+														)
+													)
+												)
+											),
+											0,
+											130,
+											"UTF-8"
+										),
+										$imageurl,
+										$imageurl,
+										$postlink,
+										["click_url" => $postlink],
+										$regid,
+										$deviceidswebview,
+										$senderid,
+										0,
+										$send_push_type,
+									]
+								);
+							}
+						}
+					}
+				}
+			}
+		}
 
         $bpuserid = 0;
 
@@ -424,6 +588,7 @@ if (
             $_POST["pnfpb_ic_on_demand_push_id"] != 0 &&
             $_POST["pnfpb_ic_on_demand_push_id"] != "0"
         ) {
+			
             $onetime_title = stripslashes(
                 wp_strip_all_tags(
                     sanitize_text_field($_POST["pnfpb_ic_on_demand_push_title"])
@@ -505,6 +670,31 @@ if (
         isset($_POST["pnfpb_ic_on_demand_push_title"]) &&
         isset($_POST["pnfpb_ic_on_demand_push_content"])
     ) {
+		
+		$table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+		
+		$is_selected_userids = false;
+
+		if (isset($_POST["pnfpb_ic_on_demand_push_select_user_ids"]) && sanitize_text_field(wp_unslash($_POST["pnfpb_ic_on_demand_push_select_user_ids"])) !== '') {
+
+			$on_demand_push_select_user_id_array = explode(',',sanitize_text_field(wp_unslash( $_POST["pnfpb_ic_on_demand_push_select_user_ids"] )));
+
+			$sanitized_on_demand_push_select_user_id_array = implode( ',', wp_parse_id_list( $on_demand_push_select_user_id_array ) );
+
+			$deviceids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id NOT LIKE %s AND userid IN ({$sanitized_on_demand_push_select_user_id_array})",
+					$table_name,
+					"%@N%"
+				)
+			);
+
+			$deviceidswebview = array();
+
+			$is_selected_userids = true;
+
+		}
+		
         $selected_day_push_notification =
             sanitize_text_field(
                 wp_unslash(
@@ -1068,22 +1258,46 @@ if (
             }
 
             $action_scheduler_status = "";
-
-            $action_scheduler_status = as_schedule_cron_action(
-                $scheduled_day_push_notification,
-                $selected_recurring_cron_string,
-                "PNFPB_ondemand_schedule_push_notification_hook",
-                [
-                    $scheduled_day_push_notification,
-                    $insertid,
-                    $occurence,
-                    $selected_recurring_cycle_status .
-                    " " .
-                    $selected_recurring_month_status .
-                    " " .
-                    $selected_recurring_day_status,
-                ]
-            );
+			
+			if ($is_selected_userids) {
+				$action_scheduler_status = as_schedule_cron_action(
+					$scheduled_day_push_notification,
+					$selected_recurring_cron_string,
+					"PNFPB_ondemand_schedule_push_notification_hook",
+					[
+						$scheduled_day_push_notification,
+						$insertid,
+						$occurence,
+						$selected_recurring_cycle_status .
+						" " .
+						$selected_recurring_month_status .
+						" " .
+						$selected_recurring_day_status,
+						"",
+						0,
+						$deviceids						
+					],
+				);				
+			} else {
+				$action_scheduler_status = as_schedule_cron_action(
+					$scheduled_day_push_notification,
+					$selected_recurring_cron_string,
+					"PNFPB_ondemand_schedule_push_notification_hook",
+					[
+						$scheduled_day_push_notification,
+						$insertid,
+						$occurence,
+						$selected_recurring_cycle_status .
+						" " .
+						$selected_recurring_month_status .
+						" " .
+						$selected_recurring_day_status,
+						"",
+						0,
+						[]						
+					],
+				);				
+			}
         } else {
             $table = $wpdb->prefix . "pnfpb_ic_schedule_push_notifications";
 
@@ -1221,12 +1435,20 @@ if (
             }
 
             $occurence = "Onetime scheduled";
-
-            $action_scheduler_status = as_schedule_single_action(
-                $scheduled_day_push_notification,
-                "PNFPB_ondemand_schedule_push_notification_hook",
-                [$scheduled_day_push_notification, $insertid, $occurence, ""]
-            );
+			
+			if ($is_selected_userids) {
+				$action_scheduler_status = as_schedule_single_action(
+					$scheduled_day_push_notification,
+					"PNFPB_ondemand_schedule_push_notification_hook",
+					[$scheduled_day_push_notification, $insertid, $occurence, "","",0,$deviceids],
+				);				
+			} else {
+				$action_scheduler_status = as_schedule_single_action(
+					$scheduled_day_push_notification,
+					"PNFPB_ondemand_schedule_push_notification_hook",
+					[$scheduled_day_push_notification, $insertid, $occurence, ""]
+				);
+			}
         }
 
         if ($action_scheduler_status) { ?>
@@ -1353,6 +1575,19 @@ if (
             }}
     }
 }
+	
+function pnfpb_recursive_sanitize_array($array) {
+    foreach ( $array as $key => &$value ) {
+        if ( is_array( $value ) ) {
+            $value = recursive_sanitize_text_field($value);
+        }
+        else {
+            $value = sanitize_text_field( $value );
+        }
+    }
+
+    return $array;
+}
 ?>
 
 <form method="post" enctype="multipart/form-data" class="form-field">
@@ -1363,33 +1598,9 @@ if (
 					<div class="pnfpb_row">
   						<div class="pnfpb_column">
     						<div class="pnfpb_card">
-								<?php
-        							$pnfpb_ic_fcm_ondemand_schedule_now_enable = "0";
-        							if (
-            							get_option("pnfpb_ic_fcm_ondemand_schedule_now_enable") &&
-            							get_option("pnfpb_ic_fcm_ondemand_schedule_now_enable") === "1"
-        							) {
-            							$pnfpb_ic_fcm_ondemand_schedule_now_enable = "1";
-        							}
-        						?>
-								<label class="pnfpb_switch">
-									<input  id="pnfpb_ic_fcm_ondemand_schedule_now_enable" 
-										   name="pnfpb_ic_fcm_ondemand_schedule_now_enable" 
-										   type="checkbox" value="1" <?php checked(
-             									"1",
-             									esc_attr($pnfpb_ic_fcm_ondemand_schedule_now_enable)
-         									); ?>  
-									/>
-									<span class="pnfpb_slider round"></span>
-								</label>							
 								<label class="pnfpb_ic_push_settings_table_label_checkbox" for="pnfpb_ic_fcm_ondemand_schedule_now_enable">
-									<?php echo esc_html(
-             							__(
-                 							"Send notification in action scheduler asynchronous background mode to avoid server overload.",
-                 							"push-notification-for-post-and-buddypress"
-             							)
-         							); ?>
-								</label>
+									<?php echo esc_html(__("All notifications will be sent using asynchronous scheduler. Notifications will be processed in batch CRON queue in 30 to 60 seconds","push-notification-for-post-and-buddypress")); ?>
+							</label>	
 							</div>
 						</div>
 					</div>
@@ -1525,6 +1736,56 @@ if (
 				    </select>					
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<p>
+						<?php echo esc_html(
+          					__(
+              					"By Default, Notification will be sent to all users. To send notification based on users, use below option",
+              					"push-notification-for-post-and-buddypress"
+          					)
+      					); ?>
+					</p>
+				</td>
+			</tr>			
+    		<tr class="pnfpb_ic_push_settings_table_row">				
+        		<td class="pnfpb_ic_push_settings_table_ondemand_label_column column-columnname">
+					<label for="pnfpb_ic_on_demand_push_select_user">
+						<?php echo esc_html(
+          					__(
+              					"Send notification to selected users",
+              					"push-notification-for-post-and-buddypress"
+          					)
+      					); ?>
+					</label>
+					<br/>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_on_demand_push_select_user pnfpb_ic_push_settings_table_label_column" id="pnfpb_ic_on_demand_push_select_user" 
+						   name="pnfpb_ic_on_demand_push_select_user" type="text" placeholder="<?php echo esc_html(
+          					__(
+              					"Type few characters here to search users",
+              					"push-notification-for-post-and-buddypress"
+          					)
+      					); ?>"
+						   value="" />
+				</td>
+			</tr>
+    		<tr class="pnfpb_ic_push_settings_table_row">				
+        		<td class="pnfpb_ic_push_settings_table_ondemand_label_column column-columnname">
+					<label for="pnfpb_ic_on_demand_push_select_user">
+						<?php echo esc_html(
+          					__(
+              					"Selected list of users",
+              					"push-notification-for-post-and-buddypress"
+          					)
+      					); ?>
+					</label>
+					<br/>
+					<div class="pnfpb_ic_push_settings_table_ondemand_label_column column-columnname pnfpb_ic_user_selected_items" id="pnfpb_ic_user_selected_items"></div>
+					<input class="pnfpb_ic_push_settings_table_value_column_input_field pnfpb_ic_on_demand_push_select_user_id" id="pnfpb_ic_on_demand_push_select_user_ids" 
+						   name="pnfpb_ic_on_demand_push_select_user_ids" type="hidden" 
+						   value="" />					
+				</td>
+			</tr>			
 			<tr>
 				<td class="column-columnname">
 					<div class="pnfpb_column_full_ondemand">

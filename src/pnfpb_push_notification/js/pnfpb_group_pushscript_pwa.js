@@ -68,6 +68,7 @@ var data = {
 	action: 'icpushcallback',
 	device_id:'',
 	subscriptionoptions:'',
+	nonce: pnfpb_ajax_object_push.nonce,
 	pushtype: 'icfirebasecred'
 };
 		
@@ -105,7 +106,11 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 						$j(".subscribegroupbutton").removeClass( "subscribe-init-display-off" );
 						$j(".unsubscribegroupbutton").removeClass( "subscribe-init-display-off" );
 						$j(".subscribe-notification-group").removeClass( "subscribe-init-display-off" );
-						$j(".unsubscribe-notification-group").removeClass( "subscribe-init-display-off" );							
+						$j(".unsubscribe-notification-group").removeClass( "subscribe-init-display-off" );
+						
+						var leave_group_id = '0';
+
+						var groupId = '0';
 
                         getToken(messaging,{serviceWorkerRegistration:registration,vapidKey:vapidKey }).then((currentToken) => {
 							if (currentToken) {
@@ -127,7 +132,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 								$j(".group-button").on("click",".leave-group", function() {
 									var leave_group_string_array = $j(this).parent().attr('id').split("-");
 									if (leave_group_string_array.length > 0) {
-										var leave_group_id = leave_group_string_array[1];
+										leave_group_id = leave_group_string_array[1];
 										var leave_group_unsubscribebuttonname = '.unsubscribegroupbutton-'+leave_group_id;
 										var leave_group_subscribebuttonname = '.subscribegroupbutton-'+leave_group_id;
 										var leave_group_unsubscribebuttonid = '#unsubscribegroupbutton-'+leave_group_id;
@@ -144,6 +149,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 											        	action: 'icpushcallback',
 											        	device_id:deviceid,
 														bpgroup_id:leave_group_id,
+														nonce: pnfpb_ajax_object_push.nonce,
 											        	pushtype: 'unsubscribe-group-button'
 										        	};
 								
@@ -153,6 +159,8 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                            if (response != 'fail')
 			                                            {
     	                                                    if (response != 'duplicate'){
+
+																	document.cookie = "pnfpb_group_push_notification_"+leave_group_id + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";	
     	                                                        
 																	$j(leave_group_subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 																	$j(leave_group_unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
@@ -188,7 +196,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 								$j(document).on("click",".leave-group", function() {
 									var leave_group_string_array = $j(this).parent().attr('id').split("-");
 									if (leave_group_string_array.length > 0) {
-										var leave_group_id = leave_group_string_array[1];
+										leave_group_id = leave_group_string_array[1];
 										var leave_group_unsubscribebuttonname = '.unsubscribegroupbutton-'+leave_group_id;
 										var leave_group_subscribebuttonname = '.subscribegroupbutton-'+leave_group_id;
 										var leave_group_unsubscribebuttonid = '#unsubscribegroupbutton-'+leave_group_id;
@@ -205,6 +213,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 											        	action: 'icpushcallback',
 											        	device_id:deviceid,
 														bpgroup_id:leave_group_id,
+														nonce: pnfpb_ajax_object_push.nonce,
 											        	pushtype: 'unsubscribe-group-button'
 										        	};
 								
@@ -215,6 +224,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                            {
     	                                                    if (response != 'duplicate'){
     	                                                        
+																	document.cookie = "pnfpb_group_push_notification_"+leave_group_id + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";	
 																	$j(leave_group_subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 																	$j(leave_group_unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 			                                                    }
@@ -235,7 +245,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 							
 		    					$j(document).on( "click",".subscribe-notification-group", function(e) {
 									e.preventDefault();
-									var groupId = $j(this).attr("data-group-id");
+									groupId = $j(this).attr("data-group-id");
 									var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
 									var subscribebuttonname = '.subscribegroupbutton-'+groupId;
 									var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
@@ -261,21 +271,46 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 									        	if (currentToken) {
 							   
 										        	deviceid = currentToken;
+
+													var subscription_endpoint = '';
+													var subscription_p256dh = '';
+													var subscription_auth = '';
+
+													if (subscription.endpoint) {
+														subscription_endpoint = subscription.endpoint;
+													}
+
+													if (subscription.getKey("auth")) {
+														const authBuffer = subscription.getKey('auth');
+														const authUint8 = new Uint8Array(authBuffer);
+														subscription_auth = btoa(String.fromCharCode.apply(null, authUint8));									
+													}
+																					
+													if (subscription.getKey("p256dh")) {
+														const p256dhBuffer = subscription.getKey('p256dh');
+														const p256dhUint8 = new Uint8Array(p256dhBuffer);
+														subscription_p256dh = btoa(String.fromCharCode.apply(null, p256dhUint8));									
+													}										
 							
-										        	var data = {
-											        	action: 'icpushcallback',
-											        	device_id:deviceid,
+													var data = {
+														action: 'icpushcallback',
+														device_id:deviceid,
 														bpgroup_id:groupId,
-											        	pushtype: 'subscribe-group-button'
-										        	};
-								
+														pnfpb_endpoint:subscription_endpoint,
+														pnfpb_options:subscription_p256dh,
+														pnfpb_subscription_token:subscription_auth,												
+														nonce: pnfpb_ajax_object_push.nonce,
+														pushtype: 'subscribe-group-button'
+													};													
+							
+			
 										        	$j.post(pnfpb_ajax_object_push.ajax_url, data, function(response) {
 										            
 										        
 			                                            if (response != 'fail')
 			                                            {
     	                                                    if (response != 'duplicate'){
-    	                                                        
+
 			       			                                    $j(".pnfpb-group-unsubscribe-alert-msg").html("<p>"+pnfpb_ajax_object_push.group_subscribe_dialog_text_confirm+"</p>");
 			       			                                    $j( "#pnfpb-group-unsubscribe-dialog" ).dialog();
 																$j(subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
@@ -314,7 +349,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 								})
 		    					$j(document).on( "click",".unsubscribe-notification-group", function(e) {
 									e.preventDefault();
-									var groupId = $j(this).attr("data-group-id");
+									groupId = $j(this).attr("data-group-id");
 									var unsubscribebuttonname = '.unsubscribegroupbutton-'+groupId;
 									var subscribebuttonname = '.subscribegroupbutton-'+groupId;
 									var unsubscribebuttonid = '#unsubscribegroupbutton-'+groupId;
@@ -345,6 +380,7 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 											        	action: 'icpushcallback',
 											        	device_id:deviceid,
 														bpgroup_id:groupId,
+														nonce: pnfpb_ajax_object_push.nonce,
 											        	pushtype: 'unsubscribe-group-button'
 										        	};
 								
@@ -354,6 +390,8 @@ $j.post(pnfpb_ajax_object_push.ajax_url, data, async function(responseajax) {
 			                                            if (response != 'fail')
 			                                            {
     	                                                    if (response != 'duplicate'){
+
+																document.cookie = "pnfpb_group_push_notification_"+groupId + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";															
     	                                                        
 																$j(unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 																$j(subscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );

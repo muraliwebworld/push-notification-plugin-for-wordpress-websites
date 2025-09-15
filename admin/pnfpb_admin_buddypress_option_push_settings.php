@@ -731,6 +731,90 @@
                             ); ?>"  />
 					</div>				
 				</div>
+				<div class="pnfpb_row">
+					<div class="pnfpb_column_400 pnfpb_column_buddypress_functions">
+    					<div class="pnfpb_card">
+							<label class="pnfpb_ic_push_settings_table_label_checkbox pnfpb_flex_grow_6 pnfpb_padding_top_8 pnfpb_max_width_236" 
+                            for="pnfpb_ic_fcm_mark_favourite_enable">
+								<?php echo esc_html(
+                                    __("Likes / Mark as favourite", "push-notification-for-post-and-buddypress")
+                                ); ?>
+							</label>
+							<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_margin_top_8 pnfpb_margin_left_4 pnfpb_max_width_40">
+									<input  id="pnfpb_ic_fcm_mark_favourite_enable" 
+                                            name="pnfpb_ic_fcm_mark_favourite_enable" 
+                                            type="checkbox" value="1" <?php checked(
+                                                "1",
+                                                esc_attr(get_option("pnfpb_ic_fcm_mark_favourite_enable"))
+                                            ); ?>  
+                                    />	
+									<span class="pnfpb_slider round"></span>
+							</label>								
+							<button type="button" 
+                                class="pnfpb_mark_favourite_button" 
+                                onclick="toggle_mark_favourite_form()">
+                                <?php echo esc_html( __("Customize", "push-notification-for-post-and-buddypress")); ?>
+                            </button>
+						</div>
+					</div>
+					<div class="pnfpb_ic_mark_favourite_form pnfpb_column_400">
+						<label class="pnfpb_ic_push_settings_table_label_checkbox" 
+							for="pnfpb_ic_fcm_buddypress_mark_favourite_text_enable">
+								<?php echo esc_html(
+									__(
+										"Mark as favourite / Likes notification title",
+										"push-notification-for-post-and-buddypress"
+									)
+								); ?>
+						</label>
+						<br/>
+						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+								id="pnfpb_ic_fcm_buddypress_mark_favourite_text_enable" 
+								name="pnfpb_ic_fcm_buddypress_mark_favourite_text_enable" 
+								type="text" value="<?php if (
+									get_option("pnfpb_ic_fcm_buddypress_mark_favourite_text_enable")
+								) {
+									echo esc_attr(
+										get_option("pnfpb_ic_fcm_buddypress_mark_favourite_text_enable")
+									);
+								} else {
+									echo esc_attr(
+										__(
+											"[username] liked your activity",
+											"push-notification-for-post-and-buddypress"
+										)
+									);
+								} ?>"  />
+						<br/>
+						<p>
+							[username]
+							<?php echo esc_html(
+								__(
+									"is shortcode which replaces with username who liked activity/marked activity as favourite",
+									"push-notification-for-post-and-buddypress"
+								)
+							); ?>
+						</p>
+						<br/>
+						<label class="pnfpb_ic_push_settings_table_label_checkbox" 
+							for="pnfpb_ic_fcm_buddypress_mark_favourite_content_enable">
+								<?php echo esc_html(
+									__(
+										"Default content for Mark as favourite/Likes notification",
+										"push-notification-for-post-and-buddypress"
+									)
+								); ?>
+						</label>
+						<br/>				
+						<input  class="pnfpb_ic_push_settings_table_value_column_input_field" 
+							id="pnfpb_ic_fcm_buddypress_mark_favourite_content_enable" 
+							name="pnfpb_ic_fcm_buddypress_mark_favourite_content_enable" 
+							type="text" value="<?php echo esc_attr(
+								$markfavouritecontent
+							); ?>"  
+						/>
+					</div>
+				</div>			
 				<?php } ?>		
 			</td>
 		</tr>

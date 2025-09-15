@@ -111,6 +111,8 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 
 		'use strict';
 
+		//console.log(pnfpb_ajax_object_sw.nonce);
+
 		var pnfpb_progressier_app_enabled = '<?php echo esc_js(
       get_option("pnfpb_ic_thirdparty_pwa_app_enable")
   ); ?>';
@@ -118,6 +120,8 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 		var pnfpb_hide_foreground_notification = '<?php echo esc_js(
       get_option("pnfpb_ic_fcm_turnoff_foreground_messages")
   ); ?>';
+
+		var pnfpb_sw_token = {};
 
 		var pnfpb_progressier_app_id = '<?php if (
       get_option("pnfpb_ic_thirdparty_pwa_app_enable") === "1" &&
@@ -150,7 +154,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v2.01.11',
+  			cache_version: 'pnfpb_v2.18.2',
   			offline_assets: []
 		};
 
@@ -233,27 +237,26 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 			self.addEventListener('install', (event) => {
   				// Don't wait to take control.
 				//console.log('skip waiting...service worker install');
-  				self.skipWaiting();
+  				event.waitUntil(self.skipWaiting());
 
   				// Set up our cache.
 				if (isExcludeallurlsincache !== '1'  && isExcludeallurlsincache !== 'no') {
   					event.waitUntil(
     					caches.open(SW.cache_version).then(function(cache) {
-        				// Attempt to cache assets
-						//console.log(SW.offline_assets);
-        				var cacheResult = cache.addAll(SW.offline_assets);
+        					// Attempt to cache assets
 
-        				// Success
-        				cacheResult.then(function () {
-          					console.log('Service Worker: Installation successful!');
-        				});
+							var urlsToCache = SW.offline_assets || [];
 
-        				// Failure
-        				cacheResult.catch(function () {
-          					console.log('Service Worker: Installation failed.');
-        				});
+							return Promise.all(
+								urlsToCache.map(url =>
+									cache.add(url).catch(err => {
+										console.warn('Service Worker: Failed to cache', url, err);
+									})
+								)
+							).then(() => {
+								console.log('Service Worker: Installation completed with some files possibly skipped.');
+							});
 
-        				return cacheResult;
       					}).then(function(e){
         					return self.skipWaiting();
       					})
@@ -267,6 +270,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 			self.addEventListener('activate', function(event) {
   				// Delete all caches that aren't named in SW.cache_version.
   				//
+				event.waitUntil(clients.claim());
   				var expectedCacheNames = [SW.cache_version];
   				event.waitUntil(
     				caches.keys().then(function(cacheNames) {
@@ -526,39 +530,163 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 		};
 	}
 
-		function receivePushNotification(event) {
+	async function pnfpb_send_delivery_confirmation(notification_id,notification_token,notify_type) {
+
+		/* Get required details for fetch api from Indexeddb */
+		/* Encrypt using AES-256-GCM method to send it in API */
+		/* After data sent using API, Server then decrypts using AES-256-GCM method */
+		/* to update Notification delivery and read counts in PNFPB Plugin's WordPress database tables */
+
+		const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database", 2);
+
+		PNFPB_SW_request.onsuccess = (event) => {
+			const PNFPB_SW_db = event.target.result;
+			const PNFPB_SW_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_Store"], "readonly");
+			const PNFPB_SW_objectStore = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store");
+			const PNFPB_SW_getRequest = PNFPB_SW_objectStore.get(1);
+			PNFPB_SW_getRequest.onsuccess = async () => {
+				const data = PNFPB_SW_getRequest.result;
+				if (data && data.pnfpb_auth_token) {
+					if (data.pnfpb_auth_token !== '') {
+
+						// concatenate data to be encrypted delimited with "@!!@" which will be decrypted in server side 
+						// and split to appropriate fields using same delimiter "@!!@"
+
+						var pnfpb_subscription_token = '';
+						if (data.subscription_token) {
+							pnfpb_subscription_token = data.subscription_token;
+						}
+						const pnfpb_data_to_be_encrypted = notification_id+'@!!@'+pnfpb_subscription_token+'@!!@'+navigator.userAgent+'@!!@'+notify_type;
+						const notification_delivery_encrypted_data = await pnfpb_encryptData(pnfpb_data_to_be_encrypted,data.pnfpb_auth_token);
+						const notification_delivery_encrypted_authtoken = await pnfpb_encryptData(notification_token,data.pnfpb_auth_token);
+						const PNFPB_SW_rest_token_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_rest_token_Store"], "readonly");
+						const PNFPB_SW_rest_token_objectStore = PNFPB_SW_rest_token_transaction.objectStore("PNFPB_SW_rest_token_Store");
+						const PNFPB_SW_rest_token_getRequest = PNFPB_SW_rest_token_objectStore.get(1);
+						PNFPB_SW_rest_token_getRequest.onsuccess = async () => {
+							const data = PNFPB_SW_rest_token_getRequest.result;
+							if (data && data.pnfpb_rest_token && data.pnfpb_rest_token !== '') {
+								const notification_delivery_details = { encrypted_data: notification_delivery_encrypted_data, pnfpb_encrypted_authtoken: notification_delivery_encrypted_authtoken };
+
+								/* Send notification delivery counts and read counts with encrypted signature using AES-256-GCM using secured PNFPB REST API */
+
+								fetch('<?php echo esc_url_raw(get_home_url())."/wp-json/PNFPBpush/v1/notification-delivery-counts/"; ?>', { method: 'POST', headers: {'Content-Type': 'application/json',
+							  },body: JSON.stringify(notification_delivery_details) })
+								.then(async response => {
+									// Check if the request was successful (e.g., status code 200-299)
+									if (!response.ok) {
+										throw new Error(`HTTP error! status: ${response.status}`);
+									}
+									// Parse the response body as JSON
+									//const responsejson = await response.json();
+									return '';
+								})
+								.catch(error => {
+									// Handle any errors that occurred during the fetch operation
+									console.error('There was a problem with the fetch operation:', error);
+									return '';
+								});
+							} else {
+								console.log('Notification delivery and read count not sent - PNFPB_SW_rest_token_Store tokens not found');
+								return '';
+							} 
+						}
+					} else {
+						console.log('Notification delivery and read count not sent - PNFPB_SW_Store tokens not found');
+						return '';
+					}
+				} else {
+					return '';
+				}
+			};
+			PNFPB_SW_getRequest.onerror = (event) => {
+				reject('Error getting data: ' + event.target.error);
+				PNFPB_SW_db.close();
+				return '';
+			};
+
+		};
+
+		PNFPB_SW_request.onerror = (event) => {
+			console.error("Database error:", event.target.errorCode);
+			return '';
+		};
+
+	}
+
+	async function pnfpb_encryptData(plaintext, passphrase) {
+		const ptUtf8 = new TextEncoder().encode(plaintext);
+		const pwUtf8 = new TextEncoder().encode(passphrase);
+		const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+
+		const iv = crypto.getRandomValues(new Uint8Array(16));
+		const alg = { name: 'AES-GCM', iv: iv };
+		const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+
+		const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUtf8);
+	  	const tag = new Uint8Array(ctBuffer, ctBuffer.byteLength - 16, 16);
+	  	const ciphertext = new Uint8Array(ctBuffer, 0, ctBuffer.byteLength - 16);
+
+		const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
+
+		return {
+			ciphertext: btoa(String.fromCharCode(...new Uint8Array(ciphertext))),
+			iv: btoa(String.fromCharCode(...new Uint8Array(iv))),
+			tag: btoa(String.fromCharCode(...new Uint8Array(tag)))
+		}
+	}
+
+	async function pnfpb_receivePushNotification(event) {
 
 			event.stopImmediatePropagation();
 
 			var notification = {};
 
+			var pnfpb_push_data = {};
+
+			var notification_id = '';
+			var notification_token = '';
+
   			if (event.data) {
     			notification = event.data.json().notification;
+				pnfpb_push_data = event.data.json().data;
+				if (pnfpb_push_data.notification_id) {
+					notification_id = pnfpb_push_data.notification_id;
+				}
+				if (pnfpb_push_data.notification_auth_token) {
+					notification_token = pnfpb_push_data.notification_auth_token;
+				}
+				// Customize notification here
+				const notificationTitle = notification.title;
+				const notificationOptions = {
+					body: notification.body,
+					icon: notification.icon,
+					image: notification.image,
+					data: {
+						url: notification.click_action,
+						notification_id:notification_id,
+						notification_token:notification_token,
+					},
+					tag: notification.tag,
+					renotify: notification.renotify
+				}; 
+
+				event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
+
+				if (notification_id !== '' && notification_token !== '') {
+					await pnfpb_send_delivery_confirmation(notification_id,notification_token,'delivery');
+				}
+
 			}
 
-			// Customize notification here
-			const notificationTitle = notification.title;
-			const notificationOptions = {
-				body: notification.body,
-				icon: notification.icon,
-				image: notification.image,
-				data: {
-					url: notification.click_action
-				},
-				tag: notification.tag,
-				renotify: notification.renotify
-  				//actions: notification.action,
-			}; 
-			
-			event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
+	}
 
- 			
-		}
+	/* Push event process when push message received by browser */
 
-		self.addEventListener("push", receivePushNotification);
+	self.addEventListener("push", pnfpb_receivePushNotification);
 	
+	/* Event to be processed after notification is clicked to open client page/url */
 
-		self.addEventListener("notificationclick",(event) => {
+	self.addEventListener("notificationclick", (event) => {
 			event.preventDefault();
 			if (event.action === "read_more") {
 				event.notification.close();
@@ -585,7 +713,8 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
   					// This looks to see if the current is already open and
   					// focuses if it is
   					event.waitUntil(clients.matchAll({
-    					type: "window"
+    					type: "window",
+						includeUncontrolled: true,
   					}).then((clientList) => {
     					for (const client of clientList) {
       						if (client.url === pnfpb_custom_click_action_url && 'focus' in client)
@@ -598,34 +727,35 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 					if (event.action === "close_notification") {
 						event.notification.close();
 					} else {
-
 						event.notification.close();
   						// This looks to see if the current is already open and
   						// focuses if it is
   						event.waitUntil(clients.matchAll({
-    						type: "window"
-  						}).then((clientList) => {
-    						for (const client of clientList) {
-      							if (client.url === event.notification.data.url && 'focus' in client)
-        							return client.focus();
-    						}
-    						if (clients.openWindow)
-      							return clients.openWindow(event.notification.data.url);
+    						type: "window",
+							includeUncontrolled: true,
+  						}).then( async (clientList) => {
+    						if (clients.openWindow) {
+								// Send a message to the client.
+								clients.openWindow(event.notification.data.url).then(async function(windowClient) {
+									if (event.notification.data.notification_id !== '' && event.notification.data.notification_token !== '') {
+										await pnfpb_send_delivery_confirmation(event.notification.data.notification_id,event.notification.data.notification_token,'read');
+										return;
+									} else {
+										return;
+									}
+								})
+							}
   						}))
 					}
 				}
 			}
-		},
-		false,
-		);
+	},
+	false,
+	);
 
-		<?php
-  $sw_contents = ob_get_contents();
-  //ob_get_contents();
+<?php $sw_contents = ob_get_contents();
 
   ob_get_clean();
-
-  //exit();
 
   return $sw_contents;
     }
@@ -641,7 +771,7 @@ if (!function_exists("PNFPB_icfm_icpush_firebasesw_template")) {
 
 
 var firebase_sw = '<?php echo esc_js(
-    PNFPB_PLUGIN_DIR_PATH . "build/service_worker/index.js"
+    PNFPB_PLUGIN_DIR_PATH . "build/pnfpb_service_worker/index.js"
 ); ?>';
 
 
@@ -769,37 +899,184 @@ if (!function_exists("PNFPB_ic_genenrate_pwa_mainfest_json")) {
 
             $pnfpb_pwa_protocol_count++;
         }
+		
+		$pnfpb_ic_pwa_shortcut_name_array = [];
+		$pnfpb_ic_pwa_shortcut_shortname_array = [];
+		$pnfpb_ic_pwa_shortcut_starturl_array = [];
+		$pnfpb_ic_pwa_shortcut_description_array = [];
+		$pnfpb_ic_pwa_shortcut_upload_icon_132_array = [];
+		$pnfpb_ic_pwa_shortcut_upload_icon_512_array = [];
 
-        ob_start();
+		if (get_option("pnfpb_ic_pwa_app_shortcut_name")) {
+			$pnfpb_ic_pwa_shortcut_name_array = get_option(
+				"pnfpb_ic_pwa_app_shortcut_name"
+			);
+
+			if (!is_array($pnfpb_ic_pwa_shortcut_name_array)) {
+				$pnfpb_ic_pwa_shortcut_name_array = [" "];
+			}
+		} else {
+			$pnfpb_ic_pwa_shortcut_name_array = [" "];
+		}
+
+		if (get_option("pnfpb_ic_pwa_app_shortcut_shortname")) {
+			$pnfpb_ic_pwa_shortcut_shortname_array = get_option(
+				"pnfpb_ic_pwa_app_shortcut_shortname"
+			);
+
+			if (!is_array($pnfpb_ic_pwa_shortcut_shortname_array)) {
+				$pnfpb_ic_pwa_shortcut_shortname_array = [" "];
+			}
+		} else {
+			$pnfpb_ic_pwa_shortcut_shortname_array = [" "];
+		}
+
+		if (get_option("pnfpb_ic_pwa_app_shortcut_starturl")) {
+			$pnfpb_ic_pwa_shortcut_starturl_array = get_option(
+				"pnfpb_ic_pwa_app_shortcut_starturl"
+			);
+
+			if (!is_array($pnfpb_ic_pwa_shortcut_starturl_array)) {
+				$pnfpb_ic_pwa_shortcut_starturl_array = [" "];
+			}
+		} else {
+			$pnfpb_ic_pwa_shortcut_starturl_array = [" "];
+		}
+
+		if (get_option("pnfpb_ic_pwa_app_shortcut_description")) {
+			$pnfpb_ic_pwa_shortcut_description_array = get_option(
+				"pnfpb_ic_pwa_app_shortcut_description"
+			);
+
+			if (!is_array($pnfpb_ic_pwa_shortcut_description_array)) {
+				$pnfpb_ic_pwa_shortcut_description_array = [" "];
+			}
+		} else {
+			$pnfpb_ic_pwa_shortcut_description_array = [" "];
+		}
+
+		if (get_option("pnfpb_ic_fcm_pwa_shortcut_upload_icon_132")) {
+			$pnfpb_ic_pwa_shortcut_upload_icon_132_array = get_option(
+				"pnfpb_ic_fcm_pwa_shortcut_upload_icon_132"
+			);
+
+			if (!is_array($pnfpb_ic_pwa_shortcut_upload_icon_132_array)) {
+				$pnfpb_ic_pwa_shortcut_upload_icon_132_array = [" "];
+			}
+		} else {
+			$pnfpb_ic_pwa_shortcut_upload_icon_132_array = [" "];
+		}
+
+		if (get_option("pnfpb_ic_fcm_pwa_shortcut_upload_icon_512")) {
+			$pnfpb_ic_pwa_shortcut_upload_icon_512_array = get_option(
+				"pnfpb_ic_fcm_pwa_shortcut_upload_icon_512"
+			);
+
+			if (!is_array($pnfpb_ic_pwa_shortcut_upload_icon_512_array)) {
+				$pnfpb_ic_pwa_shortcut_upload_icon_512_array = [" "];
+			}
+		} else {
+			$pnfpb_ic_pwa_shortcut_upload_icon_512_array = [" "];
+		}
+	
+	 	$pnfpb_ic_pwa_shortcuts_manifest_array = [];
+		$pnfpb_ic_pwa_shortcuts_manifest_array_count = 0;
+		
+       foreach (
+            $pnfpb_ic_pwa_shortcut_name_array
+            as $pnfpb_ic_pwa_shortcut_name_array_element
+        ) {
+		    if ($pnfpb_ic_pwa_shortcut_name_array_element !== '' && isset($pnfpb_ic_pwa_shortcut_starturl_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]) && $pnfpb_ic_pwa_shortcut_starturl_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count] !== '' ) {
+				
+				$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["name"] = $pnfpb_ic_pwa_shortcut_name_array_element;
+
+				if (isset($pnfpb_ic_pwa_shortcut_shortname_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]) && $pnfpb_ic_pwa_shortcut_shortname_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count] !== '') {
+					$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["short_name"] = $pnfpb_ic_pwa_shortcut_shortname_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count];
+				}
+
+				if (isset($pnfpb_ic_pwa_shortcut_starturl_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count])) {
+					$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["url"] = $pnfpb_ic_pwa_shortcut_starturl_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count];
+				}
+
+				if (isset($pnfpb_ic_pwa_shortcut_description_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]) && $pnfpb_ic_pwa_shortcut_description_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count] !== '') {
+					$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["description"] = $pnfpb_ic_pwa_shortcut_description_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count];
+				}
+
+				if (is_array($pnfpb_ic_pwa_shortcut_upload_icon_132_array) || is_array($pnfpb_ic_pwa_shortcut_upload_icon_512_array)) {
+					$pnfpb_ic_pwa_shortcuts_icons_array_count = 0;
+					if (isset($pnfpb_ic_pwa_shortcut_upload_icon_132_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]) && $pnfpb_ic_pwa_shortcut_upload_icon_132_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count] !== '') {
+						$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["icons"][$pnfpb_ic_pwa_shortcuts_icons_array_count]["src"] = $pnfpb_ic_pwa_shortcut_upload_icon_132_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count];
+						$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["icons"][$pnfpb_ic_pwa_shortcuts_icons_array_count]["sizes"] = "132x132";
+						$pnfpb_ic_pwa_shortcuts_icons_array_count++;													
+					}
+					if (isset($pnfpb_ic_pwa_shortcut_upload_icon_512_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]) && $pnfpb_ic_pwa_shortcut_upload_icon_512_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count] !== '') {
+						$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["icons"][$pnfpb_ic_pwa_shortcuts_icons_array_count]["src"] = $pnfpb_ic_pwa_shortcut_upload_icon_512_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count];
+						$pnfpb_ic_pwa_shortcuts_manifest_array[$pnfpb_ic_pwa_shortcuts_manifest_array_count]["icons"][$pnfpb_ic_pwa_shortcuts_icons_array_count]["sizes"] = "512x512";
+					}					
+				}
+	   		}
+			   
+			$pnfpb_ic_pwa_shortcuts_manifest_array_count++; 
+	   }
+
+		ob_start();
         ?>
 						{
-						"id": "<?php echo esc_js(get_home_url()); ?>/",
-  						"name": "<?php if (get_option("pnfpb_ic_pwa_app_name")) {
-            echo esc_js(get_option("pnfpb_ic_pwa_app_name"));
+						"id": "<?php if (get_option("pnfpb_ic_pwa_app_starturl")) {
+            echo esc_url_raw(get_option("pnfpb_ic_pwa_app_starturl"));
         } else {
-            echo esc_js(substr(get_bloginfo("name"), 0, 50));
+            echo esc_url_raw(get_home_url())."/";
+        } ?>",
+  						"name": "<?php if (get_option("pnfpb_ic_pwa_app_name")) {
+            echo esc_html(get_option("pnfpb_ic_pwa_app_name"));
+        } else {
+            echo esc_html(substr(get_bloginfo("name"), 0, 50));
         } ?>",
   						"short_name": "<?php if (get_option("pnfpb_ic_pwa_app_shortname")) {
-            echo esc_js(get_option("pnfpb_ic_pwa_app_shortname"));
+            echo esc_html(get_option("pnfpb_ic_pwa_app_shortname"));
         } else {
-            echo esc_js(substr(get_bloginfo("name"), 0, 25));
+            echo esc_html(substr(get_bloginfo("name"), 0, 25));
         } ?>",
-  						"start_url": "<?php echo esc_url(get_home_url()); ?>/",
+ 						"description": "<?php if (get_option("pnfpb_ic_pwa_app_description")) {
+            echo esc_html(get_option("pnfpb_ic_pwa_app_description"));
+        } else {
+            echo esc_html("");
+        } ?>",
+  						"start_url": "<?php if (get_option("pnfpb_ic_pwa_app_starturl")) {
+            echo esc_url_raw(get_option("pnfpb_ic_pwa_app_starturl"));
+        } else {
+            echo esc_url_raw(get_home_url())."/";
+        } ?>",
+		<?php 
+		if (get_option("pnfpb_ic_pwa_app_scope") && esc_url_raw(get_option("pnfpb_ic_pwa_app_scope") !== ''))
+ 		{ 
+		?>
+  						"scope": "<?php if (get_option("pnfpb_ic_pwa_app_scope")) {
+            echo esc_url_raw(get_option("pnfpb_ic_pwa_app_scope"));
+        }  ?>",
+		<?php
+		}
+		?>
+  						"orientation": "<?php if (get_option("pnfpb_ic_pwa_app_orientation")) {
+            echo esc_html(get_option("pnfpb_ic_pwa_app_orientation"));
+        } else {
+            echo esc_html("any");
+        } ?>",
   						"icons": [
 							{
 								"src": "<?php if (get_option("pnfpb_ic_fcm_pwa_upload_icon_132")) {
-            echo esc_js(get_option("pnfpb_ic_fcm_pwa_upload_icon_132"));
+            echo esc_url_raw(get_option("pnfpb_ic_fcm_pwa_upload_icon_132"));
         } else {
-            echo esc_js(plugin_dir_url(__DIR__) . "img/icon_132.png");
+            echo esc_url_raw(plugin_dir_url(__DIR__) . "img/icon_132.png");
         } ?>",
 								"sizes": "132x132",
 								"type": "image/png"
 							},
 							{
 								"src": "<?php if (get_option("pnfpb_ic_fcm_pwa_upload_icon_512")) {
-            echo esc_js(get_option("pnfpb_ic_fcm_pwa_upload_icon_512"));
+            echo esc_url_raw(get_option("pnfpb_ic_fcm_pwa_upload_icon_512"));
         } else {
-            echo esc_js(plugin_dir_url(__DIR__) . "img/icon.png");
+            echo esc_url_raw(plugin_dir_url(__DIR__) . "img/icon.png");
         } ?>",
 								"sizes": "512x512",
 								"type": "image/png"
@@ -815,13 +1092,13 @@ if (!function_exists("PNFPB_ic_genenrate_pwa_mainfest_json")) {
    							 	"src": "<?php if (
                 get_option("pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value")
             ) {
-                echo esc_js(
+                echo esc_html(
                     get_option(
                         "pnfpb_ic_fcm_pwa_upload_screenshot_desktop_value"
                     )
                 );
             } else {
-                echo esc_js(
+                echo esc_url_raw(
                     plugin_dir_url(__DIR__) . "img/pnfpb-pwa-screenshot.png"
                 );
             } ?>",
@@ -833,7 +1110,7 @@ if (!function_exists("PNFPB_ic_genenrate_pwa_mainfest_json")) {
     						 	"label": "<?php if (
                 get_option("pnfpb_ic_fcm_pwa_upload_screenshot_desktop_label")
             ) {
-                echo esc_js(
+                echo esc_html(
                     get_option(
                         "pnfpb_ic_fcm_pwa_upload_screenshot_desktop_label"
                     )
@@ -846,23 +1123,23 @@ if (!function_exists("PNFPB_ic_genenrate_pwa_mainfest_json")) {
     							"src": "<?php if (
                get_option("pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value")
            ) {
-               echo esc_js(
+               echo esc_url_raw(
                    get_option("pnfpb_ic_fcm_pwa_upload_screenshot_mobile_value")
                );
            } else {
-               echo esc_js(
+               echo esc_url_raw(
                    plugin_dir_url(__DIR__) . "img/pnfpb-pwa-screenshot.png"
                );
            } ?>",
-    							"sizes": "<?php echo esc_js($pnfpb_pwa_mobile_screenshot_width) .
+    							"sizes": "<?php echo esc_html($pnfpb_pwa_mobile_screenshot_width) .
                "x" .
-               esc_js($pnfpb_pwa_mobile_screenshot_height); ?>",
+               esc_html($pnfpb_pwa_mobile_screenshot_height); ?>",
     							"type": "image/webp",
     							"form_factor": "narrow",
     							"label": "<?php if (
                get_option("pnfpb_ic_fcm_pwa_upload_screenshot_mobile_label")
            ) {
-               echo esc_js(
+               echo esc_html(
                    get_option("pnfpb_ic_fcm_pwa_upload_screenshot_mobile_label")
                );
            } else {
@@ -872,29 +1149,32 @@ if (!function_exists("PNFPB_ic_genenrate_pwa_mainfest_json")) {
 						],
 						<?php }
       if (count($pnfpb_ic_pwa_protocol_array) > 0) { ?>
-						"protocol_handlers": <?php echo esc_js(
-          wp_json_encode($pnfpb_ic_pwa_protocol_array)
-      ); ?>,
+						"protocol_handlers": <?php echo wp_json_encode($pnfpb_ic_pwa_protocol_array); ?>,
+						<?php }
+      if (count($pnfpb_ic_pwa_shortcuts_manifest_array) > 0) { ?>
+						"shortcuts": <?php echo wp_json_encode($pnfpb_ic_pwa_shortcuts_manifest_array); ?>,
 						<?php }
       ?>
   						"theme_color": "<?php if (get_option("pnfpb_ic_pwa_theme_color")) {
-            echo esc_js(get_option("pnfpb_ic_pwa_theme_color"));
+            echo esc_html(get_option("pnfpb_ic_pwa_theme_color"));
         } else {
             echo "#000000";
         } ?>",
   						"background_color": "<?php if (
             get_option("pnfpb_ic_pwa_app_backgroundcolor")
         ) {
-            echo esc_js(get_option("pnfpb_ic_pwa_app_backgroundcolor"));
+            echo esc_html(get_option("pnfpb_ic_pwa_app_backgroundcolor"));
         } else {
             echo "#ffffff";
         } ?>",
   						"display": "<?php if (get_option("pnfpb_ic_pwa_app_display")) {
-            echo esc_js(get_option("pnfpb_ic_pwa_app_display"));
+            echo esc_html(get_option("pnfpb_ic_pwa_app_display"));
         } else {
             echo "standalone";
-        } ?>"
-						}
+        } ?>",
+						"related_applications": [{"platform": "webapp",
+   								"url": "<?php echo esc_url(home_url("/")."pnfpbmanifest.json"); ?>"}]
+					}
 					<?php
      $pwa_manifest_contents = ob_get_contents();
 
