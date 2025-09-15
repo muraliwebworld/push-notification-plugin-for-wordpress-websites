@@ -179,7 +179,7 @@ After completing above steps, push notification will be displayed based on optio
 en users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.<br/>
 
 ## Screenshots
-<img width="600" height="1200" alt="PNFPB Mobile app push notification" src="https://github.com/user-attachments/assets/993e7b45-a621-4fd2-9fb3-3cc228c885dc" />
+<img width="400" height="800" alt="PNFPB Mobile app push notification" src="https://github.com/user-attachments/assets/993e7b45-a621-4fd2-9fb3-3cc228c885dc" />
 <img width="1920" height="1080" alt="PNFPB configuration admin panel for push notification" src="https://github.com/user-attachments/assets/92460932-4f39-427b-9ed8-02265c0adfc3" />
 <img width="1920" height="1080" alt="PNFPB enable WordPress post push notification settings" src="https://github.com/user-attachments/assets/732635fa-faad-4661-bbe5-61de8105c3d9" />
 <img width="1920" height="1080" alt="PNFPB enable BuddyPress push notification settings" src="https://github.com/user-attachments/assets/a4b51989-2019-4aee-9a8d-191fed2cee4f" />
