@@ -175,11 +175,21 @@ Following are steps to configure the plugin,<br/>
 12. After saving below fields, it will ask to allow notification for this website in browser default popup, click on allow notification to get notifications<br/>
 After completing above steps, push notification will be displayed based on option selected for posts/buddypress while publishing posts or custom post types or during new BuddyPress activities or comments.<br/>
 13. New Shortcode [subscribe_PNFPB_push_notification] can also be used to display Subscribe/Unsubscribe push notification toggle button. It is a additional facility in addition to default option from browser to subscribe/unsubscribe push notifications.<br/><br/>
-14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache then users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.<br/>
+14. Go to PWA settings in plugin admin area and fill all required fields to customize and generate PWA app with offline facility.If pages are included for offline cache th
+en users will be able to view those pages in offline mode without internet if page is not stored in cache then default offline page will be displayed.<br/>
 
 ## Screenshots
-![screenshot-1push](https://user-images.githubusercontent.com/32461311/132991104-5a7cfbf4-19dd-4129-8d8a-279fb00876a0.png)
-![screenshot-2](https://user-images.githubusercontent.com/32461311/133961443-aeb7765e-7ac5-4f08-943f-ab281cf3f25f.png)
-![screenshot-7](https://user-images.githubusercontent.com/32461311/133961446-a4d6d0fd-3d34-4380-ac8f-44cbbc4d1f88.png)
-![screenshot-6push](https://user-images.githubusercontent.com/32461311/132991099-e0ccd6df-0830-4af6-914e-2560ee1e07f3.png)
-![push-private-message2](https://user-images.githubusercontent.com/32461311/132991198-93bd9c69-8b89-46ee-8c7f-c8e41af0e83c.png)
+<img width="400" height="800" alt="PNFPB Mobile app push notification" src="https://github.com/user-attachments/assets/993e7b45-a621-4fd2-9fb3-3cc228c885dc" />
+<img width="1920" height="1080" alt="PNFPB configuration admin panel for push notification" src="https://github.com/user-attachments/assets/92460932-4f39-427b-9ed8-02265c0adfc3" />
+<img width="1920" height="1080" alt="PNFPB enable WordPress post push notification settings" src="https://github.com/user-attachments/assets/732635fa-faad-4661-bbe5-61de8105c3d9" />
+<img width="1920" height="1080" alt="PNFPB enable BuddyPress push notification settings" src="https://github.com/user-attachments/assets/a4b51989-2019-4aee-9a8d-191fed2cee4f" />
+<img width="1920" height="1080" alt="PNFPB choose web-push as push notification provider" src="https://github.com/user-attachments/assets/12f4f882-c5b7-4740-a2b6-565bb82292c8" />
+<img width="1920" height="1080" alt="PNFPB Progressive web app settings" src="https://github.com/user-attachments/assets/753bd4ba-86f3-4315-8f61-d4fa9f2ac523" />
+<img width="1920" height="1080" alt="PNFPB push notification delivery reports" src="https://github.com/user-attachments/assets/f0aad694-b45d-4397-9aa5-9f4ea2d5e87d" />
+<img width="1920" height="1080" alt="PNFPB push notification shortcodes" src="https://github.com/user-attachments/assets/24f19e4d-1706-4a8c-a200-5d600af5f94d" />
+<img width="1920" height="1080" alt="PNFPB on-demand or one time push notification" src="https://github.com/user-attachments/assets/58995631-639c-4de1-ab95-1fff3d92b68f" />
+<img width="1920" height="1080" alt="PNFPB Bell icon menu and BuddyPress activity push notification" src="https://github.com/user-attachments/assets/df796f9e-35aa-4d3d-874e-5e3dec1897a2" />
+<img width="1920" height="1080" alt="PNFPB various push notifications using BuddyPress" src="https://github.com/user-attachments/assets/9cc6139c-dfaf-44ac-a1bc-67d39c8005b0" />
+<img width="1600" height="900" alt="PNFPB Button customization admin panel" src="https://github.com/user-attachments/assets/c4020547-9874-4e8e-98af-711bb4f6b931" />
+<img width="1600" height="900" alt="PNFPB API to connect mobile app - native or hybrid mobile app" src="https://github.com/user-attachments/assets/6865e31a-3920-43cc-8846-a106272368e6" />
+<img width="1600" height="900" alt="PNFPB nginx related settings" src="https://github.com/user-attachments/assets/d579d7b5-4dea-4215-9514-82f0c6aadbf8" />

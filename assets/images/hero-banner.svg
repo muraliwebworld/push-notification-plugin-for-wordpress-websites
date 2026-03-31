@@ -1,0 +1,303 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500"
+  font-family="'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PNFPB Plugin — Hero Banner
+       1200 × 500 px  |  SVG vector  |  Self-contained
+       ═══════════════════════════════════════════════════════════ -->
+
+  <defs>
+
+    <!-- Background gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#0f0c29"/>
+      <stop offset="48%"  stop-color="#302b63"/>
+      <stop offset="100%" stop-color="#24243e"/>
+    </linearGradient>
+
+    <!-- Headline accent line gradient -->
+    <linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#6478ff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#6478ff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Dashboard bar gradients -->
+    <linearGradient id="bar1-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#6478ff"/>
+      <stop offset="100%" stop-color="#302b63"/>
+    </linearGradient>
+    <linearGradient id="bar2-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#00BFA5"/>
+      <stop offset="100%" stop-color="#302b63"/>
+    </linearGradient>
+    <linearGradient id="bar3-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#7C4DFF"/>
+      <stop offset="100%" stop-color="#302b63"/>
+    </linearGradient>
+    <linearGradient id="bar4-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#2196F3"/>
+      <stop offset="100%" stop-color="#302b63"/>
+    </linearGradient>
+    <linearGradient id="bar5-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#FF6D00"/>
+      <stop offset="100%" stop-color="#302b63"/>
+    </linearGradient>
+
+    <!-- Glow / blur filter -->
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft radial glow filter (badge, bell) -->
+    <filter id="soft-glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle blur for background blobs -->
+    <filter id="blob-blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+
+    <!-- Card clip-path (rounded rect reusable) -->
+    <clipPath id="dash-clip">
+      <rect x="880" y="60" width="280" height="380" rx="18"/>
+    </clipPath>
+
+  </defs>
+
+  <!-- ─── BACKGROUND ─────────────────────────────────────────── -->
+  <rect width="1200" height="500" fill="url(#bg-grad)"/>
+
+  <!-- Background network / cloud blobs -->
+  <ellipse cx="200"  cy="120" rx="180" ry="80"  fill="rgba(100,120,255,0.10)" filter="url(#blob-blur)"/>
+  <ellipse cx="600"  cy="480" rx="260" ry="100" fill="rgba(100,120,255,0.08)" filter="url(#blob-blur)"/>
+  <ellipse cx="1050" cy="100" rx="200" ry="90"  fill="rgba(100,120,255,0.10)" filter="url(#blob-blur)"/>
+  <ellipse cx="980"  cy="420" rx="150" ry="70"  fill="rgba(0,191,165,0.07)"   filter="url(#blob-blur)"/>
+
+  <!-- Subtle grid arc motifs (connectivity lines) -->
+  <g stroke="rgba(255,255,255,0.04)" stroke-width="1" fill="none">
+    <path d="M0,350 Q300,200 600,350 T1200,350"/>
+    <path d="M0,400 Q300,260 600,400 T1200,400"/>
+    <path d="M0,300 Q300,150 600,300 T1200,300"/>
+    <circle cx="600" cy="500" r="300"/>
+    <circle cx="600" cy="500" r="200"/>
+    <circle cx="600" cy="500" r="420"/>
+  </g>
+
+  <!-- ─── LEFT ZONE  (x: 50–440) ────────────────────────────── -->
+
+  <!-- Plugin badge / pill -->
+  <rect x="50" y="68" width="130" height="28" rx="14"
+        fill="rgba(100,120,255,0.18)" stroke="rgba(100,120,255,0.55)" stroke-width="1"/>
+  <text x="115" y="87" text-anchor="middle" fill="#c8d0ff" font-size="12" font-weight="600"
+        letter-spacing="0.5">PNFPB Plugin</text>
+
+  <!-- Main headline -->
+  <text x="50" y="140" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="-0.3">
+    Flexible Delivery
+  </text>
+  <text x="50" y="180" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="-0.3">
+    with Firebase,
+  </text>
+  <text x="50" y="220" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="-0.3">
+    WebPush, OneSignal
+  </text>
+  <text x="50" y="260" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="-0.3">
+    &amp; Progressier
+  </text>
+
+  <!-- Subheading -->
+  <text x="50" y="298" fill="rgba(255,255,255,0.72)" font-size="15" font-weight="400" letter-spacing="0.1">
+    Choose the backend that fits your
+  </text>
+  <text x="50" y="318" fill="rgba(255,255,255,0.72)" font-size="15" font-weight="400" letter-spacing="0.1">
+    website, app, or PWA workflow
+  </text>
+
+  <!-- Decorative glow rule below subheading -->
+  <rect x="50" y="335" width="240" height="3" rx="2" fill="url(#line-grad)"/>
+
+  <!-- ─── CENTER ZONE — Icon card grid (x: 460–760) ──────────── -->
+
+  <!-- Card row 1 -->
+
+  <!-- Firebase card -->
+  <rect x="460" y="70" width="130" height="100" rx="12"
+        fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- flame icon (simplified path) -->
+  <g transform="translate(506,90)" fill="#FF6D00" filter="url(#glow)">
+    <path d="M19,2 C19,2 14,8 14,13 C14,16.3 16.7,19 20,19 C23.3,19 26,16.3 26,13
+             C26,8 21,2 21,2 C21,5 19,7 19,7 C19,7 17,5 19,2 Z
+             M20,15 C21.1,15 22,15.9 22,17 C22,18.1 21.1,19 20,19 C18.9,19 18,18.1 18,17
+             C18,15.9 18.9,15 20,15 Z" transform="translate(-20,-2) scale(0.9)"/>
+  </g>
+  <text x="525" y="153" text-anchor="middle" fill="#FF6D00" font-size="11" font-weight="700"
+        letter-spacing="0.4">Firebase</text>
+
+  <!-- WebPush card -->
+  <rect x="605" y="70" width="130" height="100" rx="12"
+        fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- globe icon -->
+  <g transform="translate(670,108)" fill="none" stroke="#2196F3" stroke-width="2" filter="url(#glow)">
+    <circle cx="0" cy="0" r="18"/>
+    <ellipse cx="0" cy="0" rx="8" ry="18"/>
+    <line x1="-18" y1="0" x2="18" y2="0"/>
+    <line x1="-16" y1="-9" x2="16" y2="-9"/>
+    <line x1="-16" y1="9"  x2="16" y2="9"/>
+  </g>
+  <text x="670" y="153" text-anchor="middle" fill="#2196F3" font-size="11" font-weight="700"
+        letter-spacing="0.4">WebPush</text>
+
+  <!-- Card row 2 -->
+
+  <!-- OneSignal card -->
+  <rect x="460" y="185" width="130" height="100" rx="12"
+        fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- signal/wave icon -->
+  <g transform="translate(525,222)" fill="none" stroke="#E0284F" stroke-width="2.5"
+     stroke-linecap="round" filter="url(#glow)">
+    <path d="M-18,-12 Q-24,0 -18,12"/>
+    <path d="M-10,-7  Q-14,0 -10,7"/>
+    <circle cx="0" cy="0" r="4" fill="#E0284F" stroke="none"/>
+    <path d="M10,-7  Q14,0 10,7"/>
+    <path d="M18,-12 Q24,0 18,12"/>
+  </g>
+  <text x="525" y="268" text-anchor="middle" fill="#E0284F" font-size="11" font-weight="700"
+        letter-spacing="0.4">OneSignal</text>
+
+  <!-- Progressier card -->
+  <rect x="605" y="185" width="130" height="100" rx="12"
+        fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- rocket icon -->
+  <g transform="translate(670,218)" fill="#00BFA5" filter="url(#glow)">
+    <path d="M0,-22 C6,-16 10,-6 10,4 L4,10 L-4,10 L-10,4 C-10,-6 -6,-16 0,-22 Z"
+          fill="#00BFA5"/>
+    <circle cx="0" cy="2" r="5" fill="#24243e"/>
+    <path d="M-10,4 L-16,14 L-8,10 Z" fill="#00BFA5"/>
+    <path d="M10,4  L16,14 L8,10  Z" fill="#00BFA5"/>
+    <path d="M-4,10 L-4,18 L0,14 L4,18 L4,10 Z" fill="rgba(0,191,165,0.6)"/>
+  </g>
+  <text x="670" y="268" text-anchor="middle" fill="#00BFA5" font-size="11" font-weight="700"
+        letter-spacing="0.4">Progressier</text>
+
+  <!-- Card row 3 -->
+
+  <!-- Mobile App card -->
+  <rect x="460" y="300" width="130" height="100" rx="12"
+        fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- smartphone icon -->
+  <g transform="translate(525,337)" fill="none" stroke="#7C4DFF" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+    <rect x="-11" y="-22" width="22" height="38" rx="4" stroke="#7C4DFF"/>
+    <line x1="-4" y1="-18" x2="4" y2="-18"/>
+    <circle cx="0" cy="12" r="2.5" fill="#7C4DFF" stroke="none"/>
+  </g>
+  <text x="525" y="383" text-anchor="middle" fill="#7C4DFF" font-size="11" font-weight="700"
+        letter-spacing="0.4">Mobile App</text>
+
+  <!-- Instant Delivery card -->
+  <rect x="605" y="300" width="130" height="100" rx="12"
+        fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- lightning bolt icon -->
+  <g transform="translate(670,337)" filter="url(#glow)">
+    <polygon points="6,-22 -4,0 4,0 -6,22 16,-4 6,-4 16,-22" fill="#FFD600"/>
+  </g>
+  <text x="670" y="383" text-anchor="middle" fill="#FFD600" font-size="11" font-weight="700"
+        letter-spacing="0.4">Instant Delivery</text>
+
+  <!-- ─── RIGHT ZONE — Dashboard mockup (x: 880–1160) ─────────── -->
+
+  <!-- Dashboard panel outer -->
+  <rect x="880" y="60" width="280" height="380" rx="18"
+        fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+  <!-- Panel title bar -->
+  <rect x="880" y="60" width="280" height="48" rx="18"
+        fill="rgba(255,255,255,0.06)" stroke="none"/>
+  <rect x="880" y="88" width="280" height="20" fill="rgba(255,255,255,0.06)" stroke="none"/>
+
+  <!-- Window controls dots -->
+  <circle cx="906" cy="84" r="5" fill="rgba(255,80,80,0.6)"/>
+  <circle cx="922" cy="84" r="5" fill="rgba(255,185,0,0.6)"/>
+  <circle cx="938" cy="84" r="5" fill="rgba(0,200,100,0.6)"/>
+
+  <!-- Panel label -->
+  <text x="1020" y="89" text-anchor="middle" fill="rgba(255,255,255,0.55)"
+        font-size="12" font-weight="600" letter-spacing="0.5">Notification Analytics</text>
+
+  <!-- Activity bars (stats preview) -->
+  <g>
+    <!-- Row labels + bars -->
+    <text x="900" y="134" fill="rgba(255,255,255,0.45)" font-size="10">Firebase</text>
+    <rect x="900" y="138" width="220" height="10" rx="5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="900" y="138" width="178" height="10" rx="5" fill="url(#bar1-grad)" opacity="0.85"/>
+
+    <text x="900" y="162" fill="rgba(255,255,255,0.45)" font-size="10">WebPush</text>
+    <rect x="900" y="166" width="220" height="10" rx="5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="900" y="166" width="140" height="10" rx="5" fill="url(#bar4-grad)" opacity="0.85"/>
+
+    <text x="900" y="190" fill="rgba(255,255,255,0.45)" font-size="10">OneSignal</text>
+    <rect x="900" y="194" width="220" height="10" rx="5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="900" y="194" width="160" height="10" rx="5" fill="url(#bar3-grad)" opacity="0.85"/>
+
+    <text x="900" y="218" fill="rgba(255,255,255,0.45)" font-size="10">Progressier</text>
+    <rect x="900" y="222" width="220" height="10" rx="5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="900" y="222" width="120" height="10" rx="5" fill="url(#bar2-grad)" opacity="0.85"/>
+
+    <text x="900" y="246" fill="rgba(255,255,255,0.45)" font-size="10">Mobile App</text>
+    <rect x="900" y="250" width="220" height="10" rx="5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="900" y="250" width="195" height="10" rx="5" fill="url(#bar5-grad)" opacity="0.85"/>
+  </g>
+
+  <!-- Divider line -->
+  <line x1="900" y1="278" x2="1140" y2="278" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+
+  <!-- Notification feed items -->
+  <g>
+    <!-- Feed item 1 -->
+    <rect x="900" y="290" width="240" height="36" rx="8" fill="rgba(255,255,255,0.06)"/>
+    <circle cx="916" cy="308" r="8" fill="rgba(100,120,255,0.35)"/>
+    <text x="930" y="304" fill="rgba(255,255,255,0.8)" font-size="10" font-weight="600">New post published</text>
+    <text x="930" y="318" fill="rgba(255,255,255,0.4)" font-size="9">Sent via Firebase · 2s ago</text>
+
+    <!-- Feed item 2 -->
+    <rect x="900" y="334" width="240" height="36" rx="8" fill="rgba(255,255,255,0.04)"/>
+    <circle cx="916" cy="352" r="8" fill="rgba(0,191,165,0.35)"/>
+    <text x="930" y="348" fill="rgba(255,255,255,0.8)" font-size="10" font-weight="600">PWA push delivered</text>
+    <text x="930" y="362" fill="rgba(255,255,255,0.4)" font-size="9">Sent via Progressier · 5s ago</text>
+
+    <!-- Feed item 3 -->
+    <rect x="900" y="378" width="240" height="36" rx="8" fill="rgba(255,255,255,0.06)"/>
+    <circle cx="916" cy="396" r="8" fill="rgba(224,40,79,0.35)"/>
+    <text x="930" y="392" fill="rgba(255,255,255,0.8)" font-size="10" font-weight="600">BuddyPress activity</text>
+    <text x="930" y="406" fill="rgba(255,255,255,0.4)" font-size="9">Sent via OneSignal · 9s ago</text>
+  </g>
+
+  <!-- Floating notification bubble (bell + badge) -->
+  <g transform="translate(1125,72)" filter="url(#soft-glow)">
+    <!-- Bell body -->
+    <g fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round">
+      <path d="M0,-14 C0,-14 -1,-14 -1,-13 C-8,-12 -12,-6 -12,2 L-12,8 L12,8 L12,2
+               C12,-6 8,-12 1,-13 C1,-14 0,-14 0,-14 Z" fill="rgba(100,120,255,0.30)" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+      <path d="M-4,8 Q-4,12 0,12 Q4,12 4,8" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" fill="none"/>
+    </g>
+    <!-- Badge count -->
+    <circle cx="10" cy="-12" r="7" fill="#E0284F"/>
+    <text x="10" y="-8" text-anchor="middle" fill="#ffffff" font-size="8" font-weight="700">3</text>
+  </g>
+
+  <!-- ─── BOTTOM CAPTION ─────────────────────────────────────── -->
+  <text x="600" y="476" text-anchor="middle"
+        fill="rgba(255,255,255,0.28)" font-size="11" letter-spacing="1.5">
+    PNFPB · Push Notification for Post and BuddyPress · WordPress Plugin
+  </text>
+
+</svg>
