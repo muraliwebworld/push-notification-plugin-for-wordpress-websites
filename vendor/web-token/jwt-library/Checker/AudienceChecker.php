@@ -12,13 +12,13 @@ use function is_string;
 /**
  * Represents a class that checks the audience claim and header in a JWT token.
  */
-final class AudienceChecker implements ClaimChecker, HeaderChecker
+final readonly class AudienceChecker implements ClaimChecker, HeaderChecker
 {
     private const CLAIM_NAME = 'aud';
 
     public function __construct(
-        private readonly string $audience,
-        private readonly bool $protectedHeader = false
+        private string $audience,
+        private bool $protectedHeader = false
     ) {
     }
 

@@ -12,7 +12,7 @@
   		} else {
 			if (is_user_logged_in() && isset($_FILES['file']) && isset($_FILES['file']['tmp_name']) ) {
 				
-				$user_info = get_userdata( get_current_user_id() );
+				$pnfpb_user_info = get_userdata( get_current_user_id() );
 
     			// Call globals
     			global $wp_filesystem;
@@ -20,14 +20,14 @@
    				// Initiate
     			WP_Filesystem();
      
-    			$local_file =   wp_strip_all_tags(sanitize_text_field($_FILES['file']['tmp_name']));
+    			$pnfpb_local_file =   wp_strip_all_tags(sanitize_text_field($_FILES['file']['tmp_name']));
     			$file_content    =   '';
  
-    			if ( $wp_filesystem->exists( $local_file ) ) {
+    			if ( $wp_filesystem->exists( $pnfpb_local_file ) ) {
 
         			// following is alternate to
 
-        			$file_content =  $wp_filesystem->get_contents( $local_file );
+        			$file_content =  $wp_filesystem->get_contents( $pnfpb_local_file );
 					
 					update_option('pnfpb_sa_json_data',$file_content);
 

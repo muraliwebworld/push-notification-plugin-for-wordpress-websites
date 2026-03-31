@@ -18,7 +18,6 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 			$raw_args = []
 		) {
 			$apiaccesskey = get_option("pnfpb_ic_fcm_google_api");
-			
 			$webpush_option = get_option("pnfpb_webpush_push");
 			$webpush_firebase = get_option("pnfpb_webpush_push_firebase");				
 
@@ -43,6 +42,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 				} else {
 					$args = $raw_args;
 				}
+				
 
 				// These should be extracted below.
 				$recipients = [];
@@ -52,13 +52,15 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 				// Barf.
 				extract($args);
 
-
 				if (empty($recipients)) {
 					return;
 				}
-
 				// Send an email to each recipient.
 				foreach ($recipients as $recipient) {
+					
+					if (!is_object($recipient) && array($recipient)) {
+						$recipient = (object) $recipient;
+					}					
 					$sender_name = "";
 
 					$sender_name = bp_core_get_user_displayname($sender_id);
@@ -233,7 +235,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 
 						$target_deviceid_values = $wpdb->get_results(
 							$wpdb->prepare(
-								"SELECT * FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+								"SELECT * FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 								$table_name,
 								"%!!%",
 								$recipient->user_id,
@@ -270,6 +272,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 								$iconurl,
 								$messageurl,
 								[
+									"receipient_id" => strval($recipient->user_id),
 									"thread_id" => strval($thread_id),
 									"click_url" => $messageurl,
 								],
@@ -285,7 +288,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 
 							$target_userid_array_values = $wpdb->get_col(
 								$wpdb->prepare(
-									"SELECT device_id FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+									"SELECT device_id FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 									$table_name,
 									$recipient->user_id,
 									"%progressier%"
@@ -334,7 +337,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 
 							$target_userid_array_values = $wpdb->get_col(
 								$wpdb->prepare(
-									"SELECT device_id FROM %i WHERE userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+									"SELECT device_id FROM %i WHERE userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 									$table_name,
 									$recipient->user_id
 								)
@@ -386,7 +389,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 							) {
 								$target_userid_array_values = $wpdb->get_col(
 									$wpdb->prepare(
-										"SELECT userid FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+										"SELECT userid FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 										$table_name,
 										$recipient->user_id,
 										"%onesignal%"
@@ -438,7 +441,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 
 								$deviceids = $wpdb->get_col(
 										$wpdb->prepare(
-											"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 1000",
+											"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,6,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 											$table_name,
 											"%@N%",
 											$recipient->user_id
@@ -489,6 +492,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 													$iconurl,
 													$messageurl,
 													[
+														"receipient_id" => strval($recipient->user_id),
 														"thread_id" => strval($thread_id),
 														"click_url" => $messageurl,
 													],
@@ -518,6 +522,7 @@ if (!class_exists("PNFPB_private_message_notification_class")) {
 												$iconurl,
 												$messageurl,
 												[
+													"receipient_id" => strval($recipient->user_id),
 													"thread_id" => strval($thread_id),
 													"click_url" => $messageurl,
 												],

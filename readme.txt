@@ -4,9 +4,9 @@ Author URI: https://www.muraliwebworld.com
 Tags:  push notification,mobile app,progressive web app,buddypress,firebase
 Donate link: https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/
 Requires at least: 6.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 3.01
+Stable tag: 3.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,12 +51,14 @@ It sends push notifications to desktop, android/ios mobile apps using Firebase C
 1. When contact form(contactform7 plugin) submitted.
 2. When new user registered in site.
 
+= Reports =
+It supports Firebase analytics reports in Firebase console for notification_open, notification_read, page_view events.
+
 = Notifications only for loggedin users =
 Enable/Disable option in admin settings to send push notifications using Firebase httpv1 or Onesignal only for loggedin users.
 
 = Custom popup and Bell prompt to subscribe push notifications with subscription options =
-Enable/Disable custom prompt with icon to subscribe/unsubscribe push notifications in front end in admin settings.
-Choose Horizontal or Vertical custom prompt style and customize the text, color and button.
+Enable/Disable custom notification subscription prompt to subscribe/unsubscribe push notifications in front end in admin settings.
 Enable/Disable Bell prompt icon to subscribe/unsubscribe notifications. Front end users will be able to subscribe to particular category like post, activity, comments, friendship request/accept, other options while subscribing for first time or if user wants to update subscribe options from bell prompt at any time it is needed.
 
 = Shortcodes =
@@ -199,13 +201,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 12.Special settings for NGINX based server
 
 == Changelog ==
-= 3.01 version 16 Sep 2025 =
-* New feature: Self-hosted push notification using web-push. Plugin supports Firebase, self-supported web-push, Onesignal, Progressier & webtoapp push notifications
+= 3.14 version =
+* Performance improvement and bug fixes
+= 3.13 version
 * Bug fixes
-* Delivery and read reports for push notification sent using Firebase and web-push.
-* Optimized plugin code to replace functions with separate classes.
-* Admin area UI changes.
-* Requires atleast PHP version 8.1 and above. Compatible with latest PHP version 8.3 and above.
 
 == Upgrade Notice ==
-*  New Self-hosted push notification. Delivery reports for push notification, admin are UI changes, Bug fixes.
+*  Bug fixes

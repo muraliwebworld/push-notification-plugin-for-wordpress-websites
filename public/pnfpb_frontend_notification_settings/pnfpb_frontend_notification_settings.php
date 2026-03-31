@@ -1,18 +1,18 @@
 <?php
 
             global $bp, $wpdb;
-            $args = [
+            $pnfpb_args = [
                 "public" => true,
                 "_builtin" => false,
             ];
 
-            $output = "names"; // or objects
-            $operator = "and"; // 'and' or 'or'
-            $custposttypes = get_post_types($args, $output, $operator);
+            $pnfpb_output = "names"; // or objects
+            $pnfpb_operator = "and"; // 'and' or 'or'
+            $pnfpb_custposttypes = get_post_types($pnfpb_args, $pnfpb_output, $pnfpb_operator);
 
-            $bpsubscribeoptions = "10000000000";
+            $pnfpb_bpsubscribeoptions = "10000000000";
 
-            $allowed_html = [
+            $pnfpb_allowed_html = [
                 "a" => [
                     "href" => [],
                     "title" => [],
@@ -101,25 +101,25 @@
 								<div class="pnfpb_bell_icon_custom_prompt_loader_frontend" id="pnfpb_bell_icon_custom_prompt_loader_frontend"></div>
 								<div class="pnfpb_row pnfpb_frontend_subscriptions_options_menu_all">
 									<?php
-         $args = [
+         $pnfpb_args = [
              "public" => true,
              "_builtin" => false,
          ];
 
-         $output = "names"; // or objects
-         $operator = "and"; // 'and' or 'or'
-         $custposttypes = get_post_types($args, $output, $operator);
-         $frontend_post_push_enable = false;
+         $pnfpb_output = "names"; // or objects
+         $pnfpb_operator = "and"; // 'and' or 'or'
+         $pnfpb_custposttypes = get_post_types($pnfpb_args, $pnfpb_output, $pnfpb_operator);
+         $pnfpb_frontend_post_push_enable = false;
 
          $pnfpb_html_frontend_subscription_custom_post_options = "";
 
          $pnfpb_push_count = 14;
-		 $posttypecount = 0;
-         foreach ($custposttypes as $post_type) {
+		 $pnfpb_posttypecount = 0;
+         foreach ($pnfpb_custposttypes as $pnfpb_post_type) {
              if (
-                 get_option("pnfpb_ic_fcm_" . $post_type . "_enable") === "1" &&
-                 $post_type !== "buddypress" &&
-                 $post_type !== "post"
+                 get_option("pnfpb_ic_fcm_" . $pnfpb_post_type . "_enable") === "1" &&
+                 $pnfpb_post_type !== "buddypress" &&
+                 $pnfpb_post_type !== "post"
              ) {
                  if (
                      get_option(
@@ -127,19 +127,19 @@
                      ) === "1"
                  ) {
                      $pnfpb_ic_fcm_bell_subscription_default_label = ucwords(
-                         $post_type
+                         $pnfpb_post_type
                      );
 
                      if (
                          get_option(
                              "pnfpb_ic_fcm_frontend_settings_" .
-                                 $post_type .
+                                 $pnfpb_post_type .
                                  "_text"
                          )
                      ) {
                          $pnfpb_ic_fcm_bell_subscription_default_label = get_option(
                              "pnfpb_ic_fcm_frontend_settings_" .
-                                 $post_type .
+                                 $pnfpb_post_type .
                                  "_text"
                          );
                      }
@@ -149,16 +149,16 @@
 							<div class="pnfpb_card">				
 								<label class="pnfpb_ic_push_settings_table_label_checkbox 
 									pnfpb_flex_grow_6 pnfpb_max_width_236" 
-									for="'.esc_attr("pnfpb_ic_fcm_front_subscription_".$post_type."_enable").'">' .
+									for="'.esc_attr("pnfpb_ic_fcm_front_subscription_".$pnfpb_post_type."_enable").'">' .
                          					esc_html($pnfpb_ic_fcm_bell_subscription_default_label).
                          		'</label>
 								<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_max_width_40">
 									<input id="' .
-                         				esc_attr("pnfpb_ic_fcm_front_subscription_".$post_type."_enable").
+                         				esc_attr("pnfpb_ic_fcm_front_subscription_".$pnfpb_post_type."_enable").
                          				'" class="' .
-                         				esc_attr("pnfpb_ic_fcm_front_subscription_".$post_type."_enable").
+                         				esc_attr("pnfpb_ic_fcm_front_subscription_".$pnfpb_post_type."_enable").
                          				'" name="' .
-                         				esc_attr("pnfpb_ic_fcm_front_subscription_".$post_type."_enable").
+                         				esc_attr("pnfpb_ic_fcm_front_subscription_".$pnfpb_post_type."_enable").
                          				'" type="checkbox" pnfpb_index="' .
                          				esc_attr($pnfpb_push_count) .
                          				'" value="1"> 
@@ -167,12 +167,12 @@
 							</div>
 						</div>';
                  } else {
-                     $frontend_post_push_enable = true;
+                     $pnfpb_frontend_post_push_enable = true;
                  }
              }
              $pnfpb_push_count++;
-     		$posttypecount++;
-			if ($posttypecount >= 10) {
+     		$pnfpb_posttypecount++;
+			if ($pnfpb_posttypecount >= 10) {
 				
 				break;
 			}			 
@@ -239,19 +239,19 @@
 
          echo wp_kses(
              $pnfpb_html_frontend_subscription_custom_post_options,
-             $allowed_html
+             $pnfpb_allowed_html
          );
 
          $pnfpb_push_admin_type_count = 0;
 
          $pnfpb_ic_fcm_front_enable_default_label = "";
 
-         foreach ($pnfpb_show_push_notify_types as $notify_type) {
+         foreach ($pnfpb_show_push_notify_types as $pnfpb_notify_type) {
              if (
-                 get_option("pnfpb_ic_fcm_" . $notify_type . "_enable") === "1"
+                 get_option("pnfpb_ic_fcm_" . $pnfpb_notify_type . "_enable") === "1"
              ) {
 
-                 if ($notify_type === "bactivity") {
+                 if ($pnfpb_notify_type === "bactivity") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Activities",
@@ -260,7 +260,7 @@
                      );
                  }
 
-                 if ($notify_type === "bcomment") {
+                 if ($pnfpb_notify_type === "bcomment") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Comments in Activity/Post",
@@ -269,7 +269,7 @@
                      );
                  }
 
-                 if ($notify_type === "mybcomment") {
+                 if ($pnfpb_notify_type === "mybcomment") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Comments in My Activity/My Post",
@@ -278,7 +278,7 @@
                      );
                  }
 
-                 if ($notify_type === "bprivatemessage") {
+                 if ($pnfpb_notify_type === "bprivatemessage") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "New private message",
@@ -287,7 +287,7 @@
                      );
                  }
 
-                 if ($notify_type === "new_member") {
+                 if ($pnfpb_notify_type === "new_member") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "New member joined",
@@ -296,7 +296,7 @@
                      );
                  }
 
-                 if ($notify_type === "friendship_request") {
+                 if ($pnfpb_notify_type === "friendship_request") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Friendship request",
@@ -305,7 +305,7 @@
                      );
                  }
 
-                 if ($notify_type === "friendship_accept") {
+                 if ($pnfpb_notify_type === "friendship_accept") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Friendship accepted",
@@ -314,7 +314,7 @@
                      );
                  }
 
-                 if ($notify_type === "avatar_change") {
+                 if ($pnfpb_notify_type === "avatar_change") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Avatar change",
@@ -323,7 +323,7 @@
                      );
                  }
 
-                 if ($notify_type === "cover_image_change") {
+                 if ($pnfpb_notify_type === "cover_image_change") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Cover image change",
@@ -332,7 +332,7 @@
                      );
                  }
 
-                 if ($notify_type === "group_details_updated") {
+                 if ($pnfpb_notify_type === "group_details_updated") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Group details update",
@@ -341,7 +341,7 @@
                      );
                  }
 
-                 if ($notify_type === "group_invite") {
+                 if ($pnfpb_notify_type === "group_invite") {
                      $pnfpb_ic_fcm_front_enable_default_label = esc_html(
                          __(
                              "Group Invites",
@@ -353,7 +353,7 @@
                  if (
                      get_option(
                          "pnfpb_ic_fcm_frontend_settings_" .
-                             $post_type .
+                             $pnfpb_post_type .
                              "_text"
                      )
                  ) {
@@ -371,17 +371,17 @@
 						<label class="pnfpb_ic_push_settings_table_label_checkbox 
 									  pnfpb_flex_grow_6 pnfpb_max_width_236" 
 							   	for="<?php echo esc_attr(
-                    					"pnfpb_ic_fcm_front_".$notify_type."_enable"); ?>"
+                    					"pnfpb_ic_fcm_front_".$pnfpb_notify_type."_enable"); ?>"
 						>
 							<?php echo esc_html($pnfpb_ic_fcm_front_enable_default_label); ?>
 						</label>
 						<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_max_width_40">
 							<input id="<?php echo esc_attr(
-                     			"pnfpb_ic_fcm_front_".$notify_type."_enable"
+                     			"pnfpb_ic_fcm_front_".$pnfpb_notify_type."_enable"
                  			); ?>" class="<?php echo esc_attr(
-    							"pnfpb_ic_fcm_front_".$notify_type."_enable"
+    							"pnfpb_ic_fcm_front_".$pnfpb_notify_type."_enable"
 							); ?>" name="<?php echo esc_attr(
-    							"pnfpb_ic_fcm_front_".$notify_type."_enable"
+    							"pnfpb_ic_fcm_front_".$pnfpb_notify_type."_enable"
 							); ?>" type="checkbox" value="1"> 
 							<span class="pnfpb_slider round"></span>
 						</label>
@@ -478,7 +478,35 @@
 						</label>
 					</div>
 				</div>
-		<?php }			
+		<?php }
+         	if (get_option("pnfpb_ic_fcm_buddypress_follow_enable") === "1") { ?>								
+				<div class="pnfpb_column pnfpb_column_buddypress_functions">
+					<div class="pnfpb_card">				
+						<label class="pnfpb_ic_push_settings_table_label_checkbox 
+									  pnfpb_flex_grow_6 pnfpb_max_width_236" for="pnfpb_ic_fcm_front_followers_enable">
+									<?php if (get_option("pnfpb_ic_fcm_frontend_settings_followers_text")) {
+										echo esc_html(
+											get_option(
+												"pnfpb_ic_fcm_frontend_settings_followers_text"
+											)
+										);
+									} else {
+										echo esc_html(
+											__("BP Followers", "push-notification-for-post-and-buddypress")
+										);
+									} ?>							
+						</label>
+						<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_max_width_40">
+							<input id="pnfpb_ic_fcm_front_followers_enable" 
+								   class="pnfpb_ic_fcm_front_followers_enable" 
+								   name="pnfpb_ic_fcm_front_followers_enable" 
+								   type="checkbox" value="1"
+							/> 
+							<span class="pnfpb_slider round"></span>
+						</label>
+					</div>
+				</div>
+		<?php }	
          ?>
 								</div>
 							</td>
@@ -500,7 +528,7 @@
       			'<aside class="screen-heading email-settings-screen pnfpb_ic_front_push_notification_settings_messages bp-feedback bp-messages bp-template-notice">
 					<span class="bp-icon" aria-hidden="true"></span>
 					<p class="pnfpb_ic_front_push_notification_settings_text">',
-      					$allowed_html
+      					$pnfpb_allowed_html
   				) .
       			esc_html(
           		__(
@@ -508,6 +536,6 @@
               		"push-notification-for-post-and-buddypress"
           		)
       		) .
-      		wp_kses("</p></aside>", $allowed_html);
+      		wp_kses("</p></aside>", $pnfpb_allowed_html);
 
 ?>

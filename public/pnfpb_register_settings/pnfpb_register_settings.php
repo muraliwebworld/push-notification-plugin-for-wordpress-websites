@@ -22,6 +22,7 @@
 				$register_settings_args
             );
             register_setting("pnfpb_icfcm_group_config", "pnfpb_ic_fcm_appid",$register_settings_args);
+			register_setting("pnfpb_icfcm_group_config", "pnfpb_ic_fcm_measurementId",$register_settings_args);
             register_setting("pnfpb_icfcm_group_config", "pnfpb_ic_fcm_publickey",$register_settings_args);
             register_setting(
                 "pnfpb_icfcm_group",
@@ -206,7 +207,11 @@
                 "pnfpb_bell_icon_subscription_option_favourite_text",
 				$register_settings_args
             );			
-			
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_bell_icon_subscription_option_followers_text",
+				$register_settings_args
+            );			
             register_setting(
                 "pnfpb_icfcm_buttons",
                 "pnfpb_ic_fcm_label_text_shortcode",
@@ -311,7 +316,11 @@
                 "pnfpb_bell_icon_subscription_option_favourite_text_shortcode",
 				$register_settings_args
             );			
-			
+            register_setting(
+                "pnfpb_icfcm_buttons",
+                "pnfpb_bell_icon_subscription_option_followers_text_shortcode",
+				$register_settings_args
+            );			
             register_setting(
                 "pnfpb_icfcm_group",
                 "pnfpb_ic_fcm_popup_custom_prompt_subscribe_button_icon",
@@ -479,6 +488,11 @@
             );
             register_setting(
                 "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_turnonoff_delivery_notifications",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
                 "pnfpb_ic_fcm_replace_notifications",
 				$register_settings_args
             );
@@ -512,6 +526,16 @@
             register_setting(
                 "pnfpb_icfcm_group",
                 "pnfpb_ic_fcm_bactivity_enable",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_bactivity_followers_enable",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_bcomment_followers_enable",
 				$register_settings_args
             );
             register_setting(
@@ -577,6 +601,36 @@
             register_setting(
                 "pnfpb_icfcm_group",
                 "pnfpb_ic_fcm_mark_favourite_enable",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_buddypress_follow_enable",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_post_type_followers",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_only_post_followers_enable",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_post_type_role_based",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_select_role_based",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_only_role_based_post_enable",
 				$register_settings_args
             );
             register_setting(
@@ -961,6 +1015,16 @@
             register_setting(
                 "pnfpb_icfcm_pwa",
                 "pnfpb_ic_pwa_thirdparty_app_id",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_pwa",
+                "pnfpb_integrate_service_worker_in_another_plugin",
+				$register_settings_args
+            );
+            register_setting(
+                "pnfpb_icfcm_pwa",
+                "pnfpb_ic_pwa_other_sw_filename",
 				$register_settings_args
             );
             register_setting(
@@ -1427,17 +1491,10 @@
                 "pnfpb_ic_fcm_frontend_settings_favourite_text",
 				$register_settings_args
             );			
-
             register_setting(
-                "pnfpb_icfcm_group",
-                "pnfpb_ic_fcm_post_timeschedule_enable",
-                [
-                    "type" => "string",
-                    "sanitize_callback" => [
-                        $this,
-                        "pnfpb_ic_fcm_post_timeschedule_callback",
-                    ],
-                ]
+                "pnfpb_icfcm_frontend_buttons",
+                "pnfpb_ic_fcm_frontend_settings_followers_text",
+				$register_settings_args
             );
             register_setting(
                 "pnfpb_icfcm_group",
@@ -1484,12 +1541,25 @@
             foreach ($custposttypes as $post_type) {
                 $fieldname = "pnfpb_ic_fcm_" . $post_type . "_enable";
                 register_setting("pnfpb_icfcm_group", $fieldname,$register_settings_args);
+                $fieldname ="pnfpb_ic_fcm_".$post_type."_post_schedule_enable";
+                register_setting("pnfpb_icfcm_group", $fieldname,$register_settings_args);				
                 register_setting(
                     "pnfpb_icfcm_group",
                     "pnfpb_ic_fcm_" . $post_type . "_title",
 					$register_settings_args
                 );
             }
-
+			register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_default_post_schedule_enable",$register_settings_args);
+            register_setting(
+                "pnfpb_icfcm_group",
+                "pnfpb_ic_fcm_post_timeschedule_enable",
+                [
+                    "type" => "string",
+                    "sanitize_callback" => [
+                        $this,
+                        "pnfpb_ic_fcm_post_timeschedule_callback",
+                    ],
+                ]
+            );
 
 ?>

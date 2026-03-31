@@ -14,7 +14,7 @@ use const STR_PAD_LEFT;
  *
  * @see https://tools.ietf.org/html/rfc7518#section-4.6.2
  */
-final class ConcatKDF
+final readonly class ConcatKDF
 {
     /**
      * Key Derivation Function.

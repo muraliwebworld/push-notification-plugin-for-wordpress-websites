@@ -36,8 +36,8 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 			}
 
 			$deviceidswebview = [];
-
 			$deviceids = [];
+			$pushtype = 'activity';
 
 			if (
 				(($activity_content &&
@@ -214,6 +214,14 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 							];
 
 						}
+						
+						$activity_subscription_count = 0;
+
+						if (get_option('pnfpb_activity_subscription_count') !== false && 
+							get_option('pnfpb_general_subscription_count') !== false &&
+							(get_option('pnfpb_activity_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+							$activity_subscription_count = intval(get_option('pnfpb_activity_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+						}						
 
 						$PNFPB_WP_web_push_notification_class_obj = new PNFPB_web_push_notification_class();
 						$PNFPB_WP_web_push_notification_class_obj->PNFPB_web_push_notification(
@@ -232,11 +240,14 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 							$iconurl,
 							"",
 							$activitylink,
-							["click_url" => $activitylink],
+							["click_url" => $activitylink,"activity_id" => strval($activity_id)],
 							$target_subscription_array,
 							0,
 							0,
-							"activity"
+							"activity",
+							"",
+							0,
+							$activity_subscription_count
 						);
 					}
 					
@@ -579,7 +590,7 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 												$iconurl,
 												$imageurl,
 												$activitylink,
-												["click_url" => $activitylink],
+												["click_url" => $activitylink,"activity_id" => strval($activity_id)],
 												[],
 												[],
 												$user_id,
@@ -596,6 +607,7 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 									get_option("pnfpb_ic_fcm_activity_schedule_now_enable") ===
 										"1" && $activity_privacy !== "friends"
 								) {
+									
 									$action_scheduler_status = as_schedule_single_action(
 										time(),
 										"PNFPB_httpv1_schedule_push_notification_hook",
@@ -615,7 +627,7 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 											$iconurl,
 											$imageurl,
 											$activitylink,
-											["click_url" => $activitylink],
+											["click_url" => $activitylink,"activity_id" => strval($activity_id)],
 											$regid,
 											$regidwebview,
 											$user_id,
@@ -644,7 +656,7 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 											$iconurl,
 											$imageurl,
 											$activitylink,
-											["click_url" => $activitylink],
+											["click_url" => $activitylink,"activity_id" => strval($activity_id)],
 											$regid,
 											$regidwebview,
 											$user_id,
@@ -664,6 +676,14 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 								$dcount = 0;
 								$regid = [];
 								$regidwebview = [];
+								
+								$activity_subscription_count = 0;
+
+								if (get_option('pnfpb_activity_subscription_count') !== false && 
+									get_option('pnfpb_general_subscription_count') !== false &&
+									(get_option('pnfpb_activity_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+									$activity_subscription_count = intval(get_option('pnfpb_activity_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+								}
 
 								$iconurl = get_option("pnfpb_ic_fcm_upload_icon");
 
@@ -672,6 +692,15 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 								$targetid = 0;
 
 								$deviceidswebview = [];
+								
+								if (class_exists('BP_Follow') &&
+									get_option("pnfpb_ic_fcm_bactivity_followers_enable") &&
+									get_option("pnfpb_ic_fcm_bactivity_followers_enable") ===
+									"1"
+								   ) {
+									$pnfpb_current_userid = get_current_user_id();
+									$pushtype = "pnfpb_buddypress_followers_".$pnfpb_current_userid;										
+								}								
 
 								if (
 									get_option("pnfpb_ic_fcm_activity_schedule_now_enable") &&
@@ -697,12 +726,15 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 											$iconurl,
 											$imageurl,
 											$activitylink,
-											["click_url" => $activitylink],
+											["click_url" => $activitylink,"activity_id" => strval($activity_id)],
 											$regid,
 											$deviceidswebview,
 											$user_id,
 											$targetid,
-											"activity",
+											$pushtype,
+											"",
+											0,
+											$activity_subscription_count
 										]
 									);
 								} else {
@@ -723,12 +755,15 @@ if (!class_exists("PNFPB_all_activities_notification_class")) {
 										$iconurl,
 										$imageurl,
 										$activitylink,
-										["click_url" => $activitylink],
+										["click_url" => $activitylink,"activity_id" => strval($activity_id)],
 										$regid,
 										$deviceidswebview,
 										$user_id,
 										$targetid,
-										"activity"
+										$pushtype,
+										"",
+										0,
+										$activity_subscription_count
 									);
 								}
 

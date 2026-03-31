@@ -12,14 +12,14 @@ use function is_int;
 /**
  * This class is a claim checker. When the "iat" is present, it will compare the value with the current timestamp.
  */
-final class IssuedAtChecker implements ClaimChecker, HeaderChecker
+final readonly class IssuedAtChecker implements ClaimChecker, HeaderChecker
 {
     private const NAME = 'iat';
 
     public function __construct(
         private ClockInterface $clock,
-        private readonly int $allowedTimeDrift = 0,
-        private readonly bool $protectedHeaderOnly = false,
+        private int $allowedTimeDrift = 0,
+        private bool $protectedHeaderOnly = false,
     ) {
     }
 

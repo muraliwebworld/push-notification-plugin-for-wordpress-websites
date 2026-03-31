@@ -9,7 +9,7 @@ use Jose\Component\Core\JWK;
 use Override;
 use function strlen;
 
-final class HS512 extends HMAC
+final readonly class HS512 extends HMAC
 {
     #[Override]
     public function name(): string

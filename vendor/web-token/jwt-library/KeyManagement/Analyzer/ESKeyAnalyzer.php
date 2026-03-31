@@ -13,7 +13,7 @@ use function is_string;
 use function sprintf;
 use function strlen;
 
-abstract class ESKeyAnalyzer implements KeyAnalyzer
+abstract readonly class ESKeyAnalyzer implements KeyAnalyzer
 {
     #[Override]
     public function analyze(JWK $jwk, MessageBag $bag): void

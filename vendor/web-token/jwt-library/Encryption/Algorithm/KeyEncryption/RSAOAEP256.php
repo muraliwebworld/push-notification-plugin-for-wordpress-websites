@@ -7,7 +7,7 @@ namespace Jose\Component\Encryption\Algorithm\KeyEncryption;
 use Jose\Component\Encryption\Algorithm\KeyEncryption\Util\RSACrypt;
 use Override;
 
-final class RSAOAEP256 extends RSA
+final readonly class RSAOAEP256 extends RSA
 {
     #[Override]
     public function getEncryptionMode(): int

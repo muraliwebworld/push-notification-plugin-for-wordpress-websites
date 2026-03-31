@@ -8,7 +8,7 @@ use Jose\Component\Core\Util\Ecc\Curve;
 use Jose\Component\Core\Util\Ecc\NistCurve;
 use Override;
 
-final class ES384KeyAnalyzer extends ESKeyAnalyzer
+final readonly class ES384KeyAnalyzer extends ESKeyAnalyzer
 {
     #[Override]
     protected function getAlgorithmName(): string

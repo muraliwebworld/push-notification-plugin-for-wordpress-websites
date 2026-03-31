@@ -65,7 +65,10 @@ if (!class_exists("PNFPB_ICFM_delivery_notifications_List")) {
                 $sql .= !empty($_REQUEST["order"])
                     ? " " . esc_sql($_REQUEST["order"])
                     : " ASC";
-            }
+            } else {
+                $sql .= " ORDER BY id";
+                $sql .= " DESC";				
+			}
 
             if ($per_page > 0) {
                 $sql .= " LIMIT $per_page";
@@ -366,17 +369,15 @@ if (!class_exists("PNFPB_ICFM_delivery_notifications_List")) {
 						sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"]))
 					);
 				}				
-                if (!wp_verify_nonce($delete_nonce, "pnfpb_delivery_report-bulk_delete_items")) {
+                if (!wp_verify_nonce($delete_nonce, "pnfpb_search_delivery_pushnotification")) {
                     die("wnonce failure");
                 } else {				
 					$delete_ids = esc_sql($_REQUEST["bulk-delete"]);
-
 					global $wpdb;
-
 					// loop over the array of record IDs and delete them
 					foreach ($delete_ids as $id) {
 						$notification_table_name =
-							$wpdb->prefix . "pnfpb_ic_schedule_push_notifications";
+							$wpdb->prefix . "pnfpb_ic_total_statistics_notifications";
 
 						$notifications = $wpdb->get_results(
 							"SELECT * FROM {$notification_table_name} WHERE `id` = {$id} "

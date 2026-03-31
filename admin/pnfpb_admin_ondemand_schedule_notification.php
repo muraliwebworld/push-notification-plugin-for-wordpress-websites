@@ -28,52 +28,9 @@ if (
 	$table_name =
 		$wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 
-	if (
-		get_option("pnfpb_ic_fcm_loggedin_notify") &&
-		get_option("pnfpb_ic_fcm_loggedin_notify") === "1"
-	) {
-		$deviceids = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE userid > %d AND device_id NOT LIKE %s AND device_id NOT LIKE %s",
-				$table_name,
-				0,
-				"%webview%",
-				"%@N%"
-			)
-		);
-
-		$deviceidswebview = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE userid > %d AND device_id LIKE %s AND device_id NOT LIKE %s",
-				$table_name,
-				0,
-				"%webview%",
-				"%@N%"
-			)
-		);
-	} else {
-		$deviceids = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id NOT LIKE %s AND device_id NOT LIKE %s",
-				$table_name,
-				"%webview%",
-				"%@N%"
-			)
-		);
-
-		$deviceidswebview = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT SUBSTRING_INDEX(device_id, '!!', 1) FROM %i WHERE device_id LIKE %s AND device_id NOT LIKE %s",
-				$table_name,
-				"%webview%",
-				"%@N%"
-			)
-		);
-	}
-
 	$url = "https://fcm.googleapis.com/fcm/send";
 
-	$regid = $deviceids;
+	$regid = [];
 
 	$activity_content_push = wp_strip_all_tags(
 		urldecode(
@@ -128,6 +85,8 @@ if (
 		);
 		$onetime_push_status = $notification->status;
 	}
+	
+	$post_topic_count = intval(get_option('pnfpb_general_subscription_count'));	
 
 	if ($schedule_push_type === "post") {
 		if (has_post_thumbnail($schedule_post_id)) {
@@ -138,6 +97,7 @@ if (
 
 			update_option("pnfpb_ic_fcm_new_post_image", $imageurl);
 		}
+		$post_topic_count = intval(get_option('pnfpb_post_subscription_count')) + intval(get_option('pnfpb_general_subscription_count'));	
 	}
 
 	if ($webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1') {
@@ -220,49 +180,50 @@ if (
 					$selected_user_ids
 				);
 			} else {
-				if (count($regid) > 0) {
-					if (get_option("pnfpb_httpv1_push") === "1") {
-						if (count($selected_user_ids) > 0) {
-							$FB_httpv1_notification_class_obj = new PNFPB_firebase_httpv1_notification_class();
-							$FB_httpv1_notification_class_obj->PNFPB_firebase_httpv1_notification(	
-								0,
-								stripslashes(
-									wp_strip_all_tags($onetime_push_title)
-								),
-								stripslashes(
-									wp_strip_all_tags($onetime_push_content)
-								),
-								$onetime_push_imageurl,
-								$onetime_push_imageurl,
-								$onetime_push_clickurl,
-								["click_url" => $postlink],
-								$selected_user_ids,
-								[],
-								$senderid,
-								0,
-								"ondemandselectedusers"
-							);									
-						} else {
-							$FB_httpv1_notification_class_obj = new PNFPB_firebase_httpv1_notification_class();
-							$FB_httpv1_notification_class_obj->PNFPB_firebase_httpv1_notification(	
-								0,
-								stripslashes(
-									wp_strip_all_tags($onetime_push_title)
-								),
-								stripslashes(
-									wp_strip_all_tags($onetime_push_content)
-								),
-								$onetime_push_imageurl,
-								$onetime_push_imageurl,
-								$onetime_push_clickurl,
-								["click_url" => $postlink],
-								$regid,
-								[],
-								$senderid,
-								0,
-								"ondemand"
-							);
-						}
+				if (get_option("pnfpb_httpv1_push") === "1") {
+					if (count($selected_user_ids) > 0) {
+						$FB_httpv1_notification_class_obj = new PNFPB_firebase_httpv1_notification_class();
+						$FB_httpv1_notification_class_obj->PNFPB_firebase_httpv1_notification(	
+							0,
+							stripslashes(
+								wp_strip_all_tags($onetime_push_title)
+							),
+							stripslashes(
+								wp_strip_all_tags($onetime_push_content)
+							),
+							$onetime_push_imageurl,
+							$onetime_push_imageurl,
+							$onetime_push_clickurl,
+							["click_url" => $postlink],
+							$selected_user_ids,
+							[],
+							$senderid,
+							0,
+							"ondemandselectedusers"
+						);									
+					} else {
+						$FB_httpv1_notification_class_obj = new PNFPB_firebase_httpv1_notification_class();
+						$FB_httpv1_notification_class_obj->PNFPB_firebase_httpv1_notification(	
+							0,
+							stripslashes(
+								wp_strip_all_tags($onetime_push_title)
+							),
+							stripslashes(
+								wp_strip_all_tags($onetime_push_content)
+							),
+							$onetime_push_imageurl,
+							$onetime_push_imageurl,
+							$onetime_push_clickurl,
+							["click_url" => $postlink],
+							$regid,
+							[],
+							$senderid,
+							0,
+							"ondemand",
+							"",
+							0,
+							$post_topic_count	
+						);
 					}
 				}
 			}
@@ -275,7 +236,6 @@ $table = $table =
 
 if ($occurence === "recurring") {
 	$recurring_status = $selected_recurring_status;
-
 	try {
 		$future_action_id = ActionScheduler::store()->query_action([
 			"hook" =>
@@ -349,44 +309,50 @@ if ($occurence === "recurring") {
 			"UPDATE %i SET scheduled_timestamp = %d,status = %s WHERE id = %d",
 			$table,
 			$current_run_timestamp,
-			$notification_id
-		)
-	);
-} else {
-	$future_action_id = ActionScheduler::store()->query_action([
-		"hook" => "PNFPB_ondemand_schedule_push_notification_hook",
-		"date" => $scheduled_day_push_notification,
-		"date_compare" => "=",
-		"status" => [
-			ActionScheduler_Store::STATUS_RUNNING,
-			ActionScheduler_Store::STATUS_PENDING,
-		],
-	]);
-
-	$datetime = new DateTime();
-	$datetime->setTimestamp($scheduled_day_push_notification);
-	$datetime->setTimezone(new DateTimeZone(wp_timezone_string()));
-	$recurring_status =
-		esc_html(
-		__(
-			"Finished on ",
-			"push-notification-for-post-and-buddypress"
-		)
-	) . $datetime->format("Y/m/d H:i:s");
-	$onetime_push_update_status = $wpdb->query(
-		$wpdb->prepare(
-			"UPDATE %i SET status = %s WHERE id = %d",
-			$table,
 			$recurring_status,
 			$notification_id
 		)
 	);
+} else {
 	if ($schedule_push_type === "post") {
 		update_post_meta(
 			$schedule_post_id,
 			"pnfpb_post_schedule",
 			""
 		);
+	}
+	try {	
+		$future_action_id = ActionScheduler::store()->query_action([
+			"hook" => "PNFPB_ondemand_schedule_push_notification_hook",
+			"date" => $scheduled_day_push_notification,
+			"date_compare" => "=",
+			"status" => [
+				ActionScheduler_Store::STATUS_RUNNING,
+				ActionScheduler_Store::STATUS_PENDING,
+			],
+		]);
+
+		$datetime = new DateTime();
+		$datetime->setTimestamp($scheduled_day_push_notification);
+		$datetime->setTimezone(new DateTimeZone(wp_timezone_string()));
+		$recurring_status =
+			esc_html(
+			__(
+				"Finished on ",
+				"push-notification-for-post-and-buddypress"
+			)
+		) . $datetime->format("Y/m/d H:i:s");
+		$onetime_push_update_status = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE %i SET status = %s WHERE id = %d",
+				$table,
+				$recurring_status,
+				$notification_id
+			)
+		);
+	} catch (Exception $e) {
+		/* for debugging purpose */
+		/*error_log(serialize($e));*/
 	}
 }
 

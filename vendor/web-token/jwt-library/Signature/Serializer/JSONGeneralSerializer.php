@@ -15,7 +15,7 @@ use function count;
 use function is_array;
 use function is_string;
 
-final class JSONGeneralSerializer extends Serializer
+final readonly class JSONGeneralSerializer extends Serializer
 {
     public const NAME = 'jws_json_general';
 

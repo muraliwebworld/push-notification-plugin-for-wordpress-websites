@@ -25,7 +25,8 @@ final class PublicKeysetCommand extends ObjectOutputCommand
     protected function configure(): void
     {
         parent::configure();
-        $this->setHelp('This command converts private keys in a key set into public keys.')
+        $this
+            ->setHelp('This command converts private keys in a key set into public keys.')
             ->addArgument('jwkset', InputArgument::REQUIRED, 'The JWKSet object');
     }
 

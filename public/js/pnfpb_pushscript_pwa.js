@@ -18,7 +18,11 @@ var pnfpb_pushtoken_fromAndroid;
 
 var pnfpb_pushtoken_fromflutter;
 
+var PNFPB_from_Java_androidapp;
+
 var pnfpbshortcodeactive;
+
+const searchString_for_notification_read_receipt = "/notification-id/";
 
 var pnfpb_custom_post_types_mobile_app = JSON.parse(pnfpb_ajax_object_mobile_app_interface_script.pnfpb_show_custom_post_types);
 
@@ -60,41 +64,41 @@ if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandl
 }
 
 function PNFPB_from_Flutter_mobileapp(pushtoken) {
-	
+
 	pnfpb_pushtoken_fromflutter = pushtoken;
- 
+
 	if (pnfpbuserid) {
 
 		pnfpbuserid.postMessage(pnfpb_ajax_object_mobile_app_interface_script.userid);
-	
+
 	}
-	
- 	return pnfpb_pushtoken_fromflutter;
-	
+
+	return pnfpb_pushtoken_fromflutter;
+
 }
 
 function PNFPB_from_Java_androidapp(pushtoken) {
-	
+
 	if (pnfpbuserid) {
- 
+
 		pnfpbuserid.postMessage(pnfpb_ajax_object_mobile_app_interface_script.userid);
-	
+
 	}
-	
+
 	if (Android) {
-	 
+
 		pnfpb_pushtoken_fromAndroid = Android.getFromAndroid();
-				
+
 	}
-	
-}
+
+}	
 
 if (pnfpb_webview) {
 
 	var $jwebview = jQuery.noConflict();
 
 	$jwebview(document).ready(function() {
-
+	
 		var data = {
 			action: 'icpushcallback',
 			device_id:'',
@@ -102,13 +106,10 @@ if (pnfpb_webview) {
 			nonce: pnfpb_ajax_object_mobile_app_interface_script.nonce,
 			pushtype: 'icfirebasecred'
 		};
-		
 
 		$jwebview.post(pnfpb_ajax_object_mobile_app_interface_script.ajax_url, data, async function(responseajax) {
 			
-
 			var firebasecredentialsobject = JSON.parse(responseajax);
-			
 					
 			if (firebasecredentialsobject.apiKey && firebasecredentialsobject.apiKey != '') {
 				
@@ -121,16 +122,19 @@ if (pnfpb_webview) {
 						messagingSenderId: firebasecredentialsobject.messagingSenderId,
 						appId: firebasecredentialsobject.appId
 					};
-		
-					vapidKey = firebasecredentialsobject.publicKey
-				
+
+					vapidKey = firebasecredentialsobject.publicKey;
+
+					await pnfpb_webview_update_indexeddb(vapidKey);
+
+					if (window.location.href.includes(searchString_for_notification_read_receipt)) {
+						await pnfpb_webview_send_notification_read_receipts(vapidKey);
+					}
 
 					checkdeviceid_webview('');
 				
 					if ($jwebview(".pnfpb-push-subscribe-icon-shortcode").length) {
-
 						mobileapp_subscribe_shortcode();
-						
 					}
 
 					frontend_subscription_menu_webview('');
@@ -1641,6 +1645,271 @@ if (pnfpb_webview) {
 			}	 
 		 
 		}
+		
+		async function pnfpb_webview_send_notification_read_receipts(vapidkey_webview) {
+			
+			if (window.location.href.includes(searchString_for_notification_read_receipt)) {
+				// Find the index of the target word
+				const targetWord = "/notification-id/";
+				const startIndex = window.location.href.indexOf(targetWord);
+				
+				// Check if the word was found
+				if (startIndex !== -1) {
+  					// Calculate the position after the target word
+  					const positionAfterWord = startIndex + targetWord.length;
+
+  					// Extract the substring from that position onwards
+  					const notification_id = window.location.href.substring(positionAfterWord);
+					
+					var data = {
+						action: 'icpushcallback',
+						notification_id:notification_id,
+						nonce: pnfpb_ajax_object_mobile_app_interface_script.nonce,
+						pushtype: 'pnfpb_read_receipt_webview'
+					};
+
+					$jwebview.post(pnfpb_ajax_object_mobile_app_interface_script.ajax_url, data, async function(responseajax) {
+						
+						var pnfpb_read_receipt_webview_object = JSON.parse(responseajax);
+					
+						if (pnfpb_read_receipt_webview_object.notification_status 
+							&& pnfpb_read_receipt_webview_object.notification_token
+							&& pnfpb_read_receipt_webview_object.notification_status === 'success' 
+							&& pnfpb_read_receipt_webview_object.notification_token !== '' ) {						
+
+							/* Get required details for fetch api from Indexeddb */
+							/* Encrypt using AES-256-GCM method to send it in API */
+							/* After data sent using API, Server then decrypts using AES-256-GCM method */
+							/* to update Notification delivery and read counts in PNFPB Plugin's WordPress database tables */
+
+							const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database", 3);
+
+							PNFPB_SW_request.onsuccess = (event) => {
+								const PNFPB_SW_db = event.target.result;
+								const PNFPB_SW_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_Store"], "readonly");
+								const PNFPB_SW_objectStore = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store");
+								const PNFPB_SW_getRequest = PNFPB_SW_objectStore.get(1);
+								PNFPB_SW_getRequest.onsuccess = async () => {
+									const data = PNFPB_SW_getRequest.result;
+									if (data && data.pnfpb_auth_token) {
+										if (data.pnfpb_auth_token !== '') {
+
+											// concatenate data to be encrypted delimited with "@!!@" which will be decrypted in server side 
+											// and split to appropriate fields using same delimiter "@!!@"
+
+											var pnfpb_encrypted_token = '';
+											if (data.subscription_token && data.subscription_token === pnfpb_ajax_object_mobile_app_interface_script.nonce) {
+												pnfpb_encrypted_token = pnfpb_read_receipt_webview_object.notification_token+'@!!@'+data.pnfpb_auth_token+'@!!@'+notification_id;
+											}
+											const pnfpb_data_to_be_encrypted = notification_id+'@!!@'+pnfpb_read_receipt_webview_object.notification_token+'@!!@'+navigator.userAgent+'@!!@'+'read_receipt_webview';
+											const notification_delivery_encrypted_data = await pnfpb_webview_encryptData(pnfpb_data_to_be_encrypted,data.pnfpb_auth_token);
+											const notification_delivery_encrypted_authtoken = await pnfpb_webview_encryptData(pnfpb_encrypted_token,data.pnfpb_auth_token);
+											const PNFPB_SW_rest_token_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_rest_token_Store"], "readonly");
+											const PNFPB_SW_rest_token_objectStore = PNFPB_SW_rest_token_transaction.objectStore("PNFPB_SW_rest_token_Store");
+											const PNFPB_SW_rest_token_getRequest = PNFPB_SW_rest_token_objectStore.get(1);
+											PNFPB_SW_rest_token_getRequest.onsuccess = async () => {
+												const data = PNFPB_SW_rest_token_getRequest.result;
+												if (data && data.pnfpb_rest_token && data.pnfpb_rest_token !== '') {
+													const notification_delivery_details = { encrypted_data: notification_delivery_encrypted_data, pnfpb_encrypted_authtoken: notification_delivery_encrypted_authtoken };
+													/* Send notification delivery counts and read counts with encrypted signature using AES-256-GCM using secured PNFPB REST API */
+													fetch(pnfpb_ajax_object_mobile_app_interface_script.homeurl+'/wp-json/PNFPBpush/v2/notification-delivery-counts/', { method: 'POST', headers: {'Content-Type': 'application/json',
+												  },body: JSON.stringify(notification_delivery_details) })
+													.then(async response => {
+														// Check if the request was successful (e.g., status code 200-299)
+														if (!response.ok) {
+															throw new Error(`HTTP error! status: ${response.status}`);
+														}
+														return '';
+													})
+													.catch(error => {
+														// Handle any errors that occurred during the fetch operation
+														console.error('There was a problem with the fetch operation:', error);
+														return '';
+													});
+												} else {
+													console.log('Notification delivery and read count not sent - PNFPB_SW_rest_token_Store tokens not found');
+													return '';
+												} 
+											}
+										} else {
+											console.log('Notification delivery and read count not sent - PNFPB_SW_Store tokens not found');
+											return '';
+										}
+									} else {
+										console.log('auth_token error');
+										return '';
+									}
+								};
+								PNFPB_SW_getRequest.onerror = (event) => {
+									reject('Error getting data: ' + event.target.error);
+									PNFPB_SW_db.close();
+									return '';
+								};
+
+							};
+
+							PNFPB_SW_request.onerror = (event) => {
+								console.error("Database error:", event.target.errorCode);
+								return '';
+							};
+						}
+					});
+
+				} else {
+					console.log('URL is not for notification read receipt');
+					return '';
+				}				
+			} else {
+				console.log(`The URL does not contain "${searchString}".`);
+			}			
+		}
+
+		async function pnfpb_webview_encryptData(plaintext, passphrase) {
+			const ptUtf8 = new TextEncoder().encode(plaintext);
+			const pwUtf8 = new TextEncoder().encode(passphrase);
+			const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+
+			const iv = crypto.getRandomValues(new Uint8Array(16));
+			const alg = { name: 'AES-GCM', iv: iv };
+			const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+
+			const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUtf8);
+			const tag = new Uint8Array(ctBuffer, ctBuffer.byteLength - 16, 16);
+			const ciphertext = new Uint8Array(ctBuffer, 0, ctBuffer.byteLength - 16);
+
+			const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
+
+			return {
+				ciphertext: btoa(String.fromCharCode(...new Uint8Array(ciphertext))),
+				iv: btoa(String.fromCharCode(...new Uint8Array(iv))),
+				tag: btoa(String.fromCharCode(...new Uint8Array(tag)))
+			}
+		}
+		
+		async function pnfpb_webview_update_indexeddb(vapidkey_webview) {
+			
+			const PNFPB_message = vapidkey_webview;
+			const PNFPB_encoder = new TextEncoder();
+			const PNFPB_data = PNFPB_encoder.encode(PNFPB_message);
+			const PNFPB_algorithm = "SHA-256";
+			const PNFPB_readableHash = await getReadableHash(PNFPB_data, PNFPB_algorithm);
+
+			if (PNFPB_readableHash) {
+				const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database", 3);
+				const PNFPB_SW_auth_token = PNFPB_readableHash;
+				const PNFPB_SW_Object = {key: 1, pnfpb_auth_token: PNFPB_SW_auth_token, subscription_token: pnfpb_ajax_object_mobile_app_interface_script.nonce};
+				const PNFPB_SW_rest_token_Object = {key: 1, pnfpb_rest_token: pnfpb_ajax_object_mobile_app_interface_script.nonce};
+				
+				PNFPB_SW_request.onupgradeneeded = (event) => {
+					const PNFPB_SW_rest_token_db = event.target.result;
+					if (!PNFPB_SW_rest_token_db.objectStoreNames.contains("PNFPB_SW_rest_token_Store")) {
+						PNFPB_SW_rest_token_db.createObjectStore("PNFPB_SW_rest_token_Store", { keyPath: "key" }); // Define keyPath for unique identification
+					}
+					if (!PNFPB_SW_rest_token_db.objectStoreNames.contains("PNFPB_SW_Store")) {
+						PNFPB_SW_rest_token_db.createObjectStore("PNFPB_SW_Store", { keyPath: "key" }); // Define keyPath for unique identification
+					}						
+				};				
+
+				PNFPB_SW_request.onsuccess = (event) => {
+					
+					const PNFPB_SW_rest_token_db = event.target.result;
+					const PNFPB_SW_rest_token_transaction = PNFPB_SW_rest_token_db.transaction(["PNFPB_SW_rest_token_Store"], "readwrite");
+					const PNFPB_SW_rest_token_objectStore = PNFPB_SW_rest_token_transaction.objectStore("PNFPB_SW_rest_token_Store");
+					const PNFPB_SW_rest_token_objectStore_get = PNFPB_SW_rest_token_transaction.objectStore("PNFPB_SW_rest_token_Store").get(1);
+					PNFPB_SW_rest_token_objectStore_get.onsuccess = (event) => {
+						let data = event.target.result;
+						if (event.target.result !== undefined  ) {
+							if (data.pnfpb_rest_token !== pnfpb_ajax_object_push.rest_nonce) {
+								const PNFPB_SW_rest_token_addRequest = PNFPB_SW_rest_token_objectStore.put(PNFPB_SW_rest_token_Object);
+								PNFPB_SW_rest_token_addRequest.onsuccess = () => {
+									console.log("Object added successfully");
+									PNFPB_SW_rest_token_db.close();
+								};
+								PNFPB_SW_rest_token_addRequest.onerror = (error) => {
+									console.error("Error adding object:", error);
+									PNFPB_SW_rest_token_db.close();
+								};
+							}
+						} else {
+							const PNFPB_SW_rest_token_addRequest = PNFPB_SW_rest_token_objectStore.put(PNFPB_SW_rest_token_Object);
+							PNFPB_SW_rest_token_addRequest.onsuccess = () => {
+								console.log("Object added successfully");
+								PNFPB_SW_rest_token_db.close();
+							};
+							PNFPB_SW_rest_token_addRequest.onerror = (error) => {
+								console.error("Error adding object:", error);
+								PNFPB_SW_rest_token_db.close();
+							};
+
+						}
+					};
+					PNFPB_SW_rest_token_objectStore_get.onerror = (event) => {
+						console.error("Error adding object:", error);
+						PNFPB_SW_rest_token_db.close();												
+					}; 					
+					
+					const PNFPB_SW_db = event.target.result;
+					const PNFPB_SW_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_Store"], "readwrite");
+					const PNFPB_SW_objectStore = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store");
+					const PNFPB_SW_objectStore_get = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store").get(1);
+					PNFPB_SW_objectStore_get.onsuccess = (event) => {
+						let data = event.target.result;
+						if (event.target.result !== undefined  ) {
+							if (data.pnfpb_auth_token !== PNFPB_readableHash) {
+								const PNFPB_SW_addRequest = PNFPB_SW_objectStore.put(PNFPB_SW_Object);
+								PNFPB_SW_addRequest.onsuccess = () => {
+									console.log("Object added successfully");
+									PNFPB_SW_db.close();
+								};
+								PNFPB_SW_addRequest.onerror = (error) => {
+									console.error("Error adding object:", error);
+									PNFPB_SW_db.close();
+								};
+							}
+						} else {
+							const PNFPB_SW_addRequest = PNFPB_SW_objectStore.put(PNFPB_SW_Object);
+							PNFPB_SW_addRequest.onsuccess = () => {
+								console.log("Object added successfully");
+								PNFPB_SW_db.close();
+							};
+							PNFPB_SW_addRequest.onerror = (error) => {
+								console.error("Error adding object:", error);
+								PNFPB_SW_db.close();
+							};
+
+						}
+					};
+					PNFPB_SW_objectStore_get.onerror = (event) => {
+						console.error("Error adding object:", error);
+						PNFPB_SW_db.close();
+					};
+				};
+
+				PNFPB_SW_request.onerror = (event) => {
+					console.error("Database error:", event.target.errorCode);
+				};								
+			}			
+		}
+		
+		async function getReadableHash(data, algorithm) {
+			try {
+				const buffer = await crypto.subtle.digest(algorithm, data);
+				const hexString = arrayBufferToHex(buffer);
+				return hexString;
+			} catch (error) {
+				console.error("Error during hashing:", error);
+				return null; // Or handle the error appropriately
+			}
+		}	
+
+		function arrayBufferToHex(buffer) {
+			const byteArray = new Uint8Array(buffer);
+			const hexCodes = [...byteArray].map(value => {
+				const hex = value.toString(16);
+				return hex.padStart(2, '0');
+			});
+			return hexCodes.join('');
+		}		
 
 	});
 }

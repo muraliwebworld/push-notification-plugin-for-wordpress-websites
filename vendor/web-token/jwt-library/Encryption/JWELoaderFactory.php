@@ -7,12 +7,12 @@ namespace Jose\Component\Encryption;
 use Jose\Component\Checker\HeaderCheckerManagerFactory;
 use Jose\Component\Encryption\Serializer\JWESerializerManagerFactory;
 
-class JWELoaderFactory
+readonly class JWELoaderFactory
 {
     public function __construct(
-        private readonly JWESerializerManagerFactory $jweSerializerManagerFactory,
-        private readonly JWEDecrypterFactory $jweDecrypterFactory,
-        private readonly ?HeaderCheckerManagerFactory $headerCheckerManagerFactory
+        private JWESerializerManagerFactory $jweSerializerManagerFactory,
+        private JWEDecrypterFactory $jweDecrypterFactory,
+        private ?HeaderCheckerManagerFactory $headerCheckerManagerFactory
     ) {
     }
 

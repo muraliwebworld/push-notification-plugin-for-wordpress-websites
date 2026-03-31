@@ -8,7 +8,7 @@
  */
 global $wpdb;
 
-$bpuserid = 0;
+$pnfpb_bpuserid = 0;
 
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 
@@ -16,48 +16,48 @@ $bpuserid = 0;
 $PNFPB_Push_Notification_subscription_update_obj = new PNFPB_httpv1_subscription_option_update();
 
 if (is_user_logged_in()) {
-    $bpuserid = get_current_user_id();
+    $pnfpb_bpuserid = get_current_user_id();
 }
 
-$table = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+$pnfpb_table = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 
-$dbname = $wpdb->dbname;
+$pnfpb_dbname = $wpdb->dbname;
 
-$response = [
+$pnfpb_response = [
     "status" => 200,
     "message" => "",
 ];
 
-if (isset($request["userid"])) {
-    $bpuserid = sanitize_text_field($request["userid"]);
+if (isset($pnfpb_request["userid"])) {
+    $pnfpb_bpuserid = sanitize_text_field($pnfpb_request["userid"]);
 }
 
 if (
-    !is_numeric($bpuserid) ||
-    $bpuserid === null ||
-    $bpuserid === "" ||
-    $bpuserid === "0"
+    !is_numeric($pnfpb_bpuserid) ||
+    $pnfpb_bpuserid === null ||
+    $pnfpb_bpuserid === "" ||
+    $pnfpb_bpuserid === "0"
 ) {
-    $bpuserid = 0;
+    $pnfpb_bpuserid = 0;
 }
 
-$encryption_key = get_option("PNFPB_icfcm_integrate_app_secret_code");
+$pnfpb_encryption_key = get_option("PNFPB_icfcm_integrate_app_secret_code");
 
-$encrypted = sanitize_text_field($request["token"]);
+$pnfpb_encrypted = sanitize_text_field($pnfpb_request["token"]);
 
-$subscriptionoptions = "";
+$pnfpb_subscriptionoptions = "";
 
 if (
-    isset($request["subscriptionoptions"]) &&
-    $request["subscriptionoptions"] !== ""
+    isset($pnfpb_request["subscriptionoptions"]) &&
+    $pnfpb_request["subscriptionoptions"] !== ""
 ) {
-    $subscriptionoptions = sanitize_text_field($request["subscriptionoptions"]);
-    $subscriptionoptions = esc_html($subscriptionoptions);
+    $pnfpb_subscriptionoptions = sanitize_text_field($pnfpb_request["subscriptionoptions"]);
+    $pnfpb_subscriptionoptions = esc_html($pnfpb_subscriptionoptions);
 }
 
-$parts = explode(":", $encrypted);
+$pnfpb_parts = explode(":", $pnfpb_encrypted);
 
-$keynonce = $encryption_key;
+$pnfpb_keynonce = $pnfpb_encryption_key;
 
 // Decode AES-256-CBC encrypted data from mobile app to extract and store subscription token in WordPress database
 
@@ -65,417 +65,417 @@ $keynonce = $encryption_key;
 //openssl_decrypt
 //
 
-$decrypted_cbc = openssl_decrypt(
-    base64_decode($parts[0]),
+$pnfpb_decrypted_cbc = openssl_decrypt(
+    base64_decode($pnfpb_parts[0]),
     "aes-256-cbc",
-    $keynonce,
+    $pnfpb_keynonce,
     OPENSSL_RAW_DATA,
-    base64_decode($parts[1])
+    base64_decode($pnfpb_parts[1])
 );
 
-$tagLength = 16;
+$pnfpb_tagLength = 16;
 
-$tag = substr(base64_decode($parts[0]), -16);
+$pnfpb_tag = substr(base64_decode($pnfpb_parts[0]), -16);
 
-$ciphertext = substr(base64_decode($parts[0]), 0, -16);
+$pnfpb_ciphertext = substr(base64_decode($pnfpb_parts[0]), 0, -16);
 
-$decrypted_gcm = openssl_decrypt(
-    $ciphertext,
+$pnfpb_decrypted_gcm = openssl_decrypt(
+    $pnfpb_ciphertext,
     "aes-256-gcm",
-    $keynonce,
+    $pnfpb_keynonce,
     OPENSSL_RAW_DATA,
-    base64_decode($parts[1]),
-    $tag
+    base64_decode($pnfpb_parts[1]),
+    $pnfpb_tag
 );
 
-if (!$decrypted_gcm && !$decrypted_cbc) {
+if (!$pnfpb_decrypted_gcm && !$pnfpb_decrypted_cbc) {
     error_log(" failed - invalid data ");
 
-    $response = [
+    $pnfpb_response = [
         "status" => 200,
         "message" => " failed - invalid data",
     ];
 
-    $res = new WP_REST_Response($response);
+    $pnfpb_res = new WP_REST_Response($pnfpb_response);
 
-    $res->set_status(200);
+    $pnfpb_res->set_status(200);
 
     return [
-        "req" => $res,
+        "req" => $pnfpb_res,
         "tokenupdatestatus" =>
-            " failed - invalid data " . $parts[0] . "-----***" . $parts[1],
+            " failed - invalid data " . $pnfpb_parts[0] . "-----***" . $pnfpb_parts[1],
     ];
 } else {
-    if (!$decrypted_cbc) {
-        $decrypted = $decrypted_gcm;
+    if (!$pnfpb_decrypted_cbc) {
+        $pnfpb_decrypted = $pnfpb_decrypted_gcm;
     } else {
-        $decrypted = $decrypted_cbc;
+        $pnfpb_decrypted = $pnfpb_decrypted_cbc;
     }
 
-    $key = hash("sha256", $encryption_key);
+    $pnfpb_key = hash("sha256", $pnfpb_encryption_key);
 
-    $receivedhasmac = base64_decode($parts[2]);
+    $pnfpb_receivedhasmac = base64_decode($pnfpb_parts[2]);
 
-    $bphasmac = hash_hmac("sha256", $decrypted, $encryption_key);
+    $pnfpb_bphasmac = hash_hmac("sha256", $pnfpb_decrypted, $pnfpb_encryption_key);
 
-    if ($bphasmac !== $parts[3]) {
+    if ($pnfpb_bphasmac !== $pnfpb_parts[3]) {
         error_log(" failed - invalid data/encryption");
 
-        $response = [
+        $pnfpb_response = [
             "status" => 200,
             "message" => " failed - invalid data/encryption",
         ];
 
-        $res = new WP_REST_Response($response);
+        $pnfpb_res = new WP_REST_Response($pnfpb_response);
 
-        $res->set_status(200);
+        $pnfpb_res->set_status(200);
 
         return [
-            "req" => $res,
+            "req" => $pnfpb_res,
             "tokenupdatestatus" => " failed - invalid data/encryption ",
-            '$bphasmac' => $bphasmac,
-            '$receivedhasmac' => $parts[3],
-            "decrypted" => $decrypted,
+            'bphasmac' => $pnfpb_bphasmac,
+            'receivedhasmac' => $pnfpb_parts[3],
+            "decrypted" => $pnfpb_decrypted,
         ];
     }
 
-    $table = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+    $pnfpb_table = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 
-    if ($request["subscription-type"] === "subscribe-group") {
-        $deviceid_select_status = $wpdb->get_results(
+    if ($pnfpb_request["subscription-type"] === "subscribe-group") {
+        $pnfpb_deviceid_select_status = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM %i WHERE device_id LIKE %s",
-                $table,
-                "%" . $wpdb->esc_like($decrypted) . "%"
+                $pnfpb_table,
+                "%" . $wpdb->esc_like($pnfpb_decrypted) . "%"
             )
         );
 
-        $updatetokenresponse = "fail";
+        $pnfpb_updatetokenresponse = "fail";
 
-        foreach ($deviceid_select_status as $result) {
-            $subscriptionoptions = $result->subscription_option;
+        foreach ($pnfpb_deviceid_select_status as $pnfpb_result) {
+            $pnfpb_subscriptionoptions = $pnfpb_result->subscription_option;
 
-            $bpuserid = $result->userid;
+            $pnfpb_bpuserid = $pnfpb_result->userid;
         }
 
-        $bpcheckdeviceid =
-            $decrypted .
+        $pnfpb_bpcheckdeviceid =
+            $pnfpb_decrypted .
             "!!" .
-            sanitize_text_field($request["groupid"]) .
+            sanitize_text_field($pnfpb_request["groupid"]) .
             "!!" .
-            sanitize_text_field($request["cookievalue"]) .
+            sanitize_text_field($pnfpb_request["cookievalue"]) .
             "!!webview";
 
-        $deviceid_check_status = $wpdb->get_results(
+        $pnfpb_deviceid_check_status = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM %i WHERE device_id LIKE %s",
-                $table,
-                "%" . $wpdb->esc_like($bpcheckdeviceid) . "%"
+                $pnfpb_table,
+                "%" . $wpdb->esc_like($pnfpb_bpcheckdeviceid) . "%"
             )
         );
 
-        if (count($deviceid_check_status) > 0) {
-            foreach ($deviceid_select_status as $result) {
-                if ($bpuserid !== 0) {
-                    $deviceid_update_status = $wpdb->query(
+        if (count($pnfpb_deviceid_check_status) > 0) {
+            foreach ($pnfpb_deviceid_select_status as $pnfpb_result) {
+                if ($pnfpb_bpuserid !== 0) {
+                    $pnfpb_deviceid_update_status = $wpdb->query(
                         $wpdb->prepare(
                             "UPDATE %i SET userid = %d WHERE device_id = %s AND device_id LIKE %s",
-                            $table,
-                            $bpuserid,
-                            $bpcheckdeviceid,
+                            $pnfpb_table,
+                            $pnfpb_bpuserid,
+                            $pnfpb_bpcheckdeviceid,
                             "%" . $wpdb->esc_like("webview") . "%"
                         )
                     );
                 }
             }
 
-            $version_values = $wpdb->get_col(
+            $pnfpb_version_values = $wpdb->get_col(
                 $wpdb->prepare(
                     "SELECT firebase_version FROM %i WHERE device_id = %s",
-                    $table,
-                    $bpcheckdeviceid
+                    $pnfpb_table,
+                    $pnfpb_bpcheckdeviceid
                 )
             );
 
-            $version_value = "L";
+            $pnfpb_version_value = "L";
 
-            foreach ($version_values as $value) {
-                $version_value = $value;
+            foreach ($pnfpb_version_values as $pnfpb_value) {
+                $pnfpb_version_value = $pnfpb_value;
             }
 
             if (
-                $version_value !== "httpv3" &&
-                $version_value !== "httpv4" &&
+                $pnfpb_version_value !== "httpv3" &&
+                $pnfpb_version_value !== "httpv4" &&
                 get_option("pnfpb_httpv1_push") === "1"
             ) {
-                $group_name =
-                    "pnfpbgroupid" . sanitize_text_field($request["groupid"]);
-                $client = new Google_Client();
+                $pnfpb_group_name =
+                    "pnfpbgroupid" . sanitize_text_field($pnfpb_request["groupid"]);
+                $pnfpb_client = new Google_Client();
                 // Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-                $client->useApplicationDefaultCredentials();
+                $pnfpb_client->useApplicationDefaultCredentials();
 
                 // Alternatively, provide the JSON authentication file directly.
-                $configArray = json_decode(
+                $pnfpb_configArray = json_decode(
                     get_option("pnfpb_sa_json_data"),
                     true
                 );
-                $client->setAuthConfig($configArray);
+                $pnfpb_client->setAuthConfig($pnfpb_configArray);
 
                 // Add the scope as a string (multiple scopes can be provided as an array)
-                $client->addScope(
+                $pnfpb_client->addScope(
                     "https://www.googleapis.com/auth/firebase.messaging"
                 );
-                $client->refreshTokenWithAssertion();
-                $pnfpb_fbauth_token_array = $client->getAccessToken();
+                $pnfpb_client->refreshTokenWithAssertion();
+                $pnfpb_fbauth_token_array = $pnfpb_client->getAccessToken();
                 $pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
 
-                $url = "https://iid.googleapis.com/iid/v1:batchAdd";
+                $pnfpb_url = "https://iid.googleapis.com/iid/v1:batchAdd";
 
-                $headers = [
+                $pnfpb_headers = [
                     "Authorization" => "Bearer " . $pnfpb_fbauth_token,
                     "Content-Type" => "application/json",
                     "access_token_auth" => "true",
                 ];
-                $grouptopic = "/topics/" . $group_name;
-                $fields = [
-                    "to" => $grouptopic,
-                    "registration_tokens" => [$decrypted],
+                $pnfpb_grouptopic = "/topics/" . $pnfpb_group_name;
+                $pnfpb_fields = [
+                    "to" => $pnfpb_grouptopic,
+                    "registration_tokens" => [$pnfpb_decrypted],
                 ];
 
-                $body = wp_json_encode($fields);
+                $pnfpb_body = wp_json_encode($pnfpb_fields);
 
-                $args = [
+                $pnfpb_args = [
                     "httpversion" => "1.0",
                     "blocking" => true,
                     "sslverify" => false,
-                    "body" => $body,
-                    "headers" => $headers,
+                    "body" => $pnfpb_body,
+                    "headers" => $pnfpb_headers,
                 ];
 
-                $apiresults = wp_remote_post($url, $args);
+                $pnfpb_apiresults = wp_remote_post($pnfpb_url, $pnfpb_args);
 
-                $apibody = wp_remote_retrieve_body($apiresults);
+                $pnfpb_apibody = wp_remote_retrieve_body($pnfpb_apiresults);
 
-                $bodyresults = json_decode($apibody, true);
+                $pnfpb_bodyresults = json_decode($pnfpb_apibody, true);
 
-                $deviceid_version_update_status = $wpdb->query(
+                $pnfpb_deviceid_version_update_status = $wpdb->query(
                     $wpdb->prepare(
                         "UPDATE %i SET firebase_version = %s WHERE device_id = %s",
-                        $table,
+                        $pnfpb_table,
                         "httpv4",
-                        $bpcheckdeviceid
+                        $pnfpb_bpcheckdeviceid
                     )
                 );
             }
 
-            $updatetokenresponse = "duplicate";
+            $pnfpb_updatetokenresponse = "duplicate";
         } else {
-            $bpnewdeviceid =
-                $decrypted .
+            $pnfpb_bpnewdeviceid =
+                $pnfpb_decrypted .
                 "!!" .
-                sanitize_text_field($request["groupid"]) .
+                sanitize_text_field($pnfpb_request["groupid"]) .
                 "!!" .
-                sanitize_text_field($request["cookievalue"]) .
+                sanitize_text_field($pnfpb_request["cookievalue"]) .
                 "!!webview";
 
-            $data = [
-                "userid" => $bpuserid,
-                "device_id" => $bpnewdeviceid,
-                "subscription_option" => $subscriptionoptions,
+            $pnfpb_data = [
+                "userid" => $pnfpb_bpuserid,
+                "device_id" => $pnfpb_bpnewdeviceid,
+                "subscription_option" => $pnfpb_subscriptionoptions,
                 "firebase_version" => "httpv4",
             ];
 
-            $insertstatus = $wpdb->insert($table, $data);
+            $pnfpb_insertstatus = $wpdb->insert($pnfpb_table, $pnfpb_data);
 
             if (get_option("pnfpb_httpv1_push") === "1") {
-                $group_name = "pnfpbgroupid" . $request["groupid"];
+                $pnfpb_group_name = "pnfpbgroupid" . $pnfpb_request["groupid"];
 
-                $client = new Google_Client();
+                $pnfpb_client = new Google_Client();
                 // Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-                $client->useApplicationDefaultCredentials();
+                $pnfpb_client->useApplicationDefaultCredentials();
 
                 // Alternatively, provide the JSON authentication file directly.
-                $configArray = json_decode(
+                $pnfpb_configArray = json_decode(
                     get_option("pnfpb_sa_json_data"),
                     true
                 );
-                $client->setAuthConfig($configArray);
+                $pnfpb_client->setAuthConfig($pnfpb_configArray);
 
                 // Add the scope as a string (multiple scopes can be provided as an array)
-                $client->addScope(
+                $pnfpb_client->addScope(
                     "https://www.googleapis.com/auth/firebase.messaging"
                 );
-                $client->refreshTokenWithAssertion();
-                $pnfpb_fbauth_token_array = $client->getAccessToken();
+                $pnfpb_client->refreshTokenWithAssertion();
+                $pnfpb_fbauth_token_array = $pnfpb_client->getAccessToken();
                 $pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
 
-                $url = "https://iid.googleapis.com/iid/v1:batchAdd";
+                $pnfpb_url = "https://iid.googleapis.com/iid/v1:batchAdd";
 
-                $headers = [
+                $pnfpb_headers = [
                     "Authorization" => "Bearer " . $pnfpb_fbauth_token,
                     "Content-Type" => "application/json",
                     "access_token_auth" => "true",
                 ];
 
-                $grouptopic = "/topics/" . $group_name;
+                $pnfpb_grouptopic = "/topics/" . $pnfpb_group_name;
 
-                $fields = [
-                    "to" => $grouptopic,
-                    "registration_tokens" => [$decrypted],
+                $pnfpb_fields = [
+                    "to" => $pnfpb_grouptopic,
+                    "registration_tokens" => [$pnfpb_decrypted],
                 ];
 
-                $body = wp_json_encode($fields);
+                $pnfpb_body = wp_json_encode($pnfpb_fields);
 
-                $args = [
+                $pnfpb_args = [
                     "httpversion" => "1.0",
                     "blocking" => true,
                     "sslverify" => false,
-                    "body" => $body,
-                    "headers" => $headers,
+                    "body" => $pnfpb_body,
+                    "headers" => $pnfpb_headers,
                 ];
 
-                $apiresults = wp_remote_post($url, $args);
-                $apibody = wp_remote_retrieve_body($apiresults);
-                $bodyresults = json_decode($apibody, true);
+                $pnfpb_apiresults = wp_remote_post($pnfpb_url, $pnfpb_args);
+                $pnfpb_apibody = wp_remote_retrieve_body($pnfpb_apiresults);
+                $pnfpb_bodyresults = json_decode($pnfpb_apibody, true);
             }
 
-            if (!$insertstatus || $insertstatus !== 0) {
-                $updatetokenresponse =
+            if (!$pnfpb_insertstatus || $pnfpb_insertstatus !== 0) {
+                $pnfpb_updatetokenresponse =
                     "subscribed" .
-                    $insertstatus .
-                    count($deviceid_select_status);
+                    $pnfpb_insertstatus .
+                    count($pnfpb_deviceid_select_status);
             }
         }
     } else {
-        if ($request["subscription-type"] === "unsubscribe-group") {
-            $bpolddeviceid =
-                $decrypted .
+        if ($pnfpb_request["subscription-type"] === "unsubscribe-group") {
+            $pnfpb_bpolddeviceid =
+                $pnfpb_decrypted .
                 "!!" .
-                sanitize_text_field($request["groupid"]) .
+                sanitize_text_field($pnfpb_request["groupid"]) .
                 "!!" .
-                sanitize_text_field($request["cookievalue"]) .
+                sanitize_text_field($pnfpb_request["cookievalue"]) .
                 "!!webview";
 
-            $deviceid_update_status = $wpdb->query(
+            $pnfpb_deviceid_update_status = $wpdb->query(
                 $wpdb->prepare(
                     "DELETE from %i WHERE device_id = %s",
-                    $table,
-                    $bpolddeviceid
+                    $pnfpb_table,
+                    $pnfpb_bpolddeviceid
                 )
             );
 
             if (get_option("pnfpb_httpv1_push") === "1") {
-                $group_name = "pnfpbgroupid" . $request["groupid"];
+                $pnfpb_group_name = "pnfpbgroupid" . $pnfpb_request["groupid"];
 
-                $client = new Google_Client();
+                $pnfpb_client = new Google_Client();
                 // Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-                $client->useApplicationDefaultCredentials();
+                $pnfpb_client->useApplicationDefaultCredentials();
 
                 // Alternatively, provide the JSON authentication file directly.
-                $configArray = json_decode(
+                $pnfpb_configArray = json_decode(
                     get_option("pnfpb_sa_json_data"),
                     true
                 );
-                $client->setAuthConfig($configArray);
+                $pnfpb_client->setAuthConfig($pnfpb_configArray);
 
                 // Add the scope as a string (multiple scopes can be provided as an array)
-                $client->addScope(
+                $pnfpb_client->addScope(
                     "https://www.googleapis.com/auth/firebase.messaging"
                 );
-                $client->refreshTokenWithAssertion();
-                $pnfpb_fbauth_token_array = $client->getAccessToken();
+                $pnfpb_client->refreshTokenWithAssertion();
+                $pnfpb_fbauth_token_array = $pnfpb_client->getAccessToken();
                 $pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
 
-                $url = "https://iid.googleapis.com/iid/v1:batchRemove";
+                $pnfpb_url = "https://iid.googleapis.com/iid/v1:batchRemove";
 
-                $headers = [
+                $pnfpb_headers = [
                     "Authorization" => "Bearer " . $pnfpb_fbauth_token,
                     "Content-Type" => "application/json",
                     "access_token_auth" => "true",
                 ];
 
-                $grouptopic = "/topics/" . $group_name;
+                $pnfpb_grouptopic = "/topics/" . $pnfpb_group_name;
 
-                $fields = [
-                    "to" => $grouptopic,
-                    "registration_tokens" => [$decrypted],
+                $pnfpb_fields = [
+                    "to" => $pnfpb_grouptopic,
+                    "registration_tokens" => [$pnfpb_decrypted],
                 ];
 
-                $body = wp_json_encode($fields);
+                $pnfpb_body = wp_json_encode($pnfpb_fields);
 
-                $args = [
+                $pnfpb_args = [
                     "httpversion" => "1.0",
                     "blocking" => true,
                     "sslverify" => false,
-                    "body" => $body,
-                    "headers" => $headers,
+                    "body" => $pnfpb_body,
+                    "headers" => $pnfpb_headers,
                 ];
 
-                $apiresults = wp_remote_post($url, $args);
-                $apibody = wp_remote_retrieve_body($apiresults);
-                $bodyresults = json_decode($apibody, true);
+                $pnfpb_apiresults = wp_remote_post($pnfpb_url, $pnfpb_args);
+                $pnfpb_apibody = wp_remote_retrieve_body($pnfpb_apiresults);
+                $pnfpb_bodyresults = json_decode($pnfpb_apibody, true);
             }
         } else {
-            $deviceid = $decrypted;
+            $pnfpb_deviceid = $pnfpb_decrypted;
 
-            $deviceidinsert = $decrypted . "!!webview";
+            $pnfpb_deviceidinsert = $pnfpb_decrypted . "!!webview";
 
-            $data = [
-                "userid" => $bpuserid,
-                "device_id" => $deviceidinsert,
-                "subscription_option" => $subscriptionoptions,
+            $pnfpb_data = [
+                "userid" => $pnfpb_bpuserid,
+                "device_id" => $pnfpb_deviceidinsert,
+                "subscription_option" => $pnfpb_subscriptionoptions,
             ];
 
-            $deviceid_select_status = $wpdb->get_results(
+            $pnfpb_deviceid_select_status = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT * FROM %i WHERE device_id LIKE %s AND device_id LIKE %s",
-                    $table,
-                    "%" . $wpdb->esc_like($deviceid) . "%",
+                    $pnfpb_table,
+                    "%" . $wpdb->esc_like($pnfpb_deviceid) . "%",
                     "%" . $wpdb->esc_like("webview") . "%"
                 )
             );
 
-            $updatetokenresponse = "fail";
+            $pnfpb_updatetokenresponse = "fail";
 
-            foreach ($deviceid_select_status as $result) {
-                if ($bpuserid !== 0) {
-                    $deviceid_update_status = $wpdb->query(
+            foreach ($pnfpb_deviceid_select_status as $pnfpb_result) {
+                if ($pnfpb_bpuserid !== 0) {
+                    $pnfpb_deviceid_update_status = $wpdb->query(
                         $wpdb->prepare(
                             "UPDATE %i SET userid = %d WHERE device_id LIKE %s AND device_id LIKE %s",
-                            $table,
-                            $bpuserid,
-                            "%" . $wpdb->esc_like($deviceid) . "%",
+                            $pnfpb_table,
+                            $pnfpb_bpuserid,
+                            "%" . $wpdb->esc_like($pnfpb_deviceid) . "%",
                             "%" . $wpdb->esc_like("webview") . "%"
                         )
                     );
                 }
 
-                $old_subscription_option = $result->subscription_option;
+                $pnfpb_old_subscription_option = $pnfpb_result->subscription_option;
 
-                if ($result->subscription_option == "") {
-                    $deviceid_update_status = $wpdb->query(
+                if ($pnfpb_result->subscription_option == "") {
+                    $pnfpb_deviceid_update_status = $wpdb->query(
                         $wpdb->prepare(
                             "UPDATE %i SET subscription_option = %s WHERE device_id LIKE %s AND device_id LIKE %s",
-                            $table,
+                            $pnfpb_table,
                             "10000000000000",
-                            "%" . $wpdb->esc_like($deviceid) . "%",
+                            "%" . $wpdb->esc_like($pnfpb_deviceid) . "%",
                             "%" . $wpdb->esc_like("webview") . "%"
                         )
                     );
 
-                    $old_subscription_option = "10000000000000";
+                    $pnfpb_old_subscription_option = "10000000000000";
                 } else {
                     if (
-                        $subscriptionoptions !== "" &&
-                        $subscriptionoptions !== "10000000000000" &&
-                        is_numeric($subscriptionoptions)
+                        $pnfpb_subscriptionoptions !== "" &&
+                        $pnfpb_subscriptionoptions !== "10000000000000" &&
+                        is_numeric($pnfpb_subscriptionoptions)
                     ) {
-                        $deviceid_update_status = $wpdb->query(
+                        $pnfpb_deviceid_update_status = $wpdb->query(
                             $wpdb->prepare(
                                 "UPDATE %i SET subscription_option = %s WHERE device_id LIKE %s AND device_id LIKE %s",
-                                $table,
-                                $subscriptionoptions,
-                                "%" . $wpdb->esc_like($deviceid) . "%",
+                                $pnfpb_table,
+                                $pnfpb_subscriptionoptions,
+                                "%" . $wpdb->esc_like($pnfpb_deviceid) . "%",
                                 "%" . $wpdb->esc_like("webview") . "%"
                             )
                         );
@@ -484,80 +484,80 @@ if (!$decrypted_gcm && !$decrypted_cbc) {
             }
 
             if (
-                $deviceid_select_status != null &&
-                count($deviceid_select_status) > 0
+                $pnfpb_deviceid_select_status != null &&
+                count($pnfpb_deviceid_select_status) > 0
             ) {
-                $version_values = $wpdb->get_col(
+                $pnfpb_version_values = $wpdb->get_col(
                     $wpdb->prepare(
                         "SELECT firebase_version FROM %i WHERE device_id = %s",
-                        $table,
-                        $deviceid
+                        $pnfpb_table,
+                        $pnfpb_deviceid
                     )
                 );
 
-                $version_value = "L";
+                $pnfpb_version_value = "L";
 
-                foreach ($version_values as $value) {
-                    $version_value = $value;
+                foreach ($pnfpb_version_values as $pnfpb_value) {
+                    $pnfpb_version_value = $pnfpb_value;
                 }
 
-                $subscription_option_array = [];
+                $pnfpb_subscription_option_array = [];
 
-                if ($subscriptionoptions != "") {
-                    $subscription_option_array = str_split(
-                        $subscriptionoptions
+                if ($pnfpb_subscriptionoptions != "") {
+                    $pnfpb_subscription_option_array = str_split(
+                        $pnfpb_subscriptionoptions
                     );
                 }
 
-                $updatetokenresponse = "duplicate";
+                $pnfpb_updatetokenresponse = "duplicate";
             } else {
-                $insertstatus = $wpdb->insert($table, $data);
+                $pnfpb_insertstatus = $wpdb->insert($pnfpb_table, $pnfpb_data);
 
-                if (!$insertstatus || $insertstatus !== 0) {
-                    $updatetokenresponse =
+                if (!$pnfpb_insertstatus || $pnfpb_insertstatus !== 0) {
+                    $pnfpb_updatetokenresponse =
                         "subscribed" .
-                        $insertstatus .
-                        count($deviceid_select_status);
+                        $pnfpb_insertstatus .
+                        count($pnfpb_deviceid_select_status);
                 }
 
-                $subscription_option_array = [];
+                $pnfpb_subscription_option_array = [];
 
-                if ($subscriptionoptions != "") {
-                    $subscription_option_array = str_split(
-                        $subscriptionoptions
+                if ($pnfpb_subscriptionoptions != "") {
+                    $pnfpb_subscription_option_array = str_split(
+                        $pnfpb_subscriptionoptions
                     );
                 }
 
                 if (
                     get_option("pnfpb_httpv1_push") === "1" &&
-                    $subscriptionoptions !== "" &&
-                    (count($subscription_option_array) > 0 &&
-                        $subscription_option_array[0] !== "1")
+                    $pnfpb_subscriptionoptions !== "" &&
+                    (count($pnfpb_subscription_option_array) > 0 &&
+                        $pnfpb_subscription_option_array[0] !== "1")
                 ) {
                     $PNFPB_Push_Notification_subscription_update_obj->PNFPB_httpv1_multiple_subscription_option_update(
-                        $subscriptionoptions,
-                        $deviceid,
+                        $pnfpb_subscriptionoptions,
+                        $pnfpb_deviceid,
                         ""
                     );
                 } else {
                     $PNFPB_Push_Notification_subscription_update_obj->PNFPB_httpv1_default_subscription_option_update(
-                        $deviceid
+                        $pnfpb_deviceid
                     );
                 }
             }
         }
     }
 
-    $response = [
+    $pnfpb_response = [
         "status" => 200,
-        "message" => $updatetokenresponse,
+        "message" => $pnfpb_updatetokenresponse,
     ];
 
-    $res = new WP_REST_Response($response);
+    $pnfpb_res = new WP_REST_Response($pnfpb_response);
 
-    $res->set_status(200);
+    $pnfpb_res->set_status(200);
 
-    return ["req" => $res, "tokenupdatestatus" => $updatetokenresponse];
+    return ["req" => $pnfpb_res, "tokenupdatestatus" => $pnfpb_updatetokenresponse];
 }
 
 ?>

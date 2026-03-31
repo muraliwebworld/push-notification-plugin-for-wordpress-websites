@@ -35,7 +35,9 @@ if (!function_exists("PNFPB_icfm_icpush_add_rewrite_rules")) {
 
         if (
             get_option("pnfpb_ic_pwa_app_enable") &&
-            get_option("pnfpb_ic_pwa_app_enable") === "1"
+            get_option("pnfpb_ic_pwa_app_enable") === "1" &&
+			get_option("pnfpb_integrate_service_worker_in_another_plugin") !== "1" &&
+			get_option("pnfpb_ic_thirdparty_pwa_app_enable") !== "1"
         ) {
             $manifest_filename_json = home_url("/") . "pnfpbmanifest.json";
             add_rewrite_rule(
@@ -73,7 +75,9 @@ if (!function_exists("PNFPB_icfm_icpush_generate_sw_pwajson")) {
                 if ($sw_filename_firebasesw != trim($query_vars_as_string)) {
                     if (
                         trim($query_vars_as_string) === "pnfpbmanifest.json" &&
-                        get_option("pnfpb_ic_pwa_app_enable") === "1"
+                        get_option("pnfpb_ic_pwa_app_enable") === "1" &&
+						get_option("pnfpb_integrate_service_worker_in_another_plugin") !== "1" &&
+						get_option("pnfpb_ic_thirdparty_pwa_app_enable") !== "1"						
                     ) {
                         header("Content-Type: application/json");
                         $pwa_manifest_contents = PNFPB_ic_generate_pwa_manifest_json();
@@ -83,7 +87,9 @@ if (!function_exists("PNFPB_icfm_icpush_generate_sw_pwajson")) {
                         return;
                     }
                 } else {
-                    if (get_option("pnfpb_onesignal_push") !== "1") {
+                    if (get_option("pnfpb_onesignal_push") !== "1" &&
+					   	get_option("pnfpb_integrate_service_worker_in_another_plugin") !== "1" &&
+						get_option("pnfpb_ic_thirdparty_pwa_app_enable") !== "1") {
                         header("Content-Type: text/javascript");
                         $firebase_sw_contents = PNFPB_icfm_icpush_firebasesw_template();
                         echo wp_strip_all_tags($firebase_sw_contents);
@@ -91,7 +97,9 @@ if (!function_exists("PNFPB_icfm_icpush_generate_sw_pwajson")) {
                     }
                 }
             } else {
-                if (get_option("pnfpb_onesignal_push") !== "1") {
+                if (get_option("pnfpb_onesignal_push") !== "1" &&
+					get_option("pnfpb_integrate_service_worker_in_another_plugin") !== "1" &&
+					get_option("pnfpb_ic_thirdparty_pwa_app_enable") !== "1") {
                     header("Content-Type: text/javascript");
                     PNFPB_icfm_icpush_sw_template();
                     $sw_contents = PNFPB_icfm_icpush_sw_template();
@@ -111,7 +119,9 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 
 		'use strict';
 
-		//console.log(pnfpb_ajax_object_sw.nonce);
+		var pnfpb_other_pwa_app_enabled = '<?php echo esc_js(
+      get_option("pnfpb_integrate_service_worker_in_another_plugin")
+  ); ?>';
 
 		var pnfpb_progressier_app_enabled = '<?php echo esc_js(
       get_option("pnfpb_ic_thirdparty_pwa_app_enable")
@@ -122,6 +132,10 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
   ); ?>';
 
 		var pnfpb_sw_token = {};
+
+		var pnfpb_ic_fcm_turnonoff_delivery_notifications = '<?php echo esc_js(
+      get_option("pnfpb_ic_fcm_turnonoff_delivery_notifications")
+  ); ?>';
 
 		var pnfpb_progressier_app_id = '<?php if (
       get_option("pnfpb_ic_thirdparty_pwa_app_enable") === "1" &&
@@ -154,7 +168,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 		// Config
 		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
 		var SW = {
-  			cache_version: 'pnfpb_v2.18.2',
+  			cache_version: 'pnfpb_v3.11.1',
   			offline_assets: []
 		};
 
@@ -162,7 +176,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 			caches.delete(SW.cache_version);
 		}
 
-		if (isPWAenabled === '1') {
+		if (isPWAenabled === '1' && pnfpb_other_pwa_app_enabled !== '1' && pnfpb_progressier_app_enabled !== '1') {
 
 			//This is the "Offline copy of pages" wervice worker
 
@@ -537,7 +551,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 		/* After data sent using API, Server then decrypts using AES-256-GCM method */
 		/* to update Notification delivery and read counts in PNFPB Plugin's WordPress database tables */
 
-		const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database", 2);
+		const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database");
 
 		PNFPB_SW_request.onsuccess = (event) => {
 			const PNFPB_SW_db = event.target.result;
@@ -569,7 +583,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 
 								/* Send notification delivery counts and read counts with encrypted signature using AES-256-GCM using secured PNFPB REST API */
 
-								fetch('<?php echo esc_url_raw(get_home_url())."/wp-json/PNFPBpush/v1/notification-delivery-counts/"; ?>', { method: 'POST', headers: {'Content-Type': 'application/json',
+								fetch('<?php echo esc_url_raw(get_home_url())."/wp-json/PNFPBpush/v2/notification-delivery-counts/"; ?>', { method: 'POST', headers: {'Content-Type': 'application/json',
 							  },body: JSON.stringify(notification_delivery_details) })
 								.then(async response => {
 									// Check if the request was successful (e.g., status code 200-299)
@@ -645,6 +659,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 
 			var notification_id = '';
 			var notification_token = '';
+			var push_notification_topic = '';
 
   			if (event.data) {
     			notification = event.data.json().notification;
@@ -654,6 +669,9 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 				}
 				if (pnfpb_push_data.notification_auth_token) {
 					notification_token = pnfpb_push_data.notification_auth_token;
+				}
+				if (pnfpb_push_data.notification_firebase_topic) {
+					push_notification_topic = pnfpb_push_data.notification_firebase_topic;
 				}
 				// Customize notification here
 				const notificationTitle = notification.title;
@@ -672,7 +690,12 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
 
 				event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 
-				if (notification_id !== '' && notification_token !== '') {
+				if (notification_id !== '' && notification_token !== '' 
+					&& (push_notification_topic === 'friendshipaccepted' || push_notification_topic === 'friendshiprequest'
+					|| push_notification_topic === 'markasfavourite' || push_notification_topic === 'privatemessages'
+					|| push_notification_topic === 'groupinvite'
+					|| push_notification_topic === 'onlytofriends' || push_notification_topic === 'ondemandselectedusers')
+					&& pnfpb_ic_fcm_turnonoff_delivery_notifications === '1') {
 					await pnfpb_send_delivery_confirmation(notification_id,notification_token,'delivery');
 				}
 
@@ -737,7 +760,7 @@ if (!function_exists("PNFPB_icfm_icpush_sw_template")) {
     						if (clients.openWindow) {
 								// Send a message to the client.
 								clients.openWindow(event.notification.data.url).then(async function(windowClient) {
-									if (event.notification.data.notification_id !== '' && event.notification.data.notification_token !== '') {
+									if (event.notification.data.notification_id !== '' && event.notification.data.notification_token !== '' && pnfpb_ic_fcm_turnonoff_delivery_notifications === '1') {
 										await pnfpb_send_delivery_confirmation(event.notification.data.notification_id,event.notification.data.notification_token,'read');
 										return;
 									} else {
@@ -1181,6 +1204,298 @@ if (!function_exists("PNFPB_ic_genenrate_pwa_mainfest_json")) {
      ob_get_clean();
 
      return $pwa_manifest_contents;
+    }
+}
+
+// Service worker template
+if (!function_exists("PNFPB_icfm_icpush_integrate_sw_template")) {
+    function PNFPB_icfm_icpush_integrate_sw_template()
+    {
+        ob_start(); ?>
+
+		'use strict';
+
+		var pnfpb_other_pwa_app_enabled = '<?php echo esc_js(
+      get_option("pnfpb_integrate_service_worker_in_another_plugin")
+  ); ?>';
+
+		var pnfpb_progressier_app_enabled = '<?php echo esc_js(
+      get_option("pnfpb_ic_thirdparty_pwa_app_enable")
+  ); ?>';
+
+		var pnfpb_hide_foreground_notification = '<?php echo esc_js(
+      get_option("pnfpb_ic_fcm_turnoff_foreground_messages")
+  ); ?>';
+
+		var pnfpb_sw_token = {};
+
+		var pnfpb_ic_fcm_turnonoff_delivery_notifications = '<?php echo esc_js(
+      get_option("pnfpb_ic_fcm_turnonoff_delivery_notifications")
+  ); ?>';
+
+		// Config
+		var OFFLINE_ARTICLE_PREFIX = 'pnfpb-offline--';
+		var pnfpb_SW = {
+  			cache_version: 'pnfpb_v3.11.1',
+  			offline_assets: []
+		};
+
+		self.addEventListener('activate', function(event) {
+  				// Delete all caches that aren't named in pnfpb_SW.cache_version.
+  				//
+  				var expectedCacheNames = [pnfpb_SW.cache_version];
+  				event.waitUntil(
+    				caches.keys().then(function(cacheNames) {
+      					return Promise.all(
+        					cacheNames.map(function(cacheName) {
+            					// If this cache name isn't present in the array of "expected"
+            					// cache names, then delete it.
+            					console.info('Service Worker: deleting old cache ' + cacheName);
+            					return caches.delete(cacheName);
+        					})
+      					);
+    				})
+  				);
+			});
+
+
+	async function pnfpb_send_delivery_confirmation(notification_id,notification_token,notify_type) {
+
+		/* Get required details for fetch api from Indexeddb */
+		/* Encrypt using AES-256-GCM method to send it in API */
+		/* After data sent using API, Server then decrypts using AES-256-GCM method */
+		/* to update Notification delivery and read counts in PNFPB Plugin's WordPress database tables */
+
+		const PNFPB_SW_request = indexedDB.open("PNFPB_SW_Database");
+
+		PNFPB_SW_request.onsuccess = (event) => {
+			const PNFPB_SW_db = event.target.result;
+			const PNFPB_SW_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_Store"], "readonly");
+			const PNFPB_SW_objectStore = PNFPB_SW_transaction.objectStore("PNFPB_SW_Store");
+			const PNFPB_SW_getRequest = PNFPB_SW_objectStore.get(1);
+			PNFPB_SW_getRequest.onsuccess = async () => {
+				const data = PNFPB_SW_getRequest.result;
+				if (data && data.pnfpb_auth_token) {
+					if (data.pnfpb_auth_token !== '') {
+
+						// concatenate data to be encrypted delimited with "@!!@" which will be decrypted in server side 
+						// and split to appropriate fields using same delimiter "@!!@"
+
+						var pnfpb_subscription_token = '';
+						if (data.subscription_token) {
+							pnfpb_subscription_token = data.subscription_token;
+						}
+						const pnfpb_data_to_be_encrypted = notification_id+'@!!@'+pnfpb_subscription_token+'@!!@'+navigator.userAgent+'@!!@'+notify_type;
+						const notification_delivery_encrypted_data = await pnfpb_encryptData(pnfpb_data_to_be_encrypted,data.pnfpb_auth_token);
+						const notification_delivery_encrypted_authtoken = await pnfpb_encryptData(notification_token,data.pnfpb_auth_token);
+						const PNFPB_SW_rest_token_transaction = PNFPB_SW_db.transaction(["PNFPB_SW_rest_token_Store"], "readonly");
+						const PNFPB_SW_rest_token_objectStore = PNFPB_SW_rest_token_transaction.objectStore("PNFPB_SW_rest_token_Store");
+						const PNFPB_SW_rest_token_getRequest = PNFPB_SW_rest_token_objectStore.get(1);
+						PNFPB_SW_rest_token_getRequest.onsuccess = async () => {
+							const data = PNFPB_SW_rest_token_getRequest.result;
+							if (data && data.pnfpb_rest_token && data.pnfpb_rest_token !== '') {
+								const notification_delivery_details = { encrypted_data: notification_delivery_encrypted_data, pnfpb_encrypted_authtoken: notification_delivery_encrypted_authtoken };
+
+								/* Send notification delivery counts and read counts with encrypted signature using AES-256-GCM using secured PNFPB REST API */
+
+								fetch('<?php echo esc_url_raw(get_home_url())."/wp-json/PNFPBpush/v2/notification-delivery-counts/"; ?>', { method: 'POST', headers: {'Content-Type': 'application/json',
+							  },body: JSON.stringify(notification_delivery_details) })
+								.then(async response => {
+									// Check if the request was successful (e.g., status code 200-299)
+									if (!response.ok) {
+										throw new Error(`HTTP error! status: ${response.status}`);
+									}
+									// Parse the response body as JSON
+									//const responsejson = await response.json();
+									return '';
+								})
+								.catch(error => {
+									// Handle any errors that occurred during the fetch operation
+									console.error('There was a problem with the fetch operation:', error);
+									return '';
+								});
+							} else {
+								console.log('Notification delivery and read count not sent - PNFPB_SW_rest_token_Store tokens not found');
+								return '';
+							} 
+						}
+					} else {
+						console.log('Notification delivery and read count not sent - PNFPB_SW_Store tokens not found');
+						return '';
+					}
+				} else {
+					return '';
+				}
+			};
+			PNFPB_SW_getRequest.onerror = (event) => {
+				reject('Error getting data: ' + event.target.error);
+				PNFPB_SW_db.close();
+				return '';
+			};
+
+		};
+
+		PNFPB_SW_request.onerror = (event) => {
+			console.error("Database error:", event.target.errorCode);
+			return '';
+		};
+
+	}
+
+	async function pnfpb_encryptData(plaintext, passphrase) {
+		const ptUtf8 = new TextEncoder().encode(plaintext);
+		const pwUtf8 = new TextEncoder().encode(passphrase);
+		const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+
+		const iv = crypto.getRandomValues(new Uint8Array(16));
+		const alg = { name: 'AES-GCM', iv: iv };
+		const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+
+		const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUtf8);
+	  	const tag = new Uint8Array(ctBuffer, ctBuffer.byteLength - 16, 16);
+	  	const ciphertext = new Uint8Array(ctBuffer, 0, ctBuffer.byteLength - 16);
+
+		const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
+
+		return {
+			ciphertext: btoa(String.fromCharCode(...new Uint8Array(ciphertext))),
+			iv: btoa(String.fromCharCode(...new Uint8Array(iv))),
+			tag: btoa(String.fromCharCode(...new Uint8Array(tag)))
+		}
+	}
+
+	async function pnfpb_receivePushNotification(event) {
+
+			event.stopImmediatePropagation();
+
+			var notification = {};
+
+			var pnfpb_push_data = {};
+
+			var notification_id = '';
+			var notification_token = '';
+			var push_notification_topic = '';
+
+  			if (event.data) {
+    			notification = event.data.json().notification;
+				pnfpb_push_data = event.data.json().data;
+				if (pnfpb_push_data.notification_id) {
+					notification_id = pnfpb_push_data.notification_id;
+				}
+				if (pnfpb_push_data.notification_auth_token) {
+					notification_token = pnfpb_push_data.notification_auth_token;
+				}
+				if (pnfpb_push_data.notification_firebase_topic) {
+					push_notification_topic = pnfpb_push_data.notification_firebase_topic;
+				}
+				// Customize notification here
+				const notificationTitle = notification.title;
+				const notificationOptions = {
+					body: notification.body,
+					icon: notification.icon,
+					image: notification.image,
+					data: {
+						url: notification.click_action,
+						notification_id:notification_id,
+						notification_token:notification_token,
+					},
+					tag: notification.tag,
+					renotify: notification.renotify
+				}; 
+
+				event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
+
+				if (notification_id !== '' && notification_token !== '' 
+					&& (push_notification_topic === 'friendshipaccepted' || push_notification_topic === 'friendshiprequest'
+					|| push_notification_topic === 'markasfavourite' || push_notification_topic === 'privatemessages'
+					|| push_notification_topic === 'groupinvite'
+					|| push_notification_topic === 'onlytofriends' || push_notification_topic === 'ondemandselectedusers')
+					&& pnfpb_ic_fcm_turnonoff_delivery_notifications === '1') {
+					await pnfpb_send_delivery_confirmation(notification_id,notification_token,'delivery');
+				}
+
+			}
+
+	}
+
+	/* Push event process when push message received by browser */
+
+	self.addEventListener("push", pnfpb_receivePushNotification);
+	
+	/* Event to be processed after notification is clicked to open client page/url */
+
+	self.addEventListener("notificationclick", (event) => {
+			event.preventDefault();
+			if (event.action === "read_more") {
+				event.notification.close();
+  				// This looks to see if the current is already open and
+  				// focuses if it is
+  				event.waitUntil(clients.matchAll({
+    						type: "window"
+  				}).then((clientList) => {
+    				for (const client of clientList) {
+      					if (client.url === event.notification.data.url && 'focus' in client)
+        					return client.focus();
+    				}
+    				if (clients.openWindow)
+      					return clients.openWindow(event.notification.data.url);
+  				}))
+    		} else {
+				if (event.action === "custom_url") {
+
+					var pnfpb_custom_click_action_url = '<?php echo esc_url(
+         get_option("pnfpb_ic_custom_click_action_url")
+     ); ?>';
+
+					event.notification.close();
+  					// This looks to see if the current is already open and
+  					// focuses if it is
+  					event.waitUntil(clients.matchAll({
+    					type: "window",
+						includeUncontrolled: true,
+  					}).then((clientList) => {
+    					for (const client of clientList) {
+      						if (client.url === pnfpb_custom_click_action_url && 'focus' in client)
+        						return client.focus();
+    					}
+    					if (clients.openWindow)
+      						return clients.openWindow(pnfpb_custom_click_action_url);
+  					}))					
+				} else {
+					if (event.action === "close_notification") {
+						event.notification.close();
+					} else {
+						event.notification.close();
+  						// This looks to see if the current is already open and
+  						// focuses if it is
+  						event.waitUntil(clients.matchAll({
+    						type: "window",
+							includeUncontrolled: true,
+  						}).then( async (clientList) => {
+    						if (clients.openWindow) {
+								// Send a message to the client.
+								clients.openWindow(event.notification.data.url).then(async function(windowClient) {
+									if (event.notification.data.notification_id !== '' && event.notification.data.notification_token !== '' && pnfpb_ic_fcm_turnonoff_delivery_notifications === '1') {
+										await pnfpb_send_delivery_confirmation(event.notification.data.notification_id,event.notification.data.notification_token,'read');
+										return;
+									} else {
+										return;
+									}
+								})
+							}
+  						}))
+					}
+				}
+			}
+	},
+	false,
+	);
+
+<?php $pnfpb_sw_contents = ob_get_contents();
+
+  ob_get_clean();
+
+  return $pnfpb_sw_contents;
     }
 }
 

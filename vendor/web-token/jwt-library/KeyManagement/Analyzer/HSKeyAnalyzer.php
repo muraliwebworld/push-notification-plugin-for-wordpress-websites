@@ -11,7 +11,7 @@ use function is_string;
 use function sprintf;
 use function strlen;
 
-abstract class HSKeyAnalyzer implements KeyAnalyzer
+abstract readonly class HSKeyAnalyzer implements KeyAnalyzer
 {
     #[Override]
     public function analyze(JWK $jwk, MessageBag $bag): void

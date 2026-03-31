@@ -16,7 +16,7 @@ use function in_array;
 use function is_string;
 use function sprintf;
 
-final class EdDSA implements SignatureAlgorithm
+final readonly class EdDSA implements SignatureAlgorithm
 {
     public function __construct()
     {

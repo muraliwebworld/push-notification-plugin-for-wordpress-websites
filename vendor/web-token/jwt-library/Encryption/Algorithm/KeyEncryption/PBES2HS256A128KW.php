@@ -7,7 +7,7 @@ namespace Jose\Component\Encryption\Algorithm\KeyEncryption;
 use AESKW\A128KW as Wrapper;
 use Override;
 
-final class PBES2HS256A128KW extends PBES2AESKW
+final readonly class PBES2HS256A128KW extends PBES2AESKW
 {
     #[Override]
     public function name(): string

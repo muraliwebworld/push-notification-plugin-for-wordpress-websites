@@ -9,7 +9,7 @@ use Jose\Component\Core\JWK;
 use Override;
 use function in_array;
 
-final class None implements SignatureAlgorithm
+final readonly class None implements SignatureAlgorithm
 {
     #[Override]
     public function allowedKeyTypes(): array

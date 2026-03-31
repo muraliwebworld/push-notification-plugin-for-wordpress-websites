@@ -7,7 +7,7 @@ namespace Jose\Component\Encryption\Algorithm\KeyEncryption;
 use AESKW\A128KW as Wrapper;
 use Override;
 
-final class ECDHESA128KW extends ECDHESAESKW
+final readonly class ECDHESA128KW extends ECDHESAESKW
 {
     #[Override]
     public function name(): string

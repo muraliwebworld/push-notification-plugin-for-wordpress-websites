@@ -508,40 +508,7 @@ $j(document).ready(function() {
             scrollTop :  $j(pnfpb_hash).offset().top
         }, 500);
     };
-	
-	
-    $j("#pnfpb-pwa-category-tabs > a").on('click touchstart', function(event){
-            event.preventDefault();
-            event.stopPropagation();
 
-            if( $j(this).hasClass('nav-tab-active') ) return false;
-		
-            var pnfpb_selector_category_tabs = $j(this).attr('href');
-            window.history.pushState("", "", pnfpb_selector_category_tabs);
-
-            $j('#pnfpb-pwa-category-tabs > a').removeClass('nav-tab-active');
-            $j('.pnfpb-category-pwa-settings-tab').removeClass('active');
-
-            $j(this).addClass('nav-tab-active');
-            $j(pnfpb_selector_category_tabs).addClass('active');
-    });
-	
-    $j("#pnfpb-pwa-tabs > a").on('click touchstart', function(event){
-            event.preventDefault();
-            event.stopPropagation();
-
-            if( $j(this).hasClass('nav-tab-active') ) return false;
-
-            var pnfpb_selector_tabs = $j(this).attr('href');
-            window.history.pushState("", "", pnfpb_selector_tabs);
-
-            $j('#pnfpb-pwa-tabs > a').removeClass('nav-tab-active');
-            $j('.pnfpb-pwa-settings-tab').removeClass('active');
-
-            $j(this).addClass('nav-tab-active');
-            $j(pnfpb_selector_tabs).addClass('active');
-    });
-	
 	var pnfpb_protocol_handler_pwa_counter = 1;
 	
 	$j('.pnfpb_pwa_card_protocol_root').each(function () {
@@ -858,6 +825,25 @@ $j(document).ready(function() {
 		
 	}
 
+	function toggle_buddypress_follow_form() {
+		
+		const { __ } = wp.i18n;
+	
+  		$j('.pnfpb_ic_buddypress_follow_form').toggle();
+		
+		if ($j('.pnfpb_ic_buddypress_follow_form').is(':visible')) {
+			
+			$j('.pnfpb_buddypress_follow_button').text(__('Hide form',"push-notification-for-post-and-buddypress"));
+			
+		}
+		else
+		{
+			$j('.pnfpb_buddypress_follow_button').text(__('Customize',"push-notification-for-post-and-buddypress"));
+		}
+		
+	}
+
+
     $j("#pnfpb-config-tabs > a").on('click touchstart', function(event){
             event.preventDefault();
             event.stopPropagation();
@@ -872,6 +858,38 @@ $j(document).ready(function() {
 
             $j(this).addClass('nav-tab-active');
             $j(pnfpb_config_selector_tabs).addClass('active');
+    });
+
+    $j("#pnfpb-pwa-category-tabs > a").on('click touchstart', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+
+            if( $j(this).hasClass('nav-tab-active') ) return false;
+
+            var pnfpb_selector_category_tabs = $j(this).attr('href');
+            window.history.pushState("", "", pnfpb_selector_category_tabs);
+
+            $j('#pnfpb-pwa-category-tabs > a').removeClass('nav-tab-active');
+            $j('.pnfpb-category-pwa-settings-tab').removeClass('active');
+
+            $j(this).addClass('nav-tab-active');
+            $j(pnfpb_selector_category_tabs).addClass('active');
+    });
+
+    $j("#pnfpb-pwa-tabs > a").on('click touchstart', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+
+            if( $j(this).hasClass('nav-tab-active') ) return false;
+
+            var pnfpb_selector_tabs = $j(this).attr('href');
+            window.history.pushState("", "", pnfpb_selector_tabs);
+
+            $j('#pnfpb-pwa-tabs > a').removeClass('nav-tab-active');
+            $j('.pnfpb-pwa-settings-tab').removeClass('active');
+
+            $j(this).addClass('nav-tab-active');
+            $j(pnfpb_selector_tabs).addClass('active');
     });
 
 	function toggle_onesignal_configuration() {

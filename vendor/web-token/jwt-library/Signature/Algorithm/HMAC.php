@@ -11,7 +11,7 @@ use Override;
 use function in_array;
 use function is_string;
 
-abstract class HMAC implements MacAlgorithm
+abstract readonly class HMAC implements MacAlgorithm
 {
     #[Override]
     public function allowedKeyTypes(): array

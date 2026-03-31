@@ -8,6 +8,7 @@
 use Minishlink\WebPush\VAPID;
 ?>
 <h1 class="pnfpb_ic_push_settings_header">
+	<span class="dashicons dashicons-admin-settings" style="font-size:26px;width:26px;height:26px;color:#2271b1;"></span>
 	<?php echo esc_html(
     	__(
         	"PNFPB - Configurations for Push notification",
@@ -85,173 +86,115 @@ use Minishlink\WebPush\VAPID;
 	</form>
 </div>
 <div id="pnfpb-admin-right_sidebar" class="pnfpb_column_left_300 pnfpb-admin-right_sidebar" >
-	<ol>
-		<li>
-			<?php echo esc_html(
-				__("To enable Post, custom post, BuddyPress push notifications go to ", "push-notification-for-post-and-buddypress")
-			); ?>
-			<a href="https://cdn75.indiacities.in/wp-admin/admin.php?page=pnfpb-icfcm-slug">
-				<?php echo esc_html(
-					__("Options tab", "push-notification-for-post-and-buddypress")
-				); ?>
-			</a> 
-		</li>
-		<li>
-			<?php echo esc_html(
-				__("Progressive Web App settings are in ", "push-notification-for-post-and-buddypress")
-			); ?>
-			<a href="https://cdn75.indiacities.in/wp-admin/admin.php?page=pnfpb_icfm_pwa_app_settings">
-				<?php echo esc_html(
-					__("PWA tab", "push-notification-for-post-and-buddypress")
-				); ?>
-			</a> 
-		</li>		
-	</ol>
-	<h4>
-		<?php echo esc_html(
-     		__("Need Help?", "push-notification-for-post-and-buddypress")
- 		); ?>
-	</h4>
-	<ol>
-		<li>
-			<?php echo esc_html(
-				__("Required PHP version 8.1 or above", "push-notification-for-post-and-buddypress")
-			); ?>		
-		</li>		
-		<li>
-			<?php echo esc_html(
-				__("Check out the", "push-notification-for-post-and-buddypress")
-			); ?>
-			<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/">
-				<?php echo esc_html(
-					__("support forum", "push-notification-for-post-and-buddypress")
-				); ?>
-			</a> 
-				<?php echo esc_html(
-					__("and", "push-notification-for-post-and-buddypress")
-				); ?>
-			<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F">
-				<?php echo esc_html(
-					__("FAQ", "push-notification-for-post-and-buddypress")
-				); ?>
-			</a>.
-		</li>
-		<li>
-			<a href="https://github.com/muraliwebworld?tab=repositories" target="_blank">
-				<?php echo esc_html(
-					__(
-						"Github repository sample code To Integrate mobile app with this plugin using API",
-						"push-notification-for-post-and-buddypress"
-					)
-				); ?>
-			</a>
-		</li>
-		<li>
-			<?php echo esc_html(
-				__("Visit ", "push-notification-for-post-and-buddypress")
-			); ?>
-			<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/">
-				<?php echo esc_html(
-					__("plugin homepage", "push-notification-for-post-and-buddypress")
-				); ?>
-			</a>.
-		</li>
-		<li>
-			<?php echo esc_html(
-				__(
-					"If you need help, Please feel free to send us your queries",
-					"push-notification-for-post-and-buddypress"
-				)
-			); ?>
-			<code>murali@indiacitys.com</code>
-		</li>
-	</ol>
-	<h4>
-		<?php echo wp_kses_post(
-     		__("Rate This Plugin", "push-notification-for-post-and-buddypress")
- 		); ?>
-	</h4>
-	<p>
-		<?php echo esc_html(
-     		__("Please", "push-notification-for-post-and-buddypress")
- 		); ?>
-	 	 <a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/reviews/#new-post">
-		 	<?php echo esc_html(
-     			__("give your rating", "push-notification-for-post-and-buddypress")
- 			); ?>
-		</a>
-		<?php echo esc_html(
-    		__(" and feedback.", "push-notification-for-post-and-buddypress")
-		); ?>
-	</p>
-	<h4>
-		<?php echo esc_html(
-     		__("Contribute/Donate", "push-notification-for-post-and-buddypress")
- 		); ?>
-	</h4>
-	<p>
-		<a href="https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/">
-			<?php echo esc_html(
-     			__(
-         			"Donate/Contribute to this plugin",
-         			"push-notification-for-post-and-buddypress"
-     			)
- 			); ?>
-		</a>
-	</p>
-	<h4>
-		<?php echo esc_html(
-     		__(
-         		"Mobile app integration help on github respository",
-         		"push-notification-for-post-and-buddypress"
-     		)
- 		); ?>
-	</h4>
-	
-	<ol>
-		
-		<li>
-			<a href="https://github.com/muraliwebworld/android-app-to-integrate-push-notification-wordpress-plugin" target="_blank">
-				<?php echo esc_html(
-     			__(
-         			"Procedure/Sample code to Integrate Android mobile app with this plugin using API",
-         			"push-notification-for-post-and-buddypress"
-     			)
- 				); ?>
-			</a>
-		</li>
-		<li>
-			<a href="https://github.com/muraliwebworld/ios-swift-app-to-integrate-push-notification-wordpress-plugin" target="_blank">
-				<?php echo esc_html(
-     				__(
-         				"Procedure/Sample code to Integrate IOS mobile app with this plugin using API",
-         				"push-notification-for-post-and-buddypress"
-     				)
- 				); ?>
-			</a>
-		</li>
-		
-	</ol>
-	
-	<h4>
-		<?php echo esc_html(
-     		__(
-         		"Demo site using WordPress Playground to test this plugin",
-         		"push-notification-for-post-and-buddypress"
-     		)
- 		); ?>
-	</h4>
-	
-	<ol>
-		
-		<li>
-			<a href="https://www.muraliwebworld.com" target="_blank">
-				<?php echo esc_html(
-     				__("Plugin support forum", "push-notification-for-post-and-buddypress")
- 				); ?>
-			</a>
-		</li>
 
-	</ol>
-	
+	<div class="pnfpb-sidebar-help-card">
+		<h4>
+			<span class="dashicons dashicons-info-outline" style="color:#2271b1;vertical-align:middle;margin-right:4px;"></span>
+			<?php echo esc_html( __( "Quick Links", "push-notification-for-post-and-buddypress" ) ); ?>
+		</h4>
+		<ul style="margin:0;padding-left:18px;">
+			<li>
+				<?php echo esc_html( __( "Enable notifications in", "push-notification-for-post-and-buddypress" ) ); ?>
+				<a href="<?php echo esc_url( get_home_url() ); ?>/wp-admin/admin.php?page=pnfpb-icfcm-slug">
+					<?php echo esc_html( __( "Options tab", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+			</li>
+			<li>
+				<?php echo esc_html( __( "Progressive Web App settings in", "push-notification-for-post-and-buddypress" ) ); ?>
+				<a href="<?php echo esc_url( get_home_url() ); ?>/wp-admin/admin.php?page=pnfpb_icfm_pwa_app_settings">
+					<?php echo esc_html( __( "PWA tab", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="pnfpb-sidebar-help-card">
+		<h4>
+			<span class="dashicons dashicons-sos" style="color:#2271b1;vertical-align:middle;margin-right:4px;"></span>
+			<?php echo esc_html( __( "Need Help?", "push-notification-for-post-and-buddypress" ) ); ?>
+		</h4>
+		<ul style="margin:0;padding-left:18px;">
+			<li><?php echo esc_html( __( "Required PHP version 8.1 or above", "push-notification-for-post-and-buddypress" ) ); ?></li>
+			<li>
+				<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/">
+					<?php echo esc_html( __( "Support forum", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+				&amp;
+				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F">
+					<?php echo esc_html( __( "FAQ", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+			</li>
+			<li>
+				<a href="https://github.com/muraliwebworld?tab=repositories" target="_blank">
+					<?php echo esc_html( __( "GitHub: API integration samples", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+			</li>
+			<li>
+				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/">
+					<?php echo esc_html( __( "Plugin homepage", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+			</li>
+			<li>
+				<?php echo esc_html( __( "Contact:", "push-notification-for-post-and-buddypress" ) ); ?>
+				<code>murali@indiacitys.com</code>
+			</li>
+		</ul>
+	</div>
+
+	<div class="pnfpb-sidebar-help-card">
+		<h4>
+			<span class="dashicons dashicons-star-filled" style="color:#f0b429;vertical-align:middle;margin-right:4px;"></span>
+			<?php echo esc_html( __( "Rate This Plugin", "push-notification-for-post-and-buddypress" ) ); ?>
+		</h4>
+		<span class="pnfpb-sidebar-rate-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+		<p>
+			<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/reviews/#new-post">
+				<?php echo esc_html( __( "Give your rating and feedback", "push-notification-for-post-and-buddypress" ) ); ?>
+			</a>
+		</p>
+	</div>
+
+	<div class="pnfpb-sidebar-help-card">
+		<h4>
+			<span class="dashicons dashicons-heart" style="color:#e53935;vertical-align:middle;margin-right:4px;"></span>
+			<?php echo esc_html( __( "Contribute / Donate", "push-notification-for-post-and-buddypress" ) ); ?>
+		</h4>
+		<p>
+			<a href="https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/">
+				<?php echo esc_html( __( "Donate / Contribute to this plugin", "push-notification-for-post-and-buddypress" ) ); ?>
+			</a>
+		</p>
+	</div>
+
+	<div class="pnfpb-sidebar-help-card">
+		<h4>
+			<span class="dashicons dashicons-smartphone" style="color:#0d9488;vertical-align:middle;margin-right:4px;"></span>
+			<?php echo esc_html( __( "Mobile App Integration", "push-notification-for-post-and-buddypress" ) ); ?>
+		</h4>
+		<ul style="margin:0;padding-left:18px;">
+			<li>
+				<a href="https://github.com/muraliwebworld/android-app-to-integrate-push-notification-wordpress-plugin" target="_blank">
+					<?php echo esc_html( __( "Android app sample code", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+			</li>
+			<li>
+				<a href="https://github.com/muraliwebworld/ios-swift-app-to-integrate-push-notification-wordpress-plugin" target="_blank">
+					<?php echo esc_html( __( "iOS Swift app sample code", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="pnfpb-sidebar-help-card">
+		<h4>
+			<span class="dashicons dashicons-desktop" style="color:#2271b1;vertical-align:middle;margin-right:4px;"></span>
+			<?php echo esc_html( __( "Demo", "push-notification-for-post-and-buddypress" ) ); ?>
+		</h4>
+		<p>
+			<a href="https://www.muraliwebworld.com" target="_blank">
+				<?php echo esc_html( __( "Plugin support &amp; demo site", "push-notification-for-post-and-buddypress" ) ); ?>
+			</a>
+		</p>
+	</div>
+
 </div>

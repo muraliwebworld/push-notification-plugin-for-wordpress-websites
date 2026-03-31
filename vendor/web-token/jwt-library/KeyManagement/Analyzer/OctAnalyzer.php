@@ -10,7 +10,7 @@ use Override;
 use function is_string;
 use function strlen;
 
-final class OctAnalyzer implements KeyAnalyzer
+final readonly class OctAnalyzer implements KeyAnalyzer
 {
     #[Override]
     public function analyze(JWK $jwk, MessageBag $bag): void

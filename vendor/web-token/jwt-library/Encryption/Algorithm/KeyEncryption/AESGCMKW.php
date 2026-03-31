@@ -16,7 +16,7 @@ use function is_string;
 use function sprintf;
 use const OPENSSL_RAW_DATA;
 
-abstract class AESGCMKW implements KeyWrapping
+abstract readonly class AESGCMKW implements KeyWrapping
 {
     public function __construct()
     {

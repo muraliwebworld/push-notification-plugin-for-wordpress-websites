@@ -7,7 +7,7 @@ namespace Jose\Component\KeyManagement\Analyzer;
 use JsonSerializable;
 use Override;
 
-final class Message implements JsonSerializable
+final readonly class Message implements JsonSerializable
 {
     final public const SEVERITY_LOW = 'low';
 

@@ -6,7 +6,7 @@ if (!class_exists("PNFPB_ICFM_admin_bar_menu_class")) {
         public function pnfpb_admin_bar_menu_register(
             WP_Admin_Bar $wp_admin_bar
         ) {
-            $items = (array) apply_filters(
+            $pnfpb_items = (array) apply_filters(
                 "pnfpb_icfm_admin_adminbarmenu_register",
                 [
                     "pnfpb_admin_main_menu",
@@ -17,11 +17,11 @@ if (!class_exists("PNFPB_ICFM_admin_bar_menu_class")) {
                 $wp_admin_bar
             );
 
-            foreach ($items as $item) {
-                $this->{$item}($wp_admin_bar);
+            foreach ($pnfpb_items as $pnfpb_item) {
+                $this->{$pnfpb_item}($wp_admin_bar);
 
                 do_action(
-                    "pnfpb_icfm_admin_adminbarmenu_register_{$item}_after",
+                    "pnfpb_icfm_admin_adminbarmenu_register_{$pnfpb_item}_after",
                     $wp_admin_bar
                 );
             }

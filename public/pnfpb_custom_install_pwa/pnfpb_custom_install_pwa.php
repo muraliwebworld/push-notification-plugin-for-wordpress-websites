@@ -792,7 +792,20 @@
 				$pnfpb_bell_icon_subscription_option_favourite_text = get_option(
 					"pnfpb_bell_icon_subscription_option_favourite_text"
 				);
-			}					
+			}
+			
+			$pnfpb_bell_icon_subscription_option_followers_text =
+				"Followers";
+
+			if (
+				get_option(
+					"pnfpb_bell_icon_subscription_option_followers_text"
+				)
+			) {
+				$pnfpb_bell_icon_subscription_option_followers_text = get_option(
+					"pnfpb_bell_icon_subscription_option_followers_text"
+				);
+			}
 
 			$pnfpb_bell_icon_subscription_option_avatar_change_text =
 				"Avatar change";
@@ -883,10 +896,14 @@
 			$pnfpb_html_subscription_post_options = "";
 
 			$pnfpb_html_subscription_favourite_options = "";
+			
+			$pnfpb_html_subscription_followers_options = "";
 
 			$pnfpb_html_bellicon_subscription_post_options = "";
 
 			$pnfpb_html_bellicon_subscription_favourite_options = "";
+			
+			$pnfpb_html_bellicon_subscription_followers_options = "";
 
 			$pnfpb_html_subscription_push_type_options = "";
 
@@ -1145,7 +1162,61 @@
 										<span class="pnfpb_slider round"></span>
 									</label>
 								</div>';
-			}					
+			}
+			
+			if (get_option("pnfpb_ic_fcm_buddypress_follow_enable") === "1") {
+				$post_type = "followers";
+
+				$pnfpb_html_subscription_followers_options .=
+					'<div class="pnfpb_card">				
+									<label class="pnfpb_ic_push_settings_table_label_checkbox 
+										pnfpb_flex_grow_6 pnfpb_max_width_236" 
+										for="' .
+					esc_attr("pnfpb_bell_icon_subscription_".$post_type."_enable") .
+					'">' .
+					esc_html(
+					$pnfpb_bell_icon_subscription_option_followers_text
+				) .
+					'
+									</label>
+									<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_max_width_40">
+										<input id="' .
+					esc_attr("pnfpb_bell_icon_subscription_".$post_type."_enable") .
+					'" class="' .
+					esc_attr("pnfpb_bell_icon_subscription_".$post_type."_enable") .
+					'" name="'.
+					esc_attr("pnfpb_bell_icon_subscription_".$post_type."_enable") .
+					'" pnfpb_index="1" type="checkbox" value="1" 
+										/> 
+										<span class="pnfpb_slider round"></span>
+									</label>
+								</div>';
+
+				$pnfpb_html_bellicon_subscription_followers_options .=
+					'<div class="pnfpb_card">				
+									<label class="pnfpb_ic_push_settings_table_label_checkbox 
+											pnfpb_flex_grow_6 pnfpb_max_width_236" 
+											for="' .
+					esc_attr("pnfpb_bell_icon_prompt_subscription_".$post_type."_enable") .
+					'">' .
+					esc_html(
+					$pnfpb_bell_icon_subscription_option_followers_text
+				) .
+					'
+									</label>
+									<label class="pnfpb_switch pnfpb_flex_grow_1 pnfpb_max_width_40">
+										<input id="' .
+					esc_attr("pnfpb_bell_icon_prompt_subscription_".$post_type."_enable") .
+					'" class="'.
+					esc_attr("pnfpb_bell_icon_prompt_subscription_".$post_type."_enable") .
+					'" name="' .
+					esc_attr("pnfpb_bell_icon_prompt_subscription_".$post_type."_enable") .
+					'"  pnfpb_index="1" type="checkbox" value="1"
+										/> 
+										<span class="pnfpb_slider round"></span>
+									</label>
+								</div>';
+			}				
 
 			$pnfpb_html_subscription_options = "";
 
@@ -1669,6 +1740,7 @@
 					$pnfpb_html_subscription_activity_options .
 					$pnfpb_html_subscription_push_type_options .
 					$pnfpb_html_subscription_favourite_options .
+					$pnfpb_html_subscription_followers_options .
 					"</div>" .
 					$pnfpb_html_subscription_footer_options;
 			}
@@ -1683,6 +1755,7 @@
 					$pnfpb_html_bellicon_subscription_activity_options .
 					$pnfpb_html_bellicon_subscription_push_type_options .
 					$pnfpb_html_bellicon_subscription_favourite_options .
+					$pnfpb_html_bellicon_subscription_followers_options .
 					"</div>" .
 					$pnfpb_html_bellicon_subscription_footer_options;
 			}

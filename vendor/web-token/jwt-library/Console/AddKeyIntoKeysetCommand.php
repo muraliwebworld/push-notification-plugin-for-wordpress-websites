@@ -16,14 +16,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function is_array;
 use function is_string;
 
-#[AsCommand(name: 'keyset:add:key', description: 'Add a key into a key set.',)]
+#[AsCommand(name: 'keyset:add:key', description: 'Add a key into a key set.')]
 final class AddKeyIntoKeysetCommand extends ObjectOutputCommand
 {
     #[Override]
     protected function configure(): void
     {
         parent::configure();
-        $this->setHelp('This command adds a key at the end of a key set.')
+        $this
+            ->setHelp('This command adds a key at the end of a key set.')
             ->addArgument('jwkset', InputArgument::REQUIRED, 'The JWKSet object')
             ->addArgument('jwk', InputArgument::REQUIRED, 'The new JWK object');
     }

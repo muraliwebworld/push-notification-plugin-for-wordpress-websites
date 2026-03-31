@@ -14,27 +14,65 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
 
             global $wpdb;
             $table = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
+			
+			$pnfpb_oauth_timestamp = get_option('pnfpb_firebase_oauth_timestamp');
 			$pnfpb_fbauth_token = get_option("pnfpb_firebase_oauth_token");
+			$one_hour_ago_timestamp = strtotime('-1 hour');
+			if ($pnfpb_fbauth_token === false || $pnfpb_fbauth_token === '' 
+				|| $pnfpb_oauth_timestamp === false || $pnfpb_oauth_timestamp === ''
+				|| !is_numeric($pnfpb_oauth_timestamp)
+				|| (is_numeric($pnfpb_oauth_timestamp) && $pnfpb_oauth_timestamp < $one_hour_ago_timestamp)) {
+				
+				$key = json_decode(get_option("pnfpb_sa_json_data"), true);
+				$now = time();
 
-			if (get_option("pnfpb_firebase_oauth_token") === false || get_option("pnfpb_firebase_oauth_token") === "") {
+				// 1. Create JWT Header
+				$header = json_encode(['typ' => 'JWT', 'alg' => 'RS256']);
 
-				$client = new Google_Client();
+				// 2. Create JWT Payload
+				$payload = json_encode([
+					'iss' => $key['client_email'],
+					'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+					'aud' => $key['token_uri'],
+					'exp' => $now + 3600, // Token valid for 1 hour
+					'iat' => $now
+				]);
 
-				// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-				//
-				$client->useApplicationDefaultCredentials();
+				// 3. Base64URL Encode
+				$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+				$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+				$jwt = $base64UrlHeader . '.' . $base64UrlPayload;
 
-				// Alternatively, provide the JSON authentication file directly.
-				$configArray = json_decode(get_option("pnfpb_sa_json_data"), true);
-				$client->setAuthConfig($configArray);
+				// 4. Sign JWT using Private Key
+				$signature = '';
+				openssl_sign($jwt, $signature, $key['private_key'], 'SHA256');
+				$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
 
-				// Add the scope as a string (multiple scopes can be provided as an array)
-				$client->addScope("https://www.googleapis.com/auth/firebase.messaging");
-				$client->refreshTokenWithAssertion();
-				$pnfpb_fbauth_token_array = $client->getAccessToken();
-				$pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
-				update_option("pnfpb_firebase_oauth_token", $pnfpb_fbauth_token);
+				$jwt = $jwt . '.' . $base64UrlSignature;
+
+				// 5. Exchange JWT for OAuth2 Token
+				$args = [
+					'body' => [
+						'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+						'assertion' => $jwt
+					]
+				];
+
+				$response = wp_remote_post($key['token_uri'], $args);
+
+				if (is_wp_error($response)) {
+					error_log(serialize($response));
+				} else {
+					$data = json_decode(wp_remote_retrieve_body($response), true);
+					if (isset($data['access_token'])) {
+						$pnfpb_fbauth_token = $data['access_token'];
+						update_option("pnfpb_firebase_oauth_token", $data['access_token']);
+						update_option("pnfpb_firebase_oauth_timestamp", strtotime('now'));						
+					}	
+				}
+
 			}
+
             $url = "https://iid.googleapis.com/iid/v1:batchAdd";
             $headers = [
                 "Authorization" => "Bearer " . $pnfpb_fbauth_token,
@@ -145,28 +183,65 @@ if (!class_exists("PNFPB_httpv1_subscription_option_update")) {
                     );
                 }
             }
-
+			
+			$pnfpb_oauth_timestamp = get_option('pnfpb_firebase_oauth_timestamp');
 			$pnfpb_fbauth_token = get_option("pnfpb_firebase_oauth_token");
+			$one_hour_ago_timestamp = strtotime('-1 hour');
+			if ($pnfpb_fbauth_token === false || $pnfpb_fbauth_token === '' 
+				|| $pnfpb_oauth_timestamp === false || $pnfpb_oauth_timestamp === ''
+				|| !is_numeric($pnfpb_oauth_timestamp)
+				|| (is_numeric($pnfpb_oauth_timestamp) && $pnfpb_oauth_timestamp < $one_hour_ago_timestamp)) {
+				
+				$key = json_decode(get_option("pnfpb_sa_json_data"), true);
+				$now = time();
 
-			if (get_option("pnfpb_firebase_oauth_token") === false || get_option("pnfpb_firebase_oauth_token") === "") {
+				// 1. Create JWT Header
+				$header = json_encode(['typ' => 'JWT', 'alg' => 'RS256']);
 
-				$client = new Google_Client();
+				// 2. Create JWT Payload
+				$payload = json_encode([
+					'iss' => $key['client_email'],
+					'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+					'aud' => $key['token_uri'],
+					'exp' => $now + 3600, // Token valid for 1 hour
+					'iat' => $now
+				]);
 
-				// Authentication with the GOOGLE_APPLICATION_CREDENTIALS environment variable
-				//
-				$client->useApplicationDefaultCredentials();
+				// 3. Base64URL Encode
+				$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+				$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+				$jwt = $base64UrlHeader . '.' . $base64UrlPayload;
 
-				// Alternatively, provide the JSON authentication file directly.
-				$configArray = json_decode(get_option("pnfpb_sa_json_data"), true);
-				$client->setAuthConfig($configArray);
+				// 4. Sign JWT using Private Key
+				$signature = '';
+				openssl_sign($jwt, $signature, $key['private_key'], 'SHA256');
+				$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
 
-				// Add the scope as a string (multiple scopes can be provided as an array)
-				$client->addScope("https://www.googleapis.com/auth/firebase.messaging");
-				$client->refreshTokenWithAssertion();
-				$pnfpb_fbauth_token_array = $client->getAccessToken();
-				$pnfpb_fbauth_token = $pnfpb_fbauth_token_array["access_token"];
-				update_option("pnfpb_firebase_oauth_token", $pnfpb_fbauth_token);
+				$jwt = $jwt . '.' . $base64UrlSignature;
+
+				// 5. Exchange JWT for OAuth2 Token
+				$args = [
+					'body' => [
+						'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+						'assertion' => $jwt
+					]
+				];
+
+				$response = wp_remote_post($key['token_uri'], $args);
+
+				if (is_wp_error($response)) {
+					error_log(serialize($response));
+				} else {
+					$data = json_decode(wp_remote_retrieve_body($response), true);
+					if (isset($data['access_token'])) {
+						$pnfpb_fbauth_token = $data['access_token'];
+						update_option("pnfpb_firebase_oauth_token", $data['access_token']);
+						update_option("pnfpb_firebase_oauth_timestamp", strtotime('now'));						
+					}	
+				}				
+		
 			}
+
             $url = "https://iid.googleapis.com/iid/v1:batchAdd";
             $headers = [
                 "Authorization" => "Bearer " . $pnfpb_fbauth_token,

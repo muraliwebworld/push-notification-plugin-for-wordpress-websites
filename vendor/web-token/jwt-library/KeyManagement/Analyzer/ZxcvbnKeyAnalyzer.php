@@ -12,7 +12,7 @@ use function count;
 use function is_string;
 use function strlen;
 
-final class ZxcvbnKeyAnalyzer implements KeyAnalyzer
+final readonly class ZxcvbnKeyAnalyzer implements KeyAnalyzer
 {
     public const STRENGTH_VERY_WEAK = 0;
 

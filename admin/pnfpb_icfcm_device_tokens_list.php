@@ -56,7 +56,10 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
                 $sql .= !empty($_REQUEST["order"])
                     ? " " . esc_sql($_REQUEST["order"])
                     : " ASC";
-            }
+            } else {
+                $sql .= " ORDER BY id";
+                $sql .= " DESC";				
+			}
 
             if ($per_page > 0) {
                 $sql .= " LIMIT $per_page";
@@ -121,7 +124,6 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
                 case "id":
                 case "device_id":
                 case "userid":
-                case "subscription_option":
                     return $item[$column_name];
                 default:
                     return print_r($item, true); //Show the whole array for troubleshooting purposes
@@ -144,6 +146,77 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
         }
 
         /**
+         * Render subscription_option as compact visual icon badges.
+         * Uses a static map — O(1) memory init per request, O(14) per displayed row.
+         */
+        function column_subscription_option( $item ) {
+            $code = isset( $item['subscription_option'] ) ? (string) $item['subscription_option'] : '';
+            if ( $code === '' ) {
+                return '<span class="pnfpb-sub-opt-none">—</span>';
+            }
+
+            // Position 8 (index 8) = Unsubscribed from all
+            if ( strlen( $code ) > 8 && $code[8] === '1' ) {
+                return '<span class="pnfpb-sub-badges">'
+                    . '<span class="pnfpb-sub-badge pnfpb-sub--unsub" title="' . esc_attr__( 'Unsubscribed from all notifications', 'push-notification-for-post-and-buddypress' ) . '">'
+                    . '<span class="dashicons dashicons-dismiss" aria-hidden="true"></span> '
+                    . esc_html__( 'Unsubscribed', 'push-notification-for-post-and-buddypress' )
+                    . '</span>'
+                    . '<span class="pnfpb-sub-raw">' . esc_html( $code ) . '</span>'
+                    . '</span>';
+            }
+
+            // Position 0 (index 0) = Subscribed to all notifications
+            if ( strlen( $code ) > 0 && $code[0] === '1' ) {
+                return '<span class="pnfpb-sub-badges">'
+                    . '<span class="pnfpb-sub-badge pnfpb-sub--all" title="' . esc_attr__( 'Subscribed to all notifications', 'push-notification-for-post-and-buddypress' ) . '">'
+                    . '<span class="dashicons dashicons-bell" aria-hidden="true"></span> '
+                    . esc_html__( 'All', 'push-notification-for-post-and-buddypress' )
+                    . '</span>'
+                    . '<span class="pnfpb-sub-raw">' . esc_html( $code ) . '</span>'
+                    . '</span>';
+            }
+
+            // Individual subscription bits (positions 1-7, 9-13)
+            static $badge_map = null;
+            if ( null === $badge_map ) {
+                $badge_map = [
+                    1  => [ 'Posts',        'dashicons-admin-post',     'posts'      ],
+                    2  => [ 'Comments',     'dashicons-admin-comments',  'comments'   ],
+                    3  => [ 'My Comments',  'dashicons-format-chat',     'mycomments' ],
+                    4  => [ 'Members',      'dashicons-groups',          'members'    ],
+                    5  => [ 'Messages',     'dashicons-email-alt',       'messages'   ],
+                    6  => [ 'Friend Req.',  'dashicons-plus-alt',        'friendreq'  ],
+                    7  => [ 'Friend Acc.',  'dashicons-yes-alt',         'friendacc'  ],
+                    9  => [ 'Avatar',       'dashicons-admin-users',     'avatar'     ],
+                    10 => [ 'Cover',        'dashicons-format-image',    'cover'      ],
+                    11 => [ 'BP Activity',  'dashicons-networking',      'bpactivity' ],
+                    12 => [ 'Grp Invite',   'dashicons-admin-site-alt3', 'grpinvite'  ],
+                    13 => [ 'Grp Update',   'dashicons-update',          'grpupdate'  ],
+                ];
+            }
+
+            $html = '<span class="pnfpb-sub-badges">';
+            $any  = false;
+            $len  = strlen( $code );
+            foreach ( $badge_map as $pos => $info ) {
+                if ( $len > $pos && $code[ $pos ] === '1' ) {
+                    $html .= '<span class="pnfpb-sub-badge pnfpb-sub--' . $info[2] . '" title="' . esc_attr( $info[0] ) . '">'
+                           . '<span class="dashicons ' . $info[1] . '" aria-hidden="true"></span>'
+                           . '</span>';
+                    $any = true;
+                }
+            }
+            if ( ! $any ) {
+                $html .= '<span class="pnfpb-sub-opt-none">—</span>';
+            }
+            $html .= '<span class="pnfpb-sub-raw">' . esc_html( $code ) . '</span>';
+            $html .= '</span>';
+
+            return $html;
+        }
+
+        /**
          * Method for name column
          *
          * @param array $item an array of DB data
@@ -158,7 +231,7 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
 
             $actions = [
                 "delete" => sprintf(
-                    '<a href="?page=%s&action=%s&devicetoken=%s&_wpnonce=%s">Delete</a>',
+                    '<a href="?page=%s&action=%s&devicetoken=%s&_wpdeletenonce=%s">Delete</a>',
                     esc_attr($_REQUEST["page"]),
                     "delete",
                     absint($item["id"]),
@@ -180,15 +253,15 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
                 "cb" => '<input type="checkbox" />',
                 "id" => __("Id", "push-notification-for-post-and-buddypress"),
                 "device_id" => __(
-                    "Device token",
+                    "Device Token",
                     "push-notification-for-post-and-buddypress"
                 ),
                 "userid" => __(
-                    "Userid",
+                    "User ID",
                     "push-notification-for-post-and-buddypress"
                 ),
                 "subscription_option" => __(
-                    "Shortcode Subscription",
+                    "Subscriptions",
                     "push-notification-for-post-and-buddypress"
                 ),
             ];
@@ -310,7 +383,6 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
                 );
                 $url = add_query_arg("s", urlencode($_REQUEST["s"]), $url);
                 $url = add_query_arg(
-                    "_wpnonce",
                     urlencode($search_nonce),
                     $url
                 );
@@ -328,7 +400,7 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
                     sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"]))
                 );
 
-                if (!wp_verify_nonce($nonce, "pnfpb_delete_devicetoken")) {
+                if (!wp_verify_nonce($nonce, "pnfpb_icfcm_device_tokens_list")) {
                     die("wnonce failure");
                 } else {
                     $devicetokenid = sanitize_text_field(
@@ -348,12 +420,20 @@ if (!class_exists("PNFPB_ICFM_Device_tokens_List")) {
                 (isset($_REQUEST["action2"]) &&
                     $_REQUEST["action2"] == "bulk-delete")
             ) {
-                $delete_ids = esc_sql($_REQUEST["bulk-delete"]);
+                $nonce = esc_attr(
+                    sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"]))
+                );
 
-                // loop over the array of record IDs and delete them
-                foreach ($delete_ids as $id) {
-                    self::delete_devicetoken($id);
-                }
+                if (!wp_verify_nonce($nonce, "pnfpb_icfcm_device_tokens_list")) {
+                    die("wnonce failure");
+                } else {				
+					$delete_ids = esc_sql($_REQUEST["bulk-delete"]);
+
+					// loop over the array of record IDs and delete them
+					foreach ($delete_ids as $id) {
+						self::delete_devicetoken($id);
+					}
+				}
             }
         }
     }

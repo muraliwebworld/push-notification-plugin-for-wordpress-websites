@@ -17,7 +17,7 @@ use const STR_PAD_LEFT;
 /**
  * @internal
  */
-final class ECKey
+final readonly class ECKey
 {
     public static function convertToPEM(JWK $jwk): string
     {
@@ -92,6 +92,7 @@ final class ECKey
         $key = openssl_pkey_new([
             'curve_name' => self::getOpensslCurveName($curve),
             'private_key_type' => OPENSSL_KEYTYPE_EC,
+            'private_key_bits' => 2048, // Not used for EC keys. See https://github.com/php/php-src/pull/19103
         ]);
         if ($key === false) {
             throw new RuntimeException('Unable to create the key');

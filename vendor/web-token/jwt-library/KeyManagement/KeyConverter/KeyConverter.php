@@ -36,7 +36,7 @@ use const PREG_PATTERN_ORDER;
 /**
  * @internal
  */
-final class KeyConverter
+final readonly class KeyConverter
 {
     /**
      * @return array<array-key, mixed>

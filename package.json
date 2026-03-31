@@ -6,7 +6,7 @@
   
     "private": true,
   
-    "description": "Push Notification for Post and Buddypress",
+    "description": "push notification for post and buddypress",
   
     "author": "Muralidharan Ramasamy",
   
@@ -22,14 +22,14 @@
   
     ],
   
-    "homepage": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites",
+    "homepage": "https://github.com/WordPress/gutenberg-examples/",
   
-    "repository": "git+https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites.git",
+    "repository": "git+https://github.com/WordPress/gutenberg-examples.git",
   
     "bugs": {
   
       
-    "url": "https://github.com/muraliwebworld/push-notification-plugin-for-wordpress-websites/discussions"
+    "url": "https://github.com/WordPress/gutenberg-examples/issues"
   
     },
   

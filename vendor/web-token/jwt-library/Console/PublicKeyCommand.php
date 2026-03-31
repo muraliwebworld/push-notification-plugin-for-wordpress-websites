@@ -25,7 +25,8 @@ final class PublicKeyCommand extends ObjectOutputCommand
     protected function configure(): void
     {
         parent::configure();
-        $this->setHelp('This command converts a private key into a public key.')
+        $this
+            ->setHelp('This command converts a private key into a public key.')
             ->addArgument('jwk', InputArgument::REQUIRED, 'The JWK object');
     }
 

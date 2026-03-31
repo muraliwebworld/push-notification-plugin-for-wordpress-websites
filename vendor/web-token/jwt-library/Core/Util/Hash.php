@@ -9,15 +9,15 @@ use InvalidArgumentException;
 /**
  * @internal
  */
-final class Hash
+final readonly class Hash
 {
     /**
      * @param positive-int $length
      */
     private function __construct(
-        private readonly string $hash,
-        private readonly int $length,
-        private readonly string $t
+        private string $hash,
+        private int $length,
+        private string $t
     ) {
     }
 

@@ -154,8 +154,8 @@ if (empty($onetime_recurring_day_name)) {
         						); ?>
 							</label>
 							<br/>
-							<select id="pnfpb_ic_fcm_token_ondemand_repeat_day_number" 
-									name="pnfpb_ic_fcm_token_ondemand_repeat_day_number">
+							<select id="pnfpb_ic_fcm_token_ondemand_repeat_day_number_post" 
+									name="pnfpb_ic_fcm_token_ondemand_repeat_day_number_post">
 								<option value="" 
 										<?php if ($onetime_recurring_day_number === "") {
             								echo esc_attr("selected");
@@ -446,8 +446,8 @@ if (empty($onetime_recurring_day_name)) {
 								</option>
 							</select>
 							<div class="pnfpb_ic_push_settings_table_margin_5px">
-								<select id="pnfpb_ic_fcm_token_ondemand_repeat_month" 
-									name="pnfpb_ic_fcm_token_ondemand_repeat_month">
+								<select id="pnfpb_ic_fcm_token_ondemand_repeat_month_post" 
+									name="pnfpb_ic_fcm_token_ondemand_repeat_month_post">
 								<option value=""  
 									<?php if ($onetime_recurring_month_number === "") {
             							echo esc_attr("selected");
@@ -585,7 +585,7 @@ if (empty($onetime_recurring_day_name)) {
         						); ?>
 							</label>
 							
-							<select id="pnfpb_ic_fcm_token_ondemand_repeat_day" name="pnfpb_ic_fcm_token_ondemand_repeat_day">
+							<select id="pnfpb_ic_fcm_token_ondemand_repeat_day_post" name="pnfpb_ic_fcm_token_ondemand_repeat_day_post">
 								<option value="" 
 										<?php if ($onetime_recurring_day_name === "") {
             								echo esc_attr("selected");

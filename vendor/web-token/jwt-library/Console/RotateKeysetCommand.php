@@ -17,14 +17,15 @@ use function count;
 use function is_array;
 use function is_string;
 
-#[AsCommand(name: 'keyset:rotate', description: 'Rotate a key set.',)]
+#[AsCommand(name: 'keyset:rotate', description: 'Rotate a key set.')]
 final class RotateKeysetCommand extends ObjectOutputCommand
 {
     #[Override]
     protected function configure(): void
     {
         parent::configure();
-        $this->setHelp('This command removes the last key in a key set a place a new one at the beginning.')
+        $this
+            ->setHelp('This command removes the last key in a key set a place a new one at the beginning.')
             ->addArgument('jwkset', InputArgument::REQUIRED, 'The JWKSet object')
             ->addArgument('jwk', InputArgument::REQUIRED, 'The new JWK object');
     }

@@ -84,7 +84,10 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
                 $sql .= !empty($_REQUEST["order"])
                     ? " " . esc_sql($_REQUEST["order"])
                     : " ASC";
-            }
+            } else {
+                $sql .= " ORDER BY id";
+                $sql .= " DESC";				
+			}
 
             if ($per_page > 0) {
                 $sql .= " LIMIT $per_page";
@@ -542,11 +545,10 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
         function column_action($item)
         {
             $edit_nonce = wp_create_nonce("pnfpb_edit_pushnotification");
-            $delete_nonce = wp_create_nonce("pnfpb_delete_pushnotification");
-            $duplicate_nonce = wp_create_nonce(
-                "pnfpb_duplicate_pushnotification"
-            );
-            $cancel_nonce = wp_create_nonce("pnfpb_cancel_pushnotification");
+			$nonce_action = 'delete_item_' . esc_attr(absint($item["id"]));
+    		$delete_nonce = wp_create_nonce( $nonce_action );
+			$nonce_action = 'duplicate_item_' . esc_attr(absint($item["id"]));
+    		$duplicate_nonce = wp_create_nonce( $nonce_action );
 
             if ($item["action_scheduler_id"] != null) {
                 $actions = [
@@ -563,30 +565,29 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
                         ))
                     ),
                     "delete" => sprintf(
-                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">%s</a><br /><br />',
+                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpdeletenonce=%s&orderby=id&order=desc">%s</a><br /><br />',
                         "pnfpb_icfm_onetime_notifications_list",
                         "delete",
                         esc_attr(absint($item["id"])),
-                        esc_attr($delete_nonce),
+						esc_attr($delete_nonce),
                         esc_attr(__(
                             "Delete",
                             "push-notification-for-post-and-buddypress"
                         ))
                     ),
                     "duplicate" => sprintf(
-                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">%s</a><br /><br />',
+                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpduplicatenonce=%s&orderby=id&order=desc">%s</a><br /><br />',
                         "pnfpb_icfm_onetime_notifications_list",
                         "duplicate",
                         esc_attr(absint($item["id"])),
-                        esc_attr($duplicate_nonce),
+						esc_attr($duplicate_nonce),
                         esc_attr(__(
                             "Duplicate",
                             "push-notification-for-post-and-buddypress"
                         ))
                     ),
                     "cancel" => sprintf(
-                        '<a href="?page=pnfpb_icfm_action_scheduler&status=pending&action=-1&action2=-1&_wpnonce=%s&s=%d&paged=1">%s</a>',
-                        esc_attr($cancel_nonce),
+                        '<a href="?page=pnfpb_icfm_action_scheduler&status=pending&action=-1&action2=-1&s=%d&paged=1">%s</a>',
                         esc_attr(absint($item["action_scheduler_id"])),
                         esc_attr(__(
                             "More actions...",
@@ -609,22 +610,22 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
                         ))
                     ),
                     "delete" => sprintf(
-                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">%s</a>',
+                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpdeletenonce=%s&orderby=id&order=desc">%s</a>',
                         "pnfpb_icfm_onetime_notifications_list",
                         "delete",
                         esc_attr(absint($item["id"])),
-                        esc_attr($delete_nonce),
+						esc_attr($delete_nonce),
                         esc_attr(__(
                             "Delete",
                             "push-notification-for-post-and-buddypress"
                         ))
                     ),
                     "duplicate" => sprintf(
-                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">%s</a><br /><br />',
+                        '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpduplicatenonce=%s&orderby=id&order=desc">%s</a><br /><br />',
                         "pnfpb_icfm_onetime_notifications_list",
                         "duplicate",
                         esc_attr(absint($item["id"])),
-                        esc_attr($duplicate_nonce),
+						esc_attr($duplicate_nonce),
                         esc_attr(__(
                             "Duplicate",
                             "push-notification-for-post-and-buddypress"
@@ -638,44 +639,6 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
         public function row_actions($actions, $always_visible = false)
         {
             return parent::row_actions($actions, true);
-        }
-
-        /**
-         * Method for name column
-         *
-         * @param array $item an array of DB data
-         *
-         * @return string
-         */
-        function column_name($item)
-        {
-            $delete_nonce = wp_create_nonce("pnfpb_delete_pushnotification");
-
-            $edit_nonce = wp_create_nonce("pnfpb_delete_pushnotification");
-
-            $title = "<strong>" . $item["title"] . "</strong>";
-
-            $actions = [
-                "edit" => sprintf(
-                    '<a href="?page=%s&title=%s&content=%s&image_url=%s&click_url=%s&orderby=id&_wpnonce=%s&order=desc">%s</a>',
-                    "pnfpb_icfm_onetime_notifications_list",
-                    $item["title"],
-                    $item["content"],
-                    $item["image_url"],
-                    $item["click_url"],
-                    esc_attr($edit_nonce),
-                    esc_attr(__("Edit", "push-notification-for-post-and-buddypress"))
-                ),
-                "delete" => sprintf(
-                    '<a href="?page=%s&action=%s&pushnotificationid=%s&_wpnonce=%s&orderby=id&order=desc">Delete</a>',
-                    "pnfpb_icfm_onetime_notifications_list",
-                    "delete",
-                    esc_attr(absint($item["id"])),
-                    esc_attr($delete_nonce)
-                ),
-            ];
-
-            return $title . $this->row_actions($actions);
         }
 
         /**
@@ -920,7 +883,6 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
                 );
 
                 $url = add_query_arg(
-                    "_wpnonce",
                     urlencode($search_nonce),
                     $url
                 );
@@ -933,21 +895,21 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
             //Detect when a bulk action is being triggered...
             if ("delete" === $this->current_action()) {
                 // In our file that handles the request, verify the nonce.
+				$push_notification_id = sanitize_text_field(
+					wp_unslash($_REQUEST["pushnotificationid"])
+				);
+				
                 $nonce = esc_attr(
-                    sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"]))
+                    sanitize_text_field(wp_unslash($_REQUEST["_wpdeletenonce"]))
                 );
 
-                if (!wp_verify_nonce($nonce, "pnfpb_delete_pushnotification")) {
-                    die("wnonce failure");
+                if (!wp_verify_nonce($nonce, 'delete_item_' . $push_notification_id)) {
+                    die("wnonce failure while deleting item");
                 } else {
                     global $wpdb;
 
                     $notification_table_name =
                         $wpdb->prefix . "pnfpb_ic_schedule_push_notifications";
-
-                    $push_notification_id = sanitize_text_field(
-                        wp_unslash($_REQUEST["pushnotificationid"])
-                    );
 
                     $notifications = $wpdb->get_results(
                         "SELECT * FROM {$notification_table_name} WHERE `id` = {$push_notification_id} "
@@ -996,14 +958,16 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
             }
 
             if ("duplicate" === $this->current_action()) {
+				$push_notification_id = sanitize_text_field(
+					wp_unslash($_REQUEST["pushnotificationid"])
+				);
+				
                 $nonce = esc_attr(
-                    sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"]))
+                    sanitize_text_field(wp_unslash($_REQUEST["_wpduplicatenonce"]))
                 );
 
-                if (
-                    !wp_verify_nonce($nonce, "pnfpb_duplicate_pushnotification")
-                ) {
-                    die("wnonce failure");
+                if (!wp_verify_nonce($nonce, 'duplicate_item_' . $push_notification_id)) {
+                    die("wnonce failure while duplicating item");
                 } else {
                     global $wpdb;
 
@@ -1085,7 +1049,7 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
                     sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"]))
                 );
 
-                if (!wp_verify_nonce($nonce, "pnfpb_cancel_pushnotification")) {
+                if (!wp_verify_nonce($nonce, "pnfpb_onetime_notifications_list")) {
                     die("wnonce failure");
                 } else {
                     $selected_day_push_notification_cancel = date(

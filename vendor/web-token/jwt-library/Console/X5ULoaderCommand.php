@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use function is_string;
 
-#[AsCommand(name: 'keyset:load:x5u', description: 'Loads a key set from an url.',)]
+#[AsCommand(name: 'keyset:load:x5u', description: 'Loads a key set from an url.')]
 final class X5ULoaderCommand extends ObjectOutputCommand
 {
     public function __construct(
@@ -27,9 +27,10 @@ final class X5ULoaderCommand extends ObjectOutputCommand
     protected function configure(): void
     {
         parent::configure();
-        $this->setHelp(
-            'This command will try to get a key set from an URL. The distant key set is list of X.509 certificates.'
-        )
+        $this
+            ->setHelp(
+                'This command will try to get a key set from an URL. The distant key set is list of X.509 certificates.'
+            )
             ->addArgument('url', InputArgument::REQUIRED, 'The URL');
     }
 

@@ -6,7 +6,7 @@ namespace Jose\Component\KeyManagement\Analyzer;
 
 use Override;
 
-final class HS512KeyAnalyzer extends HSKeyAnalyzer
+final readonly class HS512KeyAnalyzer extends HSKeyAnalyzer
 {
     #[Override]
     protected function getAlgorithmName(): string

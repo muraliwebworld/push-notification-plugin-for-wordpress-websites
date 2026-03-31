@@ -129,7 +129,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 
 					$target_deviceid_values = $wpdb->get_results(
 						$wpdb->prepare(
-							"SELECT * FROM %i WHERE device_id NOT LIKE %s AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+							"SELECT * FROM %i WHERE device_id NOT LIKE %s AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 							$table_name,
 							"%!!%",
 							"","","",$initiator_id,
@@ -164,7 +164,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 							$iconurl,
 							$iconurl,
 							$messageurl,
-							["click_url" => $messageurl],
+							["click_url" => $messageurl,"friend_id" => strval($friend_id), "initiator_id" => strval($initiator_id)],
 							$target_subscription_array,
 							$initiator_id,
 							$friend_id,
@@ -178,7 +178,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 
 						$target_userid_array_values = $wpdb->get_col(
 							$wpdb->prepare(
-								"SELECT device_id FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+								"SELECT device_id FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 								$table_name,
 								$initiator_id,
 								"%progressier%"
@@ -227,7 +227,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 
 						$target_userid_array_values = $wpdb->get_col(
 							$wpdb->prepare(
-								"SELECT device_id FROM %i WHERE userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+								"SELECT device_id FROM %i WHERE userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 								$table_name,
 								$initiator_id
 							)
@@ -279,7 +279,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 						if (get_option("pnfpb_ic_fcm_frontend_enable_subscription") === "1") {
 							$target_userid_array_values = $wpdb->get_col(
 								$wpdb->prepare(
-									"SELECT userid FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+									"SELECT userid FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 									$table_name,
 									$initiator_id,
 									"%onesignal%"
@@ -331,7 +331,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 
 							$deviceids = $wpdb->get_col(
 									$wpdb->prepare(
-										"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 1000",
+										"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,8,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 										$table_name,
 										"%@N%",
 										$initiator_id
@@ -381,7 +381,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 												$iconurl,
 												$iconurl,
 												$messageurl,
-												["click_url" => $messageurl],
+												["click_url" => $messageurl,"friend_id" => strval($friend_id), "initiator_id" => strval($initiator_id)],
 												$deviceids,
 												[],
 												$friend_id,
@@ -407,7 +407,7 @@ if (!class_exists("PNFPB_friendship_accept_notification_class")) {
 											$iconurl,
 											$iconurl,
 											$messageurl,
-											["click_url" => $messageurl],
+											["click_url" => $messageurl,"friend_id" => strval($friend_id), "initiator_id" => strval($initiator_id)],
 											$deviceids,
 											[],
 											$friend_id,

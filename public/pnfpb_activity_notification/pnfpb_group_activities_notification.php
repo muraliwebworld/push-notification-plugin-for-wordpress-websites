@@ -294,6 +294,14 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 							];
 
 						}
+						
+						$activity_subscription_count = 0;
+
+						if (get_option('pnfpb_activity_subscription_count') !== false && 
+							get_option('pnfpb_general_subscription_count') !== false &&
+							(get_option('pnfpb_activity_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+							$activity_subscription_count = intval(get_option('pnfpb_activity_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+						}						
 
 						$PNFPB_WP_web_push_notification_class_obj = new PNFPB_web_push_notification_class();
 						$PNFPB_WP_web_push_notification_class_obj->PNFPB_web_push_notification(
@@ -303,13 +311,14 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 										$iconurl,
 										$imageurl,
 										$grouplink,
-										["click_url" => $grouplink],
+										["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 										$target_subscription_array,
 										0,
 										0,
 										"activity",
 										"no",
-										$group_id								
+										$group_id,
+										$activity_subscription_count
 							);
 						}
 					
@@ -639,7 +648,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 														$iconurl,
 														$imageurl,
 														$grouplink,
-														["click_url" => $grouplink],
+														["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 														$regid,
 														$regidwebview,
 														$user_id,
@@ -658,7 +667,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 													$iconurl,
 													$imageurl,
 													$grouplink,
-													["click_url" => $grouplink],
+													["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 													$regid,
 													$regidwebview,
 													$user_id,
@@ -692,7 +701,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 														$iconurl,
 														$imageurl,
 														$grouplink,
-														["click_url" => $grouplink],
+														["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 														[],
 														[],
 														$user_id,
@@ -733,6 +742,14 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 									$regid = [];
 									$regidwebview = [];
 									$deviceidswebview = [];
+									
+									$activity_subscription_count = 0;
+
+									if (get_option('pnfpb_activity_subscription_count') !== false && 
+										get_option('pnfpb_general_subscription_count') !== false &&
+										(get_option('pnfpb_activity_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+										$activity_subscription_count = intval(get_option('pnfpb_activity_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+									}									
 
 									if (
 										get_option("pnfpb_ic_fcm_activity_schedule_now_enable") &&
@@ -751,7 +768,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 												$iconurl,
 												$imageurl,
 												$grouplink,
-												["click_url" => $grouplink],
+												["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 												$regid,
 												$deviceidswebview,
 												$user_id,
@@ -759,6 +776,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 												"activity",
 												"no",
 												$group_id,
+												$activity_subscription_count
 											]
 										);
 									} else {
@@ -769,14 +787,15 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 											$iconurl,
 											$imageurl,
 											$grouplink,
-											["click_url" => $grouplink],
+											["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 											$regid,
 											$deviceidswebview,
 											$user_id,
 											0,
 											"activity",
 											"no",
-											$group_id
+											$group_id,
+											$activity_subscription_count
 										);
 									}
 
@@ -1018,6 +1037,14 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 							];
 
 						}
+						
+						$activity_subscription_count = 0;
+
+						if (get_option('pnfpb_activity_subscription_count') !== false && 
+							get_option('pnfpb_general_subscription_count') !== false &&
+							(get_option('pnfpb_activity_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+							$activity_subscription_count = intval(get_option('pnfpb_activity_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+						}						
 
 						$PNFPB_WP_web_push_notification_class_obj = new PNFPB_web_push_notification_class();
 						$PNFPB_WP_web_push_notification_class_obj->PNFPB_web_push_notification(
@@ -1027,13 +1054,14 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 										$iconurl,
 										$imageurl,
 										$grouplink,
-										["click_url" => $grouplink],
+										["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 										$target_subscription_array,
 										0,
 										0,
 										"activity",
 										"yes",
-										$group_id								
+										$group_id,
+										$activity_subscription_count
 							);
 						}
 					
@@ -1402,7 +1430,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 													$iconurl,
 													$imageurl,
 													$grouplink,
-													["click_url" => $grouplink],
+													["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 													$regid,
 													$regidwebview,
 													$user_id,
@@ -1448,7 +1476,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 													$iconurl,
 													$imageurl,
 													$grouplink,
-													["click_url" => $grouplink],
+													["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 													$regid,
 													$regidwebview,
 													$user_id,
@@ -1463,6 +1491,14 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 							} else {
 
 								if (get_option("pnfpb_progressier_push") !== "1" && get_option("pnfpb_httpv1_push") === "1") {
+									
+									$activity_subscription_count = 0;
+
+									if (get_option('pnfpb_activity_subscription_count') !== false && 
+										get_option('pnfpb_general_subscription_count') !== false &&
+										(get_option('pnfpb_activity_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+										$activity_subscription_count = intval(get_option('pnfpb_activity_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+									}									
 
 									$dcount = 0;
 
@@ -1505,7 +1541,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 												$iconurl,
 												$imageurl,
 												$grouplink,
-												["click_url" => $grouplink],
+												["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 												[],
 												[],
 												$user_id,
@@ -1513,6 +1549,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 												"groupactivity",
 												"yes",
 												$group_id,
+												$activity_subscription_count
 											]
 										);
 									} else {
@@ -1526,14 +1563,15 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 											$iconurl,
 											$imageurl,
 											$grouplink,
-											["click_url" => $grouplink],
+											["click_url" => $grouplink,"activity_id" => strval($activity_id)],
 											[],
 											[],
 											$user_id,
 											0,
 											"groupactivity",
 											"yes",
-											$group_id
+											$group_id,
+											$activity_subscription_count
 										);
 									}
 

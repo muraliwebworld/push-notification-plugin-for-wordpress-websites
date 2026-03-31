@@ -11,7 +11,7 @@ use function sprintf;
  * This class implements a claim and header checker that checks if the value is equal to the expected value.
  * @see \Jose\Tests\Component\Checker\IsEqualCheckerTest
  */
-final class IsEqualChecker implements ClaimChecker, HeaderChecker
+final readonly class IsEqualChecker implements ClaimChecker, HeaderChecker
 {
     /**
      * @param string $key                 The claim or header parameter name to check.
@@ -19,9 +19,9 @@ final class IsEqualChecker implements ClaimChecker, HeaderChecker
      *                                    This option has no effect for claim checkers.
      */
     public function __construct(
-        private readonly string $key,
-        private readonly mixed $value,
-        private readonly bool $protectedHeaderOnly = true
+        private string $key,
+        private mixed $value,
+        private bool $protectedHeaderOnly = true
     ) {
     }
 

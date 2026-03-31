@@ -12,14 +12,14 @@ use function is_int;
 /**
  * This class is a claim checker. When the "nbf" is present, it will compare the value with the current timestamp.
  */
-final class NotBeforeChecker implements ClaimChecker, HeaderChecker
+final readonly class NotBeforeChecker implements ClaimChecker, HeaderChecker
 {
     private const NAME = 'nbf';
 
     public function __construct(
         private ClockInterface $clock,
-        private readonly int $allowedTimeDrift = 0,
-        private readonly bool $protectedHeaderOnly = false,
+        private int $allowedTimeDrift = 0,
+        private bool $protectedHeaderOnly = false,
     ) {
     }
 

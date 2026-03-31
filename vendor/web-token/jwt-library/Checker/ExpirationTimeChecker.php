@@ -14,14 +14,14 @@ use function is_int;
  *
  * When the "exp" is present, it will compare the value with the current timestamp.
  */
-final class ExpirationTimeChecker implements ClaimChecker, HeaderChecker
+final readonly class ExpirationTimeChecker implements ClaimChecker, HeaderChecker
 {
     private const NAME = 'exp';
 
     public function __construct(
         private ClockInterface $clock,
-        private readonly int $allowedTimeDrift = 0,
-        private readonly bool $protectedHeaderOnly = false,
+        private int $allowedTimeDrift = 0,
+        private bool $protectedHeaderOnly = false,
     ) {
     }
 

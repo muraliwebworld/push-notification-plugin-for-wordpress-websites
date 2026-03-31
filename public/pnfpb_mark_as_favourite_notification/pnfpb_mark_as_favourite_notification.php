@@ -134,7 +134,7 @@ if (!class_exists("PNFPB_mark_as_favourite_notification_class")) {
 					
 					$target_deviceid_values = $wpdb->get_results(
 						$wpdb->prepare(
-							"SELECT * FROM %i WHERE userid = %d AND device_id NOT LIKE %s AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+							"SELECT * FROM %i WHERE userid = %d AND device_id NOT LIKE %s AND web_auth <> %s AND web_256 <> %s AND subscription_auth_token <> %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 							$table_name,
 							$authoractivityuserid,
 							"%!!%", /* eliminate group subscription device ids */
@@ -183,7 +183,7 @@ if (!class_exists("PNFPB_mark_as_favourite_notification_class")) {
 
 						$target_userid_array_values = $wpdb->get_col(
 							$wpdb->prepare(
-								"SELECT device_id FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+								"SELECT device_id FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 								$table_name,
 								$authoractivityuserid,
 								"%progressier%"
@@ -232,7 +232,7 @@ if (!class_exists("PNFPB_mark_as_favourite_notification_class")) {
 
 						$target_userid_array_values = $wpdb->get_col(
 							$wpdb->prepare(
-								"SELECT device_id FROM %i WHERE userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+								"SELECT device_id FROM %i WHERE userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 								$table_name,
 								$authoractivityuserid
 							)
@@ -284,7 +284,7 @@ if (!class_exists("PNFPB_mark_as_favourite_notification_class")) {
 						if (get_option("pnfpb_ic_fcm_frontend_enable_subscription") === "1") {
 							$target_userid_array_values = $wpdb->get_col(
 								$wpdb->prepare(
-									"SELECT userid FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+									"SELECT userid FROM %i WHERE userid = %d AND device_id LIKE %s AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 									$table_name,
 									$authoractivityuserid,
 									"%onesignal%"
@@ -336,7 +336,7 @@ if (!class_exists("PNFPB_mark_as_favourite_notification_class")) {
 
 							$deviceids = $wpdb->get_col(
 									$wpdb->prepare(
-										"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 1000",
+										"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,15,1) = '1' OR SUBSTRING(subscription_option,25,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 										$table_name,
 										"%@N%",
 										$authoractivityuserid

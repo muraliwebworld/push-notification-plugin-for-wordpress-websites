@@ -404,6 +404,22 @@ delete_option('pnfpb_webpush_firebase_public_key');
 delete_option('pnfpb_webpush_push');
 delete_option('pnfpb_webpush_push_firebase');
 delete_option('pnfpb-pwa-shortcode-install-icon');
+delete_option('pnfpb_ic_fcm_turnonoff_delivery_notifications');
+delete_option('pnfpb_activity_subscription_count');
+delete_option('pnfpb_groupactivity_subscription_count');
+delete_option('pnfpb_comments_subscription_count');
+delete_option('pnfpb_mycomments_subscription_count');
+delete_option('pnfpb_newmemberjoined_subscription_count');
+delete_option('pnfpb_private_messages_subscription_count');
+delete_option('pnfpb_friendship_request_subscription_count');
+delete_option('pnfpb_friendship_accept_subscription_count');
+delete_option('pnfpb_avatarchange_subscription_count');
+delete_option('pnfpb_coverimagechange_subscription_count');
+delete_option('pnfpb_group_invite_subscription_count');
+delete_option('pnfpb_groupdetailsupdate_subscription_count');
+delete_option('pnfpb_post_subscription_count');
+delete_option('pnfpb_general_subscription_count');
+delete_option('pnfpb_ic_fcm_new_post_image');
 
 delete_option("PNFBP_admin_notice");
 
@@ -428,13 +444,13 @@ global $wpdb;
 $table_name = $wpdb->prefix . "pnfpb_ic_subscribed_deviceids_web";
 $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $table_name));
 
-$table_name = $wpdb->prefix . "wp_pnfpb_ic_delivery_statistics_notifications";
+$table_name = $wpdb->prefix . "pnfpb_ic_delivery_statistics_notifications";
 $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $table_name));
 
-$table_name = $wpdb->prefix . "wp_pnfpb_ic_schedule_push_notifications";
+$table_name = $wpdb->prefix . "pnfpb_ic_schedule_push_notifications";
 $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $table_name));
 
-$table_name = $wpdb->prefix . "wp_pnfpb_ic_total_statistics_notifications";
+$table_name = $wpdb->prefix . "pnfpb_ic_total_statistics_notifications";
 $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $table_name));
 
 ?>

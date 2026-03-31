@@ -167,7 +167,7 @@ if (!class_exists("PNFPB_group_invite_notification_class")) {
 							) {
 								$target_userid_array_values = $wpdb->get_col(
 									$wpdb->prepare(
-										"SELECT userid FROM %i WHERE device_id LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,13,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) LIMIT 2000",
+										"SELECT userid FROM %i WHERE device_id LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,13,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 										$table_name,
 										"%onesignal%",
 										$invited_user
@@ -223,7 +223,7 @@ if (!class_exists("PNFPB_group_invite_notification_class")) {
 
 								$deviceids = $wpdb->get_col(
 										$wpdb->prepare(
-											"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,13,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 1000",
+											"SELECT DISTINCT(SUBSTRING_INDEX(device_id, '!!', 1)) FROM %i WHERE device_id NOT LIKE %s AND userid = %d AND (SUBSTRING(subscription_option,1,1) = '1' OR SUBSTRING(subscription_option,13,1) = '1' OR subscription_option = '' OR subscription_option IS NULL) ORDER BY id DESC LIMIT 50",
 											$table_name,
 											"%@N%",
 											$invited_user

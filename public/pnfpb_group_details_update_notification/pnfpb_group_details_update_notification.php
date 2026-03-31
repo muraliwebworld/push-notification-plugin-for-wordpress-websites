@@ -134,6 +134,14 @@ if (!class_exists("PNFPB_group_details_update_notification_class")) {
 								]
 							];
 						}
+						
+						$group_details_subscription_count = 0;
+
+						if (get_option('pnfpb_groupdetailsupdate_subscription_count') !== false && 
+							get_option('pnfpb_general_subscription_count') !== false &&
+							(get_option('pnfpb_groupdetailsupdate_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+							$group_details_subscription_count = intval(get_option('pnfpb_groupdetailsupdate_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+						}						
 
 						$PNFPB_WP_web_push_notification_class_obj = new PNFPB_web_push_notification_class();
 						$PNFPB_WP_web_push_notification_class_obj->PNFPB_web_push_notification(
@@ -149,7 +157,8 @@ if (!class_exists("PNFPB_group_details_update_notification_class")) {
 							0,
 							"groupdetailsupdate",
 							"yes",
-							$group_id	
+							$group_id,
+							$group_details_subscription_count
 						);						
 					}
 					
@@ -211,6 +220,13 @@ if (!class_exists("PNFPB_group_details_update_notification_class")) {
 						$url = "https://fcm.googleapis.com/fcm/send";
 
 						if (get_option("pnfpb_httpv1_push") === "1") {
+							$group_details_subscription_count = 0;
+
+							if (get_option('pnfpb_groupdetailsupdate_subscription_count') !== false && 
+								get_option('pnfpb_general_subscription_count') !== false &&
+								(get_option('pnfpb_groupdetailsupdate_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+								$group_details_subscription_count = intval(get_option('pnfpb_groupdetailsupdate_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+							}							
 							if (
 								get_option(
 									"pnfpb_ic_fcm_buddypressoptions_schedule_now_enable"
@@ -236,7 +252,8 @@ if (!class_exists("PNFPB_group_details_update_notification_class")) {
 										0,
 										"groupdetailsupdate",
 										"yes",
-										$group_id						
+										$group_id,
+										$group_details_subscription_count
 									]
 								);
 							} else {
@@ -255,7 +272,8 @@ if (!class_exists("PNFPB_group_details_update_notification_class")) {
 									0,
 									"groupdetailsupdate",
 									"yes",
-									$group_id					
+									$group_id,
+									$group_details_subscription_count
 								);
 							}
 						}

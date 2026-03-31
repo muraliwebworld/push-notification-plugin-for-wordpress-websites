@@ -13,7 +13,7 @@ use function is_string;
  *
  * This class implements the HeaderChecker interface and is responsible for checking the "alg" header in a token.
  */
-final class AlgorithmChecker implements HeaderChecker
+final readonly class AlgorithmChecker implements HeaderChecker
 {
     private const HEADER_NAME = 'alg';
 
@@ -21,8 +21,8 @@ final class AlgorithmChecker implements HeaderChecker
      * @param string[] $supportedAlgorithms
      */
     public function __construct(
-        private readonly array $supportedAlgorithms,
-        private readonly bool $protectedHeader = false
+        private array $supportedAlgorithms,
+        private bool $protectedHeader = false
     ) {
     }
 

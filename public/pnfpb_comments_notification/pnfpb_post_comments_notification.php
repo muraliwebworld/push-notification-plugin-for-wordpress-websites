@@ -235,6 +235,14 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 								];
 
 							}
+							
+							$comments_subscription_count = 0;
+
+							if (get_option('pnfpb_comments_subscription_count') !== false && 
+								get_option('pnfpb_general_subscription_count') !== false &&
+								(get_option('pnfpb_comments_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+									$comments_subscription_count= intval(get_option('pnfpb_comments_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+							}							
 
 							$PNFPB_WP_web_push_notification_class_obj = new PNFPB_web_push_notification_class();
 							$PNFPB_WP_web_push_notification_class_obj->PNFPB_web_push_notification(
@@ -251,11 +259,14 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 								$iconurl,
 								$iconurl,
 								$postcommentlink,
-								["click_url" => $postcommentlink],
+								["click_url" => $postcommentlink,"comment_id" => $comment_ID],
 								$target_subscription_array,
 								$postuserid,
 								$authorid,
-								"comments"
+								"comments",
+								"",
+								0,
+								$comments_subscription_count
 							);
 						}
 
@@ -315,23 +326,37 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 										time(),
 										"PNFPB_onesignal_schedule_push_notification_hook",
 										[
-											$activity_id,
-											$activitytitle,
-											$localactivitycontent,
-											$activitylink,
-											$imageurl,
+											0,
+											$commenttitle,
+											mb_substr(
+												stripslashes(
+													wp_strip_all_tags(trim($localpostcontent))
+												),
+												0,
+												130,
+												"UTF-8"
+											),
+											$postcommentlink,
+											$iconurl,
 											$target_userid_array,
 										]
 									);
 								} else {
 							$PNFPB_WP_onesignal_notification_class_obj = new PNFPB_onesignal_notification_class();
 							$PNFPB_WP_onesignal_notification_class_obj->PNFPB_onesignal_notification(
-										$activity_id,
-										$activitytitle,
-										$localactivitycontent,
-										$activitylink,
-										$imageurl,
-										$target_userid_array
+											0,
+											$commenttitle,
+											mb_substr(
+												stripslashes(
+													wp_strip_all_tags(trim($localpostcontent))
+												),
+												0,
+												130,
+												"UTF-8"
+											),
+											$postcommentlink,
+											$iconurl,
+											$target_userid_array,
 									);
 								}
 							} else {
@@ -382,22 +407,36 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 										time(),
 										"PNFPB_onesignal_schedule_push_notification_hook",
 										[
-											$activity_id,
-											$activitytitle,
-											$localactivitycontent,
-											$activitylink,
-											$imageurl,
+											0,
+											$commenttitle,
+											mb_substr(
+												stripslashes(
+													wp_strip_all_tags(trim($localpostcontent))
+												),
+												0,
+												130,
+												"UTF-8"
+											),
+											$postcommentlink,
+											$iconurl,
 											$mergeduserids_array,
 										]
 									);
 								} else {
 							$PNFPB_WP_onesignal_notification_class_obj = new PNFPB_onesignal_notification_class();
 							$PNFPB_WP_onesignal_notification_class_obj->PNFPB_onesignal_notification(
-										$activity_id,
-										$activitytitle,
-										$localactivitycontent,
-										$activitylink,
-										$imageurl,
+										0,
+										$commenttitle,
+										mb_substr(
+											stripslashes(
+												wp_strip_all_tags(trim($localpostcontent))
+											),
+											0,
+											130,
+											"UTF-8"
+										),
+										$postcommentlink,
+										$iconurl,
 										$mergeduserids_array
 									);
 								}
@@ -408,6 +447,13 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 							$regid = $mergeddeviceids;
 
 							if (get_option("pnfpb_httpv1_push") === "1") {
+								$comments_subscription_count = 0;
+
+								if (get_option('pnfpb_comments_subscription_count') !== false && 
+									get_option('pnfpb_general_subscription_count') !== false &&
+									(get_option('pnfpb_comments_subscription_count') > 0 || get_option('pnfpb_general_subscription_count') > 0)) {
+									$comments_subscription_count = intval(get_option('pnfpb_comments_subscription_count'))+intval(get_option('pnfpb_general_subscription_count'));
+								}								
 								if (
 									get_option("pnfpb_ic_fcm_comments_schedule_now_enable") &&
 									get_option("pnfpb_ic_fcm_comments_schedule_now_enable") ===
@@ -430,12 +476,15 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 											$iconurl,
 											$iconurl,
 											$postcommentlink,
-											["click_url" => $postcommentlink],
+											["click_url" => $postcommentlink,"comment_id" => $comment_ID],
 											[],
 											[],
 											$postuserid,
 											$authorid,
 											"comments",
+											"",
+											0,
+											$comments_subscription_count
 										]
 									);
 								} else {
@@ -454,12 +503,15 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 										$iconurl,
 										$iconurl,
 										$postcommentlink,
-										["click_url" => $postcommentlink],
+										["click_url" => $postcommentlink,"comment_id" => $comment_ID],
 										[],
 										[],
 										$postuserid,
 										$authorid,
-										"comments"
+										"comments",
+										"",
+										0,
+										$comments_subscription_count
 									);
 								}
 							}

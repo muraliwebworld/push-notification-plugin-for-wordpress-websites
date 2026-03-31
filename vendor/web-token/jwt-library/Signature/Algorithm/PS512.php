@@ -6,7 +6,7 @@ namespace Jose\Component\Signature\Algorithm;
 
 use Override;
 
-final class PS512 extends RSAPSS
+final readonly class PS512 extends RSAPSS
 {
     #[Override]
     public function name(): string

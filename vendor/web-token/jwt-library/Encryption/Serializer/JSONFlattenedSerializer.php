@@ -14,7 +14,7 @@ use function array_key_exists;
 use function count;
 use function is_array;
 
-final class JSONFlattenedSerializer implements JWESerializer
+final readonly class JSONFlattenedSerializer implements JWESerializer
 {
     public const NAME = 'jwe_json_flattened';
 
