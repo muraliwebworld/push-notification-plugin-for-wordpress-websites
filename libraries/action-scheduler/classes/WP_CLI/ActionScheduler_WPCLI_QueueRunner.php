@@ -1,7 +1,8 @@
 <?php
-
 use Action_Scheduler\WP_CLI\ProgressBar;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
  * WP CLI Queue runner.
  *

@@ -12,7 +12,7 @@ use Override;
 use function count;
 use function is_array;
 
-final readonly class JSONFlattenedSerializer extends Serializer
+final class JSONFlattenedSerializer extends Serializer
 {
     public const NAME = 'jws_json_flattened';
 

@@ -15,7 +15,7 @@ use function count;
 use function is_array;
 use function sprintf;
 
-final readonly class CompactSerializer extends Serializer
+final class CompactSerializer extends Serializer
 {
     public const NAME = 'jws_compact';
 

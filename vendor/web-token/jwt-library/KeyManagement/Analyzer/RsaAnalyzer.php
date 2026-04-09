@@ -13,7 +13,7 @@ use function is_string;
 use function strlen;
 use const STR_PAD_RIGHT;
 
-final readonly class RsaAnalyzer implements KeyAnalyzer
+final class RsaAnalyzer implements KeyAnalyzer
 {
     #[Override]
     public function analyze(JWK $jwk, MessageBag $bag): void

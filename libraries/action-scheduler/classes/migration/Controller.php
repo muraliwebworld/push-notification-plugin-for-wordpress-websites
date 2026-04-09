@@ -1,12 +1,13 @@
 <?php
-
 namespace Action_Scheduler\Migration;
 
 use ActionScheduler_DataController;
 use ActionScheduler_LoggerSchema;
 use ActionScheduler_StoreSchema;
 use Action_Scheduler\WP_CLI\ProgressBar;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
  * Class Controller
  *

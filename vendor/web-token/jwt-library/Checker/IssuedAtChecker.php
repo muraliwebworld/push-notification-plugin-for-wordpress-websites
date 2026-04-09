@@ -12,7 +12,7 @@ use function is_int;
 /**
  * This class is a claim checker. When the "iat" is present, it will compare the value with the current timestamp.
  */
-final readonly class IssuedAtChecker implements ClaimChecker, HeaderChecker
+final class IssuedAtChecker implements ClaimChecker, HeaderChecker
 {
     private const NAME = 'iat';
 

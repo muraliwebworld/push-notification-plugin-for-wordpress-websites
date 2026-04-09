@@ -6,7 +6,7 @@ namespace Jose\Component\Signature\Algorithm;
 
 use Override;
 
-final readonly class ES384 extends ECDSA
+final class ES384 extends ECDSA
 {
     #[Override]
     public function name(): string

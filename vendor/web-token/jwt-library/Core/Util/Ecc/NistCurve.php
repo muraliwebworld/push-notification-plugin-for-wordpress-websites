@@ -26,7 +26,7 @@ use Brick\Math\BigInteger;
 /**
  * @internal
  */
-final readonly class NistCurve
+final class NistCurve
 {
     /**
      * Returns an NIST P-256 curve.

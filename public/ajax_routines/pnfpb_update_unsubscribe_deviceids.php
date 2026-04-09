@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
 * Ajax routine to delete device id from database after user opts to un-subscribe push notifications.
 *

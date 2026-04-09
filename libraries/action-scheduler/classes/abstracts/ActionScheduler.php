@@ -1,8 +1,9 @@
 <?php
-
 use Action_Scheduler\WP_CLI\Migration_Command;
 use Action_Scheduler\Migration\Controller;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
  * Class ActionScheduler
  *

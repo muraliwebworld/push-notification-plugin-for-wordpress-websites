@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 if (!class_exists("WP_List_Table")) {
     require_once ABSPATH . "wp-admin/includes/class-wp-list-table.php";
 }
@@ -728,7 +731,7 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
         public function prepare_items($search = "")
         {
 			if (isset($_REQUEST["_wpnonce"]) && !wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST["_wpnonce"])), "pnfpb_onetime_notifications_list")) {
-				die("wnonce failure");
+                wp_die( esc_html__( 'Security validation failed.', 'push-notification-for-post-and-buddypress' ) );
 			} else {			
 				//data
 				if (isset($_REQUEST["s"])) {
@@ -895,16 +898,14 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
             //Detect when a bulk action is being triggered...
             if ("delete" === $this->current_action()) {
                 // In our file that handles the request, verify the nonce.
-				$push_notification_id = sanitize_text_field(
-					wp_unslash($_REQUEST["pushnotificationid"])
-				);
+				$push_notification_id = absint( wp_unslash( $_REQUEST['pushnotificationid'] ) );
 				
                 $nonce = esc_attr(
                     sanitize_text_field(wp_unslash($_REQUEST["_wpdeletenonce"]))
                 );
 
                 if (!wp_verify_nonce($nonce, 'delete_item_' . $push_notification_id)) {
-                    die("wnonce failure while deleting item");
+					wp_die( esc_html__( 'Security validation failed while deleting item.', 'push-notification-for-post-and-buddypress' ) );
                 } else {
                     global $wpdb;
 
@@ -912,7 +913,10 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
                         $wpdb->prefix . "pnfpb_ic_schedule_push_notifications";
 
                     $notifications = $wpdb->get_results(
-                        "SELECT * FROM {$notification_table_name} WHERE `id` = {$push_notification_id} "
+                        $wpdb->prepare(
+                            "SELECT * FROM {$notification_table_name} WHERE `id` = %d",
+                            $push_notification_id
+                        )
                     );
 
                     if (count($notifications) > 0) {
@@ -958,28 +962,25 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
             }
 
             if ("duplicate" === $this->current_action()) {
-				$push_notification_id = sanitize_text_field(
-					wp_unslash($_REQUEST["pushnotificationid"])
-				);
+				$push_notification_id = absint( wp_unslash( $_REQUEST['pushnotificationid'] ) );
 				
                 $nonce = esc_attr(
                     sanitize_text_field(wp_unslash($_REQUEST["_wpduplicatenonce"]))
                 );
 
                 if (!wp_verify_nonce($nonce, 'duplicate_item_' . $push_notification_id)) {
-                    die("wnonce failure while duplicating item");
+					wp_die( esc_html__( 'Security validation failed while duplicating item.', 'push-notification-for-post-and-buddypress' ) );
                 } else {
                     global $wpdb;
 
                     $notification_table_name =
                         $wpdb->prefix . "pnfpb_ic_schedule_push_notifications";
 
-                    $push_notification_id = sanitize_text_field(
-                        wp_unslash($_REQUEST["pushnotificationid"])
-                    );
-
                     $notifications = $wpdb->get_results(
-                        "SELECT * FROM {$notification_table_name} WHERE `id` = {$push_notification_id} "
+						$wpdb->prepare(
+							"SELECT * FROM {$notification_table_name} WHERE `id` = %d",
+							$push_notification_id
+						)
                     );
 
                     $onetime_recurring_day_number = null;
@@ -1050,7 +1051,7 @@ if (!class_exists("PNFPB_ICFM_onetime_push_notifications_List")) {
                 );
 
                 if (!wp_verify_nonce($nonce, "pnfpb_onetime_notifications_list")) {
-                    die("wnonce failure");
+					wp_die( esc_html__( 'Security validation failed.', 'push-notification-for-post-and-buddypress' ) );
                 } else {
                     $selected_day_push_notification_cancel = date(
                         "Y/m/d H:i:s",

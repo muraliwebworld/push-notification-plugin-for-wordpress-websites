@@ -42,7 +42,7 @@ use const SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING;
  *  SOFTWARE.
  */
 
-final readonly class Base64UrlSafe
+final class Base64UrlSafe
 {
     public static function encode(#[SensitiveParameter] string $binString): string
     {

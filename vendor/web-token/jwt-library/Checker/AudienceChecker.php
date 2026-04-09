@@ -12,7 +12,7 @@ use function is_string;
 /**
  * Represents a class that checks the audience claim and header in a JWT token.
  */
-final readonly class AudienceChecker implements ClaimChecker, HeaderChecker
+final class AudienceChecker implements ClaimChecker, HeaderChecker
 {
     private const CLAIM_NAME = 'aud';
 

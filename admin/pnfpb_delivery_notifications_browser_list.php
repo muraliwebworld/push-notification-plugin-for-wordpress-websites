@@ -1,4 +1,9 @@
-	<h1 class="pnfpb_ic_push_settings_header">
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+?>
+<h1 class="pnfpb_ic_push_settings_header">
 	<span class="dashicons dashicons-desktop" style="font-size:26px;width:26px;height:26px;color:#0D9488;margin-top:3px;"></span>
 	<?php echo esc_html(
      __(

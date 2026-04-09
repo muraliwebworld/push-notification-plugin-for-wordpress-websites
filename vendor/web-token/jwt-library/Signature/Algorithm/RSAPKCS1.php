@@ -13,7 +13,7 @@ use function extension_loaded;
 use function in_array;
 use function sprintf;
 
-abstract readonly class RSAPKCS1 implements SignatureAlgorithm
+abstract class RSAPKCS1 implements SignatureAlgorithm
 {
     public function __construct()
     {

@@ -5,6 +5,10 @@
  * via PNFPB plugin Admin settings to WordPress options table for Push notifications.
  ************************************************************************************/
 
+	if ( ! defined( 'ABSPATH' ) ) {
+		exit; // Exit if accessed directly
+	}
+
 	if (isset($_POST['calltype']) && $_POST['calltype'] === 'pnfpb_service_account_upload') {
 		// Check the nonce first
   		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field(wp_unslash($_POST['nonce'])), 'icpushadmincallback' ) ) {

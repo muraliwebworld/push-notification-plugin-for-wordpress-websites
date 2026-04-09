@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 global $wpdb;
 if (
 	( isset( $_POST["_wpnonce"] ) ) && ( isset( $_POST["submit"] ) || isset( $_POST["disable_sw_file"] ) ) &&

@@ -13,7 +13,7 @@ use function is_string;
  *
  * This class implements the HeaderChecker interface and is responsible for checking the "alg" header in a token.
  */
-final readonly class AlgorithmChecker implements HeaderChecker
+final class AlgorithmChecker implements HeaderChecker
 {
     private const HEADER_NAME = 'alg';
 

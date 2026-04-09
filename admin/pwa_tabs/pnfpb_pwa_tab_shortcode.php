@@ -2,6 +2,9 @@
 /* PWA Sub-tab: Shortcode
  * Included by pnfpb_admin_pwa_app_settings.php
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div id="pnfpb-pwa-shortcode" class="pnfpb-pwa-settings-tab">
 

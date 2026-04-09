@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 			$register_settings_args = array(
     				'sanitize_callback' => 'sanitize_text_field'
    				);
@@ -72,6 +74,17 @@
 			register_setting("pnfpb_icfcm_group_config", "pnfpb_webpush_push_firebase", $register_settings_args);
 			register_setting("pnfpb_icfcm_group_config", "pnfpb_webpush_firebase_public_key", $register_settings_args);
 			register_setting("pnfpb_icfcm_group_config", "pnfpb_webpush_firebase_private_key", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_enable", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_enable_on_demand", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_enable_post_editor", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_provider", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_endpoint", $register_settings_args_for_url);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_api_key", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_model", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_max_input_chars", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_share_full_content", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_enable_send_time", $register_settings_args);
+            register_setting("pnfpb_icfcm_group_ai_assistant", "pnfpb_ai_assistant_enable_audience", $register_settings_args);
             register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_prompt_style",$register_settings_args);
             register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_prompt_on_off",$register_settings_args);
             register_setting("pnfpb_icfcm_group", "pnfpb_ic_fcm_prompt_style3",$register_settings_args);

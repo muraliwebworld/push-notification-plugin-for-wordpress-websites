@@ -11,7 +11,7 @@ use function sprintf;
  * This class implements a claim and header checker that checks if the value is equal to the expected value.
  * @see \Jose\Tests\Component\Checker\IsEqualCheckerTest
  */
-final readonly class IsEqualChecker implements ClaimChecker, HeaderChecker
+final class IsEqualChecker implements ClaimChecker, HeaderChecker
 {
     /**
      * @param string $key                 The claim or header parameter name to check.

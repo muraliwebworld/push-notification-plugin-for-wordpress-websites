@@ -14,7 +14,7 @@ use function sprintf;
 /**
  * @internal
  */
-final readonly class KeyChecker
+final class KeyChecker
 {
     public static function checkKeyUsage(JWK $key, string $usage): void
     {

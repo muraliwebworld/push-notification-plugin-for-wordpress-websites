@@ -50,6 +50,7 @@ if (!class_exists("PNFPB_activities_comments_notification_class")) {
 					(get_option("pnfpb_onesignal_push") === "1" ||
 						get_option("pnfpb_httpv1_push") === "1" ||
 						get_option("pnfpb_progressier_push") === "1" ||
+					    $webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1' ||
 						get_option("pnfpb_webtoapp_push") === "1"))
 			) {
 				global $wpdb;

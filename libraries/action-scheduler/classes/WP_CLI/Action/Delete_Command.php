@@ -1,7 +1,8 @@
 <?php
-
 namespace Action_Scheduler\WP_CLI\Action;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
  * WP-CLI command: action-scheduler action delete
  */

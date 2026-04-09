@@ -11,7 +11,7 @@ use RuntimeException;
 use function extension_loaded;
 use const OPENSSL_RAW_DATA;
 
-abstract readonly class AESGCM implements ContentEncryptionAlgorithm
+abstract class AESGCM implements ContentEncryptionAlgorithm
 {
     public function __construct()
     {

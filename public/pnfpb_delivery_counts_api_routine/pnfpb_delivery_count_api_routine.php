@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 	// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 	// This API routines uses 2 stage AES-256-GCM decryption method to decode data sent in Public REST API
 	// It decrypts sanitized post REST data "encrypted_data" using AES-256-GCM algorithm method,

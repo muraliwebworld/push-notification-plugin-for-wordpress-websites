@@ -17,7 +17,7 @@ use function extension_loaded;
 use function in_array;
 use function sprintf;
 
-abstract readonly class ECDSA implements SignatureAlgorithm
+abstract class ECDSA implements SignatureAlgorithm
 {
     public function __construct()
     {

@@ -3,6 +3,9 @@
  * Included by pnfpb_admin_pwa_app_settings.php
  * Expects: $pnfpb_ic_pwa_protocol_name_array, $pnfpb_ic_pwa_protocol_url_array
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div id="pnfpb-pwa-protocol-handler" class="pnfpb-pwa-settings-tab">
 
@@ -84,7 +87,7 @@
 							   id="pnfpb_ic_pwa_protocol_url_<?php echo esc_attr( $pnfpb_protocol_index ); ?>"
 							   name="pnfpb_ic_pwa_protocol_url[]"
 							   type="text"
-							   placeholder="<?php esc_attr_e( 'e.g. /handle/%s', 'push-notification-for-post-and-buddypress' ); ?>"
+							   placeholder="<?php esc_attr_e( 'e.g. /handle/', 'push-notification-for-post-and-buddypress' ); ?>"
 							   value="<?php echo esc_attr( $pnfpb_protocol_url_value ); ?>" />
 					</div>
 

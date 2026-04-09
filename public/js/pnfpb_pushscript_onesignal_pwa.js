@@ -187,6 +187,8 @@ $j(document).ready(function() {
 			   {
     	           if (response != 'duplicate') {
 					   
+					document.cookie = "pnfpb_group_push_notification_"+leave_group_id + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+					   
 					$j(leave_group_subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 					   
 					$j(leave_group_unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
@@ -258,6 +260,8 @@ $j(document).ready(function() {
 			     if (response != 'fail')
 			     {
     	             if (response != 'duplicate') {
+						 
+						document.cookie = "pnfpb_group_push_notification_"+leave_group_id + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     	                                                        
 						$j(leave_group_subscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 						$j(leave_group_unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
@@ -415,6 +419,8 @@ $j(document).ready(function() {
 			                	if (response != 'fail')
 			                    {
     	                           if (response != 'duplicate'){
+									   
+									   document.cookie = "pnfpb_group_push_notification_"+ groupId + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     	                                                        
 										$j(unsubscribebuttonname).removeClass( "subscribe-display-on" ).addClass( "subscribe-display-off" );
 										$j(subscribebuttonname).removeClass( "subscribe-display-off" ).addClass( "subscribe-display-on" );

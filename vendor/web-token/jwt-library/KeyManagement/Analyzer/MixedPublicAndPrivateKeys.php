@@ -7,7 +7,7 @@ namespace Jose\Component\KeyManagement\Analyzer;
 use Jose\Component\Core\JWKSet;
 use Override;
 
-final readonly class MixedPublicAndPrivateKeys implements KeysetAnalyzer
+final class MixedPublicAndPrivateKeys implements KeysetAnalyzer
 {
     #[Override]
     public function analyze(JWKSet $jwkset, MessageBag $bag): void

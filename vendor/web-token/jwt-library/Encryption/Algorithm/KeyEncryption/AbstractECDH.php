@@ -26,7 +26,7 @@ use function is_string;
 use function sprintf;
 use function strlen;
 
-abstract readonly class AbstractECDH implements KeyAgreement
+abstract class AbstractECDH implements KeyAgreement
 {
     #[Override]
     public function allowedKeyTypes(): array

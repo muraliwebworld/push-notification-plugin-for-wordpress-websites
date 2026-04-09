@@ -40,7 +40,7 @@
 	line-height:1.0em;
 }
 
-.pnfpb_ic_push_settings_upload_icon, .pnfpb_ic_push_settings_upload_icon_shortcode {
+.pnfpb_ic_push_settings_upload_icon {
 	width:100%;
     white-space:normal;
     word-wrap:break-word;
@@ -55,6 +55,11 @@
   	margin: 4px 2px !important;
   	cursor: pointer !important;
   	border-radius: 8px !important;	
+}
+.pnfpb_ic_push_settings_upload_icon_shortcode {
+	font-size: 13px !important;
+	padding: 4px 8px !important;
+	width: auto !important;
 }
 .devicetokens .column-id { width: 15%; }
 .devicetokens .column-device_id { width: 45% !important; }
@@ -1648,6 +1653,18 @@ td.pnfpb_ic_push_settings_table_column {
 	border-bottom: none;
 	background: #EEF2FF;
 	box-shadow: 0 -3px 10px rgba(67,56,202,0.18);
+}
+
+/* AI assistant — Teal */
+.pnfpb-main-nav-bar > a.pnfpb-main-tab--aiassistant                       { border-top-color: #0F766E; }
+.pnfpb-main-nav-bar > a.pnfpb-main-tab--aiassistant .pnfpb-main-tab__icon { background: #0F766E; }
+.pnfpb-main-nav-bar > a.pnfpb-main-tab--aiassistant:hover                  { color: #115E59; border-top-color: #0F766E; }
+.pnfpb-main-nav-bar > a.pnfpb-main-tab--aiassistant.nav-tab-active {
+	color: #115E59;
+	border-color: #0F766E;
+	border-bottom: none;
+	background: #F0FDFA;
+	box-shadow: 0 -3px 10px rgba(15,118,110,0.18);
 }
 
 /* Send Push — Emerald */

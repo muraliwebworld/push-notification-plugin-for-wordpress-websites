@@ -6,7 +6,7 @@ namespace Jose\Component\Signature\Algorithm;
 
 use Override;
 
-final readonly class RS512 extends RSAPKCS1
+final class RS512 extends RSAPKCS1
 {
     #[Override]
     public function name(): string

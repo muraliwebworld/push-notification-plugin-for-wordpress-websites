@@ -1,10 +1,13 @@
 <?php
-
 use ActionScheduler_Store as Store;
 use Action_Scheduler\Migration\Runner;
 use Action_Scheduler\Migration\Config;
 use Action_Scheduler\Migration\Controller;
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
  * Class ActionScheduler_HybridStore
  *

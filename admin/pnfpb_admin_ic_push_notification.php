@@ -5,6 +5,9 @@
 *
 * @since 1.0.0
 */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <h1 class="pnfpb_ic_push_settings_header">
 	<span class="dashicons dashicons-bell" style="font-size:26px;width:26px;height:26px;color:#2271b1;margin-top:3px;"></span>
@@ -428,21 +431,26 @@
 				<?php echo esc_html(
     				__("Check out the", "push-notification-for-post-and-buddypress")
  				); ?>
-				<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/"><?php echo esc_html(
+				<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/" target="_blank"><?php echo esc_html(
     				__("support forum", "push-notification-for-post-and-buddypress")
 				); ?></a>
 				<?php echo esc_html(
     				__("and", "push-notification-for-post-and-buddypress")
 				); ?>
-				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F"><?php echo esc_html(
+				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F" target="_blank"><?php echo esc_html(
     				__("FAQ", "push-notification-for-post-and-buddypress")
  				); ?></a>.
 			</li>
 			<li>
+				<a href="https://wiki.pnfpb.com/" target="_blank">
+					<?php echo esc_html( __( "Knowledgebase", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>			
+			</li>			
+			<li>
 				<?php echo esc_html(
     				__("Visit", "push-notification-for-post-and-buddypress")
  				); ?>
-				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/"><?php echo esc_html(
+				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/" target="_blank"><?php echo esc_html(
     				__("plugin homepage", "push-notification-for-post-and-buddypress")
 				); ?></a>.
 			</li>
@@ -464,7 +472,7 @@
 		</h4>
 		<span class="pnfpb-sidebar-rate-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
 		<p>
-			<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/reviews/#new-post"><?php echo esc_html(
+			<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/reviews/#new-post" target="_blank"><?php echo esc_html(
     			__("Leave a rating &amp; feedback", "push-notification-for-post-and-buddypress")
  			); ?></a>
 		</p>
@@ -478,7 +486,7 @@
  			); ?>
 		</h4>
 		<p>
-			<a href="https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/"><?php echo esc_html(
+			<a href="https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/" target="_blank"><?php echo esc_html(
     			__("Donate to support this plugin", "push-notification-for-post-and-buddypress")
  			); ?></a>
 		</p>
@@ -519,10 +527,15 @@
 		</h4>
 		<ul>
 			<li>
-				<a href="https://www.muraliwebworld.com" target="_blank"><?php echo esc_html(
+				<a href="https://www.pnfpb.com" target="_blank"><?php echo esc_html(
     				__("Plugin support site", "push-notification-for-post-and-buddypress")
  				); ?></a>
 			</li>
+			<li>
+				<a href="https://wiki.pnfpb.com/"  target="_blank">
+					<?php echo esc_html( __( "Plugin documentation", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>			
+			</li>			
 		</ul>
 	</div>
 	

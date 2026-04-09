@@ -12,6 +12,9 @@
  * @since 2.08
  * @updated 2.30.0 — split into config_tab/ sub-files with modern card layout
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div class="pnfpb-config-intro">
 	<div class="pnfpb-config-intro-icon">

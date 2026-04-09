@@ -6,7 +6,7 @@ namespace Jose\Component\Encryption\Algorithm\KeyEncryption;
 
 use Override;
 
-final readonly class A256GCMKW extends AESGCMKW
+final class A256GCMKW extends AESGCMKW
 {
     #[Override]
     public function name(): string

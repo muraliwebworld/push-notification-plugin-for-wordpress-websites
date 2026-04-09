@@ -16,7 +16,7 @@ use function count;
 use function is_array;
 use function sprintf;
 
-final readonly class CompactSerializer implements JWESerializer
+final class CompactSerializer implements JWESerializer
 {
     public const NAME = 'jwe_compact';
 

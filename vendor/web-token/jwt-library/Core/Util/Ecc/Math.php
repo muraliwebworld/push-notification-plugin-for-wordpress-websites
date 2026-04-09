@@ -10,7 +10,7 @@ use Jose\Component\Core\Util\BigInteger as CoreBigInteger;
 /**
  * @internal
  */
-final readonly class Math
+final class Math
 {
     public static function equals(BigInteger $first, BigInteger $other): bool
     {

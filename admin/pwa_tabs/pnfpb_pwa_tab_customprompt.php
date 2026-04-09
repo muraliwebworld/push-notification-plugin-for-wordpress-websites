@@ -2,6 +2,9 @@
 /* PWA Sub-tab: Custom Prompt
  * Included by pnfpb_admin_pwa_app_settings.php
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div id="pnfpb-pwa-custom-prompt" class="pnfpb-pwa-settings-tab">
 

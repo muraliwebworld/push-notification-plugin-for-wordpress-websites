@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 $encryption_key = get_option("PNFPB_icfcm_integrate_app_secret_code");
 
 $encrypted = sanitize_text_field($request["token"]);

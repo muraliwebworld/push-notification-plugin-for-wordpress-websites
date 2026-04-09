@@ -15,7 +15,7 @@ use function array_key_exists;
 use function count;
 use function is_array;
 
-final readonly class JSONGeneralSerializer implements JWESerializer
+final class JSONGeneralSerializer implements JWESerializer
 {
     public const NAME = 'jwe_json_general';
 

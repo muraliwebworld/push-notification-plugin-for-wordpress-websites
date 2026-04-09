@@ -8,7 +8,7 @@ use Jose\Component\Core\JWK;
 use LogicException;
 use Override;
 
-final readonly class ECDHSS extends AbstractECDH
+final class ECDHSS extends AbstractECDH
 {
     #[Override]
     public function name(): string

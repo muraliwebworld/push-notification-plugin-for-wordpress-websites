@@ -2,6 +2,9 @@
 /* PWA Category-tab: Progressier (third-party PWA)
  * Included by pnfpb_admin_pwa_app_settings.php
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div id="pnfpb-pwa-thirdparty-tab-name" class="pnfpb-thirdparty-pwa-settings-tab pnfpb-category-pwa-settings-tab">
 

@@ -9,7 +9,7 @@ use InvalidArgumentException;
 /**
  * @internal
  */
-final readonly class Hash
+final class Hash
 {
     /**
      * @param positive-int $length

@@ -13,7 +13,7 @@ use RuntimeException;
 use function in_array;
 use function is_string;
 
-abstract readonly class AESKW implements KeyWrapping
+abstract class AESKW implements KeyWrapping
 {
     public function __construct()
     {

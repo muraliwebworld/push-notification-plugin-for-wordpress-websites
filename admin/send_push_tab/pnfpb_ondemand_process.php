@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 $onetime_push_id = "";
 $onetime_push_title = "";

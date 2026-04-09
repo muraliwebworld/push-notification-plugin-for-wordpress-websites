@@ -3,6 +3,9 @@
 * Firebase, Onesignal, Progressier and webtoapp configuration settings fields for push notification
 * @Since 2.08
 */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <h2 class="pnfpb_ic_push_settings_header2">
 <?php echo esc_html(
@@ -64,7 +67,7 @@
     <li>
         <?php echo esc_html(
               __(
-              "To get Firebase config fields (for fields 2 to 8 in admin firebase settings)",
+              "To get Firebase config fields (for fields Api key, Auth domain, DB url, Project ID, Storage bucket, Sender ID, App ID, Measurement ID in admin firebase settings)",
               "push-notification-for-post-and-buddypress"
               )
           ); ?>
@@ -80,7 +83,7 @@
     <li>
         <?php echo esc_html(
               __(
-              "Project settings > General under your apps section > click on config button to view configuration fields",
+              "Go to Project settings > Go to General -> under your apps section > click on config button to view above configuration fields",
               "push-notification-for-post-and-buddypress"
               )
           ); ?>
@@ -88,7 +91,7 @@
     <li>
         <?php echo esc_html(
               __(
-                  "To get Firebase public key (for field 9 in admin firebase settings)",
+                  "To get Firebase Web Push certificate in admin firebase settings",
                   "push-notification-for-post-and-buddypress"
               )
           ); ?>
@@ -342,21 +345,53 @@
             </tr>
             <tr class="pnfpb_ic_push_settings_table_row">
                 <td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-                    <label for="pnfpb_ic_fcm_measurementId">
-                        <?php echo esc_html(
-                        __(
-                                "MeasurementId (available when Analytics enabled in Firebase project)",
-                            "push-notification-for-post-and-buddypress"
-                        )
-                        ); ?>
-                    </label>
-                    <br/>
-                    <input class="pnfpb_ic_push_settings_table_value_column_input_field" 
-                    id="pnfpb_ic_fcm_measurementId" 
-                    name="pnfpb_ic_fcm_measurementId" 
-                    type="text" value="<?php echo esc_attr(
-                        get_option("pnfpb_ic_fcm_measurementId")
-                    ); ?>" />
+                    <div style="display:flex; gap:20px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <label for="pnfpb_ic_fcm_measurementId">
+                                <?php echo esc_html(
+                                __(
+                                        "MeasurementId (available when Analytics enabled in Firebase project)",
+                                    "push-notification-for-post-and-buddypress"
+                                )
+                                ); ?>
+                            </label>
+                            <br/>
+                            <input class="pnfpb_ic_push_settings_table_value_column_input_field" 
+                            id="pnfpb_ic_fcm_measurementId" 
+                            name="pnfpb_ic_fcm_measurementId" 
+                            type="text" value="<?php echo esc_attr(
+                                get_option("pnfpb_ic_fcm_measurementId")
+                            ); ?>" />
+                        </div>
+                        <div style="min-width:130px; text-align:center;">
+                            <label for="pnfpb_ic_fcm_upload_icon">
+                                <?php echo esc_html(
+                                    __(
+                                        "FCM Push Icon(16x16 pixels)",
+                                        "push-notification-for-post-and-buddypress"
+                                    )
+                                ); ?>
+                            </label>
+                            <br/>
+                            <input type="button" value="<?php echo esc_attr(
+                                __(
+                                       "Upload Icon",
+                                    "push-notification-for-post-and-buddypress"
+                                    )
+                                ); ?>" id="pnfpb_ic_fcm_upload_button" class="button button-secondary" />
+                            <input type="hidden" id="pnfpb_ic_fcm_upload_icon" 
+                            name="pnfpb_ic_fcm_upload_icon" 
+                            value="<?php echo esc_attr(
+                                get_option("pnfpb_ic_fcm_upload_icon")
+                            ); ?>" />
+                            <div style="display:block;width:100%; overflow:hidden; text-align:center;">
+                                <div id="pnfpb_ic_fcm_upload_preview" style="background-image: url(<?php echo esc_url(
+                                    get_option("pnfpb_ic_fcm_upload_icon")
+                                ); ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:10px auto;background-position:center center;background-repeat:no-repeat;background-size:cover;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>			
             <tr class="pnfpb_ic_push_settings_table_row">
@@ -378,47 +413,6 @@
                     ); ?>" />
                 </td>
             </tr>
-            <tr class="pnfpb_ic_push_settings_table_row">
-                <td class="pnfpb_ic_push_settings_table_label_column column-columnname">
-                    <label for="pnfpb_ic_fcm_upload_icon">
-                        <?php echo esc_html(
-                            __(
-                                "FCM Push Icon(16x16 pixels)",
-                                "push-notification-for-post-and-buddypress"
-                            )
-                        ); ?>
-                    </label>
-                    <br/>          
-                    <table>
-                        <tr>
-                            <td class="column-columnname">
-                                <input type="button" value="<?php echo esc_attr(
-                                    __(
-                                           "Upload Icon",
-                                        "push-notification-for-post-and-buddypress"
-                                        )
-                                    ); ?>" id="pnfpb_ic_fcm_upload_button" class="pnfpb_ic_push_settings_upload_icon" />
-                                    <input type="hidden" id="pnfpb_ic_fcm_upload_icon" 
-                                    name="pnfpb_ic_fcm_upload_icon" 
-                                    value="<?php echo esc_attr(
-                                        get_option("pnfpb_ic_fcm_upload_icon")
-                                    ); ?>" 
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="column-columnname">
-                                <div style="display:block;width:100%; overflow:hidden; text-align:center;">
-                                    <div id="pnfpb_ic_fcm_upload_preview" style="background-image: url(<?php echo esc_url(
-                            get_option("pnfpb_ic_fcm_upload_icon")
-                        ); ?>);width:32px; height:32px;overflow:hidden;border-radius:50%;margin:20px auto;background-position:center center;background-repeat:no-repeat;background-size:cover;">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>				
           </tbody>
     </table>
 </div>		

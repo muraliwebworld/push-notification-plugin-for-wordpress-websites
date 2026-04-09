@@ -12,7 +12,7 @@ use function extension_loaded;
 use function strlen;
 use const OPENSSL_RAW_DATA;
 
-abstract readonly class AESCBCHS implements ContentEncryptionAlgorithm
+abstract class AESCBCHS implements ContentEncryptionAlgorithm
 {
     public function __construct()
     {

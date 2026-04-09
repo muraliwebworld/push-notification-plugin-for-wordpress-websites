@@ -8,7 +8,7 @@ use AESKW\A192KW as Wrapper;
 use AESKW\Wrapper as WrapperInterface;
 use Override;
 
-final readonly class A192KW extends AESKW
+final class A192KW extends AESKW
 {
     #[Override]
     public function name(): string

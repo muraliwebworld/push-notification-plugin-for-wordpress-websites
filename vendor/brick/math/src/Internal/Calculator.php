@@ -28,7 +28,7 @@ use function substr;
  *
  * @internal
  */
-abstract readonly class Calculator
+abstract class Calculator
 {
     /**
      * The maximum exponent value allowed for the pow() method.

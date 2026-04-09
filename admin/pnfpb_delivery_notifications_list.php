@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+?>
 <h1 class="pnfpb_ic_push_settings_header">
 	<span class="dashicons dashicons-chart-bar" style="font-size:26px;width:26px;height:26px;color:#1D4ED8;margin-top:3px;"></span>
 	<?php echo esc_html(
@@ -12,6 +17,7 @@
 	require_once( plugin_dir_path( __FILE__ ) . 'push_admin_menu_list.php' );
 ?>
 <?php
+// phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 // --- Summary stats cards ---
 global $wpdb;
 $pnfpb_total_sent      = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}pnfpb_ic_total_statistics_notifications" );

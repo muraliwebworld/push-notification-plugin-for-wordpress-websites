@@ -11,7 +11,7 @@ use Override;
 use function in_array;
 use function is_string;
 
-final readonly class Dir implements DirectEncryption
+final class Dir implements DirectEncryption
 {
     #[Override]
     public function getCEK(JWK $key): string

@@ -5,7 +5,9 @@
  *
  * @since 1.0.0
  */
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 //check for  function called "PNFPB_icfm_icpush_add_rewrite_rules" or "PNFPB_icfm_icpush_generate_sw"  if it doesn't already exist
 //
 

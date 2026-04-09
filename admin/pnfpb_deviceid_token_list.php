@@ -3,6 +3,9 @@
 * Admin page to list and manage device tokens
 * Device id list table to show list of Firebase subscription tokens for every user
 *********************************************************************************/
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 if (
 	((isset($_POST["_wp_device_index_nonce"])) && (isset($_POST["pnfpb_create_subscription_index"]))) &&

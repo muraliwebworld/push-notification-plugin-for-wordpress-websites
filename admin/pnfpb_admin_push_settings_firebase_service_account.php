@@ -3,6 +3,12 @@
 * Firebase service account upload and configuration settings for push notification
 * @Since 2.08
 */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 
 <h2 class="pnfpb_ic_push_settings_header2"><?php echo esc_html(

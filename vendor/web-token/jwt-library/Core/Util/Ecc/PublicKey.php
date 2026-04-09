@@ -24,7 +24,7 @@ namespace Jose\Component\Core\Util\Ecc;
 /**
  * @internal
  */
-final readonly class PublicKey
+final class PublicKey
 {
     public function __construct(
         private Point $point

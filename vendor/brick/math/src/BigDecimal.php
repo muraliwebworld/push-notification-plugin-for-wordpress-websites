@@ -36,7 +36,7 @@ use const STR_PAD_LEFT;
  *
  * The scale of the number is the number of digits after the decimal point. It is always positive or zero.
  */
-final readonly class BigDecimal extends BigNumber
+final class BigDecimal extends BigNumber
 {
     /**
      * The unscaled value of this decimal number.

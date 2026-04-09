@@ -7,7 +7,7 @@ namespace Jose\Component\KeyManagement\Analyzer;
 use Jose\Component\Core\JWK;
 use Override;
 
-final readonly class AlgorithmAnalyzer implements KeyAnalyzer
+final class AlgorithmAnalyzer implements KeyAnalyzer
 {
     #[Override]
     public function analyze(JWK $jwk, MessageBag $bag): void

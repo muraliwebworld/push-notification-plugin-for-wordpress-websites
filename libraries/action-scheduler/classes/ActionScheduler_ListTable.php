@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 /**
  * Implements the admin view of the actions.

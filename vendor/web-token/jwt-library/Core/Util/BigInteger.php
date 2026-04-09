@@ -12,7 +12,7 @@ use function strlen;
 /**
  * @internal
  */
-final readonly class BigInteger
+final class BigInteger
 {
     private function __construct(
         private BrickBigInteger $value

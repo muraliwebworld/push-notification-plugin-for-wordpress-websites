@@ -2,6 +2,9 @@
 /* PWA Category-tab: Other PWA (SuperPWA integration)
  * Included by pnfpb_admin_pwa_app_settings.php
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div id="pnfpb-pwa-other-tab-name" class="pnfpb-other-pwa-settings-tab pnfpb-category-pwa-settings-tab">
 

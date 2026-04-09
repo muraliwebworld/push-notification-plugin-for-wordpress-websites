@@ -11,7 +11,7 @@ use function in_array;
 use function is_array;
 use function sprintf;
 
-final readonly class UsageAnalyzer implements KeyAnalyzer
+final class UsageAnalyzer implements KeyAnalyzer
 {
     #[Override]
     public function analyze(JWK $jwk, MessageBag $bag): void

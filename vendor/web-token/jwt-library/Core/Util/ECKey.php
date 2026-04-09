@@ -17,7 +17,7 @@ use const STR_PAD_LEFT;
 /**
  * @internal
  */
-final readonly class ECKey
+final class ECKey
 {
     public static function convertToPEM(JWK $jwk): string
     {

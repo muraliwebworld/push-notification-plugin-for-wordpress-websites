@@ -3,6 +3,9 @@
  * BuddyPress activities and comments settings for push notification
  * @since 2.08
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 
 <?php /* ─── Section 1: BuddyPress Activities ──────────────────────────────── */ ?>
@@ -56,7 +59,8 @@
 				</button>
 			</div>
 		</div>
-
+	</div>
+	<div class="pnfpb-settings-grid"  style="grid-template-columns:1fr; margin-top:12px;">
 		<div class="pnfpb-field-card">
 			<div class="pnfpb-field-card__label">
 				<span class="dashicons dashicons-update"></span>
@@ -73,7 +77,12 @@
 			</div>
 			<p class="pnfpb-field-card__desc"><?php esc_html_e( 'Send via Action Scheduler async mode to avoid server overload. Adds 30–60 second delay.', 'push-notification-for-post-and-buddypress' ); ?></p>
 		</div>
-
+	</div>
+	<div class="pnfpb-info-box pnfpb-info-box--blue" style="grid-template-columns:1fr; margin-top:12px;">
+		<span class="dashicons dashicons-info"></span>
+		<?php esc_html_e( 'Select Background mode OR Scheduling mode. Do not enable both Background mode and Scheduling mode.', 'push-notification-for-post-and-buddypress' ); ?>
+	</div>
+	<div class="pnfpb-settings-grid pnfpb-settings-grid--2col" style="margin-top:12px;">
 		<div class="pnfpb-field-card">
 			<div class="pnfpb-field-card__label">
 				<span class="dashicons dashicons-calendar-alt"></span>
@@ -94,11 +103,7 @@
 				</label>
 			</div>
 			<p class="pnfpb-field-card__desc"><?php esc_html_e( 'Batch activities and send one digest notification per schedule interval.', 'push-notification-for-post-and-buddypress' ); ?></p>
-		</div>
-
-	</div>
-
-	<div class="pnfpb-settings-grid" style="grid-template-columns:1fr; margin-top:12px;">
+		</div>		
 		<div class="pnfpb-field-card">
 			<div class="pnfpb-field-card__label">
 				<span class="dashicons dashicons-backup"></span>
@@ -119,25 +124,25 @@
 						   type="number" min="300" style="width:90px;min-width:90px;"
 						   value="<?php $v = get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_seconds' ); echo esc_attr( ( ! $v || $v < 300 ) ? 300 : $v ); ?>" required />
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypressactivities_hourly_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"
 						   type="radio" value="hourly" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'hourly', esc_attr( get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ) ); ?> />
 					<?php esc_html_e( 'Hourly', 'push-notification-for-post-and-buddypress' ); ?>
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypressactivities_twicedaily_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"
 						   type="radio" value="twicedaily" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'twicedaily', esc_attr( get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ) ); ?> />
 					<?php esc_html_e( 'Twicedaily', 'push-notification-for-post-and-buddypress' ); ?>
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypressactivities_daily_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"
 						   type="radio" value="daily" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'daily', esc_attr( get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ) ); ?> />
 					<?php esc_html_e( 'Daily', 'push-notification-for-post-and-buddypress' ); ?>
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypressactivities_weekly_enable" name="pnfpb_ic_fcm_buddypressactivities_timeschedule_enable"
 						   type="radio" value="weekly" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'weekly', esc_attr( get_option( 'pnfpb_ic_fcm_buddypressactivities_timeschedule_enable' ) ) ); ?> />
@@ -295,7 +300,12 @@
 				</button>
 			</div>
 		</div>
-
+	</div>
+	<div class="pnfpb-info-box pnfpb-info-box--blue" style="grid-template-columns:1fr; margin-top:12px;">
+		<span class="dashicons dashicons-info"></span>
+		<?php esc_html_e( 'Select Background mode OR Scheduling mode. Do not enable both Background mode and Scheduling mode.', 'push-notification-for-post-and-buddypress' ); ?>
+	</div>	
+	<div class="pnfpb-settings-grid" style="grid-template-columns:1fr; margin-top:12px;">
 		<div class="pnfpb-field-card">
 			<div class="pnfpb-field-card__label">
 				<span class="dashicons dashicons-update"></span>
@@ -312,7 +322,8 @@
 			</div>
 			<p class="pnfpb-field-card__desc"><?php esc_html_e( 'Send via Action Scheduler async mode to avoid server overload. Adds 30–60 second delay.', 'push-notification-for-post-and-buddypress' ); ?></p>
 		</div>
-
+	</div>
+	<div class="pnfpb-settings-grid pnfpb-settings-grid--2col" style="margin-top:12px;">
 		<div class="pnfpb-field-card">
 			<div class="pnfpb-field-card__label">
 				<span class="dashicons dashicons-calendar-alt"></span>
@@ -334,17 +345,13 @@
 			</div>
 			<p class="pnfpb-field-card__desc"><?php esc_html_e( 'Batch comments and send one digest notification per schedule interval.', 'push-notification-for-post-and-buddypress' ); ?></p>
 		</div>
-
-	</div>
-
-	<div class="pnfpb-settings-grid" style="grid-template-columns:1fr; margin-top:12px;">
 		<div class="pnfpb-field-card">
 			<div class="pnfpb-field-card__label">
 				<span class="dashicons dashicons-backup"></span>
 				<?php esc_html_e( 'Schedule Frequency', 'push-notification-for-post-and-buddypress' ); ?>
 			</div>
 			<div class="pnfpb-field-card__control" style="flex-wrap:wrap; gap:16px; align-items:center;">
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;" class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;" class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block">
 					<input class="pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds_radio_block pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds"
 						   name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable" type="radio" value="seconds"
 						   style="width:16px;height:16px;cursor:pointer;"
@@ -358,25 +365,25 @@
 						   type="number" min="300" style="width:90px;min-width:90px;"
 						   value="<?php $v = get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_seconds' ); echo esc_attr( ( ! $v || $v < 300 ) ? 300 : $v ); ?>" required />
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypresscomments_hourly_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"
 						   type="radio" value="hourly" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'hourly', esc_attr( get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ) ); ?> />
 					<?php esc_html_e( 'Hourly', 'push-notification-for-post-and-buddypress' ); ?>
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypresscomments_twicedaily_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"
 						   type="radio" value="twicedaily" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'twicedaily', esc_attr( get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ) ); ?> />
 					<?php esc_html_e( 'Twicedaily', 'push-notification-for-post-and-buddypress' ); ?>
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypresscomments_daily_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"
 						   type="radio" value="daily" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'daily', esc_attr( get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ) ); ?> />
 					<?php esc_html_e( 'Daily', 'push-notification-for-post-and-buddypress' ); ?>
 				</label>
-				<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
+				<label style="display:inline-flex;align-items:center;margin-top:10px;gap:8px;cursor:pointer;font-size:13px;font-weight:400;color:#1d2327;">
 					<input id="pnfpb_ic_fcm_buddypresscomments_weekly_enable" name="pnfpb_ic_fcm_buddypresscomments_timeschedule_enable"
 						   type="radio" value="weekly" style="width:16px;height:16px;cursor:pointer;"
 						   <?php checked( 'weekly', esc_attr( get_option( 'pnfpb_ic_fcm_buddypresscomments_timeschedule_enable' ) ) ); ?> />

@@ -11,7 +11,7 @@ use Jose\Component\Encryption\Algorithm\KeyEncryption\Util\RSACrypt;
 use Override;
 use function in_array;
 
-abstract readonly class RSA implements KeyEncryption
+abstract class RSA implements KeyEncryption
 {
     #[Override]
     public function allowedKeyTypes(): array

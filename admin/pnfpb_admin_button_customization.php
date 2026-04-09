@@ -2,6 +2,9 @@
 /**
  * Plugin settings area to customize notification button options
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <h1 class="pnfpb_ic_push_settings_header"><?php echo esc_html( __( "PNFPB - Customize Button Options", "push-notification-for-post-and-buddypress" ) ); ?></h1>
 <?php

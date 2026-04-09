@@ -6,7 +6,7 @@ namespace Jose\Component\Encryption\Algorithm\ContentEncryption;
 
 use Override;
 
-final readonly class A128CBCHS256 extends AESCBCHS
+final class A128CBCHS256 extends AESCBCHS
 {
     #[Override]
     public function getCEKSize(): int

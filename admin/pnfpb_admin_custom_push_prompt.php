@@ -3,6 +3,9 @@
  * Customize Frontend custom push prompt - admin settings
  * @since 2.08
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 
 <?php /* ─── Section: Custom Push Prompt ─────────────────────────────────── */ ?>

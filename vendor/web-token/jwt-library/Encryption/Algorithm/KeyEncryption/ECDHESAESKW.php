@@ -7,7 +7,7 @@ namespace Jose\Component\Encryption\Algorithm\KeyEncryption;
 use Jose\Component\Core\JWK;
 use Override;
 
-abstract readonly class ECDHESAESKW extends AbstractECDHAESKW
+abstract class ECDHESAESKW extends AbstractECDHAESKW
 {
     /**
      * @param array<string, mixed> $complete_header

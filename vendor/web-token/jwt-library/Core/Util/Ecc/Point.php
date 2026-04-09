@@ -28,7 +28,7 @@ use const STR_PAD_LEFT;
 /**
  * @internal
  */
-final readonly class Point
+final class Point
 {
     private function __construct(
         private BigInteger $x,

@@ -1,7 +1,8 @@
 <?php
-
-
 namespace Action_Scheduler\Migration;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 
 /**
  * Class Scheduler

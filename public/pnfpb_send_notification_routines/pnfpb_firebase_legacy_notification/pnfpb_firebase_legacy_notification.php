@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /** Firebase Legacy api send push notification routine
  *
  * @since 1.65 version

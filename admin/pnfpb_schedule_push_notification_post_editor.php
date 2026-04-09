@@ -1,5 +1,26 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 $post_type = $post->post_type;
+
+$pnfpb_ai_notification_title = get_post_meta(
+	$post->ID,
+	"pnfpb_ai_notification_title",
+	true
+);
+
+$pnfpb_ai_notification_content = get_post_meta(
+	$post->ID,
+	"pnfpb_ai_notification_content",
+	true
+);
+
+$pnfpb_ai_notification_send_time = get_post_meta(
+	$post->ID,
+	"pnfpb_ai_notification_send_time",
+	true
+);
 
 $pnfpb_post_meta_send_push_notification = get_post_meta(
     $post->ID,
@@ -69,6 +90,9 @@ if (empty($onetime_recurring_day_name)) {
 ?>
 
 	    	<input type="hidden" name="pnfpb_send_notification_meta_box" value="true"/>
+			<input type="hidden" id="pnfpb_ai_notification_title" name="pnfpb_ai_notification_title" value="<?php echo esc_attr( $pnfpb_ai_notification_title ); ?>" />
+			<input type="hidden" id="pnfpb_ai_notification_content" name="pnfpb_ai_notification_content" value="<?php echo esc_attr( $pnfpb_ai_notification_content ); ?>" />
+			<input type="hidden" id="pnfpb_ai_notification_send_time" name="pnfpb_ai_notification_send_time" value="<?php echo esc_attr( $pnfpb_ai_notification_send_time ); ?>" />
 
       		<fieldset id="pnfpb_push_notification_send_layout">
 				
@@ -112,6 +136,18 @@ if (empty($onetime_recurring_day_name)) {
       					); ?>
 					</label>					
     				<div class="pnfpb_schedule_later_ondemand">
+						<div style="margin:0 0 16px 0; padding:12px; border:1px solid #dcdcde; border-radius:10px; background:#fff;">
+							<strong><?php esc_html_e( 'AI Assistant', 'push-notification-for-post-and-buddypress' ); ?></strong>
+							<p style="margin:8px 0 10px;">
+								<?php esc_html_e( 'Generate a recommended notification title, body, and send time from the post content before publishing.', 'push-notification-for-post-and-buddypress' ); ?>
+							</p>
+							<button type="button" id="pnfpb_ai_generate_post_button" class="button button-secondary">
+								<?php esc_html_e( 'Generate AI draft', 'push-notification-for-post-and-buddypress' ); ?>
+							</button>
+							<div id="pnfpb_ai_post_status" class="description" style="margin-top:8px;"></div>
+							<div id="pnfpb_ai_post_preview" class="pnfpb-ai-preview" style="display:none; margin-top:10px; padding:12px; border:1px solid #dcdcde; border-radius:10px; background:#fdfdfd;"></div>
+						</div>
+
 						<label class="pnfpb_ic_push_settings_table_label_checkbox 
 									  pnfpb_ic_push_settings_table_label_schedule_later_ondemand" 
 							   for="pnfpb_ic_fcm_token_ondemand_datepicker">

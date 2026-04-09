@@ -45,7 +45,7 @@ use const FILTER_VALIDATE_INT;
  *
  * This class is immutable.
  */
-final readonly class BigInteger extends BigNumber
+final class BigInteger extends BigNumber
 {
     /**
      * The value, as a string of digits with optional leading minus sign.

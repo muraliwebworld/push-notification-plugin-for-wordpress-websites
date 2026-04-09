@@ -12,7 +12,7 @@ use function is_int;
 /**
  * This class is a claim checker. When the "nbf" is present, it will compare the value with the current timestamp.
  */
-final readonly class NotBeforeChecker implements ClaimChecker, HeaderChecker
+final class NotBeforeChecker implements ClaimChecker, HeaderChecker
 {
     private const NAME = 'nbf';
 

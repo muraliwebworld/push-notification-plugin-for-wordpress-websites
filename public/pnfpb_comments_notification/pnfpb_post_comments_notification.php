@@ -16,6 +16,9 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 			global $wpdb;
 
 			$apiaccesskey = get_option("pnfpb_ic_fcm_google_api");
+			
+			$webpush_option = get_option("pnfpb_webpush_push");
+			$webpush_firebase = get_option("pnfpb_webpush_push_firebase");					
 
 			$deviceidswebview = [];
 
@@ -39,6 +42,7 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 				(get_option("pnfpb_ic_fcm_bcomment_enable") == 1 &&
 					get_option("pnfpb_progressier_push") !== "1" &&
 					(get_option("pnfpb_onesignal_push") === "1" ||
+					 $webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1' ||
 						get_option("pnfpb_httpv1_push") === "1"))
 			) {
 				if ($comment_ID === null) {
@@ -207,8 +211,7 @@ if (!class_exists("PNFPB_post_comments_notification_class")) {
 						$localpostcontent
 					);
 					
-					$webpush_option = get_option("pnfpb_webpush_push");
-					$webpush_firebase = get_option("pnfpb_webpush_push_firebase");			
+	
 					$target_deviceid_values = [];					
 					
 					if ($webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1') {

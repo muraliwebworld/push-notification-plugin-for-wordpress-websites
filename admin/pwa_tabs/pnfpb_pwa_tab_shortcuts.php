@@ -5,7 +5,9 @@
  * Supports two shortcuts. All input names use array notation [] to match
  * the original option storage format. JS IDs and classes are preserved exactly.
  */
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /* ------ Load saved shortcut data ----------------------------------------- */
 $pnfpb_sc_name_arr    = get_option( 'pnfpb_ic_pwa_app_shortcut_name' );
 $pnfpb_sc_short_arr   = get_option( 'pnfpb_ic_pwa_app_shortcut_shortname' );

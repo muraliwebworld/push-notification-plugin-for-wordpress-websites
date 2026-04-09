@@ -1510,6 +1510,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
 			
 									$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+
+									$j('.pnfpb_bell_icon_subscription_favourite_enable').prop('checked',false);
+
+									$j('.pnfpb_bell_icon_subscription_followers_enable').prop('checked',false);									
 		
 									if (pnfpb_custom_post_types.length > 0) {
 		
@@ -1963,6 +1967,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 								$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
 		
 								$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+
+								$j('.pnfpb_bell_icon_subscription_favourite_enable').prop('checked',false);
+
+								$j('.pnfpb_bell_icon_subscription_followers_enable').prop('checked',false);								
 	
 								if (pnfpb_custom_post_types.length > 0) {
 	
@@ -2294,6 +2302,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 									$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
 			
 									$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+
+									$j('.pnfpb_bell_icon_subscription_favourite_enable').prop('checked',false);
+
+									$j('.pnfpb_bell_icon_subscription_followers_enable').prop('checked',false);									
 		
 									if (pnfpb_custom_post_types.length > 0) {
 		
@@ -2796,6 +2808,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 	
 							$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').prop('checked',false);
 
+							$j('.pnfpb_bell_icon_prompt_subscription_favourite_enable').prop('checked',false);
+
+							$j('.pnfpb_bell_icon_prompt_subscription_followers_enable').prop('checked',false);							
+
 							if (pnfpb_custom_post_types.length > 0) {
 
 								for (var pnfpb_post_type_element = 0; pnfpb_post_type_element < pnfpb_custom_post_types.length; pnfpb_post_type_element++) {
@@ -3193,6 +3209,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 												$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
 						
 												$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+
+												$j('.pnfpb_bell_icon_subscription_favourite_enable').prop('checked',false);
+
+												$j('.pnfpb_bell_icon_subscription_followers_enable').prop('checked',false);												
 					
 												if (pnfpb_custom_post_types.length > 0) {
 					
@@ -3484,6 +3504,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 													$j('.pnfpb_bell_icon_subscription_group_details_update_enable').prop('checked',false);
 							
 													$j('.pnfpb_bell_icon_subscription_group_invite_enable').prop('checked',false);
+
+													$j('.pnfpb_bell_icon_subscription_favourite_enable').prop('checked',false);
+
+													$j('.pnfpb_bell_icon_subscription_followers_enable').prop('checked',false);													
 						
 													if (pnfpb_custom_post_types.length > 0) {
 						
@@ -3765,6 +3789,10 @@ if (pnfpb_ajax_object_push.pwaapponlyenable === '1') {
 											$j('.pnfpb_bell_icon_prompt_subscription_group_details_update_enable').prop('checked',false);
 					
 											$j('.pnfpb_bell_icon_prompt_subscription_group_invite_enable').prop('checked',false);
+
+											$j('.pnfpb_bell_icon_prompt_subscription_favourite_enable').prop('checked',false);
+
+											$j('.pnfpb_bell_icon_prompt_subscription_followers_enable').prop('checked',false);											
 				
 											if (pnfpb_custom_post_types.length > 0) {
 				

@@ -8,7 +8,7 @@ use AESKW\Wrapper as WrapperInterface;
 use Override;
 use RuntimeException;
 
-abstract readonly class AbstractECDHAESKW implements KeyAgreementWithKeyWrapping
+abstract class AbstractECDHAESKW implements KeyAgreementWithKeyWrapping
 {
     public function __construct()
     {

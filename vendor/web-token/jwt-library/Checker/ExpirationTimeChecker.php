@@ -14,7 +14,7 @@ use function is_int;
  *
  * When the "exp" is present, it will compare the value with the current timestamp.
  */
-final readonly class ExpirationTimeChecker implements ClaimChecker, HeaderChecker
+final class ExpirationTimeChecker implements ClaimChecker, HeaderChecker
 {
     private const NAME = 'exp';
 

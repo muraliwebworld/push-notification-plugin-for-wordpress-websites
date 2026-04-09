@@ -6,7 +6,7 @@ namespace Jose\Component\Encryption\Algorithm\ContentEncryption;
 
 use Override;
 
-final readonly class A128GCM extends AESGCM
+final class A128GCM extends AESGCM
 {
     #[Override]
     public function getCEKSize(): int

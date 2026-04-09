@@ -18,7 +18,7 @@ use const STR_PAD_LEFT;
 /**
  * @internal
  */
-final readonly class RSA
+final class RSA
 {
     /**
      * Probabilistic Signature Scheme.

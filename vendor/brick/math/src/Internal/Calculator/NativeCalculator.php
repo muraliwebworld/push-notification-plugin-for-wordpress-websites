@@ -26,7 +26,7 @@ use const STR_PAD_LEFT;
  *
  * @internal
  */
-final readonly class NativeCalculator extends Calculator
+final class NativeCalculator extends Calculator
 {
     /**
      * The max number of digits the platform can natively add, subtract, multiply or divide without overflow.

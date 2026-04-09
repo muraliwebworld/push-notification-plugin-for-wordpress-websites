@@ -6,6 +6,9 @@
  *
  * @since 2.30.0
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div id="pnfpb_ic_onesignal_configuration" class="pnfpb_ic_onesignal_configuration pnfpb_config_tab_content pnfpb-provider-panel">
 

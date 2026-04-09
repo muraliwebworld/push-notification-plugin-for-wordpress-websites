@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <h1 class="pnfpb_ic_push_settings_header"><?php echo esc_html( __( "PNFPB - NGINX Server Settings", "push-notification-for-post-and-buddypress" ) ); ?></h1>
 <?php

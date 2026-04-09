@@ -17,7 +17,7 @@ use function in_array;
 use function is_int;
 use function is_string;
 
-abstract readonly class PBES2AESKW implements KeyWrapping
+abstract class PBES2AESKW implements KeyWrapping
 {
     public function __construct(
         private readonly int $salt_size = 64,

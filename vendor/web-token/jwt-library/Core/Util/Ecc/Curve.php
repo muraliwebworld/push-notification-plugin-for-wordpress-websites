@@ -13,7 +13,7 @@ use const STR_PAD_LEFT;
 /**
  * @internal
  */
-final readonly class Curve implements Stringable
+final class Curve implements Stringable
 {
     public function __construct(
         private int $size,

@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
  * Insert subscription token received in rest api from Android app/Ios app for push notifications
  *
@@ -29,7 +31,7 @@ $pnfpb_response = [
 ];
 
 if (isset($pnfpb_request["userid"])) {
-    $pnfpb_bpuserid = sanitize_text_field($pnfpb_request["userid"]);
+    $pnfpb_bpuserid = absint( wp_unslash( $pnfpb_request["userid"] ) );
 }
 
 if (
@@ -43,16 +45,17 @@ if (
 
 $pnfpb_encryption_key = get_option("PNFPB_icfcm_integrate_app_secret_code");
 
-$pnfpb_encrypted = sanitize_text_field($pnfpb_request["token"]);
+$pnfpb_encrypted = isset( $pnfpb_request["token"] ) ? sanitize_text_field( wp_unslash( $pnfpb_request["token"] ) ) : '';
 
 $pnfpb_subscriptionoptions = "";
 
 if (
     isset($pnfpb_request["subscriptionoptions"]) &&
-    $pnfpb_request["subscriptionoptions"] !== ""
+    $pnfpb_request["subscriptionoptions"] !== "" && is_numeric(sanitize_text_field(wp_unslash($pnfpb_request["subscriptionoptions"])))
 ) {
-    $pnfpb_subscriptionoptions = sanitize_text_field($pnfpb_request["subscriptionoptions"]);
-    $pnfpb_subscriptionoptions = esc_html($pnfpb_subscriptionoptions);
+    $pnfpb_subscriptionoptions = sanitize_text_field( wp_unslash( $pnfpb_request["subscriptionoptions"] ) );
+} else {
+	$pnfpb_subscriptionoptions = '10000000000000000000000000';
 }
 
 $pnfpb_parts = explode(":", $pnfpb_encrypted);
@@ -92,18 +95,17 @@ if (!$pnfpb_decrypted_gcm && !$pnfpb_decrypted_cbc) {
     error_log(" failed - invalid data ");
 
     $pnfpb_response = [
-        "status" => 200,
+        "status" => 401,
         "message" => " failed - invalid data",
     ];
 
     $pnfpb_res = new WP_REST_Response($pnfpb_response);
 
-    $pnfpb_res->set_status(200);
+    $pnfpb_res->set_status(401);
 
     return [
         "req" => $pnfpb_res,
-        "tokenupdatestatus" =>
-            " failed - invalid data " . $pnfpb_parts[0] . "-----***" . $pnfpb_parts[1],
+        "tokenupdatestatus" => "failed",
     ];
 } else {
     if (!$pnfpb_decrypted_cbc) {
@@ -122,20 +124,17 @@ if (!$pnfpb_decrypted_gcm && !$pnfpb_decrypted_cbc) {
         error_log(" failed - invalid data/encryption");
 
         $pnfpb_response = [
-            "status" => 200,
+            "status" => 401,
             "message" => " failed - invalid data/encryption",
         ];
 
         $pnfpb_res = new WP_REST_Response($pnfpb_response);
 
-        $pnfpb_res->set_status(200);
+        $pnfpb_res->set_status(401);
 
         return [
             "req" => $pnfpb_res,
-            "tokenupdatestatus" => " failed - invalid data/encryption ",
-            'bphasmac' => $pnfpb_bphasmac,
-            'receivedhasmac' => $pnfpb_parts[3],
-            "decrypted" => $pnfpb_decrypted,
+            "tokenupdatestatus" => "failed",
         ];
     }
 
@@ -247,7 +246,6 @@ if (!$pnfpb_decrypted_gcm && !$pnfpb_decrypted_cbc) {
                 $pnfpb_args = [
                     "httpversion" => "1.0",
                     "blocking" => true,
-                    "sslverify" => false,
                     "body" => $pnfpb_body,
                     "headers" => $pnfpb_headers,
                 ];
@@ -329,7 +327,6 @@ if (!$pnfpb_decrypted_gcm && !$pnfpb_decrypted_cbc) {
                 $pnfpb_args = [
                     "httpversion" => "1.0",
                     "blocking" => true,
-                    "sslverify" => false,
                     "body" => $pnfpb_body,
                     "headers" => $pnfpb_headers,
                 ];
@@ -406,7 +403,6 @@ if (!$pnfpb_decrypted_gcm && !$pnfpb_decrypted_cbc) {
                 $pnfpb_args = [
                     "httpversion" => "1.0",
                     "blocking" => true,
-                    "sslverify" => false,
                     "body" => $pnfpb_body,
                     "headers" => $pnfpb_headers,
                 ];

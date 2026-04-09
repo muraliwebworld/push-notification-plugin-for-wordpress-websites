@@ -7,7 +7,7 @@ namespace Jose\Component\Encryption\Algorithm\KeyEncryption;
 use Jose\Component\Encryption\Algorithm\KeyEncryption\Util\RSACrypt;
 use Override;
 
-final readonly class RSA15 extends RSA
+final class RSA15 extends RSA
 {
     #[Override]
     public function name(): string

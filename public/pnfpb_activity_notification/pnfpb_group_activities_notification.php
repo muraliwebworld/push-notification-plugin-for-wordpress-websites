@@ -24,7 +24,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 			$sendschedule = "no"
 		) {
 			$apiaccesskey = get_option("pnfpb_ic_fcm_google_api");
-
+			
 			$bactivity = 0;
 
 			$deviceidswebview = [];
@@ -78,6 +78,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 						get_option("pnfpb_ic_fcm_buddypress_enable") == 1 &&
 						(get_option("pnfpb_onesignal_push") === "1" ||
 							get_option("pnfpb_httpv1_push") === "1" ||
+						    $webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1' ||
 							get_option("pnfpb_progressier_push") === "1" ||
 							get_option("pnfpb_webtoapp_push") === "1")))
 			) {
@@ -780,7 +781,8 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 											]
 										);
 									} else {
-										$this->PNFPB_icfcm_httpv1_send_push_notification(
+									$FB_httpv1_notification_class_obj = new PNFPB_firebase_httpv1_notification_class();
+									$FB_httpv1_notification_class_obj->PNFPB_firebase_httpv1_notification(
 											0,
 											stripslashes(wp_strip_all_tags($grouptitle)),
 											stripslashes(wp_strip_all_tags($localactivitycontent)),
@@ -826,6 +828,7 @@ if (!class_exists("PNFPB_group_activities_notification_class")) {
 							get_option("pnfpb_progressier_push") !== "1" &&
 							(get_option("pnfpb_onesignal_push") === "1" ||
 								get_option("pnfpb_httpv1_push") === "1" ||
+							    $webpush_option === '1' || $webpush_option === '2' || $webpush_firebase === '1' ||
 								get_option("pnfpb_webtoapp_push") === "1")))
 				) {
 

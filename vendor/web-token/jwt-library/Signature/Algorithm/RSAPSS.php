@@ -12,7 +12,7 @@ use Override;
 use function in_array;
 use function sprintf;
 
-abstract readonly class RSAPSS implements SignatureAlgorithm
+abstract class RSAPSS implements SignatureAlgorithm
 {
     #[Override]
     public function allowedKeyTypes(): array

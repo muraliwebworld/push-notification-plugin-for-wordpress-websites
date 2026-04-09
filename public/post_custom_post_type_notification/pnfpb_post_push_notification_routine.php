@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 global $wpdb;
 
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
@@ -8,6 +10,53 @@ if ("publish" !== $new_status) {
     return;
 }
 
+$pnfpb_ai_post_editor_enabled = get_option("pnfpb_ai_assistant_enable") === "1" &&
+	get_option("pnfpb_ai_assistant_enable_post_editor") === "1";
+
+if (isset($_POST["pnfpb_ai_notification_title"])) {
+	update_post_meta(
+		$post->ID,
+		"pnfpb_ai_notification_title",
+		sanitize_text_field(wp_unslash($_POST["pnfpb_ai_notification_title"]))
+	);
+}
+
+if (isset($_POST["pnfpb_ai_notification_content"])) {
+	update_post_meta(
+		$post->ID,
+		"pnfpb_ai_notification_content",
+		wp_kses_post(wp_unslash($_POST["pnfpb_ai_notification_content"]))
+	);
+}
+
+if (isset($_POST["pnfpb_ai_notification_send_time"])) {
+	update_post_meta(
+		$post->ID,
+		"pnfpb_ai_notification_send_time",
+		sanitize_text_field(wp_unslash($_POST["pnfpb_ai_notification_send_time"]))
+	);
+}
+
+if ($pnfpb_ai_post_editor_enabled) {
+	$pnfpb_ai_notification_title = get_post_meta(
+		$post->ID,
+		"pnfpb_ai_notification_title",
+		true
+	);
+	$pnfpb_ai_notification_content = get_post_meta(
+		$post->ID,
+		"pnfpb_ai_notification_content",
+		true
+	);
+
+	if ($pnfpb_ai_notification_title !== "") {
+		$post->post_title = $pnfpb_ai_notification_title;
+	}
+
+	if ($pnfpb_ai_notification_content !== "") {
+		$post->post_content = $pnfpb_ai_notification_content;
+	}
+}
 if (
     $new_status === "publish" &&
     get_option("pnfpb_ic_fcm_disable_post_update_enable") === "1" &&

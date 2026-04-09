@@ -1,6 +1,8 @@
 <?php
 global $wpdb;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 // phpcs:ignoreFile WordPress.DB.DirectDatabaseQuery
 
 $imageurl = "";

@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 	$allowed_html = [
 		"a" => [
 			"href" => [],
@@ -2587,7 +2590,7 @@
 				"pnfpb-icajax-onesignal-script-push",
 				plugins_url($filename, __DIR__),
 				["jquery", "wp-i18n"],
-				"3.00.1",
+				"3.00.15",
 				true
 			);
 

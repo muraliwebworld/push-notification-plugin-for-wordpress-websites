@@ -6,6 +6,9 @@
  * All upload button IDs, hidden input IDs, and preview div IDs are preserved
  * exactly as required by the existing JavaScript.
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 ?>
 <div id="pnfpb-pwa-splashscreen-ios" class="pnfpb-pwa-settings-tab">
 

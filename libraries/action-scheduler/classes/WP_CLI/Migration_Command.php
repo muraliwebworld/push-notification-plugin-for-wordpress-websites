@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Action_Scheduler\WP_CLI;
 
 use Action_Scheduler\Migration\Config;
@@ -9,7 +7,9 @@ use Action_Scheduler\Migration\Scheduler;
 use Action_Scheduler\Migration\Controller;
 use WP_CLI;
 use WP_CLI_Command;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /**
  * Class Migration_Command
  *

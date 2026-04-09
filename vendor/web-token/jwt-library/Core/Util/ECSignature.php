@@ -12,7 +12,7 @@ use const STR_PAD_LEFT;
 /**
  * @internal
  */
-final readonly class ECSignature
+final class ECSignature
 {
     private const ASN1_SEQUENCE = '30';
 

@@ -9,6 +9,9 @@
  * @param string $id     Element id/name attribute.
  * @param bool   $req    Whether to add required="required".
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 function pnfpb_render_cache_page_select( $id, $req = false ) {
 	$pnfpb_cache_allowed_html = [
 		'option' => [
@@ -18,7 +21,7 @@ function pnfpb_render_cache_page_select( $id, $req = false ) {
 	];
 	$current = get_option( $id );
 	$attrs   = $req ? ' required="required"' : '';
-	echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $id ) . '"' . $attrs . '>';
+	echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $id ) . '"' . esc_attr($attrs) . '>';
 	if ( ! $req ) {
 		echo '<option value="">' . esc_html__( 'Select page', 'push-notification-for-post-and-buddypress' ) . '</option>';
 	}
@@ -83,7 +86,7 @@ function pnfpb_render_cache_page_select( $id, $req = false ) {
 		</h3>
 		<p class="pnfpb-settings-section__desc"><?php esc_html_e( 'Up to 3 extra pages to pre-cache for offline use.', 'push-notification-for-post-and-buddypress' ); ?></p>
 
-		<div class="pnfpb-settings-grid pnfpb-settings-grid--3col">
+		<div class="pnfpb-settings-grid pnfpb-settings-grid--2col">
 
 			<div class="pnfpb-field-card">
 				<div class="pnfpb-field-card__label">

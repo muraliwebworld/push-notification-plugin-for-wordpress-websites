@@ -11,7 +11,7 @@ use function sprintf;
 /**
  * @internal
  */
-final readonly class Recipient
+final class Recipient
 {
     public function __construct(
         private array $header,

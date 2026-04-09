@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+?>
 	<h1 class="pnfpb_ic_push_settings_header"><?php echo esc_html(
 		 __(
 			 "PNFPB - Push Notification reports",

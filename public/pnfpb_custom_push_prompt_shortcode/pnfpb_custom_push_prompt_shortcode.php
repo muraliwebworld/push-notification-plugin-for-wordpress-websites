@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /** Shortcode for custom push notification subscription prompt
  *
  * @since 2.12 version

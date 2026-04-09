@@ -5,6 +5,9 @@
 *
 * @since 2.20.0
 */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 use Minishlink\WebPush\VAPID;
 ?>
 <h1 class="pnfpb_ic_push_settings_header">
@@ -116,13 +119,18 @@ use Minishlink\WebPush\VAPID;
 		<ul style="margin:0;padding-left:18px;">
 			<li><?php echo esc_html( __( "Required PHP version 8.1 or above", "push-notification-for-post-and-buddypress" ) ); ?></li>
 			<li>
-				<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/">
+				<a href="https://wordpress.org/support/plugin/push-notification-for-post-and-buddypress/" target="_blank">
 					<?php echo esc_html( __( "Support forum", "push-notification-for-post-and-buddypress" ) ); ?>
 				</a>
 				&amp;
-				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F">
+				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/#do%20you%20have%20any%20questions%3F"  target="_blank">
 					<?php echo esc_html( __( "FAQ", "push-notification-for-post-and-buddypress" ) ); ?>
 				</a>
+			</li>
+			<li>
+				<a href="https://wiki.pnfpb.com/" target="_blank">
+					<?php echo esc_html( __( "Knowledgebase", "push-notification-for-post-and-buddypress" ) ); ?>
+				</a>				
 			</li>
 			<li>
 				<a href="https://github.com/muraliwebworld?tab=repositories" target="_blank">
@@ -130,7 +138,7 @@ use Minishlink\WebPush\VAPID;
 				</a>
 			</li>
 			<li>
-				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/">
+				<a href="https://wordpress.org/plugins/push-notification-for-post-and-buddypress/"  target="_blank">
 					<?php echo esc_html( __( "Plugin homepage", "push-notification-for-post-and-buddypress" ) ); ?>
 				</a>
 			</li>
@@ -160,7 +168,7 @@ use Minishlink\WebPush\VAPID;
 			<?php echo esc_html( __( "Contribute / Donate", "push-notification-for-post-and-buddypress" ) ); ?>
 		</h4>
 		<p>
-			<a href="https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/">
+			<a href="https://www.muraliwebworld.com/support-to-push-notification-plugin-for-buddypress-and-for-post/"  target="_blank">
 				<?php echo esc_html( __( "Donate / Contribute to this plugin", "push-notification-for-post-and-buddypress" ) ); ?>
 			</a>
 		</p>
@@ -191,9 +199,14 @@ use Minishlink\WebPush\VAPID;
 			<?php echo esc_html( __( "Demo", "push-notification-for-post-and-buddypress" ) ); ?>
 		</h4>
 		<p>
-			<a href="https://www.muraliwebworld.com" target="_blank">
+			<a href="https://www.pnfpb.com" target="_blank">
 				<?php echo esc_html( __( "Plugin support &amp; demo site", "push-notification-for-post-and-buddypress" ) ); ?>
 			</a>
+		</p>
+		<p>
+			<a href="https://wiki.pnfpb.com/"  target="_blank">
+				<?php echo esc_html( __( "Plugin documentation", "push-notification-for-post-and-buddypress" ) ); ?>
+			</a>			
 		</p>
 	</div>
 

@@ -13,7 +13,7 @@ use function is_string;
  *
  * When the "iss" header parameter or claim is present, it will check if the value is within the allowed ones.
  */
-final readonly class IssuerChecker implements ClaimChecker, HeaderChecker
+final class IssuerChecker implements ClaimChecker, HeaderChecker
 {
     private const CLAIM_NAME = 'iss';
 
